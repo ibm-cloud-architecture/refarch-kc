@@ -32,9 +32,9 @@ Leveraging the Event Driven Architecture high level architecture foundation the 
 ## Deployment
 The solution support a set of related repository including
 ### Related repositories
-* [User Interface and BFF for demonstration]()
-* [Supporting microservices and functions]()
-* [Real time analytics with IBM Streams]()
+* [User Interface and BFF for demonstration](https://github.com/ibm-cloud-architecture/refarch-ks-ui)
+* [Supporting microservices and functions](https://github.com/ibm-cloud-architecture/refarch-ks-ms)
+* [Real time analytics with IBM Streams](https://github.com/ibm-cloud-architecture/refarch-ks-streams)
 
 ### Configuration
 To make the solution running we need to have a set of components ready and installed.
