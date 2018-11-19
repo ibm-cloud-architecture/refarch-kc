@@ -41,6 +41,10 @@ Three swim lanes were quickly added to the model, after the event storming activ
 
 <img src="ship-dom-cmd1.png" width="700">
 
+The above figure can be alterred using event flow:
+
+<img src="ship-dom-cmd1.2.png" width="700">
+
 <img src="ship-dom-cmd2.png" width="700">
 
 <img src="ship-dom-cmd3.png" width="700">
