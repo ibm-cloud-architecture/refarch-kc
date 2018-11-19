@@ -31,9 +31,11 @@ You will be greatly interested by the subjects addressed in this solution if you
 ## Use Case Description
 
 ## Analysis Outcomes
+
 Using the [event storming](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/methodology/readme.md) workshop the development team extracts the following analysis of the business domain.
 
 ## Architecture
+
 Leveraging the Event Driven Architecture high level architecture foundation the solution is using the following components:
 
 ![High level component view](docs/kc-hl-comp-view.png)
