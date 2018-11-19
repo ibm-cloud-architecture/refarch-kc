@@ -22,7 +22,7 @@ From the business context description above, we started the [Event Storming](htt
 
 <img src="ship-dom-evt1.png" width="700">
 
-Three swim lanes were quickly added to the model, after the event storming so we can organize event sequencing and parallelism.
+Three swim lanes were quickly added to the model, after the event storming activity so we can organize event sequencing and parallelism.
 
 <img src="ship-dom-evt2.png" width="700">
 
@@ -32,10 +32,28 @@ Three swim lanes were quickly added to the model, after the event storming so we
 
 <img src="ship-dom-evt5.png" width="700">
 
+<img src="ship-dom-evt6.png" width="700">
+
+<img src="ship-dom-evt7.png" width="700">
+
+
 ### Step 2: Commands
 
+<img src="ship-dom-cmd1.png" width="700">
+
+<img src="ship-dom-cmd2.png" width="700">
+
+<img src="ship-dom-cmd3.png" width="700">
+
+<img src="ship-dom-cmd4.png" width="700">
 
 ### Step 3: Aggregates
+
+<img src="ship-aggr-transport-quote.png" width="700">
+
+<img src="ship-aggr-shipment.png" width="700">
+
+<img src="ship-aggr-transp.png" width="700">
 
 ### Step 4: Business context
 
