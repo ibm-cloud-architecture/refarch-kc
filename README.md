@@ -46,14 +46,17 @@ Leveraging the Event Driven Architecture high level architecture foundation the 
 * Streamaing analytics is used to process aggreates and analytics on containers and ships data coming in real time.
 
 ## Deployment
+
 The solution support a set of related repositories including user interface, a set of microservices to implement event sourcing, saga and SQRS patterns, and provides simulators and analytics content. 
 
 ### Related repositories
-* [User Interface and BFF for demonstration](https://github.com/ibm-cloud-architecture/refarch-ks-ui)
-* [Supporting microservices and functions](https://github.com/ibm-cloud-architecture/refarch-ks-ms)
-* [Real time analytics with IBM Streams](https://github.com/ibm-cloud-architecture/refarch-ks-streams)
+
+* [User Interface and BFF for demonstration](https://github.com/ibm-cloud-architecture/refarch-kc-ui)
+* [Supporting microservices and functions](https://github.com/ibm-cloud-architecture/refarch-kc-ms)
+* [Real time analytics with IBM Streams](https://github.com/ibm-cloud-architecture/refarch-kc-streams)
 
 ### Configuration
+
 To make the solution running we need to have a set of components ready and installed.
 
 ## Devops
