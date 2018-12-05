@@ -1,6 +1,11 @@
 # Container Shipment Analysis
+This section defines the overall steps in the methodology to analyse a specific global shipping example and derive the Event Driven Solution to address key ( MVP) components occurring in it.
+## Output from Domain Driven Design workshop
 From the design thinking workshop we extracted the following artifacts:
-* a persona list: We develop personas for each of the business stakeholders to better understand their work environment, motivations and challenges.  Personas helps to capture the decisions and questions that these stakeholders must address with respect to the targeted key business initiative.
+* a persona list
+* the MVP hills
+### Personas for each stakeholder
+We develop personas for each of the business stakeholders to better understand their work environment, motivations and challenges.  Personas helps to capture the decisions and questions that these stakeholders must address with respect to the targeted key business initiative.
 
 Persona name | Objectives | Challenges
 --- | --- | ---
@@ -11,7 +16,7 @@ Land Transporter |Pick up and drop off containers at times and locations agreed 
 Port Docker |Load and unload containers from docked ship as specified by Shipment Company with minimal time and effort <br> free up dock asset quickly to become available for next ship | Highly complex sequence of operation in Dockyard to be coordinated to minimize effort and time 
 Customs Office|Clear containers for Export and assess duty on import containers|Depends on quality of manifest and certification of origin documentation on each container from Manufacturer 
 
-* the MVP hills
+## High level View of the Shipment Process flow
 * At the high level the shipment process flow can be presented in the diagram below:
 
 ![](shipment-bp.png)
