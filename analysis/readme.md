@@ -4,11 +4,12 @@ From the design thinking workshop we extracted the following artifacts:
 
 Persona name | Objectives | Challenges
 --- | --- | ---
-Retailer | |
-Manufacturer | |
-Shipment Company | |
+Retailer |Receive shipped goods on time, on date contracted with manufacturer |
+Manufacturer |Good enough estimates of shipment times from Shipment Company to close sale and delivery with Retailer<br>Pickup of containers by land transporter <br>Timely delivery of container to Retailer as contracted with Shipment company<br>able to get information on current locatbr>ion and state of container in transit|   
+Shipment Company |Provide good enough estimates of shipment time to close shipment contract with Manufacturer<br>Execute shipment contracts on time profitably ( with minimal cost)|Limited itinerary schedule<br>variability in ship leg travel times and costs<br>variability in port congestion and load / unload times at dock <br> variability in Land transport timings 
 Land Transporter | |
 Port Docker | |
+Customs Office| |
 
 * the MVP hills
 * At the high level the shipment process flow can be presented in the diagram below:
