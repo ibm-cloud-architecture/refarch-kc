@@ -51,21 +51,30 @@ For the global shipment example described at a very high level above we came up 
 ( The event storming process captures these event timeline sections in charts on walls around the meeting room ) 
 
 #### Container Shipping Event Timeline section 1
+
 <img src="ship-dom-evt1.png" width="700">
 
-This section of the time line deals with:
+This section of the event time line deals with initial contracts to ship container and startup actions - specifically:
 * Retailer and Manufacturer settling on an initial order for delivery of goods in a container
 * Manufacturer placing order for shipment with Shipping Company 
-* Land transport arranged and executed to pick up container and deliver to source port
-* Container ship approach source port adjacent to Manufactures location 
+* Land transport arranged to pick up container and deliver to source port
+* Container ship approach source port adjacent to Manufacturer's location 
 
 The events are organized into separate swim lanes for Manufacturer, Retailer and Ship perspectives operating in parallel. 
+
+Some of the value of swimlanes is shown in the separation of ship events as it approaches the source port from container specific events with agreements to ship etc. There is no  time coupling or precise causality between events in these two swim lanes.
+
 The red note is a comment.
-* In this case we make the parctical simplification to limit the scenario to shipping complete containers only. THis avoids having to deal with additional warehousing, container loading and packing steps. 
+* In this case we make the parctical simplification to limit the scenario to shipping complete containers only. This avoids having to deal with additional warehousing, container load aggregation and packing events - together with correspondng unpacking and disaggregation.
 
 #### Container Shipping Event timeline Section 2
 
 <img src="ship-dom-evt2.png" width="700">
+
+This section continues event time line development with a swim lane no focussed on loading and pickup of a specific container at the Manufacturer's location and its delivery to the source port dockside. 
+
+There is a critical event (indicated by vertical blue bar) separating the "source dockside" phase of the solution. Before this critical event we are deling with container specific activites in collecting and transporting the container from Maufacturer's location to dockside. 
+In the following dockside phase there are interactions with Customs officer to get the container cleared for export. 
 
 #### Event Timeline Section 3 
 <img src="ship-dom-evt3.png" width="700">
