@@ -41,16 +41,25 @@ Event storming is a rapid light weight design process enabling the team of busin
 
 Steps in the Event Storming are illustrated and described below. 
 
-### Step 1: Domain Events
-From the business context description above, we started the [Event Storming](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/methodology/readme.md) Analysis to build the following events timeline. The process start with a request for quote so a `delivery estimate time and cost requested` event occurs.
+### Step 1: Domain Event Timeline
+The initial step in Event Storming Analysis is to capture all events, things which have happened at a point in time, and organize them into a timeline. 
+* each event goes on an orange "sticky note" 
+* parallel or independent processes may be separated with blue horizontal swim lanes
+* critical events indication a new stage in the flow shown with vertical blue bars 
+For the global shipment example described at a very high level above we came up with an event timeline shown in the set of diagrams below. 
+( The event storming process captures these event timeline sections in charts on walls around the meeting room ) 
 
+#### Event Timeline section 1 - 
 <img src="ship-dom-evt1.png" width="700">
 
 Three swim lanes were quickly added to the model, after the event storming activity so we can organize event sequencing and parallelism.
-
+#### Event timeline Section 2
 <img src="ship-dom-evt2.png" width="700">
 
+#### Event Timeline Section 3 
 <img src="ship-dom-evt3.png" width="700">
+
+#### Event Timeline Section 4
 
 <img src="ship-dom-evt4.png" width="700">
 
