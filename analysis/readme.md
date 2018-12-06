@@ -101,9 +101,15 @@ It introduces two new critical events:
 
 <img src="ship-dom-evt4.png" width="700">
 
+This segment of the event timeline deals with a single swim lane for the ship while it is moored in a dock facility at the source port, is having arriving containers destined for this port unloaded and new containers being loaded at his port. The Port Dock Facility Operator is coordinating many events in he yard to perform load unload operation. These steps - as noted in a red discussion "sticky" in the event storming timeline is repeated for many containers. The time line presened here captures representative high level events. It is straightforward to extend the analysis to open up additional layers of detail touching on operational optimizations and coordination at the cost of addiional complexity not essential to our reference example here.   
+
+Some of the events in this phase are now specialized to address needs of particular ype of container - refrigerated containers - able to maintain specific temperature bounds and to report on their global location and temperature status on a continuous basis. This is a natural outcome of the event Storming analysis involving free parallel capture of event types by a team of individuals with different points of view and interests. Working forward towards one or more MVP implementations of key components of this solution linked through EDA architecture we will need to characterize event types more unifromly end to end - but imposing that level of consistency checking on the initial eventstorming process will slow down progess without providing significan benefit. 
+
 #### Event Timeline Section 5
 
 <img src="ship-dom-evt5.png" width="700">
+
+This segment of the event timeline capure events which occure in the blue water phase of the shipping, after the container ship has left the source port and is travelling owards but has not yet reached the destination port. 
 
 #### Event Timeline sections 6 and 7 
 <img src="ship-dom-evt6.png" width="700">
