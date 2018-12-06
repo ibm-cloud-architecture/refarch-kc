@@ -109,10 +109,25 @@ Some of the events in this phase are now specialized to address needs of particu
 
 <img src="ship-dom-evt5.png" width="700">
 
-This segment of the event timeline capure events which occure in the blue water phase of the shipping, after the container ship has left the source port and is travelling owards but has not yet reached the destination port. 
+This segment of the event timeline captures events which occure in the blue water phase of the shipping, after the container ship has left the source port and is travelling owards but has not yet reached the destination port. 
+
+It is divided into two swim lanes the ship perspective and individual container perspectives. The ship perspective includes events relating to the entire ship:
+* leaving port 
+* reporting its current position 
+* deciding to alter planned course to avoid a weather event
+
+The upper swim lane capture events which are specific to a particular container 
+* container sensors reporting on geolocation 
+* refrigerated container sensors reporting on temperature in the container and power consumption of the refrigeration unit 
+
 
 #### Event Timeline sections 6 and 7 
+
 <img src="ship-dom-evt6.png" width="700">
+
+The remining event time line segments 6 and 7 deal with arrival at the destination port unload of the container and delivery to the Supplier location. At the level of simplification in the reference architecture example, the steps for unloading a container at the destination port, clearing Customs and delivering it to are Retailer location are the symmetric image of the steps to pick up the container from the Manufacture location, clear it through export permissions and load onto the ship. 
+
+For these reason we just provide event timeline digrams for these steps withou going into further explanatory detail. 
 
 <img src="ship-dom-evt7.png" width="700">
 
