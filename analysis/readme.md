@@ -81,7 +81,22 @@ The Manufacturer will need an empty container (refrigerated if necessary for the
 When the container arrives at source port dockside it may or may not be intime for the cutoff time required by the Customs Officer to get containers cleared for export before the scheduled departure of a particular container ship. If the cutoff deadline is missed the shipment will need to be rebooked on a later container ship and the client Manufacturer notified of expected delay in delivery. 
 
 #### Event Timeline Section 3 
+
 <img src="ship-dom-evt3.png" width="700">
+
+This section continues the event timelines with swim lanes relating to a specific container shipment and also to the movement of a ship potentially carrying thousands of caontainers.
+
+It introduces two new critical events:
+* the Customs decision phase of event ends with a specific decision to clear a container for export or not, or posiibly a request for additionalinspecion or documents requiring more decision time 
+  * If the container is approved for export it can proceed to loading 
+  * if additional time is required for the clearance process, the original booking and expected deliver date may need to be modified 
+  * if export clearance is denied, then shipmen is cancelled and requesing paries notified 
+* ship enters dock ready to start unloading and loading is a new critical event 
+  * previous ship events in Event Timeline section 1 dealt with ship "booking" a load/unload timeslot at a dock in the source port 
+  * also getting  national authority/Customs clearance to enter that jurisdiction 
+  * now on arrival at the source port area i request permission tomoor an dock facility and eventually cleared for that
+  * this critical event is the actual start of the containe load / unload event phase for the ship at the source port 
+
 
 #### Event Timeline Section 4
 
