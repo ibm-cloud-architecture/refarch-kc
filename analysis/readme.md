@@ -71,10 +71,14 @@ The red note is a comment.
 
 <img src="ship-dom-evt2.png" width="700">
 
-This section continues event time line development with a swim lane no focussed on loading and pickup of a specific container at the Manufacturer's location and its delivery to the source port dockside. 
+This section continues event time line development with a swim lane now focussed on loading and pickup of a specific container at the Manufacturer's location and its delivery to the source port dockside. 
 
-There is a critical event (indicated by vertical blue bar) separating the "source dockside" phase of the solution. Before this critical event we are deling with container specific activites in collecting and transporting the container from Maufacturer's location to dockside. 
-In the following dockside phase there are interactions with Customs officer to get the container cleared for export. 
+There is a critical event (indicated by vertical blue bar) separating the "source dockside" phase of the solution. Before this critical event we are deling with container specific activities in collecting and transporting the container from Maufacturer's location to dockside. 
+In the following dockside phase there are interactions with Customs Officer to get the container cleared for export. 
+
+The Manufacturer will need an empty container (refrigerated if necessary for the shipment of interest) to load the goods into. We show an event for empty container being delivered. The solution is simplified if we assume that the Manufacture has a pool of empty containers always available. Alternatively this can be analyzed fully in some more complete generalized version of the solution. 
+
+When the container arrives at source port dockside it may or may not be intime for the cutoff time required by the Customs Officer to get containers cleared for export before the scheduled departure of a particular container ship. If the cutoff deadline is missed the shipment will need to be rebooked on a later container ship and the client Manufacturer notified of expected delay in delivery. 
 
 #### Event Timeline Section 3 
 <img src="ship-dom-evt3.png" width="700">
