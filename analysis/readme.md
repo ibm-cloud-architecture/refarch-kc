@@ -39,7 +39,7 @@ We use the  [Event Storming](https://github.com/ibm-cloud-architecture/refarch-e
 
 Event storming is a rapid light weight design process enabling the team of business owners and stake holders, architects and IT specialists to fomalize a complex solution in a clearly communicable event timeline. This step is effective in developing Event microservices linked through an EDA architecture in one or more MVP contexts. 
 
-Steps in the Event Storming are illustrated and described below. 
+Steps in an 8 hour Event Storming analysis workshop of  the Container Shipping example are illustrated and described below. 
 
 ### Step 1: Domain Event Timeline
 The initial step in Event Storming Analysis is to capture all events, things which have happened at a point in time, and organize them into a timeline. 
@@ -89,21 +89,23 @@ This section continues the event timelines with swim lanes relating to a specifi
 It introduces two new critical events:
 * the Customs decision phase of event ends with a specific decision to clear a container for export or not, or posiibly a request for additionalinspecion or documents requiring more decision time 
   * If the container is approved for export it can proceed to loading 
-  * if additional time is required for the clearance process, the original booking and expected deliver date may need to be modified 
-  * if export clearance is denied, then shipmen is cancelled and requesing paries notified 
+  * if additional time is required for the clearance process, the original booking and expected delivery date may need to be modified 
+  * if export clearance is denied, then shipmen is cancelled and requesting parties notified 
 * ship enters dock ready to start unloading and loading is a new critical event 
   * previous ship events in Event Timeline section 1 dealt with ship "booking" a load/unload timeslot at a dock in the source port 
-  * also getting  national authority/Customs clearance to enter that jurisdiction 
-  * now on arrival at the source port area i request permission tomoor an dock facility and eventually cleared for that
-  * this critical event is the actual start of the containe load / unload event phase for the ship at the source port 
-
-
+  * also getting  national authority or Customs clearance to enter that jurisdiction 
+  * now on arrival at the source port anchorage area, the ship requests permission to moor at an available dock facility
+  * The critical event when a ship is cleared and moored at a dock hence ready to start unloading and loading containers is the start of the next event phase - container loading (and unloading)
+  
 #### Event Timeline Section 4
 
 <img src="ship-dom-evt4.png" width="700">
 
+#### Event Timeline Section 5
+
 <img src="ship-dom-evt5.png" width="700">
 
+#### Event Timeline sections 6 and 7 
 <img src="ship-dom-evt6.png" width="700">
 
 <img src="ship-dom-evt7.png" width="700">
