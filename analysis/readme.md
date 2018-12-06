@@ -34,7 +34,7 @@ For the purposes of showing how to architect a reference EDA solution we select 
 1. Shipment company works with Import Export office at destination port to clear and collect any import duties 
 1. Shipment company works with Land Transporter at destination port to pick up container and deliver to Retailer 
 1. Container is delivered by Land Transporter to Retailer's location - transaction is complete 
-## Event Storming Method for quick clear definition and communication of complex process
+## Event Storming - rapid definition and communication of complex process by business
 ### Step 1: Domain Events
 From the business context description above, we started the [Event Storming](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/methodology/readme.md) Analysis to build the following events timeline. The process start with a request for quote so a `delivery estimate time and cost requested` event occurs.
 
