@@ -18,7 +18,7 @@ Customs Officer|Clear containers for export and assess duty on import containers
 ### MVP Hills 
 The challenges listed in the persona table above identify a possible set of MVP hills for this end to end solution. The event storming methodology described below  will lead to picking out speicif subareas of the solution with most value as initial MVPs.
 ## High level View of the Shipment Process flow
-At the high level the shipment process flow is suggested and illustrated in the diagram below:
+At the high level the shipment process flow is suggested and illustrated in the diagram below.
 
 ![](shipment-bp.png)
 
@@ -46,14 +46,25 @@ The initial step in Event Storming Analysis is to capture all events, things whi
 * each event goes on an orange "sticky note" 
 * parallel or independent processes may be separated with blue horizontal swim lanes
 * critical events indication a new stage in the flow shown with vertical blue bars 
+
 For the global shipment example described at a very high level above we came up with an event timeline shown in the set of diagrams below. 
 ( The event storming process captures these event timeline sections in charts on walls around the meeting room ) 
 
-#### Event Timeline section 1 - 
+#### Container Shipping Event Timeline section 1
 <img src="ship-dom-evt1.png" width="700">
 
-Three swim lanes were quickly added to the model, after the event storming activity so we can organize event sequencing and parallelism.
-#### Event timeline Section 2
+This section of the time line deals with:
+* Retailer and Manufacturer settling on an initial order for delivery of goods in a container
+* Manufacturer placing order for shipment with Shipping Company 
+* Land transport arranged and executed to pick up container and deliver to source port
+* Container ship approach source port adjacent to Manufactures location 
+
+The events are organized into separate swim lanes for Manufacturer, Retailer and Ship perspectives operating in parallel. 
+The red note is a comment.
+* In this case we make the parctical simplification to limit the scenario to shipping complete containers only. THis avoids having to deal with additional warehousing, container loading and packing steps. 
+
+#### Container Shipping Event timeline Section 2
+
 <img src="ship-dom-evt2.png" width="700">
 
 #### Event Timeline Section 3 
