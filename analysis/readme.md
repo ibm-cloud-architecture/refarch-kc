@@ -34,7 +34,13 @@ For the purposes of showing how to architect a reference EDA solution we select 
 1. Shipment company works with Import Export office at destination port to clear and collect any import duties 
 1. Shipment company works with Land Transporter at destination port to pick up container and deliver to Retailer 
 1. Container is delivered by Land Transporter to Retailer's location - transaction is complete 
-## Event Storming - rapid definition and communication of complex process by business
+## Event Storming Analysis of the container shipping flow 
+We use the  [Event Storming](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/methodology/readme.md) Analysis to move from the high level description of a complex flow above to a specific event timeline with identified bounded contexts each of which could be a target MVP  compnent linked through EDA architecture. 
+
+Event storming is a rapid light weight design process enabling the team of business owners and stake holders, architects and IT specialists to fomalize a complex solution in a clearly communicable event timeline. This step is effective in developing Event microservices linked through an EDA architecture in one or more MVP contexts. 
+
+Steps in the Event Storming are illustrated and described below. 
+
 ### Step 1: Domain Events
 From the business context description above, we started the [Event Storming](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/methodology/readme.md) Analysis to build the following events timeline. The process start with a request for quote so a `delivery estimate time and cost requested` event occurs.
 
