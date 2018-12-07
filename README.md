@@ -6,7 +6,7 @@ As part of producing the IBM event driven point of view and reference architectu
 
 The high level process can be represented in the following diagram, we will describe the steps in the [use case section](#use-case-description):
 
-![](analysis/shipment-bp.png)
+![](analysis/shipment-bp1.png)
 
 In developing the scenario, it became apparent that the event driven nature of business, extends across the business network, so we have widened the view in the scenario to consider the chain of parties involved in the shipping process, including importer, exporter, land transport and customs. To keep the scenario easy to understand, we have only considered the following cases:
 
