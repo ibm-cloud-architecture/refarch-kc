@@ -80,7 +80,7 @@ The Manufacturer will need an empty container (refrigerated if necessary for the
 
 When the container arrives at source port dockside it may or may not be intime for the cutoff time required by the Customs Officer to get containers cleared for export before the scheduled departure of a particular container ship. If the cutoff deadline is missed the shipment will need to be rebooked on a later container ship and the client Manufacturer notified of expected delay in delivery. 
 
-#### Event Timeline Section 3 
+#### Container shipping Event Timeline Section 3 
 
 <img src="ship-dom-evt3.png" width="700">
 
@@ -97,7 +97,7 @@ It introduces two new critical events:
   * now on arrival at the source port anchorage area, the ship requests permission to moor at an available dock facility
   * The critical event when a ship is cleared and moored at a dock hence ready to start unloading and loading containers is the start of the next event phase - container loading (and unloading)
   
-#### Event Timeline Section 4
+#### Container Shipping Event Timeline Section 4
 
 <img src="ship-dom-evt4.png" width="700">
 
@@ -105,7 +105,7 @@ This segment of the event timeline deals with a single swim lane for the ship wh
 
 Some of the events in this phase are now specialized to address needs of particular ype of container - refrigerated containers - able to maintain specific temperature bounds and to report on their global location and temperature status on a continuous basis. This is a natural outcome of the event Storming analysis involving free parallel capture of event types by a team of individuals with different points of view and interests. Working forward towards one or more MVP implementations of key components of this solution linked through EDA architecture we will need to characterize event types more unifromly end to end - but imposing that level of consistency checking on the initial eventstorming process will slow down progess without providing significan benefit. 
 
-#### Event Timeline Section 5
+#### Container Shipping Event Timeline Section 5
 
 <img src="ship-dom-evt5.png" width="700">
 
@@ -121,7 +121,7 @@ The upper swim lane capture events which are specific to a particular container
 * refrigerated container sensors reporting on temperature in the container and power consumption of the refrigeration unit 
 
 
-#### Event Timeline sections 6 and 7 
+#### Container shipping Event Timeline sections 6 and 7 
 
 <img src="ship-dom-evt6.png" width="700">
 
@@ -132,11 +132,26 @@ For these reason we just provide event timeline digrams for these steps withou g
 <img src="ship-dom-evt7.png" width="700">
 
 
-### Step 2: Commands
+### Step 2: Commands and event linkages  
+After capturing all events for the scenario and organizing them in a time line, the next step in event storming analysis is to identify the triggers and event linkages.  
+
+For each identified event in the timeline we ask "What triggered this event to occur?". Expected event trigger types are:
+* a human operator makes a decision an issues a command
+* some external system or sensor provides a stimulus
+* it results from processing of a precursor event 
+* it is is triggered by ome determined period of elapsed time.
+
+Commands are identified on    sticky notes and the persona issuing them in a  yellow 
+
+In the following subsections we show the results of command and event linkage analysis for some selected areas of the container shipping example 
+
+#### Container shipping Commands for order placement  
 
 <img src="ship-dom-cmd1.png" width="700">
 
 The above figure can be alterred using event flow:
+
+#### Container Shipping  Event linkages for order placement 
 
 <img src="ship-dom-cmd1.2.png" width="700">
 
