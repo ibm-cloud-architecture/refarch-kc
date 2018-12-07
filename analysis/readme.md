@@ -41,7 +41,7 @@ Event storming is a rapid light weight design process enabling the team of busin
 
 Steps in an 8 hour Event Storming analysis workshop of  the Container Shipping example are illustrated and described below. 
 
-### Step 1: Domain Event Timeline
+### Event Storming Step 1: capture the Domain Event Timeline
 The initial step in Event Storming Analysis is to capture all events, things which have happened at a point in time, and organize them into a timeline. 
 * each event goes on an orange "sticky note" 
 * parallel or independent processes may be separated with blue horizontal swim lanes
@@ -132,16 +132,21 @@ For these reason we just provide event timeline digrams for these steps withou g
 <img src="ship-dom-evt7.png" width="700">
 
 
-### Step 2: Commands and event linkages  
-After capturing all events for the scenario and organizing them in a time line, the next step in event storming analysis is to identify the triggers and event linkages.  
+### Event Storming Step 2:  identify Commands and event linkages  
+After capturing all events for the scenario and organizing them in a time line, the next step in event storming analysis is to identify the triggers for events and causal linkages between events.  
 
 For each identified event in the timeline we ask "What triggered this event to occur?". Expected event trigger types are:
-* a human operator makes a decision an issues a command
+* a human operator makes a decision and issues a command
 * some external system or sensor provides a stimulus
-* it results from processing of a precursor event 
-* it is is triggered by ome determined period of elapsed time.
+* an event results from some policy  - typically automated processing of a precursor event 
+* it is is triggered by completion of some determined period of elapsed time.
 
-Commands are identified on    sticky notes and the persona issuing them in a  yellow 
+For each event trigerred by a command 
+* the triggering command is identified in a blue (sticky) note 
+   * this may become a microservice api in a later implementation 
+*  the human persona issuing the command is identified and shown in a yellow note above this 
+
+For events trigerred by processing of some precursor events the trigerring policy explaining when and why his event occurs is summarized in a lilac colored note. Specific causal event linkages are added to the event storming diagram as blue directed (arrow) linkages  
 
 In the following subsections we show the results of command and event linkage analysis for some selected areas of the container shipping example 
 
