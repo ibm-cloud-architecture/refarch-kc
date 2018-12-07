@@ -150,23 +150,34 @@ For events trigerred by processing of some precursor events the trigerring polic
 
 In the following subsections we show the results of command and event linkage analysis for some selected areas of the container shipping example 
 
-#### Container shipping Commands for order placement  
+#### Container shipping Commands for order placement and land transport setup
 
 <img src="ship-dom-cmd1.png" width="700">
 
-The above figure can be alterred using event flow:
+This diagram shows the  command , agent issuing them and policies triggering events for the order placement and land transport set up ( at manufacturer location )  sections of the event timeline generated in step 1
 
-#### Container Shipping  Event linkages for order placement 
+#### Container Shipping  Event linkages for order placement setup 
 
 <img src="ship-dom-cmd1.2.png" width="700">
 
+The above diagram adds event linkages showing the causality chaining of events 
+
+#### Container Shipping  Commands for pickup  at Manufacture 
+
 <img src="ship-dom-cmd2.png" width="700">
+
+The above diagram is generated for the cmmand and policies associated with pick up of a loaded container from the Manufacturer's location and delivery to the source port dockside 
+
+#### Container shipping Commands  in port to port (Blue water)  section of the event time line
 
 <img src="ship-dom-cmd3.png" width="700">
 
+### Step 3: Decision Data, Predictive Insights and Insight Storming 
+
 <img src="ship-dom-cmd4.png" width="700">
 
-### Step 3: Aggregates
+
+### Step 4: Aggregates
 
 <img src="ship-aggr-transport-quote.png" width="700">
 
@@ -174,6 +185,4 @@ The above figure can be alterred using event flow:
 
 <img src="ship-aggr-transp.png" width="700">
 
-### Step 4: Business context
-
-### Step 5: Data
+### Step 5: Business context
