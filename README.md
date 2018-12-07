@@ -4,7 +4,7 @@ This solution implementation illustrates the deployment of real time analytics o
 
 As part of producing the IBM event driven point of view and reference architecture, we wanted to bring together a complete scenario which would cover all aspects of developing an event driven solutions including extended connections to devices/IOT  and blockchain for trusted business trading networks. We felt that the shipping business could provide a good foundation for this and would enable us to show how to develop event driven solutions following the architecture patterns.
 
-The high level process can be represented in the following diagram, we will describe the steps in the [use case section](#use-case-description):
+The high level process can be represented in the following diagram, and is described in detailed in [this section](analysis/readme.md):
 
 ![](analysis/shipment-bp1.png)
 
@@ -18,7 +18,7 @@ In developing the scenario, it became apparent that the event driven nature of b
 
 * [Target Audiences](#target-audiences)
 * [Use case description](#use-case-description)
-* [Analysis](#analysis-outcomes)
+* [Analysis](./analysis/readme.md)
 * [Architecture](#architecture)
 * [Deployment](#deployment)
 * [Demonstration script](./docs/demo.md)
