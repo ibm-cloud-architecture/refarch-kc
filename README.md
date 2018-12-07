@@ -43,23 +43,23 @@ Leveraging the Event Driven Architecture high level architecture foundation the 
 
 ## Deployment
 
-The solution support a set of related repositories including user interface, a set of microservices to implement event sourcing, saga and SQRS patterns, and provides simulators and analytics content.
+The solution support a set of related repositories including user interface, a set of microservices to implement event sourcing, saga and SQRS patterns, and to implement simulators and analytics content.
 In each repository we are explaining the design and some code approach used.
 
 ### Related repositories
 
-* [User Interface in Angular 7 and BFF server used for demonstration](https://github.com/ibm-cloud-architecture/refarch-kc-ui)
-* [Supporting microservices and functions](https://github.com/ibm-cloud-architecture/refarch-kc-ms)
-* [Real time analytics with IBM Streams](https://github.com/ibm-cloud-architecture/refarch-kc-streams)
+* [User Interface in Angular 7 and Backend For Frontend server used for demonstration purpose](https://github.com/ibm-cloud-architecture/refarch-kc-ui)
+* All the [Supporting microservices and functions](https://github.com/ibm-cloud-architecture/refarch-kc-ms) are grouped in one repository. We may change that later if we need it.
+* [Real time analytics with IBM Streams Analytics](https://github.com/ibm-cloud-architecture/refarch-kc-streams)
 
-### Configuration
+### Configurations
 
-To make the solution running we need to have a set of components ready. We can deploy the components of the solution into two models:
+To make the solution running we need to have a set of components installed and ready. We can deploy the components of the solution into three models:
 
 * [public cloud (IBM Cloud)](docs/prepare-ibm-cloud.md)
 * pricate cloud (you are using [IBM Cloud Private for that](docs/prepare-icp.md))
+* Local to your laptop, mostly using docker image
 
-## Devops
 
 ## Contribute
 
