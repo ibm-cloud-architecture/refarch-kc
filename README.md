@@ -4,7 +4,7 @@ This solution implementation illustrates the deployment of real time analytics o
 
 As part of producing the IBM event driven point of view and reference architecture, we wanted to bring together a complete scenario which would cover all aspects of developing an event driven solutions including extended connections to devices/IOT  and blockchain for trusted business trading networks. We felt that the shipping business could provide a good foundation for this and would enable us to show how to develop event driven solutions following the architecture patterns.
 
-The high level process can be represented in the following diagram, and is described in detailed in [this section](analysis/readme.md):
+The high level process can be represented in the following diagram, and is described in detailed in [this section](analysis/readme.md#high-level-view-of-the-shipment-process-flow):
 
 ![](analysis/shipment-bp1.png)
 
@@ -17,7 +17,6 @@ In developing the scenario, it became apparent that the event driven nature of b
 ## Table Of Content
 
 * [Target Audiences](#target-audiences)
-* [Use case description](#use-case-description)
 * [Analysis](./analysis/readme.md)
 * [Architecture](#architecture)
 * [Deployment](#deployment)
@@ -30,12 +29,6 @@ You will be greatly interested by the subjects addressed in this solution if you
 * An architect, you will get a deeper understanding on how all the components work together, and how to address resiliency, high availability.
 * A developer, you will get a broader view of the solution end to end and get existing starting code, and practices you may want to reuse during your future implementation. We focus on event driven solution in hybrid cloud addressing patterns and non-functional requirements as CI/CD, Test Driven Development, ...
 * A project manager, you may understand all the artifacts to develop in an EDA solution, and we may help in the future to do project estimation.
-
-## Use Case Description
-
-## Analysis Outcomes
-
-Using the [event storming](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/methodology/readme.md) workshop the development team extracts the following analysis of the business domain.
 
 ## Architecture
 
