@@ -176,6 +176,29 @@ The above diagram is generated for the cmmand and policies associated with pick 
 
 ### Step 3: Decision Data, Predictive Insights and Insight Storming 
 
+Now the next step in standard Event Storming method at this point is to ask the question "What data would be helpful at each event trigger to assist the human user or automated event triggering policy make the best possible decision of how and when to act?"   
+
+An important motivation driving use of Event Driven Archtecture is that it simplifies design and realization of highly responsive systems which can react immediately, intelligently, i.e. in a personalized and context aware way, and optimally to new events as they occur. This immediately suggests that predictive analytics and models to generate predictive insights have an important role to play. This enables both action to anticipate future efects, and optimized reation 
+
+Predictive analytic insights are effectively probabilistic statements about which future events are likely to occur and what are the like properties of those events. They are typicaly generated using models crreated by Data scientists or using Atifical Intalligence (AI) or Machine learning (ML).  Business owners and stakeholders in the Event Driven solution we are realizing are like to have good intuitions on:
+* which probabilistic insights are likely to lead to better decision making and action when a particular event occurs
+* what sources of information are likely to help create a model to predict this insight 
+
+So in Event Storming for an EDA  system we recommend generalizing the step of identifying data (properties of past definite events) to help make good decision and replacing this with an **Insight Storming** step which will look for: 
+* data which will help make good decisions about how to act when an event occurs
+* predictive insights which could help guide our actions in response to proactively before some future evnet
+* sources of data which are likely to enable the building of reliable predictive insight models 
+
+This additional step of Insight Storming takes advantage of the fact that we already have a time line for the probelm being analysed with all events designed, commands, policies and event linkages already identified, and the business owners and stakeholders in the room whose insights for the business problem enable them to identify potentially valuable predictive insights. 
+
+Working through Insight Storming in this way leades to a business value driven specification of possible predictive analytics opportunities in the solution. Event Driven Architecture provides a nature pattern to models addressing the identified needs. Event Stream Processing analytics infrastructure is then availalble to support scoring of these models and uses of the resulting insights in decision making and action in real time. 
+
+The Insight storming approach could also be used in any Event Driven Archtiecture solution - independently of whether Event Storming is the preferred solution definition methodology. 
+
+We use the container shipping example to furthe elborate and illustrate the Insight storming approach below. 
+
+#### Container Shipping Insight Storming diagram
+
 <img src="ship-dom-cmd4.png" width="700">
 
 
