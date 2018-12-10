@@ -43,7 +43,7 @@ Leveraging the Event Driven Architecture high level architecture foundation the 
 
 ## Deployment
 
-The solution support a set of related repositories including user interface, a set of microservices to implement event sourcing, saga and SQRS patterns, and to implement simulators and analytics content.
+The solution support a set of related repositories including user interface, a set of microservices to implement event sourcing, saga and CQRS patterns, and to implement simulators and analytics content.
 In each repository we are explaining the design and some code approach used.
 
 ### Related repositories
