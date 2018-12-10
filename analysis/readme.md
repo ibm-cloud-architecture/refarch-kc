@@ -198,9 +198,11 @@ The Insight storming approach could also be used in any Event Driven Archtiectur
 We use the container shipping example to furthe elborate and illustrate the Insight storming approach below. 
 
 #### Container Shipping  Insight Storming diagram
-<img src="ship-dom-insight1.png" width="700">
 
-<img src="ship-dom-insight2.png" widt="700">
+<img src="ship-dom-insight1.PNG" width="700">
+
+#### Extra header 
+<img src="ship-dom-insight2.PNG" width="700">
 
 <img src="ship-dom-cmd4.png" width="700">
 
