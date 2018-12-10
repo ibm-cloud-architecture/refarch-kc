@@ -197,14 +197,14 @@ The Insight storming approach could also be used in any Event Driven Archtiectur
 
 We use the container shipping example to furthe elborate and illustrate the Insight storming approach below. 
 
-#### Container Shipping  Insight Storming diagram
-The shipping example includes the case where continuous sensor measurement data is available form each refrigerated conatiner while it is stacked on board the container ship and is in between ports on a blue water phase of the scenario. We show how streaming analytics can process the arriving contiuous sensor measures in real - time and to deliver additional capabilites in the EDA solution. 
+#### Container Shipping  Event Stream Processing diagram
+The shipping example includes the case where continuous sensor measurement data is available form each refrigerated conatiner while it is stacked on board the container ship and is in between ports on a blue water phase of the scenario. We show how streaming analytics can process the arriving continuous sensor measures in real - time and to deliver additional capabilites in the EDA solution. 
 
 A diagram for this flow  generated from Insight storming is shown below. 
 
 <img src="ship-dom-insight1.PNG" width="700">
 
-In this diagram is is made clear the the delivery of measured  temperature , probably GPS position, and power consumption of the refrigeration unit for that container is a recurring "continuous" event. Each cntainer might report once a minute; this would ensure than an auditable record of container temperature is available. 
+In this diagram is is made clear the the delivery of measured  temperature, probably GPS position, and power consumption of the refrigeration unit for that container is a recurring "continuous" event. Each cntainer might report once a minute; this ensures than an auditable record of container temperature is available from the event bus.
 
 We show a policy test to decide whether the temperatuse has gone outside the specified range committed to in that shipment contract for the goods in that container. If this violation has occured, this is an ( unusual ) alert event reporting that temperature has gone out of range.
 This information is available as data to sme dashboard seen by the shipping company operator who must make the business decision whether the contents of the container are spoiled. IT is likely that involvment of human operator is necessary since this is a business decision with possibly significant $ co0nsequences. It is possible that a bad sensor reading could have been received or that in this contract violation of the temperature range for a very short interval of time is permissable. 
@@ -219,11 +219,22 @@ If the business decision is made that the container's contents are spoiled:
 
 Each of the actions above will be a event captured in the event bus - trigerring further loosely coupled commands and policies to take defined actions.  
     
- #### Extra header 
+ #### Container Shipping Event Stream Processing now with Prediction and Insight added
+The previous section defined how event stream processing could detect when a shipment was spoiled and trigger recovery actions. But shipping experts in an insight storming session will note that it is much better to predict when a spoilage temperature event is **likely to occur** and to take automated immediate (Real-time) action to avert the spoilage. 
+
+The simplest form of prediction of a temperature likely to go outside of its permissible range is to have checks on whether the temperature is approaching these bounds. If the temperature must stay below T degrees, take corrective action if id reaches T - delta degrees. 
+
+More complex models for predicting temperature, could take into account diurnal variation due to external temperatures, possible predicted external temperatures forecase for the current course of the ship, and whether ther container is stacked above deck and hence particularly exposed to external temperatures. 
+
+We assume that possible corrective action includes resetting the thermostatic controls on the refrigeration unit for the cotainer, possibly resetting the controls which may have drifted from their calibrated settingsetc. 
+
+An sight storming diagram which could be generated from discussion of these potentially useful insights and predictions is shown in the diagram below. 
+
 <img src="ship-dom-insight2.PNG" width="700">
 
-<img src="ship-dom-cmd4.png" width="700">
+We have added an additional insight - namely that it may be possible to predict from the temperature observed in a container and the trend of poewer consumption ot tha refrigeration unit, that the unit is in danger of failing and should be inspected and possibly services as soon as possible. 
 
+INsights about predicted risk of temperature based spoilage, and prediction of refrigeration unit  probable need for maintenance are phonw in a new color - light blue. These are probabilistic prediction for preperties and likely occurence of futeure events. Loose coupling and reuse of these insights by allowing publish subscribe to insight topics is helpful.  Insights are conceptually different from events sine they are probabilistic predictions for the future rather thsn events which by definition have already happened at some specific point in time.  
 
 ### Step 4: Aggregates
 
