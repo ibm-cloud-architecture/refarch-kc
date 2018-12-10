@@ -209,13 +209,15 @@ In this diagram is is made clear the the delivery of measured  temperature, prob
 We show a policy test to decide whether the temperatuse has gone outside the specified range committed to in that shipment contract for the goods in that container. If this violation has occured, this is an ( unusual ) alert event reporting that temperature has gone out of range.
 This information is available as data to sme dashboard seen by the shipping company operator who must make the business decision whether the contents of the container are spoiled. IT is likely that involvment of human operator is necessary since this is a business decision with possibly significant $ co0nsequences. It is possible that a bad sensor reading could have been received or that in this contract violation of the temperature range for a very short interval of time is permissable. 
 
+Some stateful analysis of the container temperature reposrt would make the readings more reliable; perhaps there need to be more than one out of rage reading to issue the alert to avoid corrupted data false positives. 
+
 If the business decision is made that the container's contents are spoiled:
 * a command is invoked to act on this decision
 * the container refrigeration may be powered down ( possible other sensing left active)
 * A policy based on e terms and Class of Service of this particular shipment will determine
     * whether a replacement shipment will be initiated and booked 
     * usually shipping and reciving parties need to be notified
-    * the shipping company will schedule som salvage or dosposal action for the content of the container at next port of call
+    * the shipping company will schedule som salvage or disposal action for the content of the container at next port of call
 
 Each of the actions above will be a event captured in the event bus - trigerring further loosely coupled commands and policies to take defined actions.  
     
