@@ -198,10 +198,28 @@ The Insight storming approach could also be used in any Event Driven Archtiectur
 We use the container shipping example to furthe elborate and illustrate the Insight storming approach below. 
 
 #### Container Shipping  Insight Storming diagram
+The shipping example includes the case where continuous sensor measurement data is available form each refrigerated conatiner while it is stacked on board the container ship and is in between ports on a blue water phase of the scenario. We show how streaming analytics can process the arriving contiuous sensor measures in real - time and to deliver additional capabilites in the EDA solution. 
+
+A diagram for this flow  generated from Insight storming is shown below. 
 
 <img src="ship-dom-insight1.PNG" width="700">
 
-#### Extra header 
+In this diagram is is made clear the the delivery of measured  temperature , probably GPS position, and power consumption of the refrigeration unit for that container is a recurring "continuous" event. Each cntainer might report once a minute; this would ensure than an auditable record of container temperature is available. 
+
+We show a policy test to decide whether the temperatuse has gone outside the specified range committed to in that shipment contract for the goods in that container. If this violation has occured, this is an ( unusual ) alert event reporting that temperature has gone out of range.
+This information is available as data to sme dashboard seen by the shipping company operator who must make the business decision whether the contents of the container are spoiled. IT is likely that involvment of human operator is necessary since this is a business decision with possibly significant $ co0nsequences. It is possible that a bad sensor reading could have been received or that in this contract violation of the temperature range for a very short interval of time is permissable. 
+
+If the business decision is made that the container's contents are spoiled:
+* a command is invoked to act on this decision
+* the container refrigeration may be powered down ( possible other sensing left active)
+* A policy based on e terms and Class of Service of this particular shipment will determine
+    * whether a replacement shipment will be initiated and booked 
+    * usually shipping and reciving parties need to be notified
+    * the shipping company will schedule som salvage or dosposal action for the content of the container at next port of call
+
+Each of the actions above will be a event captured in the event bus - trigerring further loosely coupled commands and policies to take defined actions.  
+    
+ #### Extra header 
 <img src="ship-dom-insight2.PNG" width="700">
 
 <img src="ship-dom-cmd4.png" width="700">
