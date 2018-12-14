@@ -52,17 +52,44 @@ In each repository we are explaining the design and some code approach used.
 * All the [Supporting microservices and functions](https://github.com/ibm-cloud-architecture/refarch-kc-ms) are grouped in one repository. We may change that later if we need it.
 * [Real time analytics with IBM Streams Analytics](https://github.com/ibm-cloud-architecture/refarch-kc-streams)
 
+The command `./scripts/clone.sh` clones the dependant repositories. 
+
 ### Configurations
 
-To make the solution running we need to have a set of components installed and ready. We can deploy the components of the solution into three models:
+To make the solution running we need to have a set of components installed and ready. We can deploy the components of the solution into three environments:
 
-* [public cloud (IBM Cloud)](docs/prepare-ibm-cloud.md)
-* pricate cloud (you are using [IBM Cloud Private for that](docs/prepare-icp.md))
-* Local to your laptop, mostly using docker image
+* **Public cloud (IBM Cloud)**, [see the article](docs/prepare-ibm-cloud.md) for details.
+* **Private cloud** (we are using IBM Cloud Private) and [see this article](docs/prepare-icp.md) for details.
+* Local to your laptop, mostly using docker images and docker compose. See next section.
 
+### Run locally
+
+To run locally you can use a kubernetes like Minikube or Docker Edge, or we propose to use docker-compose for local deployment, and here are the instructions to launch backbone and solution components:
+
+1. Get [docker and install](https://docs.docker.com/install/) it (if not done yet)
+1. Get [docker compose](https://docs.docker.com/compose/install/)
+1. Use our compose file to start the backend components:   
+  ```shell
+  $ cd docker
+  $ docker-compose -f backbone-compose.yml up
+  ```
+
+  Once the backend is started, you need to configure the Kafka topics. The local script: `scripts/createLocalTopics.sh` will create the necessary Kafka Topics so the solution will work.
+
+4. Use our second compose file to start the web server and the other microservices.
+ ```
+  $ docker-compose -f kc-solution-compose.yml up
+ ```
 
 ## Contribute
 
 As this implementation solution is part of the Event Driven architeture reference architecture, the [contribution policies](https://github.com/ibm-cloud-architecture/refarch-eda#contribute) apply the same way here.
+
+**Contributors:**
+* [Jerome Boyer](https://www.linkedin.com/in/jeromeboyer/)
+* [Martin Siegenthaler](https://www.linkedin.com/in/martin-siegenthaler-7654184/)
+* [David Engebretsen](https://www.linkedin.com/in/david-engebretsen/)
+* [Francis Parr](https://www.linkedin.com/in/francis-parr-26041924)
+* [Hemankita Perabathini](https://www.linkedin.com/in/hemankita-perabathini/)
 
 Please [contact me](mailto:boyerje@us.ibm.com) for any questions.

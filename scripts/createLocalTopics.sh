@@ -1,43 +1,25 @@
-echo "Create topics for the KC solutions on your local kafka"
-ns="greencompute"
-
-echo "Kafka pod name is..."
-kpof=$(kubectl get pods -n greencompute| grep kafka | awk '{print $1}')
-if [ -z $kpof ]
+#!/bin/bash
+kafka=$(docker ps -a | grep kafka | awk '{print $NF}')
+if [ -z "$kafka" ]
 then
-  echo "Kafka not installed locally on your kubernetes cluster"
-else 
-  echo $kpof
+  echo "Kafka docker is not running"
 fi
+echo $kafka
+# get current topics
+docker exec  -ti $kafka /bin/bash -c "kafka-topics --list --zookeeper zookeeper1:2181" > topics
+createTopic(){
+    bc=$(tail -n+2 $2 | grep  $1)
+    echo $bc
+    if [ -z "$bc" ]
+    then
+        echo "create " $1
+        docker exec -ti docker_kafka1_1  /bin/bash -c "kafka-topics --create  --zookeeper zookeeper1:2181 --replication-factor 1 --partitions 1 --topic $1"
+    else 
+        echo $1 " topic already created"
+    fi
+}
 
-echo "Get topic list"
-topics=$(kubectl exec  -ti $kpof -n $ns  -- bash -c "/opt/kafka/bin/kafka-topics.sh --list --zookeeper gc-client-zookeeper-svc.greencompute.svc.cluster.local:2181")
+createTopic "bluewaterContainer" topics
+createTopic "bluewaterShip" topics
+createTopic "bluewaterProblem" topics
 
-bc=$(echo $topics | grep  "bluewaterContainer")
-echo $bc
-if [ -z $bc ]
-then
-  echo "create bluewaterContainer"
-else 
-  echo "bluewaterContainer topic already created"
-fi
-
-bc=$(echo $topics | grep  "bluewaterShip")
-echo $bc
-if [ -z $bc ]
-then
-  echo "create bluewaterShip"
-  kubectl exec  -ti $kpof -n $ns   -- bash -c "/opt/kafka/bin/kafka-topics.sh --create  --zookeeper gc-client-zookeeper-svc.greencompute.svc.cluster.local:2181 --replication-factor 1 --partitions 1 --topic bluewaterShip"
-else 
-  echo "bluewaterShip topic already created"
-fi
-
-bc=$(echo $topics | grep  "bluewaterProblem")
-echo $bc
-if [ -z $bc ]
-then
-  echo "create bluewaterProblem"
-  kubectl exec  -ti $kpof -n $ns   -- bash -c "/opt/kafka/bin/kafka-topics.sh --create  --zookeeper gc-client-zookeeper-svc.greencompute.svc.cluster.local:2181 --replication-factor 1 --partitions 1 --topic bluewaterProblem"
-else 
-  echo "bluewaterProblem topic already created"
-fi
