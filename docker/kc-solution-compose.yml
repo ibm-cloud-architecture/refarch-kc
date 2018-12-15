@@ -1,5 +1,26 @@
 version: '3'
 services:
+    simulator:
+        image: ibmcase/fleetms:latest
+        hostname: fleetms
+        ports:
+            - "9081:9080"
+            - "9444:9443"
+        environment:
+            KAFKA_ENV: LOCAL
+            KAFKA_BROKERS: localhost:9092
+        depends_on:
+            - kafka1
+    web:
+        image: ibmcase/kc-ui:latest
+        hostname: kcui
+        ports:
+            - "3000:3000"
+        environment:
+            KAFKA_BROKERS: localhost:9092
+            FLEET_MS_URL: http://localhost:9081/fleetms
+        depends_on:
+            - simulator
     zookeeper1:
         image: zookeeper:latest
         hostname: zookeeper1

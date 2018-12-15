@@ -1,5 +1,5 @@
 #!/bin/bash
-kafka=$(docker ps -a | grep kafka | awk '{print $NF}')
+kafka=$(docker ps -a | grep docker_kafka | awk '{print $NF}')
 if [ -z "$kafka" ]
 then
   echo "Kafka docker is not running"
