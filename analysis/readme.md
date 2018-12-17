@@ -195,7 +195,7 @@ The shipping example includes the case where continuous sensor measurement data 
 
 A diagram for this flow  generated from Insight storming is shown below. 
 
-<img src="ship-dom-insight1.PNG" width="700">
+<img src="ship-dom-insight1.png" width="700">
 
 In this diagram it is made clear the the delivery of measured  temperature, probably GPS position, and power consumption of the refrigeration unit for that container is a recurring "continuous" event. Each container might report once a minute; this ensures that an auditable record of container temperature is available from the event bus.
 
@@ -225,7 +225,7 @@ We assume that possible corrective action includes resetting the thermostatic co
 
 An sight storming diagram which could be generated from discussion of these potentially useful insights and predictions is shown in the diagram below. 
 
-<img src="ship-dom-insight2.PNG" width="700">
+<img src="ship-dom-insight2.png" width="700">
 
 We have added an additional insight - namely that it may be possible to predict from the temperature observed in a container and the trend of poewer consumption ot tha refrigeration unit, that the unit is in danger of failing and should be inspected and possibly services as soon as possible. 
 
