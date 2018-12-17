@@ -175,7 +175,7 @@ The above diagram is generated for the cmmand and policies associated with pick 
 
 ### Step 3: Decision Data, Predictive Insights and Insight Storming 
 
-Insight storming  - extending the EventStorming workshop to identify and capture insightful predictive analytics - was introduced and described in  [Workshop execution Step 8 : Insight] (https://github.com/ibm-cloud-architecture/refarch-eda/tree/master/docs/methodology/readme.md). 
+Insight storming  - extending the EventStorming workshop to identify and capture insightful predictive analytics - was introduced and described in [Workshop execution Step 8 - Insight](https://github.com/ibm-cloud-architecture/refarch-eda/tree/master/docs/methodology/readme.md) . 
 
 Predictive analytic insights are effectively probabilistic statements about which future events are likely to occur and what are the like properties of those events. They are typicaly generated using models crreated by Data scientists or using Atifical Intalligence (AI) or Machine learning (ML).  Business owners and stakeholders in the Event Driven solution we are realizing are like to have good intuitions on:
 * which probabilistic insights are likely to lead to better decision making and action when a particular event occurs
