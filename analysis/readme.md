@@ -223,17 +223,21 @@ More complex models for predicting temperature, could take into account diurnal 
 
 We assume that possible corrective action includes resetting the thermostatic controls on the refrigeration unit for the cotainer, possibly resetting the controls which may have drifted from their calibrated settingsetc. 
 
-An sight storming diagram which could be generated from discussion of these potentially useful insights and predictions is shown in the diagram below. 
+An insight storming diagram which could be generated from discussion of these potentially useful insights and predictions is shown in the diagram below. 
 
 <img src="ship-dom-insight2.png" width="700">
 
 We have added an additional insight - namely that it may be possible to predict from the temperature observed in a container and the trend of poewer consumption ot tha refrigeration unit, that the unit is in danger of failing and should be inspected and possibly services as soon as possible. 
 
-Insights about predicted risk of temperature based spoilage, and prediction of refrigeration unit  probable need for maintenance are phonw in a new color - light blue. These are probabilistic prediction for preperties and likely occurence of futeure events. Loose coupling and reuse of these insights by allowing publish subscribe to insight topics is helpful.  Insights are conceptually different from events sine they are probabilistic predictions for the future rather thsn events which by definition have already happened at some specific point in time.  
+Insights about predicted risk of temperature based spoilage, and prediction of refrigeration unit  probable need for maintenance are phonw in a new color - light blue. These are probabilistic prediction for preperties and likely occurence of futeure events. Loose coupling and reuse of these insights by allowing publish subscribe to insight topics is helpful.  Insights are conceptually different from events sine they are probabilistic predictions for the future rather thsn events which by definition have already happened at some specific point in time. 
+
+#### Event Stream processing for insights relating to the ship 
+
+<img scr="ship-dom-insight3.png" width="700">
 
 ### Step 4: Aggregates
 
-<img src="ship-aggr-transport-quote.png" width="700">
+<img src="ship-aggr-transport-quote.png" width="700"> 
 
 <img src="ship-aggr-shipment.png" width="700">
 
