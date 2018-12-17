@@ -233,7 +233,7 @@ Insights about predicted risk of temperature based spoilage, and prediction of r
 
 #### Event Stream processing for insights relating to the ship 
 
-<img scr="ship-dom-insight3.png" width="700">
+<img src="ship-dom-insight3.png" width="700">
 
 ### Step 4: Aggregates
 
