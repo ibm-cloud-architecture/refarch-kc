@@ -1,7 +1,6 @@
 # Container Shipment Analysis
 This section defines the overall steps in the methodology to analyse a specific global shipping example and derive the Event Driven Solution to address key ( MVP) components occurring in it. We combined some elements of the [Design Thinking](https://www.ibm.com/cloud/garage/content/think/practice_design_thinking/) methodology with the [event storming](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/methodology/readme.md) and [domain driven design](https://www.ibm.com/cloud/garage/content/code/domain-driven-design/) to extract the following analysis of the business domain.
 
-
 ## Output from Domain Driven Design workshop
 From the design thinking workshop we extracted the following artifacts:
 * a persona list
@@ -176,9 +175,7 @@ The above diagram is generated for the cmmand and policies associated with pick 
 
 ### Step 3: Decision Data, Predictive Insights and Insight Storming 
 
-Now the next step in standard Event Storming method at this point is to ask the question "What data would be helpful at each event trigger to assist the human user or automated event triggering policy make the best possible decision of how and when to act?"   
-
-An important motivation driving use of Event Driven Archtecture is that it simplifies design and realization of highly responsive systems which can react immediately, intelligently, i.e. in a personalized and context aware way, and optimally to new events as they occur. This immediately suggests that predictive analytics and models to generate predictive insights have an important role to play. This enables both action to anticipate future efects, and optimized reation 
+Insight storming  - extending the EventStorming workshop to identify and capture insightful predictive analytics - was introduced and described in [Workshop execution Step 8 - Insight](https://github.com/ibm-cloud-architecture/refarch-eda/tree/master/docs/methodology/readme.md) . 
 
 Predictive analytic insights are effectively probabilistic statements about which future events are likely to occur and what are the like properties of those events. They are typicaly generated using models crreated by Data scientists or using Atifical Intalligence (AI) or Machine learning (ML).  Business owners and stakeholders in the Event Driven solution we are realizing are like to have good intuitions on:
 * which probabilistic insights are likely to lead to better decision making and action when a particular event occurs
@@ -191,23 +188,19 @@ So in Event Storming for an EDA  system we recommend generalizing the step of id
 
 This additional step of Insight Storming takes advantage of the fact that we already have a time line for the probelm being analysed with all events designed, commands, policies and event linkages already identified, and the business owners and stakeholders in the room whose insights for the business problem enable them to identify potentially valuable predictive insights. 
 
-Working through Insight Storming in this way leades to a business value driven specification of possible predictive analytics opportunities in the solution. Event Driven Architecture provides a nature pattern to models addressing the identified needs. Event Stream Processing analytics infrastructure is then availalble to support scoring of these models and uses of the resulting insights in decision making and action in real time. 
+Working through Insight Storming in this way leads to a business value driven specification of possible predictive analytics opportunities in the solution. Event Driven Architecture provides a nature pattern to models addressing the identified needs. Event Stream Processing analytics infrastructure is then availalable to support scoring of these models and uses of the resulting insights in decision making and action in real time. 
 
-The Insight storming approach could also be used in any Event Driven Archtiecture solution - independently of whether Event Storming is the preferred solution definition methodology. 
-
-We use the container shipping example to furthe elborate and illustrate the Insight storming approach below. 
-
-#### Container Shipping  Event Stream Processing diagram
+#### Container Shipping  Event Stream Processing diagram - including event stream processing flows
 The shipping example includes the case where continuous sensor measurement data is available form each refrigerated conatiner while it is stacked on board the container ship and is in between ports on a blue water phase of the scenario. We show how streaming analytics can process the arriving continuous sensor measures in real - time and to deliver additional capabilites in the EDA solution. 
 
 A diagram for this flow  generated from Insight storming is shown below. 
 
-<img src="ship-dom-insight1.PNG" width="700">
+<img src="ship-dom-insight1.png" width="700">
 
-In this diagram is is made clear the the delivery of measured  temperature, probably GPS position, and power consumption of the refrigeration unit for that container is a recurring "continuous" event. Each cntainer might report once a minute; this ensures than an auditable record of container temperature is available from the event bus.
+In this diagram it is made clear the the delivery of measured  temperature, probably GPS position, and power consumption of the refrigeration unit for that container is a recurring "continuous" event. Each container might report once a minute; this ensures that an auditable record of container temperature is available from the event bus.
 
-We show a policy test to decide whether the temperatuse has gone outside the specified range committed to in that shipment contract for the goods in that container. If this violation has occured, this is an ( unusual ) alert event reporting that temperature has gone out of range.
-This information is available as data to sme dashboard seen by the shipping company operator who must make the business decision whether the contents of the container are spoiled. IT is likely that involvment of human operator is necessary since this is a business decision with possibly significant $ co0nsequences. It is possible that a bad sensor reading could have been received or that in this contract violation of the temperature range for a very short interval of time is permissable. 
+We show a policy test to decide whether the temperature has gone outside the specified range committed to in that shipment contract for the goods in that container. If this violation has occured, this is an ( unusual ) alert event reporting that temperature has gone out of range.
+This information is available as data to sme dashboard seen by the shipping company operator who must make the business decision whether the contents of the container aree spoiled. It is likely that involvement of human operator is necessary since this is a business decision with possibly significant $ co0nsequences. It is possible that a bad sensor reading could have been received or that in this contract violation of the temperature range for a very short interval of time is permissable. 
 
 Some stateful analysis of the container temperature reposrt would make the readings more reliable; perhaps there need to be more than one out of rage reading to issue the alert to avoid corrupted data false positives. 
 
@@ -221,7 +214,7 @@ If the business decision is made that the container's contents are spoiled:
 
 Each of the actions above will be a event captured in the event bus - trigerring further loosely coupled commands and policies to take defined actions.  
     
- #### Container Shipping Event Stream Processing now with Prediction and Insight added
+ #### Container Shipping Event Stream Processing with predictive Insight flows included
 The previous section defined how event stream processing could detect when a shipment was spoiled and trigger recovery actions. But shipping experts in an insight storming session will note that it is much better to predict when a spoilage temperature event is **likely to occur** and to take automated immediate (Real-time) action to avert the spoilage. 
 
 The simplest form of prediction of a temperature likely to go outside of its permissible range is to have checks on whether the temperature is approaching these bounds. If the temperature must stay below T degrees, take corrective action if id reaches T - delta degrees. 
@@ -230,17 +223,21 @@ More complex models for predicting temperature, could take into account diurnal 
 
 We assume that possible corrective action includes resetting the thermostatic controls on the refrigeration unit for the cotainer, possibly resetting the controls which may have drifted from their calibrated settingsetc. 
 
-An sight storming diagram which could be generated from discussion of these potentially useful insights and predictions is shown in the diagram below. 
+An insight storming diagram which could be generated from discussion of these potentially useful insights and predictions is shown in the diagram below. 
 
-<img src="ship-dom-insight2.PNG" width="700">
+<img src="ship-dom-insight2.png" width="700">
 
 We have added an additional insight - namely that it may be possible to predict from the temperature observed in a container and the trend of poewer consumption ot tha refrigeration unit, that the unit is in danger of failing and should be inspected and possibly services as soon as possible. 
 
-INsights about predicted risk of temperature based spoilage, and prediction of refrigeration unit  probable need for maintenance are phonw in a new color - light blue. These are probabilistic prediction for preperties and likely occurence of futeure events. Loose coupling and reuse of these insights by allowing publish subscribe to insight topics is helpful.  Insights are conceptually different from events sine they are probabilistic predictions for the future rather thsn events which by definition have already happened at some specific point in time.  
+Insights about predicted risk of temperature based spoilage, and prediction of refrigeration unit  probable need for maintenance are phonw in a new color - light blue. These are probabilistic prediction for preperties and likely occurence of futeure events. Loose coupling and reuse of these insights by allowing publish subscribe to insight topics is helpful.  Insights are conceptually different from events sine they are probabilistic predictions for the future rather thsn events which by definition have already happened at some specific point in time. 
+
+#### Event Stream processing for insights relating to the ship 
+
+<img src="ship-dom-insight3.png" width="700">
 
 ### Step 4: Aggregates
 
-<img src="ship-aggr-transport-quote.png" width="700">
+<img src="ship-aggr-transport-quote.png" width="700"> 
 
 <img src="ship-aggr-shipment.png" width="700">
 
