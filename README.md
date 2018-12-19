@@ -64,26 +64,21 @@ To make the solution running we need to have a set of components installed and r
 
 ### Run locally
 
-To run locally you can use a kubernetes like Minikube or Docker Edge, or we propose to use docker-compose for local deployment, and here are the instructions to launch backbone and solution components:
+To run locally you can use a kubernetes like Minikube or Docker Edge, or docker-compose. We propose to use docker-compose for local deployment, and here are the instructions to launch backbone and solution components:
 
 1. Get [docker and install](https://docs.docker.com/install/) it (if not done yet)
 1. Get [docker compose](https://docs.docker.com/compose/install/)
-1. Use our compose file to start the backend components:   
-  ```shell
-  $ cd docker
-  $ docker-compose -f backbone-compose.yml up
-  ```
+1. In one Terminal window use our compose file to start the backend components: `$ cd docker &&  docker-compose -f backbone-compose.yml up`.    
+Once the backend is started, you need to configure the Kafka topics. The local script: `scripts/createLocalTopics.sh` will create the necessary Kafka Topics so the solution will work.
 
-  Once the backend is started, you need to configure the Kafka topics. The local script: `scripts/createLocalTopics.sh` will create the necessary Kafka Topics so the solution will work.
+1. In a second terminal use our second compose file to start the web server and the other microservices: `$ docker-compose -f kc-solution-compose.yml up`
 
-4. Use our second compose file to start the web server and the other microservices.
- ```
-  $ docker-compose -f kc-solution-compose.yml up
- ```
+ 1. Verify the different components work fine. You can use the different test scripts you can find in each of the microservices, simulators of the solution, or go to the [user interface URL](http://localhost:3000) the Fleet Simulator [API URL](http://localhost:9081/api/explorer/) and execute the [demo script](./docs/demo.md).
+
 
 ## Contribute
 
-As this implementation solution is part of the Event Driven architeture reference architecture, the [contribution policies](https://github.com/ibm-cloud-architecture/refarch-eda#contribute) apply the same way here.
+As this implementation solution is part of the Event Driven architeture reference architecture, the [contribution policies](./CONTRIBUTING.md) apply the same way here.
 
 **Contributors:**
 * [Jerome Boyer](https://www.linkedin.com/in/jeromeboyer/)
