@@ -42,7 +42,9 @@ Event storming is a rapid light weight design process enabling the team of busin
 
 Steps in an 8 hour Event Storming analysis workshop of  the Container Shipping example are illustrated and described below. 
 
-### Event Storming Step 1: capture the Domain Event Timeline
+### Event Storming the container Shipment example part1: capture the Domain Event Timeline, swwim lanes and key phases
+(This section of the example description covers activities identified as EventStorming Steps 1,2,3 in the generic description of the [Eventstorming Method](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/methodology/readme.md) . ) 
+
 The initial step in Event Storming Analysis is to capture all events, things which have happened at a point in time, and organize them into a timeline. 
 * each event goes on an orange "sticky note" 
 * parallel or independent processes may be separated with blue horizontal swim lanes
@@ -133,7 +135,9 @@ For these reason we just provide event timeline digrams for these steps withou g
 <img src="ship-dom-evt7.png" width="700">
 
 
-### Event Storming Step 2:  identify Commands and event linkages  
+### Event Storming the Container Shipment Example part 2:  identify Commands and event linkages  
+(This section of the example description covers activities identified as EventStorming Steps 4,5) in the generic description of the [Eventstorming Method](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/methodology/readme.md) . )
+
 After capturing all events for the scenario and organizing them in a time line, the next step in event storming analysis is to identify the triggers for events and causal linkages between events.  
 
 For each identified event in the timeline we ask "What triggered this event to occur?". Expected event trigger types are:
@@ -163,7 +167,7 @@ This diagram shows the  command , agent issuing them and policies triggering eve
 
 The above diagram adds event linkages showing the causality chaining of events 
 
-#### Container Shipping  Commands for pickup  at Manufacture 
+#### Container Shipping  Commands for pickup  at Manufacturer
 
 <img src="ship-dom-cmd2.png" width="700">
 
@@ -173,7 +177,9 @@ The above diagram is generated for the cmmand and policies associated with pick 
 
 <img src="ship-dom-cmd3.png" width="700">
 
-### Step 3: Decision Data, Predictive Insights and Insight Storming 
+### Event Storming the Container Shipment examples part 3: Decision Data, Predictive Insights and Insight Storming 
+(This section of the example description covers activities identified as EventStorming Step 8) in the generic description of the [Eventstorming Method](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/methodology/readme.md) . )
+
 
 Insight storming  - extending the EventStorming workshop to identify and capture insightful predictive analytics - was introduced and described in [Workshop execution Step 8 - Insight](https://github.com/ibm-cloud-architecture/refarch-eda/tree/master/docs/methodology/readme.md) . 
 
@@ -235,7 +241,8 @@ Insights about predicted risk of temperature based spoilage, and prediction of r
 
 <img src="ship-dom-insight3.png" width="700">
 
-### Step 4: Aggregates
+
+### Event Storming the Container Shipment example Step 6: Aggregates
 
 <img src="ship-aggr-transport-quote.png" width="700"> 
 
@@ -243,4 +250,4 @@ Insights about predicted risk of temperature based spoilage, and prediction of r
 
 <img src="ship-aggr-transp.png" width="700">
 
-### Step 5: Business context
+### Event storming the Container shipment example Step 7: Business context
