@@ -51,6 +51,7 @@ In each repository we are explaining the design and some code approach used.
 * [User Interface in Angular 7 and Backend For Frontend server used for demonstration purpose](https://github.com/ibm-cloud-architecture/refarch-kc-ui)
 * All the [Supporting microservices and functions](https://github.com/ibm-cloud-architecture/refarch-kc-ms) are grouped in one repository. We may change that later if we need it.
 * [Real time analytics with IBM Streams Analytics](https://github.com/ibm-cloud-architecture/refarch-kc-streams)
+* [Order management microservice using CQRS and event sourcing pattern](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms)
 
 The command `./scripts/clone.sh` clones the dependant repositories. 
 
@@ -60,7 +61,7 @@ To make the solution running we need to have a set of components installed and r
 
 * **Public cloud (IBM Cloud)**, [see the article](docs/prepare-ibm-cloud.md) for details.
 * **Private cloud** (we are using IBM Cloud Private) and [see this article](docs/prepare-icp.md) for details.
-* Local to your laptop, mostly using docker images and docker compose. See next section.
+* Local to your laptop, mostly using docker images and docker compose. See next section for explanations.
 
 ### Run locally
 
@@ -73,7 +74,7 @@ Once the backend is started, you need to configure the Kafka topics. The local s
 
 1. In a second terminal use our second compose file to start the web server and the other microservices: `$ docker-compose -f kc-solution-compose.yml up`
 
- 1. Verify the different components work fine. You can use the different test scripts you can find in each of the microservices, simulators of the solution, or go to the [user interface URL](http://localhost:3000) the Fleet Simulator [API URL](http://localhost:9081/api/explorer/) and execute the [demo script](./docs/demo.md).
+1. Verify the different components work fine. You can use the different test scripts you can find in each of the microservices, simulators of the solution, or go to the [user interface URL](http://localhost:3000) the Fleet Simulator [API URL](http://localhost:9081/api/explorer/) and execute the [demo script](./docs/demo.md).
 
 
 ## Contribute
