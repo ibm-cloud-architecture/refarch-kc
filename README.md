@@ -62,6 +62,17 @@ As presented in [this note](https://github.com/ibm-cloud-architecture/refarch-ed
     * Events:
     * Operations:
 
+### Microservices for shipment order handling - additional comments
+In this section we provided additional commentary and explanation on the organizaion of the shipment handling processing into a set of EDA coupled microservices. This will include
+* some furher explanation of the concept behind each of the proposed microservices
+* a figure illustrating this structure 
+* explanation how this uses and benefits from key EDA patterns - event sourcing and Command Query Responsibility Separation ( CQRS).
+
+** Fleets/Ships Microservice - concept **
+This service keeps track of each of the container ships available for transporting containers
+
+#### Figure illustrating organization of shipment handling as microservices  
+
 ![](microsvc-hld.png)
 
 ## Architecture
