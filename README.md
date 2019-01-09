@@ -41,19 +41,19 @@ As presented in [this note](https://github.com/ibm-cloud-architecture/refarch-ed
         * ship unique identifier, and a container capacity (represented as a matrix to make it simple), current position, status, itinerary identifier. 
     * Events: Ship commission , ship position, load event, unload event, start itinerary X
     * Operations: getFleets, get ships in a fleet, get ship by ID. CRUD Fleet and Ship level
-* Itinerary Service: define a set of routes supported by the shipping company
-    * Information model: itineraryID, shipID, src_Port, planned_src_port_dates, dest_port, planned_dest_port_dates, free_space_this_leg
+* Voyages Service: define a set of voyage schedules supported by the shipping company
+    * Information model: voyageID, shipID, src_Port, planned_src_port_dates, dest_port, planned_dest_port_dates, free_space_this_leg
     * Events: add itinerary route
     * Operations: CRUD on itinerary routes
 * Order Service: manage the shipment order
     * Information model: Booking id , customer, pickup loc, pickup after date, deliver location, expected deliver date, order status, assigned container  
-    * Events: Place order, pickup container, load container,
+    * Events: Place order, order assigned to voyage( sets VoyageID, ship ID ), container assigned to order ( Sets container ID), Landorder, Transport associated with pickup container, Order status event, Order billing/accounting event
     * Operations: CRUD on order, update order status
 * Container Service:
     * Information model: Container Id, Container temperature, container position, container condition ( maintenance goods), current associated order
     * Events: 
     * Operations: CRUD on container
-* Custom Service
+* Customs and Export Service
     * Information model:
     * Events:
     * Operations: process an order for custom validation
