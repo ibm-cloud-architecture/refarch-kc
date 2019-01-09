@@ -62,14 +62,26 @@ As presented in [this note](https://github.com/ibm-cloud-architecture/refarch-ed
     * Events:
     * Operations:
 
-### Microservices for shipment order handling - additional comments
+### Microservices for shipment order handling - additional comments and motivation
 In this section we provided additional commentary and explanation on the organizaion of the shipment handling processing into a set of EDA coupled microservices. This will include
 * some furher explanation of the concept behind each of the proposed microservices
 * a figure illustrating this structure 
 * explanation how this uses and benefits from key EDA patterns - event sourcing and Command Query Responsibility Separation ( CQRS).
 
-** Fleets/Ships Microservice - concept **
-This service keeps track of each of the container ships available for transporting containers
+#### Fleets/Ships Microservice - concept 
+This service keeps track of each of the container ships available for transporting containers. Each ship has a unique shipID. the information about each ship is kept in a keystore keyed by shipID. 
+
+The ships may be organized into Fleets but for the main purposes of discussing how shipment orders are managed and tracked for the "simplified" container example we are analysing, it is probably sufficient to think in terms of a single fleet of container ships. 
+
+A ship record is created when a new ship is commissioned, joins the fleet and becomes available to carry containers as part of he shipping service. We can think to this as being triggered by some "New ship event" on the event bus. 
+
+Each ship record will carry attributes of the ship including its full name and registry. A very important attribute from the point of view of processing shipment orders and quote requests is the carrying capacity of the ship. How many containers can it carry on any voyage. We can book shipments only if there will be space available to carry them on the ship. 
+
+In addition to its ShipID Key and attributes including capacity ( number of containers it is designed to carry ) the rest of the ship record will consist of a list of all the ( recent) "ship events" recording things which have happened to that ship.  This list will include: 
+* GPS lat/log position reports of the position of the ship a different points in time 
+* events of the ship starting or completing a specific scheduled "voyage"  - sailing from source port to destination port as scheduled for this ship
+* clearances for the ship to enter or leave territorial waters of a nation or port 
+* arrival at a port dock and start or completion of a  ship load / load operation at the dock 
 
 #### Figure illustrating organization of shipment handling as microservices  
 
