@@ -17,10 +17,11 @@ In developing the scenario, it became apparent that the event driven nature of b
 ## Table Of Content
 
 * [Target Audiences](#target-audiences)
-* [Analysis](./analysis/readme.md)
-* [Architecture](#architecture)
-* [Deployment](#deployment)
-* [Demonstration script](./docs/demo.md)
+* [Analysis](./analysis/readme.md) as a detail explanation of the event storming method applyied to the container shipping process.
+* [Define microservice scopes](#define-microservice-scopes)
+* [Architecture](#architecture) using the different EDA patterns.
+* [Deployment](#deployment) to hybrid cloud
+* [Demonstration script](./docs/demo.md) to present the application end to end.
 
 ## Target Audiences
 
@@ -29,6 +30,37 @@ You will be greatly interested by the subjects addressed in this solution if you
 * An architect, you will get a deeper understanding on how all the components work together, and how to address resiliency, high availability.
 * A developer, you will get a broader view of the solution end to end and get existing starting code, and practices you may want to reuse during your future implementation. We focus on event driven solution in hybrid cloud addressing patterns and non-functional requirements as CI/CD, Test Driven Development, ...
 * A project manager, you may understand all the artifacts to develop in an EDA solution, and we may help in the future to do project estimation.
+
+## Define microservice scopes
+
+As presented in [this note](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/README.md#understanding-event-driven-microservice-patterns), we are using a set of microservice design patterns to develop this solution. One of them is the sub domain decomposition. From the analysis output we have the aggregates, actors and data that is helping us to extract a set of subdomains:
+
+* Fleet Service: responsible to group the ship, container carriers, in fleet, per major ocean. 
+    * Information model: 
+        * Fleet has multiple ships,
+        * ship unique identifier, and a container capacity (represented as a matrix to make it simple), current position, status, itinerary identifier. 
+    * Events: Ship commission , ship position, load event, unload event, start itinerary X
+    * Operations: getFleets, get ships in a fleet, get ship by ID. CRUD Fleet and Ship level
+* Itinerary Service: define a set of routes supported by the shipping company
+    * Information model: itineraryID, shipID, src_Port, planned_src_port_dates, dest_port, planned_dest_port_dates, free_space_this_leg
+    * Events: add itinerary route
+    * Operations: CRUD on itinerary routes
+* Order Service: manage the shipment order
+    * Information model: Booking id , customer, pickup loc, pickup after date, deliver location, expected deliver date, order status, assigned container  
+    * Events: Place order, pickup container, load container,
+    * Operations: CRUD on order, update order status
+* Container Service:
+    * Information model: Container Id, Container temperature, container position, container condition ( maintenance goods), current associated order
+    * Events: 
+    * Operations: CRUD on container
+* Custom Service
+    * Information model:
+    * Events:
+    * Operations: process an order for custom validation
+* Land Transport Service:
+    * Information model: LandTID, pickup place pickup time, drop place. Drop time, provider, price , container id , LT order status
+    * Events:
+    * Operations:
 
 ## Architecture
 
@@ -49,7 +81,7 @@ In each repository we are explaining the design and some code approach used.
 ### Related repositories
 
 * [User Interface in Angular 7 and Backend For Frontend server used for demonstration purpose](https://github.com/ibm-cloud-architecture/refarch-kc-ui)
-* All the [Supporting microservices and functions](https://github.com/ibm-cloud-architecture/refarch-kc-ms) are grouped in one repository. We may change that later if we need it.
+* Most of the simples [supporting microservices and functions](https://github.com/ibm-cloud-architecture/refarch-kc-ms) of this solution are grouped in one repository. We may change that later if we need it.
 * [Real time analytics with IBM Streams Analytics](https://github.com/ibm-cloud-architecture/refarch-kc-streams)
 * [Order management microservice using CQRS and event sourcing pattern](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms)
 
