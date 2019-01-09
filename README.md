@@ -33,13 +33,17 @@ You will be greatly interested by the subjects addressed in this solution if you
 
 ## Define microservice scopes
 
-As presented in [this note](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/README.md#understanding-event-driven-microservice-patterns), we are using a set of microservice design patterns to develop this solution. One of them is the sub domain decomposition. From the analysis output we have the aggregates, actors and data that is helping us to extract a set of subdomains:
+As presented in [this note](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/README.md#understanding-event-driven-microservice-patterns), we are using a set of microservice design patterns to develop this solution. One of them is the sub domain decomposition. From the analysis output we have the aggregates, actors and data that are helping us to extract a set of subdomains:
+
+#### Figure illustrating organization of shipment handling as microservices  
+
+![](./docs/microsvc-hld.png)
 
 * Fleet Service: responsible to group the ship, container carriers, in fleet, per major ocean. 
     * Information model: 
         * Fleet has multiple ships,
-        * ship unique identifier, and a container capacity (represented as a matrix to make it simple), current position, status, itinerary identifier. 
-    * Events: Ship commission , ship position, load event, unload event, start itinerary X
+        * Ship has unique identifier (we will use its name), and a container capacity (represented as a matrix to make it simple), current position, status, voyage identifier for the voyage it is doing. 
+    * Events: Ship commission, ship position, load event, unload event, start itinerary X
     * Operations: getFleets, get ships in a fleet, get ship by ID. CRUD Fleet and Ship level
 * Voyages Service: define a set of voyage schedules supported by the shipping company
     * Information model: voyageID, shipID, src_Port, planned_src_port_dates, dest_port, planned_dest_port_dates, free_space_this_leg
@@ -63,9 +67,8 @@ As presented in [this note](https://github.com/ibm-cloud-architecture/refarch-ed
     * Operations:
 
 ### Microservices for shipment order handling - additional comments and motivation
-In this section we provided additional commentary and explanation on the organizaion of the shipment handling processing into a set of EDA coupled microservices. This will include
+In this section we provided additional commentary and explanation on the organization of the shipment handling processing into a set of EDA coupled microservices. This will include
 * some furher explanation of the concept behind each of the proposed microservices
-* a figure illustrating this structure 
 * explanation how this uses and benefits from key EDA patterns - event sourcing and Command Query Responsibility Separation ( CQRS).
 
 #### Fleets/Ships Microservice - concept 
@@ -73,7 +76,7 @@ This service keeps track of each of the container ships available for transporti
 
 The ships may be organized into Fleets but for the main purposes of discussing how shipment orders are managed and tracked for the "simplified" container example we are analysing, it is probably sufficient to think in terms of a single fleet of container ships. 
 
-A ship record is created when a new ship is commissioned, joins the fleet and becomes available to carry containers as part of he shipping service. We can think to this as being triggered by some "New ship event" on the event bus. 
+A ship record is created when a new ship is commissioned, joins the fleet and becomes available to carry containers as part of the shipping service. We can think to this as being triggered by some "New ship event" on the event bus. 
 
 Each ship record will carry attributes of the ship including its full name and registry. A very important attribute from the point of view of processing shipment orders and quote requests is the carrying capacity of the ship. How many containers can it carry on any voyage. We can book shipments only if there will be space available to carry them on the ship. 
 
@@ -83,9 +86,6 @@ In addition to its ShipID Key and attributes including capacity ( number of cont
 * clearances for the ship to enter or leave territorial waters of a nation or port 
 * arrival at a port dock and start or completion of a  ship load / load operation at the dock 
 
-#### Figure illustrating organization of shipment handling as microservices  
-
-![](microsvc-hld.png)
 
 ## Architecture
 
