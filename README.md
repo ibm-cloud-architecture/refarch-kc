@@ -1,6 +1,6 @@
-# K Container Shipment Use Case
+# K Container Shipment EDA reference implementation
 
-This solution implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an event driven architecture with event backbone, functions as service and microservices.
+This solution implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an event driven architecture with event backbone, functions as service and microservices. 
 
 As part of producing the IBM event driven point of view and reference architecture, we wanted to bring together a complete scenario which would cover all aspects of developing an event driven solutions including extended connections to devices/IOT  and blockchain for trusted business trading networks. We felt that the shipping business could provide a good foundation for this and would enable us to show how to develop event driven solutions following the architecture patterns.
 
@@ -75,8 +75,8 @@ Leveraging the Event Driven Architecture high level architecture foundation the 
 
 ## Deployment
 
-The solution support a set of related repositories including user interface, a set of microservices to implement event sourcing, saga and CQRS patterns, and to implement simulators and analytics content.
-In each repository we are explaining the design and some code approach used.
+This solution supports a set of related repositories which includes user interface, a set of microservices to implement event sourcing, saga and CQRS patterns, and to implement simulators and analytics content.
+In each repository we are explaining the design and implementation approach, how to build and run.
 
 ### Related repositories
 
@@ -85,24 +85,24 @@ In each repository we are explaining the design and some code approach used.
 * [Real time analytics with IBM Streams Analytics](https://github.com/ibm-cloud-architecture/refarch-kc-streams)
 * [Order management microservice using CQRS and event sourcing pattern](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms)
 
-The command `./scripts/clone.sh` clones the dependant repositories. 
+The command `./scripts/clone.sh` clones those dependant repositories. 
 
 ### Configurations
 
 To make the solution running we need to have a set of components installed and ready. We can deploy the components of the solution into three environments:
 
-* **Public cloud (IBM Cloud)**, [see the article](docs/prepare-ibm-cloud.md) for details.
+* **Public cloud (IBM Cloud)**, [see this article](docs/prepare-ibm-cloud.md) for details.
 * **Private cloud** (we are using IBM Cloud Private) and [see this article](docs/prepare-icp.md) for details.
-* Local to your laptop, mostly using docker images and docker compose. See next section for explanations.
+* **Local** to your laptop, mostly using docker images and docker compose. See next section for explanations.
 
 ### Run locally
 
-To run locally you can use a kubernetes like Minikube or Docker Edge, or docker-compose. We propose to use docker-compose for local deployment, and here are the instructions to launch backbone and solution components:
+To run locally you can use a kubernetes like Minikube or Docker Edge, or use docker-compose. We propose to use docker-compose for local deployment, and here are the instructions to launch backbone and solution components:
 
 1. Get [docker and install](https://docs.docker.com/install/) it (if not done yet)
 1. Get [docker compose](https://docs.docker.com/compose/install/)
 1. In one Terminal window use our compose file to start the backend components: `$ cd docker &&  docker-compose -f backbone-compose.yml up`.    
-Once the backend is started, you need to configure the Kafka topics. The local script: `scripts/createLocalTopics.sh` will create the necessary Kafka Topics so the solution will work.
+The first time the backend is started, you need to configure the Kafka topics we are using in the solution. The local script: `scripts/createLocalTopics.sh` will create them.
 
 1. In a second terminal use our second compose file to start the web server and the other microservices: `$ docker-compose -f kc-solution-compose.yml up`
 
