@@ -62,6 +62,8 @@ As presented in [this note](https://github.com/ibm-cloud-architecture/refarch-ed
     * Events:
     * Operations:
 
+![](microsvc-hld.png)
+
 ## Architecture
 
 Leveraging the Event Driven Architecture high level architecture foundation the solution is using the following components:
