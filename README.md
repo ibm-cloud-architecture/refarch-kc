@@ -17,7 +17,7 @@ In developing the scenario, it became apparent that the event driven nature of b
 ## Table Of Content
 
 * [Target Audiences](#target-audiences)
-* [Analysis](./analysis/readme.md) as a detail explanation of the event storming method applyied to the container shipping process.
+* [Analysis](./analysis/readme.md) is a detailed explanation of the event storming method applied to the containershipping process.
 * [Define microservice scopes](#define-microservice-scopes)
 * [Architecture](#architecture) using the different EDA patterns.
 * [Deployment](#deployment) to hybrid cloud
