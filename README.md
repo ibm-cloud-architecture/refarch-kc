@@ -70,6 +70,7 @@ As presented in [this note](https://github.com/ibm-cloud-architecture/refarch-ed
 ### Microservices for shipment order handling - additional comments and motivation
 In this section we provided additional commentary and explanation on the organization of the shipment handling processing into a set of EDA coupled microservices. This will include
 * some furher explanation of the concept behind each of the proposed microservices
+* user stories for the microservices
 * explanation how this uses and benefits from key EDA patterns - event sourcing and Command Query Responsibility Separation ( CQRS).
 
 #### Fleets/Ships Microservice - concept 
@@ -128,6 +129,31 @@ If requests for shipment *quotes* are significantly more frequent than actual bo
 Whenever the *Assign_Order_to_Voyage( )* command succeeds, it generates a *new_order_booked* event on the event bus. The *Find_Voyages_with_Capacity( )* service subscribes to these events and uses them to keep its capacity information on each voyage approximately and eventually correct. This illustrates use of the CQRS pattern to allow the available space query service to be scaled over many processors while ensuring reliable processing of actual booking commands against individual voyages.
 
 In addition to capacity, each voyage record will maintin a list of all Orders assigned to to it, allowing generation of a full manifest for expected or actual contents of the ship. In the simplified example we are developing here, we do not worry about order cancellations or modifications; in a pratical production implementation the voyage record would also hold order cancel and order modify event using event sourcing to generate a reliable current manifest from the voyage event history.
+
+#### Orders Microservice - user stories
+
+**User story for placing a shipment order**
+As a manufacturer of pharmaceutical goods with production location XXX near port UU,  I repeatedly identify new potential retailers for my product - for example a retailer with a distribution hub at location YYY near port VV - and need to place an order with shipping company ( Kyles Containers ) to have a container of my product picked up from location XXX and delivered to location YYY.  At the time I request a shipment booking I always know: 
+* the pickup location XXX and its adjacent port UU
+* the delivery location YYY and its adjacent port VV
+* the earliest date at which a container's worth of my product could be available for pickup at XXX 
+* the latest date by which it needs to be delivered to my target retailer at location YYYY
+
+Since my product can degrade if exposed to extreme temperatures, I expect transport to be in a refrigerated contain and can supply a specific temperature range t me maintained while in transit. 
+
+When the order is placed, I will want a committed reasonable price for the shipment to be specified by the the Shipping Company ( Kyles containers).  In addition I would like to know on confirmation of the order:
+* the expected pickup and delivery dates (this will help close my agreement with the proposed retailer receiving the goods)
+* the identity of the ship and scheduled voyage which will transport my container (this will help me with insurance considerations)
+* an orderID which I can use with the shipping company subsequently to track the order 
+
+In general any pickup any delivery dates after my product availability and before the customer required delivery date are acceptable.
+
+I know that I will be expected to document properties of my product including speicifcation of its nature and origin, weight transported, recipient for whom it is intended etc for Customs and export processing and for possible use by the shipping company BUT is not essential for an initial implementation of the order placement microservice
+
+**User story for tracking a shipment**
+
+
+#### Orders Microservice - concept
 
 ## Architecture
 
