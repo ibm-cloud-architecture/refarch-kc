@@ -113,8 +113,22 @@ The life cycle of a voyage is as follows:
  
  Command Query Responsibility Separation (CQRS) may be important to the design of the voyage microservice to handling the processing above with ideal scalability and responsiveness.  
  
-It is important that from the perspective of a single voyage, that at all time there is an accurate and reliable list of which orders have been accepted for the voyage and what is the ammount of capacity still available on that voyage for future bookings. Hence there needs to be an atomic mehod assign_order_to_voyage( ) which adds the order event to the voyage and decrements the free capacity count by one. Since this operation updates the voyage record, it is a command int he CQRS  sense.  
- 
+It is important that from the perspective of a single voyage, that at all time there is an accurate and reliable list of which orders have been accepted for the voyage and what is the ammount of capacity still available on that voyage for future bookings. Hence there needs to be an atomic method *assign_order_to_voyage( )* which adds the order event to the voyage and decrements the free capacity count by one. Since this operation updates the voyage record, it is a command in the CQRS sense. 
+
+When responding to a request for quote or getting a list of voyages which could be candidate placements for a booking, an important query is: 
+* *Find_Voyages_With_Capacity()* : i.e. find all voyages from source port A to destination port B  
+* .. which will leave the source port AFTER goods available date 
+* .. AND will arrive at destination port BEFORE goods delivery required date 
+* .. AND have bookable freespace 
+
+Any such voyage can be used to respond to a quote or used as a target to try assigning a booking. 
+
+If requests for shipment *quotes* are significantly more frequent than actual bookings, one could provide maximal scalability and rsponsiveness by doing a fully separated CQRS design. The actual table of voyages with accurate and realiable capacity counts for each voyage would be handled in an orders command service with n *assign_Order_To_Voyage( )* command api.  Requests to check for voyages likely to have availabity for a specific port piar in a specific time window, could be handled by a separate query service with voyage information indexed by port-pair and sorted by departure/arrival date.  
+
+Whenever the *Assign_Order_to_Voyage()* command succeeds, it generates a *new_order_booked* event on the event bus. The *Find_Voyages_with_Capacity()* service subscribes to these events and uses them to keep its capacity information on each voyage approximately and eventually correct. This allows the query service tobe scaled over many processors while ensuring reliable processing actual booking commands against individual voyages in the CQRS pattern.
+
+In addition to capacity each voyage record will maintin a list of all Orders assigned to to it, allowing generation of a full manifest for expected or actual contents of the ship. In the simplified example we are developing here,we do not worry about order cancellations or modifications; in a pratical production implementation the voyage record would also hold order cancel and order modify event using event sourcing to generate a reliable current manifest from the voyage event history.
+
 ## Architecture
 
 Leveraging the Event Driven Architecture high level architecture foundation the solution is using the following components:
@@ -124,7 +138,7 @@ Leveraging the Event Driven Architecture high level architecture foundation the 
 * Top left represents the user interface to support the demonstration of the KC solution, with a set of widgets to present the ships movements, the container tracking / monitoring and the event dashboards. The botton of the UI will have controls to help performaing the step by step demonstration.
 * The event backbone is used to define a set of topics used in the solution and as event sourcing for microservice to microservice data consistency support.
 * Each service supports the top-level process with context boundary defining the microservice scope.
-* Streamaing analytics is used to process aggreates and analytics on containers and ships movement data coming in real time.
+* Streamaing analytics is used to process aggregates and analytics on containers and ships movement data coming in real time.
 
 ## Deployment
 
