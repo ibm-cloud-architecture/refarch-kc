@@ -112,7 +112,9 @@ The life cycle of a voyage is as follows:
  * providing a current manifest of which orders/containers are present or expected on the ship for a specific voyage 
  
  Command Query Responsibility Separation (CQRS) may be important to the design of the voyage microservice to handling the processing above with ideal scalability and responsiveness.  
-
+ 
+It is important that from the perspective of a single voyage, that at all time there is an accurate and reliable list of which orders have been accepted for the voyage and what is the ammount of capacity still available on that voyage for future bookings. Hence there needs to be an atomic mehod assign_order_to_voyage( ) which adds the order event to the voyage and decrements the free capacity count by one. Since this operation updates the voyage record, it is a command int he CQRS  sense.  
+ 
 ## Architecture
 
 Leveraging the Event Driven Architecture high level architecture foundation the solution is using the following components:
