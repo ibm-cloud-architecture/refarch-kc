@@ -37,7 +37,7 @@ As presented in [this note](https://github.com/ibm-cloud-architecture/refarch-ed
 
 #### Figure illustrating organization of shipment handling as microservices  
 
-![](./docs/microsvc-hld.png)
+![](docs/microsvc-hld.png)
 
 * Fleet Service: responsible to group the ship, container carriers, in fleet, per major ocean. 
     * Information model: 
