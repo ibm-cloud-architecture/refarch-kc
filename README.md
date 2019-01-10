@@ -117,15 +117,15 @@ In an initial implementation of the track order microservice, some of this event
 As the person in Container Shipping company Kyles Containers reponsible for keeping track of shipment orders we have accepted and responding to customer order requests for new shipment orders, I need to be able to:
 * determine reliably whether there is free capacity on a particular scheduled voyage to accomodate an additional container 
 * AND IF space is available on that voyage ... 
-  * create a unique new orderID for the shipment this shipment can be accepted 
-  * set up persistent information with the order which will help me ensure that shipment operations with Kyles Containers are porperly set up for it. This will include:
-   * the pick up location and port
-   * expected pickup date
-   * the delivery location and port
-   * the voyageID on which this container is now booked 
-   * the shipID for that voyage
- * associate this new orderID with the voyage
- * decrement any free space count for that voyage 
+   * create a unique new orderID for the shipment this shipment can be accepted 
+   * set up persistent information with the order which will help me ensure that shipment operations with Kyles Containers are porperly set up for it. This will include:
+       * the pick up location and port
+       * expected pickup date
+       * the delivery location and port
+       * the voyageID on which this container is now booked 
+       * the shipID for that voyage
+   * associate this new orderID with the voyage
+   * decrement any free space count for that voyage 
  
 Know that a specific voyage can accomodate an additional container for a specific order allows me to reponde positively to a customer request to place a new shipment order. 
 
