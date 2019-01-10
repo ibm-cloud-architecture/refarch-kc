@@ -42,8 +42,8 @@ As presented in [this note](https://github.com/ibm-cloud-architecture/refarch-ed
 #### Summary of microservice scopes for shipment handling 
 * Fleet Service: responsible to group the ship, container carriers, in fleet, per major ocean. 
     * Information model: 
-        * Fleet has multiple ships,
-        * Ship has unique identifier (we will use its name), and a container capacity (represented as a matrix to make it simple), current position, status, voyage identifier for the voyage it is doing. 
+     * Fleet has multiple ships,
+     * Ship has unique identifier (we will use its name), and a container capacity (represented as a matrix to make it simple), current position, status, voyage identifier for the voyage it is doing. 
     * Events: Ship commission, ship position, load event, unload event, start itinerary X
     * Operations: getFleets, get ships in a fleet, get ship by ID. CRUD Fleet and Ship level
 * Voyages Service: define a set of voyage schedules supported by the shipping company
@@ -131,9 +131,12 @@ Know that a specific voyage can accomodate an additional container for a specifi
 
 Having an accurate free space count associated with each voyage will tell me when a voyage is fully booked and cannot accept any further orders. It will also warn me when a voyage is underbooked; using that information I can consider getting Kyles containers to market additional cpapcity or lower its prices. 
 
-Having a list of all booked orders on a voyage will enable me to generate a manifest of all container expected or in transit on that voyage. This is likely to be required as part of the customes and export clearances and also for review and approval by ship operations to ensure that the cargo loading for this voyage is acceptable/safe. 
+Having a list of all booked orders on a voyage will enable me to generate a manifest of all container expected or in transit on that voyage. This is required as part of the customes and export clearances and also for review and approval by ship operations to ensure that the cargo loading for this voyage is acceptable/safe. 
 
-The attributes associated with new order are used to schedule and trigger, trucking operaions, customs operations, pickup and delivery confirmations  s
+The attributes associated with new order are used to schedule and trigger and monitor: trucking operations, customs and export operations, pickup and delivery confirmations, ship load and unload operation. 
+
+#### Voyage Microservice: find voyages for port pair and time interval - user story
+As the person in Container Shipping company Kyles Containers reponsible for keeping track of shipment orders we have accepted and responding to customer order requests for new shipment orders, I need to be able to query the voyages records to find a list of voyages for a specific port-pair , with source port loading after a specifed start date  and destination port unloading before a specified end date. This is the set of voyages I need to check for available capacity  ( using create new order and assign to voyage ) when trying to determine whether a new shipment request from a customer can be satisfied by Kyles Containers shipping or not.   
      
 #### Fleets/Ships Microservice - concept 
 This service keeps track of each of the container ships available for transporting containers. Each ship has a unique shipID. the information about each ship is kept in a keystore keyed by shipID. 
