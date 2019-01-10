@@ -93,6 +93,25 @@ Organizing the ship record in this way is an example of *event sourcing*; all ev
 This service keeps track of each scheduled, current or completed voyage of a container ship, being loaded with containers at a source port, 
 sailing to a destination port and having onboard containers unloaded there. 
 
+The life cycle of a voyage is as follows:
+*  Voyages are scheduled some number of months in advance -  typically in response to some predictive model for how much demand is expected for shipment taffic in the future for a specifi source port destination port pair.
+    * each voyage is assigned a unique voyageID at the time it is created 
+* Each voyage is assigned to be handled by a specific ship, and will have expected dates for:
+    * start and completion loading at the source port
+    * leaving the source port and travellng to the destination port 
+    * arrival into unloading dock at the destination port and start and completion of unloading at that port 
+* When a voyage is scheduled and before it is actually in progress,  bookings (and cancellations) to carry containers can be accepted
+    *  the capacity of the assigned ship determines the maximum number of containers which can be carried on the voyage; available capacity on the voyage must be tracked and booking accepted only until the voyage is fully booked
+* When the expected source port loading date is reached and the the voyage actually begins, there may be voyage events recording actual dates for arrival at the destination port etc which may be different from the expected dates 
+    *  since each ship is expecting to execute a sequence of voyages, delays on one voyage may force rescheduling expected dates or cancellations of follow on voyages
+ * A voyage is eventually completed. The voyage record, keyed by voyageID, will continued to be important for a while for auditing and billing activities but will eventually be archived.
+ 
+ Voyage records play an important role in: 
+ * processing shipment quote requests - when could a container be delivered to this destination from this source? 
+ * processing a shipment order - when a container is actually booked for a specific voyage 
+ * providing a current manifest of which orders/containers are present or expected on the ship for a specific voyage 
+ 
+ Command Query Responsibility Separation (CQRS) may be important to the design of the voyage microservice to handling the processing above with ideal scalability and responsiveness.  
 
 ## Architecture
 
