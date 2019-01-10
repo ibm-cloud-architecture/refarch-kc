@@ -130,9 +130,8 @@ Whenever the *Assign_Order_to_Voyage( )* command succeeds, it generates a *new_o
 
 In addition to capacity, each voyage record will maintin a list of all Orders assigned to to it, allowing generation of a full manifest for expected or actual contents of the ship. In the simplified example we are developing here, we do not worry about order cancellations or modifications; in a pratical production implementation the voyage record would also hold order cancel and order modify event using event sourcing to generate a reliable current manifest from the voyage event history.
 
-#### Orders Microservice - user stories
+#### Orders Microservice: Place Shipment Order - user story
 
-**User story for placing a shipment order**
 As a manufacturer of pharmaceutical goods with production location XXX near port UU,  I repeatedly identify new potential retailers for my product - for example a retailer with a distribution hub at location YYY near port VV - and need to place an order with shipping company ( Kyles Containers ) to have a container of my product picked up from location XXX and delivered to location YYY.  At the time I request a shipment booking I always know: 
 * the pickup location XXX and its adjacent port UU
 * the delivery location YYY and its adjacent port VV
@@ -150,8 +149,23 @@ In general any pickup any delivery dates after my product availability and befor
 
 I know that I will be expected to document properties of my product including speicifcation of its nature and origin, weight transported, recipient for whom it is intended etc for Customs and export processing and for possible use by the shipping company BUT is not essential for an initial implementation of the order placement microservice
 
-**User story for tracking a shipment**
+#### Orders Microservice: Track Order user story
 
+As a manufacturer of Pharmacutical goods who has placed an shipment with a shipping company ( Kyles Containers) and received an order number for that shipment, i may repeatedly make a request for trackting to be told the current state and progress of the order. 
+
+For tracking requests made before the goods are picked up from my facility, this will be primarily to confirm the order and to hear about any changes in expected pickup date or expected delivery date which could have resulted from delay of the assigned ship in earlier voyages or other difficulties. Having this information will hep me maintain good relations with the tagret retailer expecting to receive th goods. 
+
+For tracking requests made while my goods are in transit or have been delivered, I expect to receive full information of the history of the container carrying my goods including:
+* whether it has been picked up from my manufacturing site XXX by  trucking / land transport and delivered to source port UU 
+* whether i has been cleared for export and loaded onto the designated ship 
+* the location history of the ship 
+* if the ship has arrived at destination port VV, whther my goods are unloaded and cleared by customers
+* whether a trucking / land transport has picked up the container and delivered to the retailer's location YYY
+* a full temperature and gps history of the container end to end during transit. 
+
+Having this tracking information will ive me confidence that my goods have not been damaged in transit and are or soon will be properly delivered to the expected rcipient in good order. 
+
+In an initial implementation of the track order microservice, some of this event information - particularly relating to customs, export, ship loading an unloading at port and trucking land transport operation swill be missing. 
 
 #### Orders Microservice - concept
 
