@@ -138,9 +138,11 @@ As a manufacturer of pharmaceutical goods with production location XXX near port
 * the earliest date at which a container's worth of my product could be available for pickup at XXX 
 * the latest date by which it needs to be delivered to my target retailer at location YYYY
 
-Since my product can degrade if exposed to extreme temperatures, I expect transport to be in a refrigerated contain and can supply a specific temperature range t me maintained while in transit. 
+Since my product can degrade if exposed to extreme temperatures, I expect transport to be in a refrigerated contain and can supply a specific temperature range to be maintained while my goods are in transit. 
 
-When the order is placed, I will want a committed reasonable price for the shipment to be specified by the the Shipping Company ( Kyles containers).  In addition I would like to know on confirmation of the order:
+If the shipping company ( Kyles containers) has no available capacity to ship a container meeting my timing and delivery requirements, I expect the order request to be rejected. This will enable me to conside other shipping arrangements or renegotiate dates with my target retailer. 
+
+If the order can be placed, I will want the response from the shipping company ( Kyles Containers) to include a committed reasonable price for the shipment to be specified. In addition I would like to know on confirmation of the order:
 * the expected pickup and delivery dates (this will help close my agreement with the proposed retailer receiving the goods)
 * the identity of the ship and scheduled voyage which will transport my container (this will help me with insurance considerations)
 * an orderID which I can use with the shipping company subsequently to track the order 
@@ -151,7 +153,7 @@ I know that I will be expected to document properties of my product including sp
 
 #### Orders Microservice: Track Order user story
 
-As a manufacturer of Pharmacutical goods who has placed an shipment with a shipping company ( Kyles Containers) and received an order number for that shipment, i may repeatedly make a request for trackting to be told the current state and progress of the order. 
+As a manufacturer of Pharmacutical goods who has placed a shipment order with a shipping company ( Kyles Containers) and received an order ID for that shipment, I may repeatedly request for tracking in that orderID and expect to be told the current state and progress of the order. 
 
 For tracking requests made before the goods are picked up from my facility, this will be primarily to confirm the order and to hear about any changes in expected pickup date or expected delivery date which could have resulted from delay of the assigned ship in earlier voyages or other difficulties. Having this information will hep me maintain good relations with the tagret retailer expecting to receive th goods. 
 
