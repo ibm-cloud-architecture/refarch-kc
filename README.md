@@ -73,6 +73,47 @@ In this section we provided additional commentary and explanation on the organiz
 * user stories for the microservices
 * explanation how this uses and benefits from key EDA patterns - event sourcing and Command Query Responsibility Separation ( CQRS).
 
+#### Orders Microservice: Place Shipment Order - user story
+
+As a manufacturer of pharmaceutical goods with production location XXX near port UU,  I repeatedly identify new potential retailers for my product - for example a retailer with a distribution hub at location YYY near port VV - and need to place an order with shipping company ( Kyles Containers ) to have a container of my product picked up from location XXX and delivered to location YYY.  At the time I request a shipment booking I always know: 
+* the pickup location XXX and its adjacent port UU
+* the delivery location YYY and its adjacent port VV
+* the earliest date at which a container's worth of my product could be available for pickup at XXX 
+* the latest date by which it needs to be delivered to my target retailer at location YYYY
+
+Since my product can degrade if exposed to extreme temperatures, I expect transport to be in a refrigerated contain and can supply a specific temperature range to be maintained while my goods are in transit. 
+
+If the shipping company ( Kyles containers) has no available capacity to ship a container meeting my timing and delivery requirements, I expect the order request to be rejected. This will enable me to conside other shipping arrangements or renegotiate dates with my target retailer. 
+
+If the order can be placed, I will want the response from the shipping company ( Kyles Containers) to include a committed reasonable price for the shipment to be specified. In addition I would like to know on confirmation of the order:
+* the expected pickup and delivery dates (this will help close my agreement with the proposed retailer receiving the goods)
+* the identity of the ship and scheduled voyage which will transport my container (this will help me with insurance considerations)
+* an orderID which I can use with the shipping company subsequently to track the order 
+
+In general any pickup any delivery dates after my product availability and before the customer required delivery date are acceptable.
+
+I know that I will be expected to document properties of my product including speicifcation of its nature and origin, weight transported, recipient for whom it is intended etc for Customs and export processing and for possible use by the shipping company BUT is not essential for an initial implementation of the order placement microservice
+
+#### Orders Microservice: Track Order user story
+
+As a manufacturer of Pharmacutical goods who has placed a shipment order with a shipping company ( Kyles Containers) and received an order ID for that shipment, I may repeatedly request for tracking in that orderID and expect to be told the current state and progress of the order. 
+
+For tracking requests made before the goods are picked up from my facility, this will be primarily to confirm the order and to hear about any changes in expected pickup date or expected delivery date which could have resulted from delay of the assigned ship in earlier voyages or other difficulties. Having this information will hep me maintain good relations with the tagret retailer expecting to receive th goods. 
+
+For tracking requests made while my goods are in transit or have been delivered, I expect to receive full information of the history of the container carrying my goods including:
+* whether it has been picked up from my manufacturing site XXX by  trucking / land transport and delivered to source port UU 
+* whether i has been cleared for export and loaded onto the designated ship 
+* the location history of the ship 
+* if the ship has arrived at destination port VV, whther my goods are unloaded and cleared by customers
+* whether a trucking / land transport has picked up the container and delivered to the retailer's location YYY
+* a full temperature and gps history of the container end to end during transit. 
+
+Having this tracking information will ive me confidence that my goods have not been damaged in transit and are or soon will be properly delivered to the expected rcipient in good order. 
+
+In an initial implementation of the track order microservice, some of this event information - particularly relating to customs, export, ship loading an unloading at port and trucking land transport operation swill be missing. 
+
+#### Orders Microservice - concept
+
 #### Fleets/Ships Microservice - concept 
 This service keeps track of each of the container ships available for transporting containers. Each ship has a unique shipID. the information about each ship is kept in a keystore keyed by shipID. 
 
@@ -129,47 +170,6 @@ If requests for shipment *quotes* are significantly more frequent than actual bo
 Whenever the *Assign_Order_to_Voyage( )* command succeeds, it generates a *new_order_booked* event on the event bus. The *Find_Voyages_with_Capacity( )* service subscribes to these events and uses them to keep its capacity information on each voyage approximately and eventually correct. This illustrates use of the CQRS pattern to allow the available space query service to be scaled over many processors while ensuring reliable processing of actual booking commands against individual voyages.
 
 In addition to capacity, each voyage record will maintin a list of all Orders assigned to to it, allowing generation of a full manifest for expected or actual contents of the ship. In the simplified example we are developing here, we do not worry about order cancellations or modifications; in a pratical production implementation the voyage record would also hold order cancel and order modify event using event sourcing to generate a reliable current manifest from the voyage event history.
-
-#### Orders Microservice: Place Shipment Order - user story
-
-As a manufacturer of pharmaceutical goods with production location XXX near port UU,  I repeatedly identify new potential retailers for my product - for example a retailer with a distribution hub at location YYY near port VV - and need to place an order with shipping company ( Kyles Containers ) to have a container of my product picked up from location XXX and delivered to location YYY.  At the time I request a shipment booking I always know: 
-* the pickup location XXX and its adjacent port UU
-* the delivery location YYY and its adjacent port VV
-* the earliest date at which a container's worth of my product could be available for pickup at XXX 
-* the latest date by which it needs to be delivered to my target retailer at location YYYY
-
-Since my product can degrade if exposed to extreme temperatures, I expect transport to be in a refrigerated contain and can supply a specific temperature range to be maintained while my goods are in transit. 
-
-If the shipping company ( Kyles containers) has no available capacity to ship a container meeting my timing and delivery requirements, I expect the order request to be rejected. This will enable me to conside other shipping arrangements or renegotiate dates with my target retailer. 
-
-If the order can be placed, I will want the response from the shipping company ( Kyles Containers) to include a committed reasonable price for the shipment to be specified. In addition I would like to know on confirmation of the order:
-* the expected pickup and delivery dates (this will help close my agreement with the proposed retailer receiving the goods)
-* the identity of the ship and scheduled voyage which will transport my container (this will help me with insurance considerations)
-* an orderID which I can use with the shipping company subsequently to track the order 
-
-In general any pickup any delivery dates after my product availability and before the customer required delivery date are acceptable.
-
-I know that I will be expected to document properties of my product including speicifcation of its nature and origin, weight transported, recipient for whom it is intended etc for Customs and export processing and for possible use by the shipping company BUT is not essential for an initial implementation of the order placement microservice
-
-#### Orders Microservice: Track Order user story
-
-As a manufacturer of Pharmacutical goods who has placed a shipment order with a shipping company ( Kyles Containers) and received an order ID for that shipment, I may repeatedly request for tracking in that orderID and expect to be told the current state and progress of the order. 
-
-For tracking requests made before the goods are picked up from my facility, this will be primarily to confirm the order and to hear about any changes in expected pickup date or expected delivery date which could have resulted from delay of the assigned ship in earlier voyages or other difficulties. Having this information will hep me maintain good relations with the tagret retailer expecting to receive th goods. 
-
-For tracking requests made while my goods are in transit or have been delivered, I expect to receive full information of the history of the container carrying my goods including:
-* whether it has been picked up from my manufacturing site XXX by  trucking / land transport and delivered to source port UU 
-* whether i has been cleared for export and loaded onto the designated ship 
-* the location history of the ship 
-* if the ship has arrived at destination port VV, whther my goods are unloaded and cleared by customers
-* whether a trucking / land transport has picked up the container and delivered to the retailer's location YYY
-* a full temperature and gps history of the container end to end during transit. 
-
-Having this tracking information will ive me confidence that my goods have not been damaged in transit and are or soon will be properly delivered to the expected rcipient in good order. 
-
-In an initial implementation of the track order microservice, some of this event information - particularly relating to customs, export, ship loading an unloading at port and trucking land transport operation swill be missing. 
-
-#### Orders Microservice - concept
 
 ## Architecture
 
