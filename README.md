@@ -39,6 +39,7 @@ As presented in [this note](https://github.com/ibm-cloud-architecture/refarch-ed
 
 ![](docs/microsvc-hld.png)
 
+#### Summary of microservice scopes for shipment handling 
 * Fleet Service: responsible to group the ship, container carriers, in fleet, per major ocean. 
     * Information model: 
         * Fleet has multiple ships,
@@ -78,13 +79,19 @@ The ships may be organized into Fleets but for the main purposes of discussing h
 
 A ship record is created when a new ship is commissioned, joins the fleet and becomes available to carry containers as part of the shipping service. We can think to this as being triggered by some "New ship event" on the event bus. 
 
-Each ship record will carry attributes of the ship including its full name and registry. A very important attribute from the point of view of processing shipment orders and quote requests is the carrying capacity of the ship. How many containers can it carry on any voyage. We can book shipments only if there will be space available to carry them on the ship. 
+Each ship record will carry attributes of the ship including its full name and registry. An important attribute from the point of view of processing shipment orders and quote requests is the carrying capacity of the ship. How many containers can it carry on any voyage? We can  accept additional shipment bookings only only for voyages where there will be space available to carry them on the ship. 
 
-In addition to its ShipID Key and attributes including capacity ( number of containers it is designed to carry ) the rest of the ship record will consist of a list of all the ( recent) "ship events" recording things which have happened to that ship.  This list will include: 
+In addition to its ShipID Key and attributes including capacity (number of containers it is designed to carry) the rest of the ship record will consist of a list of all the ( recent) "ship events" recording things which have happened to that ship.  This list will include: 
 * GPS lat/log position reports of the position of the ship a different points in time 
 * events of the ship starting or completing a specific scheduled "voyage"  - sailing from source port to destination port as scheduled for this ship
 * clearances for the ship to enter or leave territorial waters of a nation or port 
 * arrival at a port dock and start or completion of a  ship load / load operation at the dock 
+
+Organizing the ship record in this way is an example of *event sourcing*; all event relating specificall to a ship are saved in the record for that ship. From the ship record we have a complete history of all events relevant to it.
+
+#### Voyages microservice  - concept 
+This service keeps track of each scheduled, current or completed voyage of a container ship, being loaded with containers at a source port, 
+sailing to a destination port and having onboard containers unloaded there. 
 
 
 ## Architecture
