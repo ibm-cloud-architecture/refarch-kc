@@ -74,18 +74,17 @@ In this section we provided additional commentary and explanation on the organiz
 * explanation how this uses and benefits from key EDA patterns - event sourcing and Command Query Responsibility Separation ( CQRS).
 
 #### Orders Microservice: Place Shipment Order - user story
-
 As a manufacturer of pharmaceutical goods with production location XXX near port UU,  I repeatedly identify new potential retailers for my product - for example a retailer with a distribution hub at location YYY near port VV - and need to place an order with shipping company ( Kyles Containers ) to have a container of my product picked up from location XXX and delivered to location YYY.  At the time I request a shipment booking I always know: 
 * the pickup location XXX and its adjacent port UU
 * the delivery location YYY and its adjacent port VV
 * the earliest date at which a container's worth of my product could be available for pickup at XXX 
 * the latest date by which it needs to be delivered to my target retailer at location YYYY
 
-Since my product can degrade if exposed to extreme temperatures, I expect transport to be in a refrigerated contain and can supply a specific temperature range to be maintained while my goods are in transit. 
+Since my product can degrade if exposed to extreme temperatures, I expect transport to be in a refrigerated container and can supply a specific temperature range to be maintained while my goods are in transit. 
 
-If the shipping company ( Kyles containers) has no available capacity to ship a container meeting my timing and delivery requirements, I expect the order request to be rejected. This will enable me to conside other shipping arrangements or renegotiate dates with my target retailer. 
+If the shipping company ( Kyles containers) has no available capacity to ship a container meeting my timing and delivery requirements, I expect the order request to be rejected. This will enable me to consider other shipping arrangements or renegotiate dates with my target retailer. 
 
-If the order can be placed, I will want the response from the shipping company ( Kyles Containers) to include a committed reasonable price for the shipment to be specified. In addition I would like to know on confirmation of the order:
+If the order can be placed, I will want the response from the shipping company (Kyles Containers) to include a committed reasonable price for the shipment to be specified. In addition I would like to know on confirmation of the order:
 * the expected pickup and delivery dates (this will help close my agreement with the proposed retailer receiving the goods)
 * the identity of the ship and scheduled voyage which will transport my container (this will help me with insurance considerations)
 * an orderID which I can use with the shipping company subsequently to track the order 
@@ -96,7 +95,7 @@ I know that I will be expected to document properties of my product including sp
 
 #### Orders Microservice: Track Order user story
 
-As a manufacturer of Pharmacutical goods who has placed a shipment order with a shipping company ( Kyles Containers) and received an order ID for that shipment, I may repeatedly request for tracking in that orderID and expect to be told the current state and progress of the order. 
+As a manufacturer of Pharmaceutical goods who has placed a shipment order with a shipping company ( Kyles Containers) and received an order ID for that shipment, I may repeatedly request for tracking in that orderID and expect to be told the current state and progress of the order. 
 
 For tracking requests made before the goods are picked up from my facility, this will be primarily to confirm the order and to hear about any changes in expected pickup date or expected delivery date which could have resulted from delay of the assigned ship in earlier voyages or other difficulties. Having this information will hep me maintain good relations with the tagret retailer expecting to receive th goods. 
 
@@ -106,7 +105,7 @@ For tracking requests made while my goods are in transit or have been delivered,
 * the location history of the ship 
 * if the ship has arrived at destination port VV, whther my goods are unloaded and cleared by customers
 * whether a trucking / land transport has picked up the container and delivered to the retailer's location YYY
-* a full temperature and gps history of the container end to end during transit. 
+* a full temperature and gps history of the container for the complete transit end to end. 
 
 Having this tracking information will ive me confidence that my goods have not been damaged in transit and are or soon will be properly delivered to the expected rcipient in good order. 
 
@@ -114,6 +113,28 @@ In an initial implementation of the track order microservice, some of this event
 
 #### Orders Microservice - concept
 
+#### Voyages Microservice:  Create new order and Assign to Voyage - user story
+As the person in Container Shipping company Kyles Containers reponsible for keeping track of shipment orders we have accepted and responding to customer order requests for new shipment orders, I need to be able to:
+* determine reliably whether there is free capacity on a particular scheduled voyage to accomodate an additional container 
+* AND IF space is available on that voyage ... 
+  * create a unique new orderID for the shipment this shipment can be accepted 
+  * set up persistent information with the order which will help me ensure that shipment operations with Kyles Containers are porperly set up for it. This will include:
+   * the pick up location and port
+   * expected pickup date
+   * the delivery location and port
+   * the voyageID on which this container is now booked 
+   * the shipID for that voyage
+ * associate this new orderID with the voyage
+ * decrement any free space count for that voyage 
+ 
+Know that a specific voyage can accomodate an additional container for a specific order allows me to reponde positively to a customer request to place a new shipment order. 
+
+Having an accurate free space count associated with each voyage will tell me when a voyage is fully booked and cannot accept any further orders. It will also warn me when a voyage is underbooked; using that information I can consider getting Kyles containers to market additional cpapcity or lower its prices. 
+
+Having a list of all booked orders on a voyage will enable me to generate a manifest of all container expected or in transit on that voyage. This is likely to be required as part of the customes and export clearances and also for review and approval by ship operations to ensure that the cargo loading for this voyage is acceptable/safe. 
+
+The attributes associated with new order are used to schedule and trigger, trucking operaions, customs operations, pickup and delivery confirmations  s
+     
 #### Fleets/Ships Microservice - concept 
 This service keeps track of each of the container ships available for transporting containers. Each ship has a unique shipID. the information about each ship is kept in a keystore keyed by shipID. 
 
