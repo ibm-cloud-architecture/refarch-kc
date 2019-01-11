@@ -68,96 +68,98 @@ As presented in [this note](https://github.com/ibm-cloud-architecture/refarch-ed
     * Operations:
 
 ### Microservices for shipment order handling - additional comments and motivation
-In this section we provided additional commentary and explanation on the organization of the shipment handling processing into a set of EDA coupled microservices. This will include
+
+In this section we provided additional explanations on the organization of the shipment handling processing into a set of EDA coupled microservices. This will include
 * some furher explanation of the concept behind each of the proposed microservices
 * user stories for the microservices
-* explanation how this uses and benefits from key EDA patterns - event sourcing and Command Query Responsibility Separation ( CQRS).
+* explanation how this uses and benefits from key EDA patterns - event sourcing and Command Query Responsibility Separation (CQRS).
 
-#### Orders Microservice: Place Shipment Order - user story
-As a manufacturer of pharmaceutical goods with production location XXX near port UU,  I repeatedly identify new potential retailers for my product - for example a retailer with a distribution hub at location YYY near port VV - and need to place an order with shipping company ( Kyles Containers ) to have a container of my product picked up from location XXX and delivered to location YYY.  At the time I request a shipment booking I always know: 
+#### Orders Microservice: Place Shipment Order - user stories
+
+As a manufacturer of pharmaceutical goods with production location XXX near port UU, I repeatedly identify new potential retailers for my product - for example a retailer with a distribution hub at location YYY near port VV - and I need to place an order with shipping company (K.Containers ) to have a container of my products picked up from location XXX and delivered to location YYY.  At the time I request a shipment booking I always know: 
 * the pickup location XXX and its adjacent port UU
 * the delivery location YYY and its adjacent port VV
-* the earliest date at which a container's worth of my product could be available for pickup at XXX 
+* the earliest date at which a container's worth of my products could be available for pickup at XXX 
 * the latest date by which it needs to be delivered to my target retailer at location YYYY
 
 Since my product can degrade if exposed to extreme temperatures, I expect transport to be in a refrigerated container and can supply a specific temperature range to be maintained while my goods are in transit. 
 
-If the shipping company ( Kyles containers) has no available capacity to ship a container meeting my timing and delivery requirements, I expect the order request to be rejected. This will enable me to consider other shipping arrangements or renegotiate dates with my target retailer. 
+If the shipping company (K.Containers) has no available capacity to ship a container meeting my timing and delivery requirements, I expect the order request to be rejected. This will enable me to consider other shipping arrangements or renegotiate dates with my target retailer.
 
-If the order can be placed, I will want the response from the shipping company (Kyles Containers) to include a committed reasonable price for the shipment to be specified. In addition I would like to know on confirmation of the order:
+If the order can be placed, I will want the response from the shipping company (K.Containers) to include a committed reasonable price for the shipment to be specified. In addition, I would like to know on confirmation of the order:
 * the expected pickup and delivery dates (this will help close my agreement with the proposed retailer receiving the goods)
 * the identity of the ship and scheduled voyage which will transport my container (this will help me with insurance considerations)
 * an orderID which I can use with the shipping company subsequently to track the order 
 
 In general any pickup any delivery dates after my product availability and before the customer required delivery date are acceptable.
 
-I know that I will be expected to document properties of my product including speicifcation of its nature and origin, weight transported, recipient for whom it is intended etc for Customs and export processing and for possible use by the shipping company BUT is not essential for an initial implementation of the order placement microservice
+I know that I will be expected to document properties of my product including specifications of its nature and origin, weight transported, recipient for whom it is intended etc for Customs and export processing and for possible use by the shipping company BUT is not essential for an initial implementation of the order placement microservice
 
 #### Orders Microservice: Track Order user story
 
-As a manufacturer of Pharmaceutical goods who has placed a shipment order with a shipping company ( Kyles Containers) and received an order ID for that shipment, I may repeatedly request for tracking in that orderID and expect to be told the current state and progress of the order. 
+As a manufacturer of Pharmaceutical goods who has placed a shipment order with a shipping company (K.Containers) and received an order ID for that shipment, I may repeatedly request for tracking in that orderID and expect to be told the current state and progress of the order.
 
 For tracking requests made before the goods are picked up from my facility, this will be primarily to confirm the order and to hear about any changes in expected pickup date or expected delivery date which could have resulted from delay of the assigned ship in earlier voyages or other difficulties. Having this information will hep me maintain good relations with the tagret retailer expecting to receive th goods. 
 
 For tracking requests made while my goods are in transit or have been delivered, I expect to receive full information of the history of the container carrying my goods including:
-* whether it has been picked up from my manufacturing site XXX by  trucking / land transport and delivered to source port UU 
-* whether i has been cleared for export and loaded onto the designated ship 
+* whether it has been picked up from my manufacturing site XXX by trucking / land transport and delivered to source port UU 
+* whether it has been cleared for export and loaded onto the designated ship 
 * the location history of the ship 
-* if the ship has arrived at destination port VV, whther my goods are unloaded and cleared by customers
+* if the ship has arrived at destination port VV, whether my goods are unloaded and cleared by customs
 * whether a trucking / land transport has picked up the container and delivered to the retailer's location YYY
 * a full temperature and gps history of the container for the complete transit end to end. 
 
-Having this tracking information will ive me confidence that my goods have not been damaged in transit and are or soon will be properly delivered to the expected rcipient in good order. 
+Having this tracking information will give me confidence that my goods have not been damaged in transit and are or soon will be properly delivered to the expected rcipient in good order. 
 
-In an initial implementation of the track order microservice, some of this event information - particularly relating to customs, export, ship loading an unloading at port and trucking land transport operation swill be missing. 
+In an initial implementation of the track order microservice, some of this event information - particularly relating to customs, export, ship loading an unloading at port and trucking land transport operations may be missing. 
 
 #### Orders Microservice - concept
 
 #### Voyages Microservice:  Create new order and Assign to Voyage - user story
-As the person in Container Shipping company Kyles Containers reponsible for keeping track of shipment orders we have accepted and responding to customer order requests for new shipment orders, I need to be able to:
+As the person in Container Shipping company K.Containers reponsible for keeping track of shipment orders we have accepted and responded to customer order requests for new shipment orders, I need to be able to:
 * determine reliably whether there is free capacity on a particular scheduled voyage to accomodate an additional container 
 * AND IF space is available on that voyage ... 
    * create a unique new orderID for the shipment this shipment can be accepted 
-   * set up persistent information with the order which will help me ensure that shipment operations with Kyles Containers are porperly set up for it. This will include:
+   * set up persistent information with the order which will help me ensure that shipment operations with K.Containers are porperly set up for it. This will include:
        * the pick up location and port
-       * expected pickup date
-       * the delivery location and port
-       * the voyageID on which this container is now booked 
-       * the shipID for that voyage
-   * associate this new orderID with the voyage
-   * decrement any free space count for that voyage 
+       * expected pickup date.
+       * the delivery location and port.
+       * the voyageID on which this container is now booked.
+       * the shipID for that voyage.
+   * associate this new orderID with the voyage.
+   * decrement any free space count for that voyage.
  
-Know that a specific voyage can accomodate an additional container for a specific order allows me to reponde positively to a customer request to place a new shipment order. 
+Know that a specific voyage can accomodate an additional container for a specific order allows me to respond positively to a customer request to place a new shipment order.
 
-Having an accurate free space count associated with each voyage will tell me when a voyage is fully booked and cannot accept any further orders. It will also warn me when a voyage is underbooked; using that information I can consider getting Kyles containers to market additional cpapcity or lower its prices. 
+Having an accurate free space count associated with each voyage will tell me when a voyage is fully booked and cannot accept any further orders. It will also warn me when a voyage is underbooked; using that information I can consider getting K.Containers to market additional cpapcity or lower its prices. 
 
-Having a list of all booked orders on a voyage will enable me to generate a manifest of all container expected or in transit on that voyage. This is required as part of the customes and export clearances and also for review and approval by ship operations to ensure that the cargo loading for this voyage is acceptable/safe. 
+Having a list of all booked orders on a voyage will enable me to generate a manifest of all containers expected or in transit on that voyage. This is required as part of the customs and export clearances and also for review and approval by ship operations to ensure that the cargo loading for this voyage is acceptable/safe. 
 
 The attributes associated with new order are used to schedule and trigger and monitor: trucking operations, customs and export operations, pickup and delivery confirmations, ship load and unload operation. 
 
 #### Voyage Microservice: find voyages for port pair and time interval - user story
-As the person in Container Shipping company Kyles Containers reponsible for keeping track of shipment orders we have accepted and responding to customer order requests for new shipment orders, I need to be able to query the voyages records to find a list of voyages for a specific port-pair , with source port loading after a specifed start date  and destination port unloading before a specified end date. This is the set of voyages I need to check for available capacity  ( using create new order and assign to voyage ) when trying to determine whether a new shipment request from a customer can be satisfied by Kyles Containers shipping or not.   
+
+As the person in Container Shipping company K.Containers reponsible for keeping track of shipment orders we have accepted and responding to customer order requests for new shipment orders, I need to be able to query the voyages records to find a list of voyages for a specific port-pair , with source port loading after a specifed start date  and destination port unloading before a specified end date. This is the set of voyages I need to check for available capacity  ( using create new order and assign to voyage ) when trying to determine whether a new shipment request from a customer can be satisfied by K.Containers shipping or not.   
      
 #### Fleets/Ships Microservice - concept 
-This service keeps track of each of the container ships available for transporting containers. Each ship has a unique shipID. the information about each ship is kept in a keystore keyed by shipID. 
+This service keeps track of each of the container ships available for transporting containers. Each ship has a unique shipID. The information about each ship is kept in a keystore keyed by shipID. 
 
-The ships may be organized into Fleets but for the main purposes of discussing how shipment orders are managed and tracked for the "simplified" container example we are analysing, it is probably sufficient to think in terms of a single fleet of container ships. 
+The ships may be organized into Fleets.
 
 A ship record is created when a new ship is commissioned, joins the fleet and becomes available to carry containers as part of the shipping service. We can think to this as being triggered by some "New ship event" on the event bus. 
 
-Each ship record will carry attributes of the ship including its full name and registry. An important attribute from the point of view of processing shipment orders and quote requests is the carrying capacity of the ship. How many containers can it carry on any voyage? We can  accept additional shipment bookings only only for voyages where there will be space available to carry them on the ship. 
+Each ship record will carry attributes of the ship including its full name and registry. An important attribute from the point of view of processing shipment orders and quote requests is the carrying capacity of the ship. How many containers can it carry on any voyage? We can accept additional shipment bookings only for voyages where there will be space available to carry them on the ship.
 
-In addition to its ShipID Key and attributes including capacity (number of containers it is designed to carry) the rest of the ship record will consist of a list of all the ( recent) "ship events" recording things which have happened to that ship.  This list will include: 
-* GPS lat/log position reports of the position of the ship a different points in time 
-* events of the ship starting or completing a specific scheduled "voyage"  - sailing from source port to destination port as scheduled for this ship
-* clearances for the ship to enter or leave territorial waters of a nation or port 
-* arrival at a port dock and start or completion of a  ship load / load operation at the dock 
+In addition to its ShipID Key and attributes including capacity (number of containers it is designed to carry). As part of the other important information is the events related to the ship to record things which have happened to that ship.  This list will include: 
+* GPS lat/log position reports of the position of the ship a different points in time.
+* Events of the ship starting or completing a specific scheduled "voyage"  - sailing from source port to destination port as scheduled for this ship.
+* Clearances for the ship to enter or leave territorial waters of a nation or port.
+* Arrival at a port dock and start or completion of a ship load / load operation at the dock.
 
-Organizing the ship record in this way is an example of *event sourcing*; all event relating specificall to a ship are saved in the record for that ship. From the ship record we have a complete history of all events relevant to it.
+Organizing the ship record in this way is an example of *event sourcing*; all event relating specifically to a ship are saved. Using queries with time stamp, shipID it is possible to get a complete history of all events relevant to it.
 
 #### Voyages microservice  - concept 
-This service keeps track of each scheduled, current or completed voyage of a container ship, being loaded with containers at a source port, 
-sailing to a destination port and having onboard containers unloaded there. 
+This service keeps track of each scheduled, current or completed voyage of a container ship, being loaded with containers at a source port, sailing to a destination port and having onboard containers unloaded there. 
 
 The life cycle of a voyage is as follows:
 *  Voyages are scheduled some number of months in advance -  typically in response to some predictive model for how much demand is expected for shipment taffic in the future for a specifi source port destination port pair.
