@@ -1,21 +1,21 @@
 version: '3'
 services:
     simulator:
-        image: ibmcase/fleetms:latest
+        image: ibmcase/kc-fleetms:latest
         hostname: fleetms
         ports:
-            - "9081:9080"
-            - "9444:9443"
+            - "9080:9080"
+            - "9443:9443"
         environment:
             KAFKA_ENV: LOCAL
-            KAFKA_BROKERS: localhost:9092
+            KAFKA_BROKERS: kafka1:9092
     web:
         image: ibmcase/kc-ui:latest
         hostname: kcui
         ports:
             - "3000:3000"
         environment:
-            KAFKA_BROKERS: localhost:9092
-            FLEET_MS_URL: http://localhost:9081/fleetms
+            KAFKA_BROKERS: kafka1:9092
+            FLEET_MS_URL: http://simulator:9080/fleetms
         depends_on:
             - simulator

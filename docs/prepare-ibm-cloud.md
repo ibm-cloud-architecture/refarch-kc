@@ -37,8 +37,20 @@ To set the cluster config to your cluster use: `ibmcloud ks cluster-config <clus
 
 Create a namespace: `kubectl create namespace browncompute`
 
-Now each components, microservices or cloud functions, we are deploying as part of this solution will have its helm chart or scripts.
- 
+Now for each component, microservice or cloud function, we are deploying as part of this solution, we have its helm chart or scripts to deploy to IKS.
+
+##  Event Streams Service on IBM Cloud
+
+To provision your service, go to the IBM Cloud Catalog and search for `Event Stream`. It is in the Integration category. Create the service and specify a name, a region, and a space. 
+
+* In the service credentials create new credentials to get the Kafka brokers list, the admim URL and the api_key needed to authenticate the consumers or producers.
+ ![](./IES-IC-credentials.png)
+* In the Manage panel add the topics needed for the solution. 
+ ![](./IES-IC-topics.png) 
+* Modify the Broker and APIkey configuration for each service of the solution. See each project for that:
+  * For the `Ship / Fleet microservice and simulator` see the [config.properties](https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/fleet-ms/src/main/resources/config.properties.tmpl) file. Then repackage with `mvn package`
+
+
 ## Streaming Analytics Service
 
 The documentation located [here](https://github.com/ibm-cloud-architecture/refarch-kc-streams#application-development-and-deployment) describes how to configure the IBM Cloud based Streaming Analytics Service and how to build/deploy the example application. 
