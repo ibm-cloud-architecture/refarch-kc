@@ -52,7 +52,7 @@ As presented in [this note](https://github.com/ibm-cloud-architecture/refarch-ed
     * Operations: CRUD on itinerary routes
 * Order Service: manage the shipment order
     * Information model: Booking id , customer, pickup loc, pickup after date, deliver location, expected deliver date, order status, assigned container  
-    * Events: Place order, order assigned to voyage( sets VoyageID, ship ID ), container assigned to order ( Sets container ID), Landorder, Transport associated with pickup container, Order status event, Order billing/accounting event
+    * Events: order placed, order assigned to voyage( sets VoyageID, ship ID ), container assigned to order ( Sets container ID), Landorder, Transport associated with pickup container, Order status event, Order billing/accounting event
     * Operations: CRUD on order, update order status
 * Container Service:
     * Information model: Container Id, Container temperature, container position, container condition ( maintenance goods), current associated order
