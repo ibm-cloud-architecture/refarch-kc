@@ -29,7 +29,7 @@ The challenges listed in the persona table above identify a possible set of MVP 
 
 At the high level the shipment process flow is suggested and illustrated in the diagram below.
 
-![](shipment-bp.png)
+![](shipment-bp1.png)
 
 For the purposes of showing how to design a reference EDA solution we select on a simple subcase of all actual and possible variations of the global container flow. Very high level steps in this flow are as follows: 
 1. Retailer and manufacturer interact to create agreement to deliver specific goods in a container from manufacturer's location to retailer's location with an expected arrival date. 
