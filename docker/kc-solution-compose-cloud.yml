@@ -1,0 +1,24 @@
+version: '3'
+services:
+    simulator:
+        image: ibmcase/kc-fleetms:latest
+        hostname: fleetms
+        ports:
+            - "9080:9080"
+            - "9443:9443"
+        environment:
+            KAFKA_BROKERS: kafka03-prod02.messagehub.services.us-south.bluemix.net:9093,kafka01-prod02.messagehub.services.us-south.bluemix.net:9093,kafka02-prod02.messagehub.services.us-south.bluemix.net:9093,kafka04-prod02.messagehub.services.us-south.bluemix.net:9093,kafka05-prod02.messagehub.services.us-south.bluemix.net:9093
+            KAFKA_ENV: IBMCLOUD
+            KAFKA_APIKEY:
+    web:
+        image: ibmcase/kc-ui:latest
+        hostname: kcui
+        ports:
+            - "3000:3000"
+        environment:
+            KAFKA_BROKERS: kafka03-prod02.messagehub.services.us-south.bluemix.net:9093,kafka01-prod02.messagehub.services.us-south.bluemix.net:9093,kafka02-prod02.messagehub.services.us-south.bluemix.net:9093,kafka04-prod02.messagehub.services.us-south.bluemix.net:9093,kafka05-prod02.messagehub.services.us-south.bluemix.net:9093
+            KAFKA_ENV: IBMCLOUD
+            KAFKA_APIKEY:
+            FLEET_MS_URL: http://simulator:9080/fleetms
+        depends_on:
+            - simulator
