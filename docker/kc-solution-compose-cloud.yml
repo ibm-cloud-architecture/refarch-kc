@@ -9,7 +9,7 @@ services:
         environment:
             KAFKA_BROKERS: kafka03-prod02.messagehub.services.us-south.bluemix.net:9093,kafka01-prod02.messagehub.services.us-south.bluemix.net:9093,kafka02-prod02.messagehub.services.us-south.bluemix.net:9093,kafka04-prod02.messagehub.services.us-south.bluemix.net:9093,kafka05-prod02.messagehub.services.us-south.bluemix.net:9093
             KAFKA_ENV: IBMCLOUD
-            KAFKA_APIKEY: 9WKzmHOGX6K6DwsNxKXBnrhijskOlMmDVdOgZdB8aTEzEJzJ
+            KAFKA_APIKEY:
     web:
         image: ibmcase/kc-ui:latest
         hostname: kcui
@@ -18,7 +18,7 @@ services:
         environment:
             KAFKA_BROKERS: kafka03-prod02.messagehub.services.us-south.bluemix.net:9093,kafka01-prod02.messagehub.services.us-south.bluemix.net:9093,kafka02-prod02.messagehub.services.us-south.bluemix.net:9093,kafka04-prod02.messagehub.services.us-south.bluemix.net:9093,kafka05-prod02.messagehub.services.us-south.bluemix.net:9093
             KAFKA_ENV: IBMCLOUD
-            KAFKA_APIKEY: 9WKzmHOGX6K6DwsNxKXBnrhijskOlMmDVdOgZdB8aTEzEJzJ
+            KAFKA_APIKEY:
             FLEET_MS_URL: http://simulator:9080/fleetms
         depends_on:
             - simulator
