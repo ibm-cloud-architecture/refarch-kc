@@ -19,3 +19,23 @@ services:
             FLEET_MS_URL: http://simulator:9080/fleetms
         depends_on:
             - simulator
+    ordercmd:
+        image: ibmcase/kc-ordercmdms:latest
+        hostname: ordercmd
+        ports:
+            - "10080:9080"
+        environment:
+            KAFKA_ENV: LOCAL
+            KAFKA_BROKERS: kafka1:9092
+        depends_on:
+            - simulator            
+    orderquery:
+        image: ibmcase/kc-orderqueryms:latest
+        hostname: orderquery
+        ports:
+            - "11080:9080"
+        environment:
+            KAFKA_ENV: LOCAL
+            KAFKA_BROKERS: kafka1:9092
+        depends_on:
+            - simulator
