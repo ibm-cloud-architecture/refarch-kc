@@ -20,5 +20,7 @@ services:
             KAFKA_ENV: IBMCLOUD
             KAFKA_APIKEY:
             FLEET_MS_URL: http://simulator:9080/fleetms
+            ORDER_MS_URL: http://ordercmd:10080/orders
+            ORDER_QUERY_MS_URL: http://orderquery:11080/orders
         depends_on:
             - simulator

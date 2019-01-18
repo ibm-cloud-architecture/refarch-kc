@@ -17,8 +17,12 @@ services:
         environment:
             KAFKA_BROKERS: kafka1:9092
             FLEET_MS_URL: http://simulator:9080/fleetms
+            ORDER_MS_URL: http://ordercmd:10080/orders
+            ORDER_QUERY_MS_URL: http://orderquery:11080/orders
         depends_on:
             - simulator
+            - ordercmd 
+            - orderquery
     ordercmd:
         image: ibmcase/kc-ordercmdms:latest
         hostname: ordercmd
