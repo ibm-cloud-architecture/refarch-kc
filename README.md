@@ -33,23 +33,23 @@ You will be greatly interested by the subjects addressed in this solution if you
 
 ## Define microservice scopes
 
-As presented in [this note](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/README.md#understanding-event-driven-microservice-patterns), we are using a set of microservice design patterns to develop this solution. One of them is the sub domain decomposition. From the analysis output we have the aggregates, actors and data that are helping us to extract a set of subdomains:
+As presented in [in the note about event driven microservice patterns](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/README.md#understanding-event-driven-microservice-patterns), we are using a set of microservice design patterns to develop this solution. One of them is the sub domain decomposition. From the analysis output we have the aggregates, actors and data that are helping us to extract a set of subdomains. The figure below summarizes those aggregaees:
 
 #### Figure illustrating organization of shipment handling as microservices  
 
 ![](docs/microsvc-hld.png)
 
-#### Summary of microservice scopes for shipment handling 
+#### Summary of microservice scopes for shipment handling:
 * Fleet Service: responsible to group the ship, container carriers, in fleet, per major ocean. 
     * Information model: 
-     * Fleet has multiple ships,
-     * Ship has unique identifier (we will use its name), and a container capacity (represented as a matrix to make it simple), current position, status, voyage identifier for the voyage it is doing. 
-    * Events: Ship commission, ship position, load event, unload event, start itinerary X
-    * Operations: getFleets, get ships in a fleet, get ship by ID. CRUD Fleet and Ship level
+       * Fleet has multiple ships,
+       * Ship has unique identifier (we will use its name), and a container capacity (represented as a matrix to make it simple), current position, status, voyage identifier for the voyage it is doing. 
+    * Events: Ship commission, ship position, load container event, unload container event, start itinerary X, arrive at port, docked,...
+    * Operations: getFleets, get ships in a fleet, get ship by ID. CRUD Fleet and Ship.
 * Voyages Service: define a set of voyage schedules supported by the shipping company
-    * Information model: voyageID, shipID, src_Port, planned_src_port_dates, dest_port, planned_dest_port_dates, free_space_this_leg
+    * Information model: voyageID, shipID, src_Port, planned_departure_date, dest_port, planned_arrival_dates, free_space_this_leg
     * Events: add itinerary route
-    * Operations: CRUD on itinerary routes
+    * Operations: CRUD on itinerary routes, query on capacity availability, assign slot to order, free slot for order.
 * Order Service: manage the shipment order
     * Information model: Booking id , customer, pickup loc, pickup after date, deliver location, expected deliver date, order status, assigned container  
     * Events: order placed, order assigned to voyage( sets VoyageID, ship ID ), container assigned to order ( Sets container ID), Landorder, Transport associated with pickup container, Order status event, Order billing/accounting event
@@ -69,14 +69,14 @@ As presented in [this note](https://github.com/ibm-cloud-architecture/refarch-ed
 
 ### Microservices for shipment order handling - additional comments and motivation
 
-In this section we provided additional explanations on the organization of the shipment handling processing into a set of EDA coupled microservices. This will include
-* some furher explanation of the concept behind each of the proposed microservices
+In this section we provided additional explanations on the organization of the shipment handling processing into a set of EDA coupled microservices. This will include:
+* some further explanation of the concept behind each of the proposed microservices
 * user stories for the microservices
 * explanation how this uses and benefits from key EDA patterns - event sourcing and Command Query Responsibility Separation (CQRS).
 
 #### Orders Microservice: Place Shipment Order - user stories
 
-As a manufacturer of pharmaceutical goods with production location XXX near port UU, I repeatedly identify new potential retailers for my product - for example a retailer with a distribution hub at location YYY near port VV - and I need to place an order with shipping company (K.Containers ) to have a container of my products picked up from location XXX and delivered to location YYY.  At the time I request a shipment booking I always know: 
+As a manufacturer of pharmaceutical goods with production location XXX near port UU, I repeatedly identify new potential retailers for my product - for example a retailer with a distribution hub at location YYY near port VV - and I need to place an order with shipping company (K.Containers) to have a container of my products picked up from location XXX and delivered to location YYY.  At the time I request a shipment booking I always know: 
 * the pickup location XXX and its adjacent port UU
 * the delivery location YYY and its adjacent port VV
 * the earliest date at which a container's worth of my products could be available for pickup at XXX 
@@ -93,13 +93,13 @@ If the order can be placed, I will want the response from the shipping company (
 
 In general any pickup any delivery dates after my product availability and before the customer required delivery date are acceptable.
 
-I know that I will be expected to document properties of my product including specifications of its nature and origin, weight transported, recipient for whom it is intended etc for Customs and export processing and for possible use by the shipping company BUT is not essential for an initial implementation of the order placement microservice
+I know that I will be expected to document properties of my product including specifications of its nature and origin, weight transported, recipient for whom it is intended etc for Customs and export processing and for possible use by the shipping company BUT is not essential for an initial implementation of the order placement microservice.
 
 #### Orders Microservice: Track Order user story
 
 As a manufacturer of Pharmaceutical goods who has placed a shipment order with a shipping company (K.Containers) and received an order ID for that shipment, I may repeatedly request for tracking in that orderID and expect to be told the current state and progress of the order.
 
-For tracking requests made before the goods are picked up from my facility, this will be primarily to confirm the order and to hear about any changes in expected pickup date or expected delivery date which could have resulted from delay of the assigned ship in earlier voyages or other difficulties. Having this information will hep me maintain good relations with the tagret retailer expecting to receive th goods. 
+For tracking requests made before the goods are picked up from my facility, this will be primarily to confirm the order and to hear about any changes in expected pickup date or expected delivery date which could have resulted from delay of the assigned ship in earlier voyages or other difficulties. Having this information will help me maintain good relations with the target retailer expecting to receive the goods. 
 
 For tracking requests made while my goods are in transit or have been delivered, I expect to receive full information of the history of the container carrying my goods including:
 * whether it has been picked up from my manufacturing site XXX by trucking / land transport and delivered to source port UU 
@@ -109,19 +109,17 @@ For tracking requests made while my goods are in transit or have been delivered,
 * whether a trucking / land transport has picked up the container and delivered to the retailer's location YYY
 * a full temperature and gps history of the container for the complete transit end to end. 
 
-Having this tracking information will give me confidence that my goods have not been damaged in transit and are or soon will be properly delivered to the expected rcipient in good order. 
+Having this tracking information will give me confidence that my goods have not been damaged in transit and are or soon will be properly delivered to the expected recipient in good order. 
 
 In an initial implementation of the track order microservice, some of this event information - particularly relating to customs, export, ship loading an unloading at port and trucking land transport operations may be missing. 
-
-#### Orders Microservice - concept
 
 #### Voyages Microservice:  Create new order and Assign to Voyage - user story
 As the person in Container Shipping company K.Containers reponsible for keeping track of shipment orders we have accepted and responded to customer order requests for new shipment orders, I need to be able to:
 * determine reliably whether there is free capacity on a particular scheduled voyage to accomodate an additional container 
 * AND IF space is available on that voyage ... 
    * create a unique new orderID for the shipment this shipment can be accepted 
-   * set up persistent information with the order which will help me ensure that shipment operations with K.Containers are porperly set up for it. This will include:
-       * the pick up location and port
+   * set up persistent information with the order which will help me ensure that shipment operations with K.Containers are properly set up for it. This will include:
+       * the pick up location and port.
        * expected pickup date.
        * the delivery location and port.
        * the voyageID on which this container is now booked.
@@ -131,7 +129,7 @@ As the person in Container Shipping company K.Containers reponsible for keeping 
  
 Know that a specific voyage can accomodate an additional container for a specific order allows me to respond positively to a customer request to place a new shipment order.
 
-Having an accurate free space count associated with each voyage will tell me when a voyage is fully booked and cannot accept any further orders. It will also warn me when a voyage is underbooked; using that information I can consider getting K.Containers to market additional cpapcity or lower its prices. 
+Having an accurate free space count associated with each voyage will tell me when a voyage is fully booked and cannot accept any further orders. It will also warn me when a voyage is underbooked; using that information I can consider getting K.Containers to market additional capacity or lower its prices.
 
 Having a list of all booked orders on a voyage will enable me to generate a manifest of all containers expected or in transit on that voyage. This is required as part of the customs and export clearances and also for review and approval by ship operations to ensure that the cargo loading for this voyage is acceptable/safe. 
 
@@ -139,7 +137,7 @@ The attributes associated with new order are used to schedule and trigger and mo
 
 #### Voyage Microservice: find voyages for port pair and time interval - user story
 
-As the person in Container Shipping company K.Containers reponsible for keeping track of shipment orders we have accepted and responding to customer order requests for new shipment orders, I need to be able to query the voyages records to find a list of voyages for a specific port-pair , with source port loading after a specifed start date  and destination port unloading before a specified end date. This is the set of voyages I need to check for available capacity  ( using create new order and assign to voyage ) when trying to determine whether a new shipment request from a customer can be satisfied by K.Containers shipping or not.   
+As the person in Container Shipping company, K.Containers, reponsible for keeping track of shipment orders we have accepted and responding to customer order requests for new shipment orders, I need to be able to query the voyages records to find a list of voyages for a specific port-pair, with source port loading after a specifed start date  and destination port unloading before a specified end date. This is the set of voyages I need to check for available capacity  (using created new order and assign to voyage) when trying to determine whether a new shipment request from a customer can be satisfied by K.Containers shipping or not.
      
 #### Fleets/Ships Microservice - concept 
 This service keeps track of each of the container ships available for transporting containers. Each ship has a unique shipID. The information about each ship is kept in a keystore keyed by shipID. 
@@ -162,17 +160,17 @@ Organizing the ship record in this way is an example of *event sourcing*; all ev
 This service keeps track of each scheduled, current or completed voyage of a container ship, being loaded with containers at a source port, sailing to a destination port and having onboard containers unloaded there. 
 
 The life cycle of a voyage is as follows:
-*  Voyages are scheduled some number of months in advance -  typically in response to some predictive model for how much demand is expected for shipment taffic in the future for a specifi source port destination port pair.
-    * each voyage is assigned a unique voyageID at the time it is created 
+*  Voyages are scheduled some number of months in advance -  typically in response to some predictive model for how much demand is expected for shipment taffic in the future for a specific source port destination port pair.
+    * each voyage is assigned a unique voyageID at the time it is created.
 * Each voyage is assigned to be handled by a specific ship, and will have expected dates for:
-    * start and completion loading at the source port
-    * leaving the source port and travellng to the destination port 
-    * arrival into unloading dock at the destination port and start and completion of unloading at that port 
-* When a voyage is scheduled and before it is actually in progress,  bookings (and cancellations) to carry containers can be accepted
+    * start and completion loading at the source port.
+    * leaving the source port and travelling to the destination port.
+    * arrival into unloading dock at the destination port and start and completion of unloading at that port.
+* When a voyage is scheduled and before it is actually in progress, bookings (and cancellations) to carry containers can be accepted.
     *  the capacity of the assigned ship determines the maximum number of containers which can be carried on the voyage; available capacity on the voyage must be tracked and booking accepted only until the voyage is fully booked
-* When the expected source port loading date is reached and the the voyage actually begins, there may be voyage events recording actual dates for arrival at the destination port etc which may be different from the expected dates 
-    *  since each ship is expecting to execute a sequence of voyages, delays on one voyage may force rescheduling expected dates or cancellations of follow on voyages
- * A voyage is eventually completed. The voyage record, keyed by voyageID, will continued to be important for a while for auditing and billing activities but will eventually be archived.
+* When the expected source port loading date is reached and the voyage actually begins, there may be voyage events recording actual dates for arrival at the destination port etc..., which may be different from the expected dates.
+    *  since each ship is expecting to execute a sequence of voyages, delays on one voyage may force rescheduling expected dates or cancellations of follow on voyages.
+ * A voyage is eventually completed. The voyage record, keyed by voyageID, will continue to be important for a while for auditing and billing activities but will eventually be archived.
  
  Voyage records play an important role in: 
  * processing shipment quote requests - when could a container be delivered to this destination from this source? 
@@ -210,7 +208,7 @@ Leveraging the Event Driven Architecture high level architecture foundation the 
 
 ## Deployment
 
-This solution supports a set of related repositories which includes user interface, a set of microservices to implement event sourcing, saga and CQRS patterns, and to implement simulators and analytics content.
+This solution supports a set of related repositories which includes user interface, a set of microservices to implement Event Sourcing, Saga and CQRS patterns, and to implement simulators and analytics content.
 In each repository we are explaining the design and implementation approach, how to build and run.
 
 ### Related repositories
