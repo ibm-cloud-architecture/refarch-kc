@@ -14,6 +14,10 @@ In developing the scenario, it became apparent that the event driven nature of b
 2. Exporter becomes the customer of the shipping agent and uses 'ToDoor' shiping service
 3. Shipping agent manages process of land transport loading, unloading and shipping. Through the scenario we can see the impact of “events”, which may delay or change the shipping process across all three parties.  
 
+We are using goods to be transported in refrigerator containers or reefer containers.
+
+<img src="docs/reefer.png" width="300px" style="padding:20px;"></img>
+
 ## Table Of Content
 
 * [Target Audiences](#target-audiences)
