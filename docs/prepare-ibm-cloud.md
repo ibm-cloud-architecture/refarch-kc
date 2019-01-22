@@ -15,6 +15,9 @@ IBM Cloud offers a set of services to run part of your event driven architecture
     ```
     * [Kubernetes CLI](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
     * IBM Cloud Container Registry plug-in
+    ```
+    $ ibmcloud plugin install container-registry -r Bluemix
+    ```
 
 All our docker images for this solution are in public docker registry: dockerhub under ibmcase.
 
@@ -41,7 +44,7 @@ Now for each component, microservice or cloud function, we are deploying as part
 
 ##  Event Streams Service on IBM Cloud
 
-To provision your service, go to the IBM Cloud Catalog and search for `Event Stream`. It is in the Integration category. Create the service and specify a name, a region, and a space. 
+To provision your service, go to the IBM Cloud Catalog and search for `Event Streams`. It is in the Integration category. Create the service and specify a name, a region, and a space. 
 
 * In the service credentials create new credentials to get the Kafka brokers list, the admim URL and the api_key needed to authenticate the consumers or producers.
  ![](./IES-IC-credentials.png)

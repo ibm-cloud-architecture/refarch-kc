@@ -219,7 +219,7 @@ In each repository we are explaining the design and implementation approach, how
 
 * [User Interface in Angular 7 and Backend For Frontend server used for demonstration purpose](https://github.com/ibm-cloud-architecture/refarch-kc-ui)
 * Most of the simples [supporting microservices and functions](https://github.com/ibm-cloud-architecture/refarch-kc-ms) of this solution are grouped in one repository. We may change that later if we need it.
-* [Real time analytics with IBM Streams Analytics](https://github.com/ibm-cloud-architecture/refarch-kc-streams)
+* [Real time analytics with IBM Streaming Analytics](https://github.com/ibm-cloud-architecture/refarch-kc-streams)
 * [Order management microservice using CQRS and event sourcing pattern](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms)
 
 The command `./scripts/clone.sh` clones those dependant repositories. 
