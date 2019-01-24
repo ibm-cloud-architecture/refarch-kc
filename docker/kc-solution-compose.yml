@@ -31,8 +31,6 @@ services:
         environment:
             KAFKA_ENV: LOCAL
             KAFKA_BROKERS: kafka1:9092
-        depends_on:
-            - simulator            
     orderquery:
         image: ibmcase/kc-orderqueryms:latest
         hostname: orderquery
@@ -41,5 +39,8 @@ services:
         environment:
             KAFKA_ENV: LOCAL
             KAFKA_BROKERS: kafka1:9092
-        depends_on:
-            - simulator
+    voyages:
+        image: ibmcase/kc-voyagesms:latest
+        hostname: voyages
+        ports:
+            - "3100:3000"
