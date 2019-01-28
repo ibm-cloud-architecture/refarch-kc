@@ -11,9 +11,9 @@ services:
             KAFKA_BROKERS: kafka1:9092
     web:
         image: ibmcase/kc-ui:latest
-        hostname: kcui
+        hostname: kcsolution
         ports:
-            - "3000:3000"
+            - "3110:3010"
         environment:
             KAFKA_BROKERS: kafka1:9092
             FLEET_MS_URL: http://simulator:9080/fleetms
@@ -23,6 +23,7 @@ services:
             - simulator
             - ordercmd 
             - orderquery
+            - voyages
     ordercmd:
         image: ibmcase/kc-ordercmdms:latest
         hostname: ordercmd

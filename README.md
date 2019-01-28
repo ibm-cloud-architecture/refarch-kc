@@ -1,8 +1,8 @@
 # K Container Shipment EDA reference implementation
 
-This solution implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an event driven architecture with event backbone, functions as service and microservices. 
+This solution implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an [event driven architecture](https://github.com/ibm-cloud-architecture/refarch-eda) with event backbone, functions as service and microservices. 
 
-As part of producing the IBM event driven point of view and reference architecture, we wanted to bring together a complete scenario which would cover all aspects of developing an event driven solutions including extended connections to devices/IOT  and blockchain for trusted business trading networks. We felt that the shipping business could provide a good foundation for this and would enable us to show how to develop event driven solutions following the architecture patterns.
+As part of producing the IBM event driven point of view and reference architecture, we wanted to bring together a complete scenario which would cover all aspects of developing an event driven solutions including extended connections to devices/IOT and blockchain for trusted business trading networks. We felt that the shipping business could provide a good foundation for this and would enable us to show how to develop event driven solutions following the architecture patterns.
 
 The high level process can be represented in the following diagram, and is described in detailed in [this section](analysis/readme.md#high-level-view-of-the-shipment-process-flow):
 
@@ -38,14 +38,14 @@ You will be greatly interested by the subjects addressed in this solution if you
 
 ## Define microservice scopes
 
-As presented in [in the note about event driven microservice patterns](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/README.md#understanding-event-driven-microservice-patterns), we are using a set of microservice design patterns to develop this solution. One of them is the sub domain decomposition. From the analysis output we have the aggregates, actors and data that are helping us to extract a set of subdomains. The figure below summarizes those aggregaees:
+As presented in [in the note about event driven microservice patterns](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/README.md#understanding-event-driven-microservice-patterns), we are using a set of event-drivent design patterns to develop this solution. One of them is the sub domain decomposition. From the analysis output we have the aggregates, actors and data that are helping us to extract a set of subdomains. The figure below summarizes those aggregaees:
 
-### Figure illustrating organization of shipment handling as microservices  
+#### Figure illustrating organization of shipment handling as microservices  
 
 ![](docs/microsvc-hld.png)
 
 #### Summary of microservice scopes for shipment handling:
-* Fleet Service: responsible to group the ship, container carriers, in fleet, per major ocean. 
+* Fleet Service: responsibles to group the ship (container carriers), in fleet, per major ocean. 
     * Information model: 
        * Fleet has multiple ships,
        * Ship has unique identifier (we will use its name), and a container capacity (represented as a matrix to make it simple), current position, status, voyage identifier for the voyage it is doing. 
@@ -53,21 +53,21 @@ As presented in [in the note about event driven microservice patterns](https://g
     * Operations: getFleets, get ships in a fleet, get ship by ID. CRUD Fleet and Ship.
 * Voyages Service: define a set of voyage schedules supported by the shipping company
     * Information model: voyageID, shipID, src_Port, planned_departure_date, dest_port, planned_arrival_dates, free_space_this_leg
-    * Events: add itinerary route
+    * Events: add itinerary route, OrderAssigned
     * Operations: CRUD on itinerary routes, query on capacity availability, assign slot to order, free slot for order.
 * Order Service: manage the shipment order
     * Information model: Booking id , customer, pickup loc, pickup after date, deliver location, expected deliver date, order status, assigned container  
     * Events: order placed, order assigned to voyage( sets VoyageID, ship ID ), container assigned to order ( Sets container ID), Landorder, Transport associated with pickup container, Order status event, Order billing/accounting event
     * Operations: CRUD on order, update order status
-* Container Service:
+* Container Service: (not yet implemented)
     * Information model: Container Id, Container temperature, container position, container condition ( maintenance goods), current associated order
     * Events: 
     * Operations: CRUD on container
-* Customs and Export Service
+* Customs and Export Service (not yet implemented)
     * Information model:
     * Events:
     * Operations: process an order for custom validation
-* Land Transport Service:
+* Land Transport Service: (not yet implemented)
     * Information model: LandTID, pickup place pickup time, drop place. Drop time, provider, price , container id , LT order status
     * Events:
     * Operations:
@@ -85,19 +85,24 @@ Leveraging the Event Driven Architecture high level architecture foundation the 
 * Each service supports the top-level process with context boundary defining the microservice scope.
 * Streamaing analytics is used to process aggregates and analytics on containers and ships movement data coming in real time.
 
+As we develop by iterations the current scope of the MVP is addressing the following components:
+
+![](docs/kc-mvp-components.png)
+
 [Read more on EDA design pattern...](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/ED-patterns.md)
 
 ## Deployment
 
-This solution supports a set of related repositories which includes user interface, a set of microservices to implement Event Sourcing, Saga and CQRS patterns, and to implement simulators and analytics content.
-In each repository we are explaining the design and implementation approach, how to build and run.
+This solution supports a set of related repositories which includes user interface, a set of microservices to implement the Event Sourcing and CQRS patterns, and to implement simulators and analytics content.
+In each repository we are explaining the design and implementation approach, how to build and run them:
 
 ### Related repositories
 
 * [User Interface in Angular 7 and Backend For Frontend server used for demonstration purpose](https://github.com/ibm-cloud-architecture/refarch-kc-ui)
-* Most of the simples [supporting microservices and functions](https://github.com/ibm-cloud-architecture/refarch-kc-ms) of this solution are grouped in one repository. We may change that later if we need it.
+* [Ship and fleet microservice](https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/fleet-ms) of this solution are grouped in one repository. We may change that later if we need it.
 * [Real time analytics with IBM Streaming Analytics](https://github.com/ibm-cloud-architecture/refarch-kc-streams)
 * [Order management microservice using CQRS and event sourcing pattern](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms)
+* [Voyage microservice](https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/voyages-ms)
 
 The command `./scripts/clone.sh` clones those dependant repositories. 
 
@@ -105,7 +110,7 @@ The command `./scripts/clone.sh` clones those dependant repositories.
 
 To make the solution running we need to have a set of components installed and ready. We can deploy the components of the solution into three environments:
 
-* **Public cloud (IBM Cloud)**, [see this article](docs/prepare-ibm-cloud.md) for details.
+* **Public cloud (IBM Cloud)**, [see this article](docs/prepare-ibm-cloud.md) for details on how to prepare the needed services.
 * **Private cloud** (we are using IBM Cloud Private) and [see this article](docs/prepare-icp.md) for details.
 * **Local** to your laptop, mostly using docker images and docker compose. See next section for explanations.
 
