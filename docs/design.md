@@ -5,7 +5,7 @@
 In this section we provided additional explanations on the organization of the shipment handling processing into a set of EDA coupled microservices. This will include:
 * some further explanation of the concept behind each of the proposed microservices
 * user stories for the microservices
-* explanation how this uses and benefits from key EDA patterns - event sourcing and Command Query Responsibility Separation (CQRS).
+* explanation how this uses and benefits from key [EDA patterns](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/ED-patterns.md) - event sourcing and Command Query Responsibility Separation (CQRS).
 
 #### Orders Microservice: Place Shipment Order - user stories
 
@@ -14,6 +14,10 @@ As a manufacturer of pharmaceutical goods with production location XXX near port
 * the delivery location YYY and its adjacent port VV
 * the earliest date at which a container's worth of my products could be available for pickup at XXX 
 * the latest date by which it needs to be delivered to my target retailer at location YYYY
+
+Here is an example of screen I may use:
+
+![](kc-order.png)
 
 Since my product can degrade if exposed to extreme temperatures, I expect transport to be in a refrigerated container and can supply a specific temperature range to be maintained while my goods are in transit. 
 
@@ -26,7 +30,7 @@ If the order can be placed, I will want the response from the shipping company (
 
 In general any pickup any delivery dates after my product availability and before the customer required delivery date are acceptable.
 
-I know that I will be expected to document properties of my product including specifications of its nature and origin, weight transported, recipient for whom it is intended etc for Customs and export processing and for possible use by the shipping company BUT is not essential for an initial implementation of the order placement microservice.
+*I know that I will be expected to document properties of my product including specifications of its nature and origin, weight transported, recipient for whom it is intended etc... for Customs and export processing and for possible use by the shipping company BUT is not essential for an initial implementation of the order placement microservice.*
 
 #### Orders Microservice: Track Order user story
 
