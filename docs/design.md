@@ -17,7 +17,7 @@ As a manufacturer of pharmaceutical goods with production location XXX near port
 
 Here is an example of screen I may use:
 
-![](kc-order.png)
+<img src="kc-order.png" height="630px">
 
 Since my product can degrade if exposed to extreme temperatures, I expect transport to be in a refrigerated container and can supply a specific temperature range to be maintained while my goods are in transit. 
 
@@ -49,6 +49,10 @@ For tracking requests made while my goods are in transit or have been delivered,
 Having this tracking information will give me confidence that my goods have not been damaged in transit and are or soon will be properly delivered to the expected recipient in good order. 
 
 In an initial implementation of the track order microservice, some of this event information - particularly relating to customs, export, ship loading an unloading at port and trucking land transport operations may be missing. 
+
+#### Order life cycle
+
+![](order-life-cycle.png)
 
 #### Voyages Microservice:  Create new order and Assign to Voyage - user story
 As the person in Container Shipping company K.Containers reponsible for keeping track of shipment orders we have accepted and responded to customer order requests for new shipment orders, I need to be able to:
