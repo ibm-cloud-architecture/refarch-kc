@@ -105,7 +105,11 @@ You can start the simulation on the ship movement by seleting one of the three p
 
 ![](kc-ship-scenarios.png)  
 
-The command is sent to the Simulator and the boat will start to move. The simulation implementation is yet not completed. 
+The command is sent to the Simulator and the boat will start to move and generate container metrics:
+
+![](boat-with-issues.png)  
+
+The simulation implementation is yet not completed. 
 
 
 
