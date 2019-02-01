@@ -1,0 +1,12 @@
+#!/bin/bash
+cd ../../refarch-kc-ms/fleet-ms/
+scripts/buildDocker.sh
+cd ../voyages-ms
+scripts/buildDocker.sh
+cd ../../refarch-kc-orders-ms/order-command-ms
+scripts/buildDocker.sh
+cd ../order-query-ms
+scripts/buildDocker.sh
+cd ../../refarch-kc-ui
+scripts/build.sh
+
