@@ -14,7 +14,7 @@ createTopic(){
     then
         echo "create " $1
         docker exec -ti docker_kafka1_1  /bin/bash -c "kafka-topics --create  --zookeeper zookeeper1:2181 --replication-factor 1 --partitions 1 --topic $1"
-    else 
+    else
         echo $1 " topic already created"
     fi
 }
@@ -22,4 +22,3 @@ createTopic(){
 createTopic "bluewaterContainer" topics
 createTopic "bluewaterShip" topics
 createTopic "bluewaterProblem" topics
-
