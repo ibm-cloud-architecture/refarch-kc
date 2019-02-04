@@ -1,2 +1,3 @@
 docker/kafka1/
 docker/zookeeper1/
+docker/api-secret.yml
