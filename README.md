@@ -125,7 +125,13 @@ The first time the backend is started, you need to configure the Kafka topics we
 
 1. In a second terminal use our second compose file to start the web server and the other microservices: `$ docker-compose -f kc-solution-compose.yml up`
 
-1. Verify the different components work fine. You can use the different test scripts you can find in each of the microservices, simulators of the solution, or go to the [user interface URL](http://localhost:3110) the Fleet Simulator [API URL](http://localhost:9080/api/explorer/), to get the fleets defined use the URL: http://localhost:9080/fleetms/fleets. Read the [demo script](./docs/demo.md) to see how all those components work together to present the business process.
+1. Verify the different components work fine. You can use the different test scripts we have defined in each of the microservices or use the following URLs:
+  * For the [user interface URL](http://localhost:3110)
+  * The Fleet Simulator [API URL](http://localhost:9080/api/explorer/) or one of its operation to get the fleet names: http://localhost:9080/fleetms/fleets.
+  * The voyages http://localhost:3100/voyage
+  * the order http://localhost:11080/orders/byManuf/GoodManuf
+  
+Read the [demo script](./docs/demo.md) to see how all those components work together to present the business process.
 
 ## Contribute
 

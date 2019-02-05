@@ -35,13 +35,13 @@ It is recommended that you use your own private image repository, so the followi
 
 ## Define an image private repository
 
-Use the [docker container image private registry](https://console.bluemix.net/containers-kubernetes/catalog/registry) to push your images and then deploy them to IBM Kubernetes Service. In the Catalog Use the `Containers` category and `Container Registry` tile. Create the repository with the `create` button. You can share a repository for multi IKS clusters.
+Use the [docker container image private registry](https://console.bluemix.net/containers-kubernetes/catalog/registry) to push your images and then deploy them to IBM Kubernetes Service. When deploying enterprise application it is strongly recommended to use private registry to protect your images from being used and changed by unauthorized users. Private registries must be set up by the cluster admin to ensure that the credentials to access the private registry are available to the cluster users. In the Catalog Use the `Containers` category and `Container Registry` tile. Create the repository with the `create` button. You can share a repository for multi IKS clusters.
 
 Once you access your registry, create a namespace for your solution. We used `ibmcaseeda`. 
 
 ![](iks-registry-ns.png)
 
-We will use this namesapce when tagging the docker images for our microservice. But first let add a kubernetes cluster.
+We will use this namespace when tagging the docker images for our microservice. But first let add a kubernetes cluster.
 
 ## Kubernetes Cluster Service
 
@@ -101,13 +101,21 @@ The Event streams broker api key is needed to connect any deployed consumers or 
 The template (file: api-secret-tmpl.yml) for this secret is in the docker folder. Use the following command to deploy the secret into kubernetes cluster under the browncompute namespace:
 
 ```
-$ kubectl create -f api-secret.yml  -n browncompute
+$ kubectl create -f api-secret.yml -n browncompute
 ```
 
 Verify it is configured:
 ```
-$ kubectl describe secret  es-secret -n browncompute
+$ kubectl describe secret es-secret -n browncompute
 ```
+> Name:         es-secret  
+ Namespace:    browncompute  
+ Labels:       <none>  
+ Annotations:  <none>  
+ Type:  Opaque  
+ Data  
+ ====  
+ apikey:  36 bytes  
 
 The secret will be accessed via environment variable so when defining pod we will add reference to this secret. Something like the following definition:
 
@@ -120,8 +128,17 @@ The secret will be accessed via environment variable so when defining pod we wil
               key: apikey
 ```
 
+See an example in the fleet ms [deployment.yml]()
 
 ## Deploy each microservice
+
+As we push images to the IBM Cloud provate registry we need to define a secret to keep the authentication token so the IKS cluster can download images from the registry. This is also mandatory when registry and clusters are not in the same region.
+
+Copy the default secret to your namespace:
+```
+kubectl get secret bluemix-default-secret-regional -o yaml | sed 's/default/browncompute/g' | kubectl -n browncompute create -f -
+```
+
 Now for each microservice of the solution, we have defined a helm chart or a script to deploy it to IKS. The following links go to each service deployment instructions:
 
 * First deploy the [fleet microservice](https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/fleet-ms#run-on-ibm-cloud-with-kubernetes-service)
