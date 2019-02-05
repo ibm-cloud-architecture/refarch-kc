@@ -33,15 +33,18 @@ fi
 podId=$(kubectl get pods -n $ns | grep ordercommandms | awk '{print $1}')
 verifyPod $podId
 
+echo "###########################"
+cd ../../refarch-kc-order-ms/order-ordercommand-ms/scripts
+./deployHelm
+
 echo "############################"
-oq=$(helm list | grep kc-fleetms | awk '{print $1}')
-if [[ -z "$oq" ]]
-then 
-  echo "kc-fleetms release not deployed..."
-  cd ../../refarch-kc-ms/fleet-ms/chart
-  helm install fleetms/ --name kc-fleetms --namespace browncompute
-else 
-    echo "kc-fleetms release deployed, here is the pod logs" 
-fi
-podId=$(kubectl get pods -n $ns | grep fleetms | awk '{print $1}')
-verifyPod $podId
+cd ../../refarch-kc-ms/fleet-ms/scripts
+./deployHelm
+
+echo "############################"
+cd ../voyage-ms/scripts
+./deployHelm
+
+echo "############################"
+cd ../../refarch-kc-ui/scripts
+./deployHelm
