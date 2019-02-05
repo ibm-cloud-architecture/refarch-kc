@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ $# -eq 2 ]
+then
+  iksname=$1
+  nspace=$2
+else
+  iksname="fabio-wdc-07"
+  nspace="browncompute"
+fi
+echo "get worker node IP address for $iksname"
+ipadd=$(ibmcloud ks workers $iksname | grep kube | awk '{print $2}' | head -n 1)
+
+port=$(kubectl get services -n $nspace | grep )
+url=$ipadd":"$port
+cd ../../refarch-kc-ms/fleet-ms
+./scripts/testGetFleetNames.sh $url

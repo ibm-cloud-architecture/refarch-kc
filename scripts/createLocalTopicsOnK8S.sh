@@ -1,8 +1,8 @@
 echo "Create topics for the KC solutions on your local kafka"
-ns="greencompute"
+ns="browncompute"
 
 echo "Kafka pod name is..."
-kpof=$(kubectl get pods -n greencompute| grep kafka | awk '{print $1}')
+kpof=$(kubectl get pods -n browncompute| grep kafka | awk '{print $1}')
 if [ -z $kpof ]
 then
   echo "Kafka not installed locally on your kubernetes cluster"
@@ -28,3 +28,4 @@ createTopic "bluewaterContainer" topics
 createTopic "bluewaterShip" topics
 createTopic "bluewaterProblem" topics
 createTopic "orders" topics
+createTopic "errors" topics

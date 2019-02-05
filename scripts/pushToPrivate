@@ -1,0 +1,3 @@
+docker push registry.ng.bluemix.net/ibmcaseeda/kc-orderqueryms
+docker push registry.ng.bluemix.net/ibmcaseeda/kc-ordercmdms
+docker push registry.ng.bluemix.net/ibmcaseeda/kc-fleetms

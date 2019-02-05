@@ -89,34 +89,56 @@ As we develop by iterations the current scope of the Minimum Viable Product is o
 
 [Read more on EDA design pattern...](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/ED-patterns.md)
 
+--- 
+
 ## Deployment
 
 This solution supports a set of related repositories which includes user interface, a set of microservices to implement the Event Sourcing and CQRS patterns, and to implement simulators and analytics content.
-In each repository we are explaining the design and implementation approach, how to build and run them:
+In each repository we are explaining the design and implementation approach, how to build and run them for development purpose.
 
 ### Related repositories
 
 The command `./scripts/clone.sh` in this repositiory clones those dependant repositories. 
 
-* [User Interface in Angular 7 and Backend For Frontend server used for demonstration purpose](https://github.com/ibm-cloud-architecture/refarch-kc-ui)
+* [User Interface in Angular 7 and Backend For Frontend server used for demonstration purpose](https://github.com/ibm-cloud-architecture/refarch-kc-ui).
 * [Ship and fleet microservice](https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/fleet-ms) of this solution are grouped in one repository. We may change that later if we need it.
-* [Real time analytics with IBM Streaming Analytics](https://github.com/ibm-cloud-architecture/refarch-kc-streams)
-* [Order management microservice using CQRS and event sourcing pattern](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms)
-* [Voyage microservice](https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/voyages-ms)
-
+* [Real time analytics with IBM Streaming Analytics](https://github.com/ibm-cloud-architecture/refarch-kc-streams) to identify problem on containers from real time events.
+* [Order management microservice using CQRS and event sourcing pattern](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms).
+* [Voyage microservice](https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/voyages-ms) to support the order management and ship voyage assignment.
 
 
 ### Configurations
 
-To make the solution running we need to have a set of products installed and ready. We can deploy the components of the solution into three environments:
+To make the solution running we need to have a set of products installed and ready:
+* Event Streams
+* Streaming Analytics
+* Kubernetes Cluster or Docker compose.
+
+We can deploy the components of the solution into three environments:
 
 * **Public cloud (IBM Cloud)**, [see this article](docs/prepare-ibm-cloud.md) for details on how to prepare the needed services.
 * **Private cloud** (we are using IBM Cloud Private) and [see this article](docs/prepare-icp.md) for details.
 * **Local** to your laptop, mostly using docker images and docker compose. See next section for explanations.
 
+### Build
+This project includes some scripts to help build the full solution once all the repositories are cloned. If you have some problem during this integrated build we recommend goind into each project to assess the build process in detail. Also for development purpose going into each project, you can learn how to build and run locally.
+
+* To be able to build you need maven and docker:
+  * Get [docker and install](https://docs.docker.com/install/) it (if not done yet).
+  * Get [maven](https://maven.apache.org/install.html) and add it to your PATH
+
+* build all projects in one command by executing: `scripts/buildAll`
+* Use the `scripts/imageStatus` script to verify your images are built:
+
+```
+```
+
+* If you want to delete the docker images after that use the command:
+``
+
 ### Run locally
 
-To run locally you can use a kubernetes cluster like Minikube or Docker Edge, or use docker-compose. We propose to use docker-compose for local deployment, and here are the instructions to launch backbone and solution components:
+To run the full solution locally you can use a kubernetes cluster like Minikube or Docker Edge, or use docker-compose. We propose to use docker-compose for local deployment, and here are the instructions to launch backbone and solution components:
 
 1. Get [docker and install](https://docs.docker.com/install/) it (if not done yet)
 1. Get [docker compose](https://docs.docker.com/compose/install/)
@@ -132,6 +154,53 @@ The first time the backend is started, you need to configure the Kafka topics we
   * the order http://localhost:11080/orders/byManuf/GoodManuf
   
 Read the [demo script](./docs/demo.md) to see how all those components work together to present the business process.
+
+### Run on IBM Cloud Kubernetes Services
+Be sure to have installed the needed services by following [this note](docs/prepare-ibm-cloud.md). To use Event Streams we need to get the API key and configure a secret to the `browncompute` namespace.
+
+1. Define a secret for Event Stream: 
+  ```sh
+  $ kubectl create secret generic eventstreams-apikey --from-literal=binding='<replace with api key>' -n browncompute
+  # Verify the secrets
+  $ kubectl get secrets -n browncompute
+  ```  
+  This secret is used by all the microservices using Kafka. The details of how we use it with environment variable is described in one of the project [here](https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/fleet-ms/README.md#run-on-ibm-cloud-with-kubernetes-service)  
+
+2. Define a secret to access the image private repository so when your IKS instance accesses docker images it will authenticate. This is also mandatory when registry and clusters are not in the same region.
+  ```sh
+  kubectl get secret bluemix-default-secret-regional -o yaml | sed 's/default/browncompute/g' | kubectl -n browncompute create -f -
+
+  # Verify the secret 
+  $ kubectl get secrets -n browncompute
+  ```
+ 
+ > bluemix-browncompute-secret-regional   kubernetes.io/dockerconfigjson        1         16h  
+default-token-j5mfj                    kubernetes.io/service-account-token   3         28d  
+eventstreams-apikey                    Opaque                                1         1h  
+
+
+Now for each microservice of the solution, we have defined a helm chart or a script to deploy it to IKS. 
+
+3. Push images to your IBM Cloud private image repository. If not connected to ibmcloud do the following:
+  ```sh
+  $ ibmcloud login -a https://api.us-east.bluemix.net
+
+  # Target the IBM Cloud Container Service region in which you want to work.
+  $ ibmcloud cs region-set us-east
+  # Set the KUBECONFIG environment variable.
+  $ export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/fabio-wdc-07/kube-config-wdc07-fabio-wdc-07.yml
+  # Verify you have access to your cluster by listing the node:
+  $ kubectl get nodes
+  ```
+  Then execute the `./script/pushToPrivate`
+  
+The following links go to each service deployment instructions:
+
+* First deploy the [fleet microservice](https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/fleet-ms#run-on-ibm-cloud-with-kubernetes-service)
+* The [voyage microservice](https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/voyages-ms#run-on-ibm-cloud-with-kubernetes-service)
+* The [order command microservice](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/tree/master/order-command-ms#run-on-ibm-cloud-with-kubernetes-service)
+* The [order query microservice](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/tree/master/order-query-ms#run-on-ibm-cloud-with-kubernetes-service)
+* Last the [web user interface](https://github.com/ibm-cloud-architecture/refarch-kc-ui#deploy-on-ibm-cloud-iks)
 
 ## Contribute
 

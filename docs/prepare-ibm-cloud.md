@@ -16,12 +16,12 @@ At the high level the deployed solution will look like the following:
     * [Docker CLI](https://docs.docker.com/install/)
     * [IBM Cloud CLI](https://cloud.ibm.com/docs/cli/reference/ibmcloud/download_cli.html#install_use)
     * IBM Cloud Kubernetes Service [plug-in](https://cloud.ibm.com/docs/cli/reference/ibmcloud/extend_cli.html#plug-ins) using the following command:
-      ```
+      ```sh
       $ ibmcloud plugin install container-service -r Bluemix
       ```
     * [Kubernetes CLI](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
     * IBM Cloud Container Registry plug-in
-      ```
+      ```sh
       $ ibmcloud plugin install container-registry -r Bluemix
       ```
 
@@ -54,7 +54,7 @@ Here is an image of our cluster, with 3 nodes and the smallest configuration:
 ![](./iks-cluster.png) 
 
 To access to the cluster use the following command:
-```
+```sh
 # login to IBM Cloud. Do not need to be done each time.
 $ ibmcloud login -a https://api.us-east.bluemix.net
 
@@ -129,20 +129,3 @@ The secret will be accessed via environment variable so when defining pod we wil
 ```
 
 See an example in the fleet ms [deployment.yml]()
-
-## Deploy each microservice
-
-As we push images to the IBM Cloud provate registry we need to define a secret to keep the authentication token so the IKS cluster can download images from the registry. This is also mandatory when registry and clusters are not in the same region.
-
-Copy the default secret to your namespace:
-```
-kubectl get secret bluemix-default-secret-regional -o yaml | sed 's/default/browncompute/g' | kubectl -n browncompute create -f -
-```
-
-Now for each microservice of the solution, we have defined a helm chart or a script to deploy it to IKS. The following links go to each service deployment instructions:
-
-* First deploy the [fleet microservice](https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/fleet-ms#run-on-ibm-cloud-with-kubernetes-service)
-* The [voyage microservice](https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/voyages-ms#run-on-ibm-cloud-with-kubernetes-service)
-* The [order command microservice](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/tree/master/order-command-ms#run-on-ibm-cloud-with-kubernetes-service)
-* The [order query microservice](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/tree/master/order-query-ms#run-on-ibm-cloud-with-kubernetes-service)
-* Last the [web user interface](https://github.com/ibm-cloud-architecture/refarch-kc-ui#deploy-on-ibm-cloud-iks)
