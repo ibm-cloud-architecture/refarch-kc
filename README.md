@@ -130,18 +130,18 @@ This project includes some scripts to help build the full solution once all the 
 * build all projects in one command by executing: `scripts/buildAll`
 * Use the `scripts/imageStatus` script to verify your images are built:
 
-  ```
-ibmcase/kc-ui                                        latest              c89827424689        15 hours ago        596MB  
-registry.ng.bluemix.net/ibmcaseeda/kc-ui             latest              c89827424689        15 hours ago        596MB  
-ibmcase/kc-orderqueryms                              latest              09406c8795e8        23 hours ago        548MB   
-registry.ng.bluemix.net/ibmcaseeda/kc-orderqueryms   latest              09406c8795e8        23 hours ago        548MB   
-ibmcase/kc-ordercmdms                                latest              5190db45e4bf        23 hours ago        548MB   
-registry.ng.bluemix.net/ibmcaseeda/kc-ordercmdms     latest              5190db45e4bf        23 hours ago        548MB   
-ibmcase/kc-voyagesms                                 latest              54b8d6a61f4e        23 hours ago        1.16GB   
-registry.ng.bluemix.net/ibmcaseeda/kc-voyagesms      latest              54b8d6a61f4e        23 hours ago        1.16GB   
-ibmcase/kc-fleetms                                   latest              a5e1d40a8b1f        23 hours ago        616MB   
-registry.ng.bluemix.net/ibmcaseeda/kc-fleetms        latest              a5e1d40a8b1f        23 hours ago        616MB   
-  ```
+```
+ ibmcase/kc-ui                                        latest              c89827424689        15 hours ago        596MB  
+ registry.ng.bluemix.net/ibmcaseeda/kc-ui             latest              c89827424689        15 hours ago        596MB  
+ ibmcase/kc-orderqueryms                              latest              09406c8795e8        23 hours ago        548MB   
+ registry.ng.bluemix.net/ibmcaseeda/kc-orderqueryms   latest              09406c8795e8        23 hours ago        548MB   
+ ibmcase/kc-ordercmdms                                latest              5190db45e4bf        23 hours ago        548MB   
+ registry.ng.bluemix.net/ibmcaseeda/kc-ordercmdms     latest              5190db45e4bf        23 hours ago        548MB   
+ ibmcase/kc-voyagesms                                 latest              54b8d6a61f4e        23 hours ago        1.16GB   
+ registry.ng.bluemix.net/ibmcaseeda/kc-voyagesms      latest              54b8d6a61f4e        23 hours ago        1.16GB   
+ ibmcase/kc-fleetms                                   latest              a5e1d40a8b1f        23 hours ago        616MB   
+ registry.ng.bluemix.net/ibmcaseeda/kc-fleetms        latest              a5e1d40a8b1f        23 hours ago        616MB   
+```
 
 * If you want to delete the docker images after that use the command:
 `docker rmi $(docker -aq | grep ibmcase)`
