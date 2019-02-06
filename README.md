@@ -169,7 +169,8 @@ Read the [demo script](./docs/demo.md) to see how all those components work toge
 
 Be sure to have installed the needed services (Event Streams, Streams Analytics, IKS) by following [this note](docs/prepare-ibm-cloud.md). 
 
-1. Define a Event Stream API key secret: To use Event Streams, we need to get the API key and configure a secret to the `browncompute` namespace.
+1. Define a Event Stream API key secret: To use Event Streams, we need to get the API key and configure a secret to the `browncompute` namespace.  
+
   ```sh
   $ kubectl create secret generic eventstreams-apikey --from-literal=binding='<replace with api key>' -n browncompute
   # Verify the secrets
