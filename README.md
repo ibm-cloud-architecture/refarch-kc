@@ -186,10 +186,14 @@ Be sure to have installed the needed services (Event Streams, Streams Analytics,
   $ kubectl get secrets -n browncompute
   ```
  
- > bluemix-browncompute-secret-regional   kubernetes.io/dockerconfigjson        1         16h  
-default-token-j5mfj                    kubernetes.io/service-account-token   3         28d  
-eventstreams-apikey                    Opaque                                1         1h  
+You will see something like below.
 
+```
+NAME                                       TYPE                                  DATA      AGE
+bluemix-browncompute-secret-regional       kubernetes.io/dockerconfigjson        1         22m
+default-token-ggwl2                        kubernetes.io/service-account-token   3         41m
+eventstreams-apikey                        Opaque                                1         24m
+```
 
 Now for each microservice of the solution, we have defined a helm chart or a script to deploy it to IKS. 
 
@@ -204,7 +208,7 @@ Now for each microservice of the solution, we have defined a helm chart or a scr
   # Verify you have access to your cluster by listing the node:
   $ kubectl get nodes
   ```
-  Then execute the `./script/pushToPrivate`
+  Then execute the `./scripts/pushToPrivate`
   
 4. Deploy the helm charts for each components using the `scripts/deployHelms`. 
 
