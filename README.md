@@ -123,12 +123,13 @@ We can deploy the components of the solution into three environments:
 ### Build
 This project includes some scripts to help build the full solution once all the repositories are cloned. If you have some problem during this integrated build we recommend goind into each project to assess the build process in detail. Also for development purpose going into each project, you can learn how to build and run locally.
 
-* To be able to build you need maven and docker:
+* To be able to build you need npm, node, maven and docker:
   * Get [docker and install](https://docs.docker.com/install/) it (if not done yet).
   * Get [maven](https://maven.apache.org/install.html) and add it to your PATH
+  * Get [node and npm](https://nodejs.org/en/)
 
 * build all projects in one command by executing: `scripts/buildAll`
-* Use the `scripts/imageStatus` script to verify your images are built:
+* Use the `scripts/imageStatus` script to verify your docker images are built:
 
 ```
  ibmcase/kc-ui                                        latest              c89827424689        15 hours ago        596MB  
@@ -152,16 +153,18 @@ To run the full solution locally you can use a kubernetes cluster like Minikube 
 
 1. Get [docker and install](https://docs.docker.com/install/) it (if not done yet)
 1. Get [docker compose](https://docs.docker.com/compose/install/)
+1. Assign at least 8GB of memory and may be 4 to 6 CPUs to your docker runtime. This is set in the Preferences menu and under the `Advanced` tab.
 1. In one Terminal window use our compose file to start the backend components: `$ cd docker &&  docker-compose -f backbone-compose.yml up`.    
 The first time the backend is started, you need to configure the Kafka topics we are using in the solution. The local script: `scripts/createLocalTopics.sh` will create them.
 
 1. In a second terminal use our second compose file to start the web server and the other microservices: `$ docker-compose -f kc-solution-compose.yml up`
 
 1. Verify the different components work fine. You can use the different test scripts we have defined in each of the microservices or use the following URLs:
-  * For the [user interface URL http://localhost:3110](http://localhost:3110)
+  * For the [user interface URL http://localhost:3010](http://localhost:3010)
   * The Fleet Simulator [API URL](http://localhost:9080/api/explorer/) or one of its operation to get the fleet names: http://localhost:9080/fleetms/fleets.
+  * Add an order
   * The voyages http://localhost:3100/voyage
-  * The order http://localhost:11080/orders/byManuf/GoodManuf
+  * The order query microservice http://localhost:11080/orders/byManuf/GoodManuf
   
 Read the [demo script](./docs/demo.md) to see how all those components work together to present the business process.
 
