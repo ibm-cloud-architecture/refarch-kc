@@ -1,4 +1,3 @@
 __confluent.support.metrics
-bluewaterContainer
-bluewaterProblem
-bluewaterShip
+__consumer_offsets
+orders
