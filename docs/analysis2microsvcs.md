@@ -42,7 +42,7 @@ A complete microservices specification ( the target of this design step ) will i
    * APIs  ( Synchronous ) 
    * Topics and events Subscribed to
    * Events published / emitted   
-* List of end to end interaction 
+* List of end to end interactions 
    * List of logic segments per microservice 
 * Recovery processing, scaling 
    * We expect this to be highly patterned and template driven not requiring example-specific design 
