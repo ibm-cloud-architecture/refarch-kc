@@ -1,4 +1,4 @@
-# From Analysis to Microservices 
+# From Analysis to Microservice Specifications 
 ## Goals and outline of section 
 This section describes the design step which uses output from the event storming session and subsequent analysis and derives a set of micro services design specification.
 The goals for ts design step and the resulting specifications are: 
@@ -46,6 +46,23 @@ A complete microservices specification ( the target of this design step ) will i
    * List of logic segments per microservice 
 * Recovery processing, scaling 
    * We expect this to be highly patterned and template driven not requiring example-specific design 
+With the above information coging of each microservice and other components of the sprint should be straightforward.    
+
+
+## Steps in the design process 
+Here we describe in generic terms, each step in the process of deriving event-linked microservice specification. In following section we will describe in more detail how each of these steps plays out in the specific context of the the k container shipping example.
+
+List of generic steps:
+* Step 1 - limit the context and scope for this particular build / sprint 
+   * we assume that we are developing a particular build for a sprint within some agile development ; additional functions and complexity may be added in later sprints
+   * working from the initial list of aggregates, select which aggregates will be included in this build
+   * for each aggregate possible choices are: (1) to completely skip and workaround the aggregate in this build (2) to include a full lifecycle implementation of the aggregate (3) to provide a simplified lifecycle implementation - typicall a table of entities is initialized at start up, and state changes to existing entities are tracked 
+   * determine whether there are simulation services or predictive analytics service to be included in the build 
+   * identify the external query apis and command apis which this build will support 
+   
+   
+    
+     
 
 ## Example of a reference to an image 
 Here is an example of screen I may use:
