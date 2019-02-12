@@ -72,7 +72,12 @@ Here we describe in generic terms, each step in the process of deriving event-li
    * ( Typically queries are synchronous API calls since the caller cannot usefully proceeed until a result is returned )
    * From this we can extract: (1)  a complete  list of event types on each topic, with information passed on each event type (2) the complete list of “logic segments” for each microservice processing action in response to an API call or initiating event 
    * When specifying  the “fields” in each event – the CloudEvents standard  in https://github.com/cloudevents/spec should be assumed as a start point 
+*  **Step 4 - specify recovery approach in case a microservice fails**
+   * If a microservice fails it will need to recover its internal state date by resubscribing to one or more topics on the event bus  
+   * In general, commamd and query microservices will have a standard pattern for doing this 
+   * Any custom event filtering and service specific logic should be specified 
 
+#### Concepts underlying this approach 
 
    
 ## Example of a reference to an image 
