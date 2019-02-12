@@ -50,16 +50,20 @@ With the above information coging of each microservice and other components of t
 
 
 ## Steps in the design process 
-Here we describe in generic terms, each step in the process of deriving event-linked microservice specification. In following section we will describe in more detail how each of these steps plays out in the specific context of the the k container shipping example.
+Here we describe in generic terms, each step in the process of deriving event-linked microservice specification. In following section we will describe in more detail how each of these steps plays out in the specific context of the the K container shipping example.
 
-List of generic steps:
-* Step 1 - limit the context and scope for this particular build / sprint 
+#### List of generic steps:
+*  **Step 1 - limit the context and scope for this particular build / sprint** 
    * we assume that we are developing a particular build for a sprint within some agile development ; additional functions and complexity may be added in later sprints
    * working from the initial list of aggregates, select which aggregates will be included in this build
    * for each aggregate possible choices are: (1) to completely skip and workaround the aggregate in this build (2) to include a full lifecycle implementation of the aggregate (3) to provide a simplified lifecycle implementation - typicall a table of entities is initialized at start up, and state changes to existing entities are tracked 
    * determine whether there are simulation services or predictive analytics service to be included in the build 
    * identify the external query apis and command apis which this build will support 
-   
+* **Step 2 -    identify specific microservices in each aggregate **
+   *  each aggregate will be implemented as some composition of (1) a command microservice managing state chsnges to the entities in this aggregate (2) possibly one or more separate ( CQRS) query services providing internal or external API query capabilities (3) additional simulation, predictive analytics or User Interface microservices 
+   * The command microservice will be built around and manage a collection of active entites for the aggregate, keyed by some primary key
+   * The separation of each aggregate into specific component microservices as outlined above, will be a complete list of microservices for the build. 
+   * Identify the data collections, and collection organization ( keying structure)  in each command and query microservice 
    
     
      
