@@ -24,7 +24,7 @@ In this microservices specification step we make use of the following materials 
    * Policies 
    * Event prediction and probability flows 
 * Data  ( Conceptual ) 
-The derivation of these material was described in: [Analysis](./analysis/readme.md) .
+The derivation of these material was described in: [Analysis](../analysis/readme.md) .
 
 ## Example of a reference to an image 
 Here is an example of screen I may use:
