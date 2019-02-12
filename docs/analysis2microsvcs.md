@@ -56,14 +56,24 @@ Here we describe in generic terms, each step in the process of deriving event-li
 *  **Step 1 - limit the context and scope for this particular build / sprint** 
    * we assume that we are developing a particular build for a sprint within some agile development ; additional functions and complexity may be added in later sprints
    * working from the initial list of aggregates, select which aggregates will be included in this build
-   * for each aggregate possible choices are: (1) to completely skip and workaround the aggregate in this build (2) to include a full lifecycle implementation of the aggregate (3) to provide a simplified lifecycle implementation - typicall a table of entities is initialized at start up, and state changes to existing entities are tracked 
+   * for each aggregate possible choices are: (1) to completely skip and workaround the aggregate in this build (2) to include a full lifecycle implementation of the aggregate (3) to provide a simplified lifecycle implementation - typicall a table of entities is initialized at s.  tart up, and state changes to existing entities are tracked 
    * determine whether there are simulation services or predictive analytics service to be included in the build 
    * identify the external query apis and command apis which this build will support 
+   * create entity lifecycle diagrams for entites having a full lifecycle implementation in this build / sprint .
 *  **Step 2 -    identify specific microservices in each aggregate**
    *  each aggregate will be implemented as some composition of (1) a command microservice managing state chsnges to the entities in this aggregate (2) possibly one or more separate ( CQRS) query services providing internal or external API query capabilities (3) additional simulation, predictive analytics or User Interface microservices 
    * The command microservice will be built around and manage a collection of active entites for the aggregate, keyed by some primary key
-   * The separation of each aggregate into specific component microservices as outlined above, will be a complete list of microservices for the build. 
-   * Identify the data collections, and collection organization ( keying structure)  in each command and query microservice 
+   * The separation of each aggregate into specific component microservices as outlined above, will be a complete list of microservices for the build / sprint. 
+   * Identify the data collections, and collection organization (keying structure)  in each command and query microservice for this build.
+*  **Step 3 -  generate microservice interaction diagrams for the build** 
+   * The diagram will show API calls initiating state change 
+   * It shows for each interaction whether this is a synchronous API calls or an asynchronous event interaction via the event backbone
+   * The diagram labes each specific event interaction between microservices trigerring a state change
+   * ( Typically queries are synchronous API calls since the caller cannot usefully proceeed until a result is returned )
+   * From this we can extract: (1)  a complete  list of event types on each topic, with information passed on each event type (2) the complete list of “logic segments” for each microservice processing action in response to an API call or initiating event 
+   * When specifying  the “fields” in each event – the CloudEvents standard  in https://github.com/cloudevents/spec should be assumed as a start point 
+
+
    
 ## Example of a reference to an image 
 Here is an example of screen I may use:
