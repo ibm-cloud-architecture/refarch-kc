@@ -59,15 +59,12 @@ Here we describe in generic terms, each step in the process of deriving event-li
    * for each aggregate possible choices are: (1) to completely skip and workaround the aggregate in this build (2) to include a full lifecycle implementation of the aggregate (3) to provide a simplified lifecycle implementation - typicall a table of entities is initialized at start up, and state changes to existing entities are tracked 
    * determine whether there are simulation services or predictive analytics service to be included in the build 
    * identify the external query apis and command apis which this build will support 
-* **Step 2 -    identify specific microservices in each aggregate **
+*  **Step 2 -    identify specific microservices in each aggregate**
    *  each aggregate will be implemented as some composition of (1) a command microservice managing state chsnges to the entities in this aggregate (2) possibly one or more separate ( CQRS) query services providing internal or external API query capabilities (3) additional simulation, predictive analytics or User Interface microservices 
    * The command microservice will be built around and manage a collection of active entites for the aggregate, keyed by some primary key
    * The separation of each aggregate into specific component microservices as outlined above, will be a complete list of microservices for the build. 
    * Identify the data collections, and collection organization ( keying structure)  in each command and query microservice 
    
-    
-     
-
 ## Example of a reference to an image 
 Here is an example of screen I may use:
 
