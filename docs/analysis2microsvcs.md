@@ -52,7 +52,7 @@ With the above information coging of each microservice and other components of t
 ## Steps in the design process 
 Here we describe in generic terms, each step in the process of deriving event-linked microservice specification. In following section we will describe in more detail how each of these steps plays out in the specific context of the the K container shipping example.
 
-#### List of generic steps:
+### List of generic steps:
 *  **Step 1 - limit the context and scope for this particular build / sprint** 
    * we assume that we are developing a particular build for a sprint within some agile development ; additional functions and complexity may be added in later sprints
    * working from the initial list of aggregates, select which aggregates will be included in this build
@@ -71,14 +71,20 @@ Here we describe in generic terms, each step in the process of deriving event-li
    * The diagram labels each specific event interaction between microservices trigerring a state change
    * ( Typically queries are synchronous API calls since the caller cannot usefully proceeed until a result is returned )
    * From this we can extract: (1)  a complete  list of event types on each topic, with information passed on each event type (2) the complete list of “logic segments” for each microservice processing action in response to an API call or initiating event 
-   * When specifying  the “fields” in each event – the CloudEvents standard  in https://github.com/cloudevents/spec should be assumed as a start point 
+   * When, at the next level of detail, the individual fields in each event are specified and typed, the CloudEvents standard  in https://github.com/cloudevents/spec should be assumed as a start point 
 *  **Step 4 - specify recovery approach in case a microservice fails**
    * If a microservice fails it will need to recover its internal state date by resubscribing to one or more topics on the event bus  
    * In general, commamd and query microservices will have a standard pattern for doing this 
    * Any custom event filtering and service specific logic should be specified 
 
-#### Concepts underlying this approach 
-
+### Concepts and rationale underlying this design approach
+* What is the difference between event information stored in the event backbone and state data stored in the microservices ?
+   * the event information stored persistently in the event backbone is organized by topic and, within each topic, entirely by event time-of-occurrence.
+   * the state information in a command microservice is a list (collection) of  all **currently active** entities of the owning aggregate ( e.g. all orders, all voyages etc ) and the **current** state of each such entity 
+   * each command microservice will consist of a collection of entity records keyed by primary key 
+   * this is complementary to the historically organized information in the event back back 
+  
+  
    
 ## Example of a reference to an image 
 Here is an example of screen I may use:
