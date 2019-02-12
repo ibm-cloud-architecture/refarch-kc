@@ -82,8 +82,13 @@ Here we describe in generic terms, each step in the process of deriving event-li
    * the event information stored persistently in the event backbone is organized by topic and, within each topic, entirely by event time-of-occurrence.
    * the state information in a command microservice is a list (collection) of  all **currently active** entities of the owning aggregate ( e.g. all orders, all voyages etc ) and the **current** state of each such entity 
    * each command microservice will consist of a collection of entity records keyed by primary key 
-   * this is complementary to the historically organized information in the event back back 
-  
+   * this is complementary to the historically organized information in the event backbone. 
+* When is it OK to be using synchronous interactions between services instead of asyncrhonous event interacts through the event backbone?
+    * For non-state-changing queries, for which the response is always instantaneously available a synchronous query callmy be Ok and will provide a simpler more understandable interface.
+    * Any processing which can be though of as being triggered by some state change in anothe aggregate should be modelled with an asynchronous, because as the solution eveolves other new microservices may also need to be aware of this event. We do not want to have to go back and change logic n the service where this event originated to have that microservice actively report the event to all potential consumers. 
+*   How do we save microservices from having to maintain data collections with complex secondary indexing for which eventual consistency will be hard to implement? 
+    * Each command  microservice should do all its state changing updates using the primary key lookup only for its entities.
+    * Each asynchronous event interaction between microservices should carry primary entityIds ( orderID, VoyageID, shipID) for any entities assocoated 
   
    
 ## Example of a reference to an image 
