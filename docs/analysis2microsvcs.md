@@ -68,7 +68,7 @@ Here we describe in generic terms, each step in the process of deriving event-li
 *  **Step 3 -  generate microservice interaction diagrams for the build** 
    * The diagram will show API calls initiating state change 
    * It shows for each interaction whether this is a synchronous API calls or an asynchronous event interaction via the event backbone
-   * The diagram labes each specific event interaction between microservices trigerring a state change
+   * The diagram labels each specific event interaction between microservices trigerring a state change
    * ( Typically queries are synchronous API calls since the caller cannot usefully proceeed until a result is returned )
    * From this we can extract: (1)  a complete  list of event types on each topic, with information passed on each event type (2) the complete list of “logic segments” for each microservice processing action in response to an API call or initiating event 
    * When specifying  the “fields” in each event – the CloudEvents standard  in https://github.com/cloudevents/spec should be assumed as a start point 
