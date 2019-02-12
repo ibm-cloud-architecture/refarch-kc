@@ -12,8 +12,21 @@ This is a common occurrence in agile development and it may be helpful to show h
 
 Requirements for scalability, coupling of microservices *only* through the event back bone and eventual correctness   differentiate this step from previous Event Storming and Domain Driven Design activities which were 100% business requirement driven.
 
+## Starting materials generated during Event Storming and Analysis
+In this microservices specification step we make use of the following materials generated during Event Storming and analysis of the K Container Shipping example problem: 
+* Event Sequence flow
+* Events – business description
+* Critical events 
+* Aggregates and services  
+   * Users – roles user stories 
+   * Commands
+   * Event linkages
+   * Policies 
+   * Event prediction and probability flows 
+* Data  ( Conceptual ) 
+The derivation of these material was described in: [Analysis](./analysis/readme.md) .
 
-
+## Example of a reference to an image 
 Here is an example of screen I may use:
 
 <img src="kc-order.png" height="630px">
