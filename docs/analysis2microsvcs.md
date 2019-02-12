@@ -1,4 +1,4 @@
-# Analysis to Microservices 
+# From Analysis to Microservices 
 ## Goals and outline of section 
 This section describes the design step which uses output from the event storming session and subsequent analysis and derives a set of micro services design specification.
 The goals for ts design step and the resulting specifications are: 
