@@ -26,6 +26,27 @@ In this microservices specification step we make use of the following materials 
 * Data  ( Conceptual ) 
 The derivation of these material was described in: [Analysis](../analysis/readme.md) .
 
+## Event linked microservices design - structure 
+A complete microservices specification ( the target of this design step ) will include specifications of the following: 
+* Event Topics 
+   * Used to configure the Kafka Event Backbone 
+* Event types within each event topic 
+* Microservices: 
+   * These are finer grained than aggregates 
+   * May separate query and command; possibly multiple queries  
+   * May Separate whether simulation or business processing component 
+   * Demonstration Control –main UI 
+   * Scaffolding and testing services  - whether local and cloud versions 
+* Microservice specification ( for each identified 
+   * Data within Each microservice
+   * APIs  ( Synchronous ) 
+   * Topics and events Subscribed to
+   * Events published / emitted   
+* List of end to end interaction 
+   * List of logic segments per microservice 
+* Recovery processing, scaling 
+   * We expect this to be highly patterned and template driven not requiring example-specific design 
+
 ## Example of a reference to an image 
 Here is an example of screen I may use:
 
