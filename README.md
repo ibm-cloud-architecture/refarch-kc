@@ -38,7 +38,7 @@ You will be greatly interested by the subjects addressed in this solution if you
 
 ## Define microservice scopes
 
-As presented in [in the note about event driven microservice patterns](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/README.md#understanding-event-driven-microservice-patterns), we are using a set of event-drivent design patterns to develop this solution. One of them is the **sub domain decomposition**. From the analysis output we have the aggregates, actors and data that are helping us to extract a set of subdomains. The figure below summarizes those aggregates:
+As presented in [the note about event driven microservice patterns](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/README.md#understanding-event-driven-microservice-patterns), we are using a set of event-drivent design patterns to develop this solution. One of them is the **sub domain decomposition**. From the analysis output we have the aggregates, actors and data that are helping us to extract a set of subdomains. The figure below summarizes those aggregates:
 
 #### Figure illustrating organization of shipment handling as microservices  
 
@@ -74,7 +74,11 @@ As presented in [in the note about event driven microservice patterns](https://g
 
 ## Architecture
 
-From the aggregates discovered and the microservice scope as defined above, and leveraging the event-driven architecture and microservice patterns, we can identfy the following components to support the solution implementation:
+When dealing with architecture we want to start by high level and drill down into more detail view. The system context view for the solution looks like the diagram below:
+
+![]()
+
+From the aggregates discovered and the microservice scope as defined above, and leveraging the event-driven and microservice patterns, we can identfy the following components to support the solution implementation:
 
 ![High level component view](docs/kc-hl-comp-view.png)
 
@@ -192,10 +196,10 @@ Be sure to have installed the needed services (Event Streams, Streams Analytics,
 You will see something like below.
 
 ```
-NAME                                       TYPE                                  DATA      AGE
-bluemix-browncompute-secret-regional       kubernetes.io/dockerconfigjson        1         22m
-default-token-ggwl2                        kubernetes.io/service-account-token   3         41m
-eventstreams-apikey                        Opaque                                1         24m
+NAME                                   TYPE                                  DATA      AGE
+bluemix-browncompute-secret-regional     kubernetes.io/dockerconfigjson        1         22m
+default-token-ggwl2                      kubernetes.io/service-account-token   3         41m
+eventstreams-apikey                      Opaque                                1         24m
 ```
 
 Now for each microservice of the solution, we have defined a helm chart or a script to deploy it to IKS. 
