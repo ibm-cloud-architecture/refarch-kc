@@ -77,9 +77,9 @@ As presented in [the note about event driven microservice patterns](https://gith
 
 When dealing with architecture we want to start by high level and drill down into more detail view. The system context view for the solution looks like the diagram below:
 
-![]()
+![](./docs/kc-syst-ctx.png)
 
-From the aggregates discovered and the microservice scope as defined above, and leveraging the event-driven and microservice patterns, we can identfy the following components to support the solution implementation:
+Deploying the different components using event-driven and microservice patterns, we may organize them as in the following figure:
 
 ![High level component view](docs/kc-hl-comp-view.png)
 
@@ -117,7 +117,7 @@ The command `./scripts/clone.sh` in this repositiory clones those dependant repo
 To make the solution running we need to have a set of products installed and ready:
 * Event Streams
 * Streaming Analytics
-* Kubernetes Cluster or Docker compose.
+* Kubernetes Cluster (IBM Cloud Private or IBM Kubernetes Service on cloud) or Docker compose.
 
 We can deploy the components of the solution into three environments:
 
