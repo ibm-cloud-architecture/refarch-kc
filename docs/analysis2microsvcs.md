@@ -13,7 +13,7 @@ This is a common occurrence in agile development and it may be helpful to show h
 Requirements for scalability, coupling of microservices *only* through the event back bone and eventual correctness   differentiate this step from previous Event Storming and Domain Driven Design activities which were 100% business requirement driven.
 
 ## Starting materials generated during Event Storming and Analysis
-In this microservices specification step we make use of the following materials generated during Event Storming and analysis of the K Container Shipping example problem: 
+In this microservices specification step we make use of the following materials generated during Event Storming and analysis of the Container Shipment example problem: 
 * Event Sequence flow
 * Events – business description
 * Critical events 
@@ -50,7 +50,7 @@ With the above information coging of each microservice and other components of t
 
 
 ## Steps in the design process 
-Here we describe in generic terms, each step in the process of deriving event-linked microservice specification. In following section we will describe in more detail how each of these steps plays out in the specific context of the the K container shipping example.
+Here we describe in generic terms, each step in the process of deriving event-linked microservice specification. In following section we will describe in more detail how each of these steps plays out in the specific context of the the container shippment example.
 
 ### List of generic steps:
 *  **Step 1 - limit the context and scope for this particular build / sprint** 
@@ -92,7 +92,7 @@ Here we describe in generic terms, each step in the process of deriving event-li
     * Each query which might require speciaoized secondary indexing to respond to queries can be implemented in a separate CQRS query service which subscribes to events  to do all internal updating and receives events from the event backbone in a ( Consistent) eventually correct order. 
     * This allows for recovery of any failed service by rebuilding it in "eventually correct" order.
     
-## Specific application to Container Shipping example   
+## Specific application to Container Shippment example   
 In this section we discuss how the generic steps introduced above can be applied for the Container shipping example 
 ### Step1 - context and scope for container shipping example
   
