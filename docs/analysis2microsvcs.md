@@ -92,5 +92,7 @@ Here we describe in generic terms, each step in the process of deriving event-li
     * Each query which might require speciaoized secondary indexing to respond to queries can be implemented in a separate CQRS query service which subscribes to events  to do all internal updating and receives events from the event backbone in a ( Consistent) eventually correct order. 
     * This allows for recovery of any failed service by rebuilding it in "eventually correct" order.
     
-    
+## Specific application to Container Shipping example   
+In this section we discuss how the generic steps introduced above can be applied for the Container shipping example 
+### Step1 - context and scope for container shipping example
   
