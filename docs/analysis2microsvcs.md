@@ -94,5 +94,15 @@ Here we describe in generic terms, each step in the process of deriving event-li
     
 ## Specific application to Container Shippment example   
 In this section we discuss how the generic steps introduced above can be applied for the Container shipping example 
-### Step1 - context and scope for container shipping example
+### Step1 - context and scope for demonstration build of container shipping example
+An initial scoping decision is that the demonstration will address shipment orders and shipment progress initiated by the "manufacturer" of the goods with the shipment company. In the context of the example there is also discussion of manufacturer and retailer reaching some agreement on the goods to be delivered but this is not part of the demonstrated capabilities. 
+
+The Event Storming analysis of the shipment problem was end-to-end and involved many aggregates including: Orders, Voyages, Trucking operations both at the source (maufacturer pickup )  and destination (retailer delivery), Customs and export interactions, Container loading into ship at source port and unloading from ship at destination port, containers and fleet of ships. To have a simple initial demonstration build showing the role of EDA architecture and event coupled microservices, as an initial step towards development of a more complete system using agile incremental development and deployment, the initial demonstration build makes the following simplifications and scoping decisions:   
+*   This build will have no implementation of:  TruckOps, Customs and export, Dockside Handling
+*   It will show a full lifecyle for placing a shipment order, having it shipped and delivered 
+*   It will include a imulation  Service for ship movements
+*   It will include simulation and analytics for  Container temperatures  in while onboard ship  
+*   It will provide a query for a user to track an order and the current location and state of the associated shipment   
+
+
   
