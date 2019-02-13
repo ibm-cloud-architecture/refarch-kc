@@ -23,6 +23,7 @@ We are using goods to be transported in refrigerator containers or reefer contai
 * [Target Audiences](#target-audiences)
 * [Analysis](./analysis/readme.md) is a detailed explanation of the event storming method applied to the container shipping process. 
 * [Define microservice scopes](#define-microservice-scopes)
+* [From analysis to microservices specification](./docs/analysis2microsvcs.md)
 * [Design Considerations](./docs/design.md)
 * [Architecture](#architecture) using the different EDA patterns.
 * [Deployment](#deployment) to hybrid cloud
