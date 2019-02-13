@@ -88,10 +88,9 @@ Here we describe in generic terms, each step in the process of deriving event-li
     * Any processing which can be though of as being triggered by some state change in anothe aggregate should be modelled with an asynchronous, because as the solution eveolves other new microservices may also need to be aware of this event. We do not want to have to go back and change logic n the service where this event originated to have that microservice actively report the event to all potential consumers. 
 *   How do we save microservices from having to maintain data collections with complex secondary indexing for which eventual consistency will be hard to implement? 
     * Each command  microservice should do all its state changing updates using the primary key lookup only for its entities.
-    * Each asynchronous event interaction between microservices should carry primary entityIds ( orderID, VoyageID, shipID) for any entities assocoated 
+    * Each asynchronous event interaction between microservices should carry primary entityIds ( orderID, VoyageID, shipID) for any entities associated with the interaction.
+    * Each query which might require speciaoized secondary indexing to respond to queries can be implemented in a separate CQRS query service which subscribes to events  to do all internal updating and receives events from the event backbone in a ( Consistent) eventually correct order. 
+    * This allows for recovery of anyfailed service by rebuilding it in eventually correct order.
+    
+    
   
-   
-## Example of a reference to an image 
-Here is an example of screen I may use:
-
-<img src="kc-order.png" height="630px">
