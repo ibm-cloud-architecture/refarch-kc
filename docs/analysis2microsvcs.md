@@ -90,7 +90,7 @@ Here we describe in generic terms, each step in the process of deriving event-li
     * Each command  microservice should do all its state changing updates using the primary key lookup only for its entities.
     * Each asynchronous event interaction between microservices should carry primary entityIds ( orderID, VoyageID, shipID) for any entities associated with the interaction.
     * Each query which might require speciaoized secondary indexing to respond to queries can be implemented in a separate CQRS query service which subscribes to events  to do all internal updating and receives events from the event backbone in a ( Consistent) eventually correct order. 
-    * This allows for recovery of anyfailed service by rebuilding it in eventually correct order.
+    * This allows for recovery of any failed service by rebuilding it in "eventually correct" order.
     
     
   
