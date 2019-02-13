@@ -92,15 +92,15 @@ Here we describe in generic terms, each step in the process of deriving event-li
     * Each query which might require speciaoized secondary indexing to respond to queries can be implemented in a separate CQRS query service which subscribes to events  to do all internal updating and receives events from the event backbone in a ( Consistent) eventually correct order. 
     * This allows for recovery of any failed service by rebuilding it in "eventually correct" order.
     
-## Specific application to Container Shippment example   
+## Specific application to Container Shipment example   
 In this section we discuss how the generic steps introduced above can be applied for the Container shipping example 
-### Step1 - context and scope for demonstration build of container shipping example
+### Step1 - context and scope for demonstration build
 An initial scoping decision is that the demonstration will address shipment orders and shipment progress initiated by the "manufacturer" of the goods with the shipment company. In the context of the example there is also discussion of manufacturer and retailer reaching some agreement on the goods to be delivered but this is not part of the demonstrated capabilities. 
 
 The Event Storming analysis of the shipment problem was end-to-end and involved many aggregates including: Orders, Voyages, Trucking operations both at the source (maufacturer pickup )  and destination (retailer delivery), Customs and export interactions, Container loading into ship at source port and unloading from ship at destination port, containers and fleet of ships. To have a simple initial demonstration build showing the role of EDA architecture and event coupled microservices, as an initial step towards development of a more complete system using agile incremental development and deployment, the initial demonstration build makes the following simplifications and scoping decisions:   
-*   This build will have no implementation of:  TruckOps, Customs and export, Dockside Handling
-*   It will show a full lifecyle for placing a shipment order, having it shipped and delivered 
-*   It will include a imulation  Service for ship movements
+*   This build will have no implementation of:  Trucking operations, Customs and export, or Dockside Handling aggregates 
+*   It will show a full lifecyle for a manufacturer user to place an order for shipment, seeing a filled container placed on board ship transported to the destination port and delivered.  
+*   It will include a simulation  Service for ship movements - tracking the movement of ships carrying containers 
 *   It will include simulation and analytics for  Container temperatures  in while onboard ship  
 *   It will provide a query for a user to track an order and the current location and state of the associated shipment   
 
