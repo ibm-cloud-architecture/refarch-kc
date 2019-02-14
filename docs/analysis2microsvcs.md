@@ -158,3 +158,18 @@ We have described the the mornal, exception-free path first. There are two excep
 * At the time a new shipment order is requested, there may be no voyage with available capacity meeting the location and time requirements of the request. When this occurs, the manufacturer/user is informed and the order state becomes state= REJECTED (No Availability). At this point the user can modify the order with a second API requests changing dates or possibly locations. This retry request could still fail returning the order back to state = REJECTED ( No availability). Alternatively the changes in dates and location could be anough for an available voyage to be found. When this occurs the order will transition to state = BOOKED modified. 
     * If an API call to modify an order is made and the order is in some state different from state=REJECTED(No availability), we reject the API request. There could be race conditions, the order is in the process of being assigned to a voyage, or  complex recovery issues, -  what if the order is already in a container and at sea when a modify order is received ?  Full treatment of these complex business specific issues is  out of scope and avoided by the state check in the modify order call API call
 * We also model the exception condition when the refrigeration unit in a container fails or is misset or over loaded. If the temperature in the container goes outside the service level rance for that shipment the goods must be considered spoiled.  The oreder will transition from state = CONTAINER_ON_SHIP to  state = ORDER_SPOILED(Temperature out of Range). Some complex business recovery such as compensating the customer and possibly scheduling a replcement shipment may be required. The details will be contract specific and outside the scope , but we do include the use of Streaming event container analytics to detect the spoilage and use rule based real-time /edge adjustments of the refrigeration gear to avoid spoilage in the demonstration simulation.   
+
+### Step 2 -  microservices and microservice owned data for demonstration build
+In this step we fix the specific microservices for each aggregate and te data organization for each microservice.
+#### Orders Aggregate
+For Orders we will need an orders-command-ms which will maintain a list of all current active orders and the current state of each order. The order state will as described above.  The collection of active orders will be keyed by orderID. The orders-command-ms will offer APIs for create order and modify order since these are external interactions. 
+
+It makes sense to use CQRS and separate out order tracking into a separate oders-query-ms since: 
+*  The demand for order tracking might have significantly more intense scalability needs than order commands 
+    *   orders are typically created once and changes state a handful of times;  there could be many different users querying status of a particular orders independently and each requesting tracking multiple time  for each order to determine if there is some delay expected 
+*  Order state tracking information should probably be organized by requesting customer NOT bu order ID 
+    * since customers should be ollowed to see status on their own orders but not on other customer's orders  
+    * when the shipping company is tracking an order it is most frequently doing so on behalf of a specific customer
+With this approach orders-query-ms becomes a CQRS  query service with internal state updated from the event backbone, and an order tracking API 
+
+#### Voyages Aggregate 
