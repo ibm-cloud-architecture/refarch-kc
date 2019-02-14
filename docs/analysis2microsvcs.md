@@ -173,3 +173,27 @@ It makes sense to use CQRS and separate out order tracking into a separate oders
 With this approach orders-query-ms becomes a CQRS  query service with internal state updated from the event backbone, and an order tracking API 
 
 #### Voyages Aggregate 
+For Voyages we will need a voyages-command-ms which will maintain a list of all voyages and their current state. In any given run of the demonstration we will work with a fixed set of voyages - effectively the schedule for the container fleet - so there is no need for an API t create additional voyages. The voyage definition will be read from file when the build is initializing. We expect this voyage data to be well formed:
+* each voyage has a container ship in the fleet allocated to make the voyage 
+* the voyages assigned to any one ship are properly "chained".  For the sequence of voyages assigned to any one container ship, the destination port of the nth voyage is always the start port of the (n+1)th voyage 
+
+The states of a yoyage are:
+*  SCHEDULED   - in this state it can accept order bookings, knows how much free space is available for additional bookings, and knows the orderIDs of each shipment already booked on the voyage 
+*  IN_PROGRESS -  in this state it includes a manifest  a list of the orderIDs and containerIDs on board the ship 
+*  COMPLETED    - a voyage in the completed state supports tracing continers, may know which containers in the voyage were spoiled etc 
+
+It will be helpful for the voyage-command-ms to include a query service to lookup voyages with a particular source port and destination port in a particular time windaw. This will help process booking request event but does not need to be an external API hence there is no strong argument for realizing this as a separate CQRS query service. 
+
+#### Containers Aggregate
+For Containers we will need we will use a containers-command-ms to maintain a list of defined containerIDs and track the state of each container. A fixed set of valid container IDs will be initialized at demonstrtaion start time. As noted previously we will assume this to be enough for all requested orders to be assigned a container without availability issues. Since the collection of containers is fixed the component will not need a cmmand API
+
+The state of a container managed in the cmtainer-command-ms is whether that container is currently allocated for use in a shipment order or not. 
+
+We will be modelling and performing streaming analytics on temperature inside a (refrigerated) container. Hence there will be a separate services performing this streaming analytics and simulation:  container-streaming-svc.  
+
+#### Fleet/Ships Aggregate
+
+For Ships we wil have a monolithic fleet simulation service providing continuous simulation of ship position for each ship and modelling of ship events. 
+This service will include a UI to enable viewing the positions and states of the ships.
+It may have a separate UI to control the overall demonstration.
+There is no requirement for any separate microservice maintining additional information on ship state.
