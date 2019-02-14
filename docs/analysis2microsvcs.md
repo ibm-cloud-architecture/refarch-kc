@@ -132,3 +132,16 @@ The scoping decisions for the demonstration build listed above are reflected in 
 
 <img src="order-life-cycle.png" height="630px">
 
+A shipment order is initially created with an API call made by a manufacturer. The order request specifies: 
+*  the pickup location where  emptry container will be loaded 
+*  the delivery location where the container is to be delivered to (we expect this to be in a remote country requiring a sea voyage ) 
+*  the shipment time window i.e. 
+   *  earliest date at which goods are available at pickup location for loading into the container 
+   *  date by which delivery to the destination address is required 
+Since our initial demonstration build expects to show refrigeration behavior snd track preservation of a cold chain, we asume that orders are for some commodity which requires refrigeration during its shipment.    
+   
+A graphical view of this API with some additional field specification is provided in figref:
+
+When a new shipment order is placed, the shipping company must determine whether there is available capacity in some planned ship voyage which meets all the requirements specified by the manufacturer / customer. If there is a planned voyage with available cpacity for ne additional container going from the source port nearest the pickup location to the destination port nearest to the delivery location then the order can transition to state=BOOKED and positive confirmation of the order returned to the requester.  If no such voyage is available then the shipment order transitions to state=REJECTED(No Availability) and this is reported back to the requester. 
+
+Once an order is BOOKED, then the expected dates and locations where for which a container will be needed are known. A request can be issued to book a specific (refrigerated) container for use with this shipment. We assume that the shipping company always has enough container available to meet expected shipment demand, hence the shipment order will transition to state=CONTAINER_ALLOCATED when this container booking is received. 
