@@ -116,4 +116,12 @@ Command API.s will be provided to:
 * track an existing order, eith to confirmits booking state or to resolve the actual location and status of the container in transit 
 * modify an order request which could not be booked within the requested time window 
 
-A more complete and complex build might include an api for a shipping company person to optimally and manually assign orders to voyages, but for th selected demonstration we will automate this process and assign orders to the first voyage found, going from the posrt nearets pickup location to port nearest delivery location, within the requested time window and with available capacity for an additional container. 
+A more complete and complex build could include an api for a shipping company person to optimally and manually assign orders to voyages, but for this initial demonstration we will automate this process and assign orders automatilly to the first voyage found meeting the requested requirements.  Specifically, each order is assigned to the first located voyage:
+*  going from the port nearest to  pickup location
+*  to  the port nearest  the delivery location, 
+*  within the requested time window  for pickup and delivery 
+*  with available capacity for an additional container on that voyage.
+ 
+Additional APIwill be need:
+* to initiate the overall demonstration 
+* to manage and view specific simulation component - container simulation and analytics abd ship simulation and analytics. 
