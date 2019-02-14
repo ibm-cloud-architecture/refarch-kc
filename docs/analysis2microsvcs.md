@@ -140,7 +140,7 @@ A shipment order is initially created with an API call made by a manufacturer. T
    *  date by which delivery to the destination address is required 
 Since our initial demonstration build expects to show refrigeration behavior snd track preservation of a cold chain, we asume that orders are for some commodity which requires refrigeration during its shipment.    
    
-A graphical view of this API with some additional field specification is provided in figref:
+A graphical view of this API with some additional field specification is provided in [Create order Request](./createOrderApi.png) . 
 
 When a new shipment order is placed, the shipping company must determine whether there is available capacity in some planned ship voyage which meets all the requirements specified by the manufacturer / customer. If there is a planned voyage with available cpacity for ne additional container going from the source port nearest the pickup location to the destination port nearest to the delivery location then the order can transition to state=BOOKED and positive confirmation of the order returned to the requester.  If no such voyage is available then the shipment order transitions to state=REJECTED(No Availability) and this is reported back to the requester. 
 
