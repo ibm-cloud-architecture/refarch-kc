@@ -102,7 +102,12 @@ The Event Storming analysis of the shipment problem was end-to-end and involved 
 *   It will show a full lifecyle for a manufacturer user to place an order for shipment, seeing a filled container placed on board ship transported to the destination port and delivered.  
 *   It will include a simulation  Service for ship movements - tracking the movement of ships carrying containers 
 *   It will include simulation and analytics for  Container temperatures  in while onboard ship  
-*   It will provide a query for a user to track an order and the current location and state of the associated shipment   
+*   It will provide a query for a user to track an order and the current location and state of the associated shipment
 
+Based on the scope selection above, active aggregates in the build will be:
+* Orders  - with support for a complete order lifecycle 
+* Voyages  - list of planned port to port passges with dates and manifests for each sip 
+* Containers - with allocation of a container to each order and temperature tracking of refrigerated containers 
+* Ships - with tracking of current voyage and current geographical position of each container ship 
 
-  
+The event backbone will be configured with a topic for each of the above aggregated. We expect to see multiple event typs on each topic, but subscriptions and sequencing of event will be within these high level topics.  
