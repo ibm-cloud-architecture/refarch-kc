@@ -185,11 +185,14 @@ The states of a yoyage are:
 It will be helpful for the voyage-command-ms to include a query service to lookup voyages with a particular source port and destination port in a particular time windaw. This will help process booking request event but does not need to be an external API hence there is no strong argument for realizing this as a separate CQRS query service. 
 
 #### Containers Aggregate
-For Containers we will need we will use a containers-command-ms to maintain a list of defined containerIDs and track the state of each container. A fixed set of valid container IDs will be initialized at demonstrtaion start time. As noted previously we will assume this to be enough for all requested orders to be assigned a container without availability issues. Since the collection of containers is fixed the component will not need a cmmand API
+For Containers we will need we will use a containers-command-ms to maintain a list of defined containerIDs and track the state of each container. A fixed set of valid container IDs will be initialized at demonstration start time. As noted previously we will assume this to be enough for all requested orders to be assigned a container without availability issues. Since the collection of containers is fixed the component will not need a cmmand API
 
-The state of a container managed in the cmtainer-command-ms is whether that container is currently allocated for use in a shipment order or not. 
+The container current state maintained in container-command-ms is:
+*  state = FREE     - this container is not in use and is available to be assigned to a new shipment order 
+*  state = ALLOCATED - thei container is allocated ot order orderID  and potentially in use for that shipment   
 
 We will be modelling and performing streaming analytics on temperature inside a (refrigerated) container. Hence there will be a separate services performing this streaming analytics and simulation:  container-streaming-svc.  
+Conceptually, while a container is ALLOCATED to a shipment order with state = CONTAINER_ON_SHIP, its internal temperature and power usage will be maintained as streaming state by the container-streaming-svc. 
 
 #### Fleet/Ships Aggregate
 
