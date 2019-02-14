@@ -125,3 +125,10 @@ A more complete and complex build could include an api for a shipping company pe
 Additional APIwill be need:
 * to initiate the overall demonstration 
 * to manage and view specific simulation component - container simulation and analytics abd ship simulation and analytics. 
+
+### Shipment order lifecycle and state change events 
+
+The scoping decisions for the demonstration build listed above are reflected in a shipment order life cycle diagram shown below.
+
+<img src="order-life-cycle.png" height="630px">
+
