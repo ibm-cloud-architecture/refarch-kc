@@ -110,4 +110,10 @@ Based on the scope selection above, active aggregates in the build will be:
 * Containers - with allocation of a container to each order and temperature tracking of refrigerated containers 
 * Ships - with tracking of current voyage and current geographical position of each container ship 
 
-The event backbone will be configured with a topic for each of the above aggregated. We expect to see multiple event typs on each topic, but subscriptions and sequencing of event will be within these high level topics.  
+The event backbone will be configured with a topic for each of the above aggregated. We expect to see multiple event typs on each topic, but subscriptions and sequencing of events will be within these high level topics. 
+Command API.s will be provided to: 
+* place a new shipment order 
+* track an existing order, eith to confirmits booking state or to resolve the actual location and status of the container in transit 
+* modify an order request which could not be booked within the requested time window 
+
+A more complete and complex build might include an api for a shipping company person to optimally and manually assign orders to voyages, but for th selected demonstration we will automate this process and assign orders to the first voyage found, going from the posrt nearets pickup location to port nearest delivery location, within the requested time window and with available capacity for an additional container. 
