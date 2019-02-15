@@ -225,7 +225,7 @@ Comments on steps in the command flow:
    *  using such a list each voyage matching the port pair requirement of the new order can be checked or available capacity
    *  if a voyage meeting all requirements for the new order is found, a booking event is emitted; if not, a rejected(No availability) event is emitted 
    *  a booked event causes state change in both the voyage - available capacity reduced, new order added to bookings - and to the order. We choose to make both booking and rejected (no Availabiity) events on the Orders topic rather than the Voyages topic
-*  the orders-command-ms subscribes to *Orders: booking*  and to *Orders: Rejected(no availability)* events and updates the current state of the affected order.
+*  the orders-command-ms subscribes to *Orders: booking*  and to *Orders: Rejected(no availability)* events and updates the current state of the affected order with the received information.
    *  for bookings, the current state of order is updated with the booking informationg including VoyageID and now specific pickup and delivery expected dates
    * a rejected order has its state updated to rejected. This enables the requester to modify the order, suggesting different required dates or locations and trigerring a new search for a voyage meeting the modified requirements.  
    *  booked orders now have a specific schedule from the booked voyage of when they will need a container allocated for their use 
@@ -238,7 +238,7 @@ Comments on steps in the command flow:
 *  The orders-command-ms subscribes to all*Orders: allocatedContainer* events and updates the order current state with its allocated containerID   
    *  Once an rder is booked on a voyage and has a container allocated for it to use, the actual physical process of shipment canbegin at this point.
    *  Since the delivery of empty container, loading it with goods at the pick up site, truck operations to get it to dockside etc are out of scope for this build, we can consider the container ready for its voyage at this point. Hence the *Voyages:fullContainerReady* event is emitted at this point by the orders-command-ms. This event includes the containerID  of the allocated container. 
-*  The voyages-command-ms subscribes to Voyages: fullContainerReady events an uses these to construct a complete manifest -  the list of  <containerID, orderID> pairs which will travel on this voyage 
+*  The voyages-command-ms subscribes to *Voyages: fullContainerReady* events an uses these to construct a complete manifest -  the list of  <containerID, orderID> pairs which will travel on this voyage 
 *  At this point the voyage-command-ms interacts with the fleet/ships-simulation-ms to simulate start of voyage 
   *  we have shown this in the figure as a syncronous call to getNextVoyageInfo . This oul also be handled with one or more event interactions 
   *  the ship-simulator-ms will update the state of this ship to show the available containers and orders on board
@@ -277,18 +277,28 @@ This diagram starts with containers on board a ship which is sailing on specific
 *  The fleet/ships-simulator-ms will continue at this point to start the next voyage in its planned itenerary and interact with voyages-command-ms to do this 
    *  this is a cycled repetition of start of voyage interaction discussed previously 
    
-   
 
-#### Query microservice service  - CQRS Shipment tracking microservices 
+#### Query microservice service  - CQRS Order and  Shipment tracking microservices 
 The diagram below shows all interactions with the shipment tracking microservice. This microservice subscribes to may events  carrying required information and supports one or more query APIs for different flavors of order and shipment tracking 
 
 <img src="interactions3.png" height="630px">
 
+There could be multiple flavors of orderand shipment tracking query APIs supported:
+* Order confirmation query could address orders, bookings, rejections, modified orders etc 
+* Shipment state query could cover: container assignment, on board ship, ship position, off ship, delivery, etc 
+* Cold chain certification query could want to augment the above with a full temperature log of the container while in transit and expect reporting on temperature range violations. 
+
+Since we are using a CQRS approach, and all queries are non state changing, we could combine these multiple query levels into a single microservice or separate them out into separate microservices. If query load is intense there could be multiple instances of each such query microservices with load balancing of user requests. 
+
+The design of these different flavors query services is essentially the same.  The internal state data to respond to queries is obtained by subscribing to the necessary Topics. Fofulel cold chain and shipment reporting, this will involve all four topics Orders, Voyages, Containers and Ships.  Internally the data will be organized (1) by requester of the order, then by orderID, then current state and possibly summaries of repeated event history. 
+
+The inteaction digram 3 above illustrates this organization. For any order and shipment tracking query service there are synchronous APIs offered at one side and subscribed events received at the other to gather required state information from the vent backbone.  
+
 #### Topics, event types and the event emit and consumption lists
 
-From the interaction diagrams we can extract a list of all event types which will occur in the build and check that they are organized into topics in a way which preserves all essential event sequencing. 
+From the interaction diagrams we can compile  a list of all event types which will occur in the build and check that they are organized into topics in a way which preserves all essential event sequencing. 
 
-The diagram below lists the event types and topics. 
+The diagram below lists the event types and topics, showing emitters ( publishers) and consumers ( subscribers) of each event type. 
 
 <img src="topicsAndEvents.png" height="630px">
 
