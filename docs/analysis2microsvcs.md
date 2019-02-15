@@ -236,8 +236,16 @@ Comments on steps in the command flow:
    * it is very natural/necessary for the allocation of a container to be reported as an asynchronous event since this may occur at any time before the container is needed, possibly significanly later that he Containers:needEmpty event occurs 
    * we make allocatedContainer an event on the Orders topic since that is the most significant state change which it drives.  
 *  The orders-command-ms subscribes to all Orders:containerAllocated events and updates the order current state with its allocated containerID   
-   *  since the delivery of empty container, lodaing it, truck operatotion to get it to dockside etc are out of scope for this build, we can consider the container ready for its voyage at this point. Hence the Voyages:fullContainerReady event is emitted now including the container information.
-   
+   *  since the delivery of empty container, loading it with goods at the pick up site, truck operations to get it to dockside etc are out of scope for this build, we can consider the container ready for its voyage at this point. Hence the Voyages:fullContainerReady event is emitted now including the container information.
+*  The voyages-command-ms subscribes to Voyages: fullContainerReady events an uses these to construct a complete manifest - list of containerIDs and associate orderID which will travel on this voyage 
+*  At this point the voyage-command-ms interacts with the fleet/ships-simulation-ms to simulate start of voyage 
+  *  we have shown this in the figure as a syncronous call to getNextVoyageInfo . This oul also be handled with one or more event interactions 
+  *  the ship-simulator-ms will update the state of this ship to show the available containers and orders on board
+  *  it will start the simulation of the ship moving on its course tocomplete the vogage
+  *  the ship-simulator-ms willemit a Voyages: ShipStartedVoyage  event 
+* the Voyages-command-ms receives this event and for each order/container in the manifest emits an Orders: ContainerOnShip event
+* the orders-command-ms will subscribe to Orders: ContainerOnShip events and update the current state of each identified order with this information.
+
 #### Command microservice interaction - container on ship at sea through shipment complete
 The diagram below shows all command interactions from container on ship in voyage through shipment delivered and order completed. 
 
