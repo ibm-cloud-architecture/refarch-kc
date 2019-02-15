@@ -219,8 +219,26 @@ Comments on steps in the command flow:
 *  A new shipment order request is initiated with the syncronous createOrder API at top left 
    *   the orders-command-ms will create a new order record in its tale of active orders and populate it with order details
    *   a NewOrder event is emitted on the Orders Topic 
-   *   the new orderID is returen in the response to createOrder, enabling the to requester to subsequently query for order status, or possibly modify parameters of an unbooked order 
-#### Command microservice interaction - contain on ship at sea through shipment complete
+   *   the new orderID is returned in the response, this enables the requester to query the status of an order and possibly modify the parameters of an unbooked order.  
+ *  the voyages-command-ms subscibes to all newOrder events on the Orders topic and tries to assign eachnew order to an available voyage 
+   *  this operation is simplified by internally maintainin some list of vayages organized by port pait ( Starting port - ending port combination) and by time within port pair.
+   *  using such a list each voyage matching the port pair requirement of the new order can be checked or available capacity
+   *  if a voyage meeting all requirements for the new order is found, a booking event is emitted; if not, a rejected(No availability) event is emitted 
+   *  a booked event causes state chenge in both the voyage - available capacity reduced, new order added to bookings - and to the order. We choose to make both booking and rejected (no Availabiity) events on the Orders topic rather than the Voyages topic
+*  the orders-command-ms subscribes to booking and Rejected(no availability) events and updates the current state of the affected order.
+   *  for bookings, the current state of order is updated with the booking informationg including VoyageID and now specific pickup and delivery expected dates
+   * a reqjected order has its state updated to rejected. This enables the requester to modify the order, suggesting different required dates or locations trigerring a new search for a voyage meeting the modified requirements.  
+   *  booked orders now have a specific schedule from the booked voyage of when they will need a container allocated for their use 
+   *  A  Containers:needEmpty   event is issued to get a specific containallocated for use by a booked shipment
+*  The containers-comand-ms subscribed to  COntainers:needEmpty events and allocates an available container 
+   *  this microservice is maintaining a list of all containers and their current states 
+   *  for each  incoming needEmpty event, it assignes a free container to that order and emits an Orders:allocatedContainer event
+   * it is very natural/necessary for the  allocated of a container to be reported as an asynchronous event since this may occur at any time before the container is needed, possibly significanly later that he Containers:needEmpty event occurs 
+   * we make allocatedContainer an event on the Orders topic since that is the most significant state change which it drives.  
+*  The orders-command-ms subscribes to all Orders:containerAllocated events and updates the order current state with its allocated containerID   
+   *  since the delivery of empty container, lodaing it, truck operatotion to get it to dockside etc are out of scope for this build, we can consider the container ready for its voyage at this point. Hence the Voyages:fullContainerReady event is emitted now including the container information.
+   
+#### Command microservice interaction - container on ship at sea through shipment complete
 The diagram below shows all command interactions from container on ship in voyage through shipment delivered and order completed. 
 
 <img src="interactions2.png" height="630px">
