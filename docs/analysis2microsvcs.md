@@ -303,4 +303,4 @@ The diagram below lists the event types and topics, showing emitters ( publisher
 <img src="topicsAndEvents.png" height="630px">
 
 ### Step4 -  data recovery considerations for this demonstration build
-At this point the pattern for data recovery after a microservice failure is understaood in principle, but specific recovery demonstartion after a failure is out of scope at this point. 
+At this point the pattern for data recovery after a microservice failure is understood in principle, but specific recovery demonstration after a failure is out of scope at this point. 
