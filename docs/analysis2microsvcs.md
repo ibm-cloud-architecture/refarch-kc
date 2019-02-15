@@ -251,9 +251,9 @@ Comments on steps in the command flow:
 The diagram below shows all command interactions from container on ship in voyage through shipment delivered and order completed. 
 
 <img src="interactions2.png" height="630px">
-As in the previous interaction diagram, the columns with grey/shaded processing block show work by (1) orders-command-ms (2) voyages-cmmand-ms (3) containers-command-ms and containers-stream-svc (4) fleet/ships-simulator service respectively.
+As in the previous interaction diagram, the columns with grey/shaded processing blocks show work by (1) orders-command-ms (2) voyages-command-ms (3) containers-command-ms and containers-streaming-ms (4) fleet/ships-simulator service respectively.
 
-This diagram stats with containon board a ship which has started a specific voyage and is at sea. 
+This diagram starts with containers on board a ship which is sailing on specific voyage and is at sea. 
 *  The fleet/ships-simulator-ms repeatedly simulated movement of the ship along its course 
    * It t emits *Ships: GPSposition* events recording the position of the ship at different points in simulated time. 
 *  Similarly, while the ship is at sea, the contaner-streams-svc is continualy simulating temperature within the container and edge monitoring to adjust controls if necessary and to report a cold chain breach in that container if it occurs. 
@@ -263,6 +263,21 @@ This diagram stats with containon board a ship which has started a specific voya
    *  If the temperature in the container goes out of range and there is a cold chain failure, a Containers: temperature Out of Range event is emitted
 *  After some period  of simulated time tracked by these ship position and container state repeated events, the ship will be simulated as arriving at the destination port of the voyage. 
    *  The ship-simulator-ms emits a *Voyages: ShipEndedVoyage* event  
+*  The voyages-command-ms subscribes to *Voyages: ShipEndedVoyage* and for each such event, emits *Orders: containerOffShip*
+   *  It can do this because the current state record for each voyage includes the manifest of <orderID, containerID> pairs which travelled on that voyage 
+   * the current state of the voyage is updated to COMPLETED
+*  The orders-command-ms subscribes to *Orders: containerOffShip* and updates the the state of all orders which have completed their shipping leg as a result of completion of their booked voyage
+   *  Now, since simulation of the dockside unloading, customs processes, trucking operation to support deliver are out of scope for this build, we can consider the shipment delivered at this point 
+   *  orders-command-ms emits *Orders: containerDelivered* and marks this as currnet state of container 
+   *  With the shipment delivered, there is no further need for a container to be associated with this order; orders-command-ms emits *Containers: containerReleased*
+*  The containers-command-ms subscribes to *Containers: cntainerReleased*  and marks the ciurrent state of the identified container as FREE and available to be allocated to other shipment orders 
+*  The order-command-ms considers process of the shipmentorder complete at this point 
+   *  It emits *Orders: orderComplete* and marks this as the current state of the order 
+   *  A more complete and realistic build would statr invoicing and billing event at this poitn , but this was decided to be out of scope at this point 
+*  The fleet/ships-simulator-ms will continue at this point to start the next voyage in its planned itenerary and interact with voyages-command-ms to do this 
+   *  this is a cycled repetition of start of voyage interaction discussed previously 
+   
+   
 
 #### Query microservice service  - CQRS Shipment tracking microservices 
 The diagram below shows all interactions with the shipment tracking microservice. This microservice subscribes to may events  carrying required information and supports one or more query APIs for different flavors of order and shipment tracking 
