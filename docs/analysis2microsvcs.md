@@ -46,7 +46,7 @@ A complete microservices specification ( the target of this design step ) will i
    * List of logic segments per microservice 
 * Recovery processing, scaling 
    * We expect this to be highly patterned and template driven not requiring example-specific design 
-With the above information coging of each microservice and other components of the sprint should be straightforward.    
+With the above information coding of each microservice and other components of the sprint should be straightforward.    
 
 
 ## Steps in the design process 
@@ -250,6 +250,13 @@ Comments on steps in the command flow:
 The diagram below shows all command interactions from container on ship in voyage through shipment delivered and order completed. 
 
 <img src="interactions2.png" height="630px">
+As in the previous interaction diagram, the columns with grey/shaded processing block show work by (1) orders-command-ms (2) voyages-cmmand-ms (3) containers-command-ms and containers-stream-svc (4) fleet/ships-simulator service respectively.
+
+This diagram stats with containon board a ship which has started a specific voyage and is at sea. 
+*  the fleet/ships-simulator-ms repeatedly simulated movement of the ship along its course 
+   * it emits Ships: position events recording the position of the ship at different points in simulated time. 
+*  similarly, while the ship is at sea, the contaner-streams-svc is continualy simulating temperature within the container and edge monitorig to adjust contraols if necessaryr and to report a cold chain breach in that container if it occurs. 
+   * this will result in a repeaed streams of contaniner 
 
 #### Query microservice service  - CQRS Shipment tracking microservices 
 The diagram below shows all interactions with the shipment tracking microservice. This microservice subscribes to may events  carrying required information and supports one or more query APIs for different flavors of order and shipment tracking 
