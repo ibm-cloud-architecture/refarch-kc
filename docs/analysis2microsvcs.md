@@ -200,3 +200,21 @@ For Ships we wil have a monolithic fleet simulation service providing continuous
 This service will include a UI to enable viewing the positions and states of the ships.
 It may have a separate UI to control the overall demonstration.
 There is no requirement for any separate microservice maintining additional information on ship state.
+
+### Step3 - specifing all interactions in a logic flow for the demonstration build
+Using the understanding of the event flow from the Event Storming session, the scoping of this build, the list of microservices and data within each microservices developed in the steps above, we can write out in a complete interrraction flow. This flow illustrates how the microservices are linked together via the Event backbone using event interractions for all non API interractions between distinct microservices. 
+
+The diagram below shows all command interactions from initial order creation through voyage start. 
+
+<img src="interactions1.png" height="630px">
+
+The diagram below shows all command interactions from container on ship in voyage through shipment delivered and order completed. 
+
+<img src="interactions3.png" height="630px">
+
+The diagram below shows all query action specific the shipment tracking microservice subscribing to events carrying required information and supporting one or more query APIs 
+
+From the interaction diagrams we can extract a list of all event types which will occur in the build and check that they are organized into topics in a way which preserves all essential event sequencing. 
+
+The diagram below lists the event types and topics. 
+
