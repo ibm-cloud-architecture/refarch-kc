@@ -210,11 +210,15 @@ The diagram below shows all command interactions from initial order creation thr
 
 The diagram below shows all command interactions from container on ship in voyage through shipment delivered and order completed. 
 
-<img src="interactions3.png" height="630px">
+<img src="interactions2.png" height="630px">
 
 The diagram below shows all query action specific the shipment tracking microservice subscribing to events carrying required information and supporting one or more query APIs 
+
+<img src="interactions3.png" height="630px">
 
 From the interaction diagrams we can extract a list of all event types which will occur in the build and check that they are organized into topics in a way which preserves all essential event sequencing. 
 
 The diagram below lists the event types and topics. 
+
+<img src="topicsAndEvents.png" height="630px">
 
