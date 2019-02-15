@@ -204,17 +204,33 @@ There is no requirement for any separate microservice maintining additional info
 ### Step3 - specifing all interactions in a logic flow for the demonstration build
 Using the understanding of the event flow from the Event Storming session, the scoping of this build, the list of microservices and data within each microservices developed in the steps above, we can write out in a complete interrraction flow. This flow illustrates how the microservices are linked together via the Event backbone using event interractions for all non API interractions between distinct microservices. 
 
+#### Command microservice interactions - order create through voyage start with container on board
 The diagram below shows all command interactions from initial order creation through voyage start. 
 
 <img src="interactions1.png" height="630px">
 
+The grey(shaded) columns of processing blocks are organized to show processing by the different command microservices.
+*  Column 1 shows processby the orders-command-ms
+*  Column 2 shows processing by the voyages-command-ms
+*  Column 3 shows processing by the containers-command-ms and in a later figure by containers-streaming-ms
+*  Column 4 shows processing by the fleet/ships-simulator-ms
+
+Comments on steps in the command flow:
+*  A new shipment order request is initiated with the syncronous createOrder API at top left 
+   *   the orders-command-ms will create a new order record in its tale of active orders and populate it with order details
+   *   a NewOrder event is emitted on the Orders Topic 
+   *   the new orderID is returen in the response to createOrder, enabling the to requester to subsequently query for order status, or possibly modify parameters of an unbooked order 
+#### Command microservice interaction - contain on ship at sea through shipment complete
 The diagram below shows all command interactions from container on ship in voyage through shipment delivered and order completed. 
 
 <img src="interactions2.png" height="630px">
 
-The diagram below shows all query action specific the shipment tracking microservice subscribing to events carrying required information and supporting one or more query APIs 
+#### Query microservice service  - CQRS Shipment tracking microservices 
+The diagram below shows all interactions with the shipment tracking microservice. This microservice subscribes to may events  carrying required information and supports one or more query APIs for different flavors of order and shipment tracking 
 
 <img src="interactions3.png" height="630px">
+
+#### Topics, event types and the event emit and consumption lists
 
 From the interaction diagrams we can extract a list of all event types which will occur in the build and check that they are organized into topics in a way which preserves all essential event sequencing. 
 
