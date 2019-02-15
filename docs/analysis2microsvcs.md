@@ -218,33 +218,34 @@ The grey(shaded) columns of processing blocks are organized to show processing b
 Comments on steps in the command flow:
 *  A new shipment order request is initiated with the syncronous createOrder API at top left 
    *   the orders-command-ms will create a new order record in its tale of active orders and populate it with order details
-   *   a NewOrder event is emitted on the Orders Topic 
-   *   the new orderID is returned in the response, this enables the requester to query the status of an order and possibly modify the parameters of an unbooked order.  
- *  the voyages-command-ms subscibes to all newOrder events on the Orders topic and tries to assign eachnew order to an available voyage 
+   *   a *NewOrder* event is emitted on the Orders Topic 
+   *   the generated  orderID  or the new shipment order is returned to the requester in the createOrder response. This enables the requester to query the status of an order and possibly modify the parameters of an unbooked order.  
+ *  the voyages-command-ms subscibes to all newOrder events on the Orders topic and tries to assign each new order to an available voyage 
    *  this operation is simplified by internally maintainin some list of vayages organized by port pait ( Starting port - ending port combination) and by time within port pair.
    *  using such a list each voyage matching the port pair requirement of the new order can be checked or available capacity
    *  if a voyage meeting all requirements for the new order is found, a booking event is emitted; if not, a rejected(No availability) event is emitted 
-   *  a booked event causes state chenge in both the voyage - available capacity reduced, new order added to bookings - and to the order. We choose to make both booking and rejected (no Availabiity) events on the Orders topic rather than the Voyages topic
-*  the orders-command-ms subscribes to booking and Rejected(no availability) events and updates the current state of the affected order.
+   *  a booked event causes state change in both the voyage - available capacity reduced, new order added to bookings - and to the order. We choose to make both booking and rejected (no Availabiity) events on the Orders topic rather than the Voyages topic
+*  the orders-command-ms subscribes to *Orders: booking*  and to *Orders: Rejected(no availability)* events and updates the current state of the affected order.
    *  for bookings, the current state of order is updated with the booking informationg including VoyageID and now specific pickup and delivery expected dates
-   * a rejected order has its state updated to rejected. This enables the requester to modify the order, suggesting different required dates or locations trigerring a new search for a voyage meeting the modified requirements.  
+   * a rejected order has its state updated to rejected. This enables the requester to modify the order, suggesting different required dates or locations and trigerring a new search for a voyage meeting the modified requirements.  
    *  booked orders now have a specific schedule from the booked voyage of when they will need a container allocated for their use 
-   *  A  Containers:needEmpty   event is issued to get a specific containallocated for use by a booked shipment
-*  The containers-comand-ms subscribed to  COntainers:needEmpty events and allocates an available container 
-   *  this microservice is maintaining a list of all containers and their current states 
-   *  for each  incoming needEmpty event, it assignes a free container to that order and emits an Orders:allocatedContainer event
-   * it is very natural/necessary for the allocation of a container to be reported as an asynchronous event since this may occur at any time before the container is needed, possibly significanly later that he Containers:needEmpty event occurs 
-   * we make allocatedContainer an event on the Orders topic since that is the most significant state change which it drives.  
-*  The orders-command-ms subscribes to all Orders:containerAllocated events and updates the order current state with its allocated containerID   
-   *  since the delivery of empty container, loading it with goods at the pick up site, truck operations to get it to dockside etc are out of scope for this build, we can consider the container ready for its voyage at this point. Hence the Voyages:fullContainerReady event is emitted now including the container information.
-*  The voyages-command-ms subscribes to Voyages: fullContainerReady events an uses these to construct a complete manifest - list of containerIDs and associate orderID which will travel on this voyage 
+   *  A  *Containers: needEmpty* event is emitted to get a specific container allocated for use by the booked shipment
+*  The containers-comand-ms subscribes to  *Containers: needEmpty* events and allocates an available container for each one
+   *  This microservice is maintaining a list of all containers and their current states 
+   *  For each incoming needEmpty event, it assigns a free container to that order and emits an *Orders: allocatedContainer* event specifying the containerID of the allocated container. 
+   *  It is very natural/necessary for the allocation of a container to be reported as an asynchronous event since this may occur at any time before the container is needed, possibly significanly later that he Containers:needEmpty event occurs 
+   *  We make  *Orders: allocatedContainer* an event on the Orders topic since that is the most significant state change which it drives.  
+*  The orders-command-ms subscribes to all*Orders: allocatedContainer* events and updates the order current state with its allocated containerID   
+   *  Once an rder is booked on a voyage and has a container allocated for it to use, the actual physical process of shipment canbegin at this point.
+   *  Since the delivery of empty container, loading it with goods at the pick up site, truck operations to get it to dockside etc are out of scope for this build, we can consider the container ready for its voyage at this point. Hence the *Voyages:fullContainerReady* event is emitted at this point by the orders-command-ms. This event includes the containerID  of the allocated container. 
+*  The voyages-command-ms subscribes to Voyages: fullContainerReady events an uses these to construct a complete manifest -  the list of  <containerID, orderID> pairs which will travel on this voyage 
 *  At this point the voyage-command-ms interacts with the fleet/ships-simulation-ms to simulate start of voyage 
   *  we have shown this in the figure as a syncronous call to getNextVoyageInfo . This oul also be handled with one or more event interactions 
   *  the ship-simulator-ms will update the state of this ship to show the available containers and orders on board
   *  it will start the simulation of the ship moving on its course tocomplete the vogage
-  *  the ship-simulator-ms willemit a Voyages: ShipStartedVoyage  event 
-* the Voyages-command-ms receives this event and for each order/container in the manifest emits an Orders: ContainerOnShip event
-* the orders-command-ms will subscribe to Orders: ContainerOnShip events and update the current state of each identified order with this information.
+  *  the ship-simulator-ms willemit a *Voyages: ShipStartedVoyage*  event 
+* the Voyages-command-ms receives this event and for each order/container in the manifest emits an *Orders: ContainerOnShip* event
+* the orders-command-ms will subscribe to *Orders: ContainerOnShip* events and update the current state of each identified order with this information.
 
 #### Command microservice interaction - container on ship at sea through shipment complete
 The diagram below shows all command interactions from container on ship in voyage through shipment delivered and order completed. 
@@ -253,10 +254,15 @@ The diagram below shows all command interactions from container on ship in voyag
 As in the previous interaction diagram, the columns with grey/shaded processing block show work by (1) orders-command-ms (2) voyages-cmmand-ms (3) containers-command-ms and containers-stream-svc (4) fleet/ships-simulator service respectively.
 
 This diagram stats with containon board a ship which has started a specific voyage and is at sea. 
-*  the fleet/ships-simulator-ms repeatedly simulated movement of the ship along its course 
-   * it emits Ships: position events recording the position of the ship at different points in simulated time. 
-*  similarly, while the ship is at sea, the contaner-streams-svc is continualy simulating temperature within the container and edge monitorig to adjust contraols if necessaryr and to report a cold chain breach in that container if it occurs. 
-   * this will result in a repeaed streams of contaniner 
+*  The fleet/ships-simulator-ms repeatedly simulated movement of the ship along its course 
+   * It t emits *Ships: GPSposition* events recording the position of the ship at different points in simulated time. 
+*  Similarly, while the ship is at sea, the contaner-streams-svc is continualy simulating temperature within the container and edge monitoring to adjust controls if necessary and to report a cold chain breach in that container if it occurs. 
+   *  This will result in a repeated stream of *Containers: tempAndGpsState* events reporting the temperature, GPS coordinates and possibly power consumption of the container
+   *  There could also be on or more *Containers: action*  events to adjust or reset controls of the refrigeration unit in the container
+   *  These adjustment event are initiated by predictive real-ime analytics on the cntainer state 
+   *  If the temperature in the container goes out of range and there is a cold chain failure, a Containers: temperature Out of Range event is emitted
+*  After some period  of simulated time tracked by these ship position and container state repeated events, the ship will be simulated as arriving at the destination port of the voyage. 
+   *  The ship-simulator-ms emits a *Voyages: ShipEndedVoyage* event  
 
 #### Query microservice service  - CQRS Shipment tracking microservices 
 The diagram below shows all interactions with the shipment tracking microservice. This microservice subscribes to may events  carrying required information and supports one or more query APIs for different flavors of order and shipment tracking 
