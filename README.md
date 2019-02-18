@@ -1,7 +1,14 @@
 # K Container Shipment EDA reference implementation
 
-This solution implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an [event driven architecture](https://github.com/ibm-cloud-architecture/refarch-eda) with event backbone, functions as service and microservices. 
+This solution implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an [event driven architecture](https://github.com/ibm-cloud-architecture/refarch-eda) with event backbone, functions as service and microservices.
 
+## What you will learn
+* CQRS pattern with event sourcing done in Kafka / IBM Event Stream 
+* Implement TDD with mockito to avoid kafka dependency
+* Applying event storming for the business process at hand
+* Identifying the microservice from the domain driven development domain context.
+
+## Introduction
 As part of producing the IBM event driven point of view and reference architecture, we wanted to bring together a complete scenario which would cover all aspects of developing an event driven solutions including extended connections to devices/IOT and blockchain for trusted business trading networks. We felt that the shipping business could provide a good foundation for this and would enable us to show how to develop event driven solutions following the architecture patterns.
 
 The high level process can be represented in the following diagram, and is described in detailed in [this section](analysis/readme.md#high-level-view-of-the-shipment-process-flow):
@@ -79,7 +86,7 @@ When dealing with architecture we want to start by high level and drill down int
 
 ![](./docs/kc-syst-ctx.png)
 
-Deploying the different components using event-driven and microservice patterns, we may organize them as in the following figure:
+Deploying the different components using event-driven and microservice patterns, we may organize them as in the following figure where event backbone ensures pub/sub implementation and supports the event sourcing:
 
 ![High level component view](docs/kc-hl-comp-view.png)
 
@@ -94,6 +101,7 @@ As we develop by iterations the current scope of the Minimum Viable Product is o
 
 [Read more on EDA design pattern...](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/ED-patterns.md)
 
+The [12 factors application](https://12factor.net/) is also used for order management microservice.
 --- 
 
 ## Deployment
