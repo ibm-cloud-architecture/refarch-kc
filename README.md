@@ -102,6 +102,7 @@ As we develop by iterations the current scope of the Minimum Viable Product is o
 [Read more on EDA design pattern...](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/ED-patterns.md)
 
 The [12 factors application](https://12factor.net/) is also used for order management microservice.
+
 --- 
 
 ## Deployment
