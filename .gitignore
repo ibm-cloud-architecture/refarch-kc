@@ -3,3 +3,4 @@ docker/zookeeper1/
 docker/api-secret.yml
 certs/es-cert.*
 scripts/localToICP
+site/

@@ -1,0 +1,9 @@
+site_name: Container Shipment EDA reference implementation
+nav:
+  - Home: index.md
+  - Business Problem Statement:
+    - Introduction: introduction.md
+    - Analysis: ./analysis/readme.md
+
+theme: readthedocs
+extra_css: ["extra.css"]

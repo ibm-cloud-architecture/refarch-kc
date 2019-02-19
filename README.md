@@ -1,6 +1,6 @@
 # K Container Shipment EDA reference implementation
 
-This solution implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an [event driven architecture](https://github.com/ibm-cloud-architecture/refarch-eda) with event backbone, functions as service and microservices.
+The IBM Event Driven architecture reference implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an [event driven architecture](https://github.com/ibm-cloud-architecture/refarch-eda) with event backbone, functions as service and microservices, and aims to illustrates the different event driven patterns like event sourcing, CQRS and Saga.
 
 ## What you will learn
 * CQRS pattern with event sourcing done in Kafka / IBM Event Stream 
@@ -8,22 +8,6 @@ This solution implementation illustrates the deployment of real time analytics o
 * Applying event storming for the business process at hand
 * Identifying the microservice from the domain driven development domain context.
 
-## Introduction
-As part of producing the IBM event driven point of view and reference architecture, we wanted to bring together a complete scenario which would cover all aspects of developing an event driven solutions including extended connections to devices/IOT and blockchain for trusted business trading networks. We felt that the shipping business could provide a good foundation for this and would enable us to show how to develop event driven solutions following the architecture patterns.
-
-The high level process can be represented in the following diagram, and is described in detailed in [this section](analysis/readme.md#high-level-view-of-the-shipment-process-flow):
-
-![](analysis/shipment-bp1.png)
-
-In developing the scenario, it became apparent that the event driven nature of business, extends across the business network, so we have widened the view in the scenario to consider the chain of parties involved in the shipping process, including importer, exporter, land transport and customs. To keep the scenario easy to understand, we have only considered the following cases:
-
-1. Importer Orders goods from exporter overseas
-2. Exporter becomes the customer of the shipping agent and uses 'K.Container' shipping service
-3. Shipping agent manages process of land transport loading, unloading and shipping. Through the scenario we can see the impact of “events”, which may delay or change the shipping process across all three parties.  
-
-We are using goods to be transported in refrigerator containers or reefer containers to keep the 'clod chain' of transported products.
-
-<img src="docs/reefer.png" width="300px" style="padding:20px;"></img>
 
 ## Table Of Content
 
@@ -36,13 +20,6 @@ We are using goods to be transported in refrigerator containers or reefer contai
 * [Deployment](#deployment) to hybrid cloud
 * [Demonstration script](./docs/demo.md) to present the application end to end.
 
-## Target Audiences
-
-You will be greatly interested by the subjects addressed in this solution if you are...
-
-* An architect, you will get a deeper understanding on how all the components work together, and how to address resiliency, high availability.
-* A developer, you will get a broader view of the solution end to end and get existing starting code, and practices you may want to reuse during your future implementation. We focus on event driven solution in hybrid cloud addressing patterns and non-functional requirements as CI/CD, Test Driven Development, ...
-* A project manager, you may understand all the artifacts to develop in an EDA solution, and we may help in the future to do project estimation.
 
 ## Define microservice scopes
 
