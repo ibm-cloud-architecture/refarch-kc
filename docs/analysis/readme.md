@@ -1,6 +1,6 @@
 # Container Shipment Analysis
 
-This section defines the overall steps in the methodology to analyse a specific global shipping example and derive the event driven solution. We combined some elements of the [design thinking](https://www.ibm.com/cloud/garage/content/think/practice_design_thinking/) methodology with the [event storming](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/methodology/readme.md) and [domain driven design](https://www.ibm.com/cloud/garage/content/code/domain-driven-design/) to extract the following analysis of the business domain.
+This section defines the overall steps in the methodology to analyse a specific global shipping example and derive the event driven solution. We combined some elements of the [design thinking](https://www.ibm.com/cloud/garage/content/think/practice_design_thinking/) methodology with the [event storming](https://www.ibm.com/cloud/garage/architectures/eventDrivenArchitecture/event-storming-methodology) and [domain driven design](https://www.ibm.com/cloud/garage/content/code/domain-driven-design/) to extract the following analysis of the business domain.
 
 ## Output from Domain Driven Design workshop
 
@@ -29,9 +29,10 @@ The challenges listed in the persona table above identify a possible set of MVP 
 
 At the high level the shipment process flow is suggested and illustrated in the diagram below.
 
-![](shipment-bp1.png)
+![shipment-bp1](./shipment-bp1.png)
 
 For the purposes of showing how to design a reference EDA solution we select on a simple subcase of all actual and possible variations of the global container flow. Very high level steps in this flow are as follows: 
+
 1. Retailer and manufacturer interact to create agreement to deliver specific goods in a container from manufacturer's location to retailer's location with an expected arrival date. 
 1. Manufacturer places shipping order with 'Shipping Company' to pickup container and deliver under the condition expected above.
 1. Shipping Company arranges for land transport to pick up loaded container and required documentation from Manufacturer and deliver the container to dockside at source port (adjacent to Maufacturer) for loading onto container carrier. 
@@ -52,11 +53,12 @@ Event storming is a rapid lightweight design process enabling the team of busine
 
 Steps in an eight hours event storming analysis workshop of the container shipping example are illustrated and described below. 
 
-### Event storming the container shipment example part1: capture the Domain Event Timeline, swim lanes and key phases
+### Step 1: Capture the Domain Event Timeline, swim lanes and key phases
 
-(This section of the example description covers activities identified as event storming workshop steps 1,2,3 in the generic description of the [event storming method](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/methodology/readme.md)). 
+(This section of the example description covers activities identified as event storming workshop steps 1,2,3 in the generic description of the [event storming method](https://www.ibm.com/cloud/garage/architectures/eventDrivenArchitecture/event-storming-methodology). 
 
-The initial step in event storming analysis is to capture all events, things which have happened at a point in time, and organize them into a timeline. 
+The initial step in event storming analysis is to capture all events, things which have happened at a point in time, and organize them into a timeline:
+
 * each event goes on an orange "sticky note" 
 * parallel or independent processes may be separated with blue horizontal swim lanes
 * critical event indicate a new stage, or pivot, in the flow shown with vertical blue bars.
@@ -66,7 +68,7 @@ For the global shipment example described at a very high level above we came up 
 
 #### Container shipping event timeline section 1
 
-<img src="ship-dom-evt1.png" width="700">
+![ship-dom-evt1](./ship-dom-evt1.png)
 
 This section of the event time line deals with initial contracts to ship container and startup actions - specifically:
 * Retailer and Manufacturer settling on an initial order for delivery of goods in a container.
@@ -78,12 +80,14 @@ The events are organized into separate swim lanes for Manufacturer, Retailer and
 
 Swim lanes help to clearly separate ship events as it approaches the source port from container specific events with agreements to ship etc. There is no time coupling or precise causality between events in these two swim lanes.
 
-The red note is a comment.
+The red sticky note is a comment.
+
 * In this case we make the particular simplification to limit the scenario to shipping complete containers only. This avoids having to deal with additional warehousing, container load aggregation and packing events - together with correspondng unpacking and disaggregation.
 
 #### Container shipping event timeline section 2
 
-<img src="ship-dom-evt2.png" width="700">
+
+![ship-dom-evt2](./ship-dom-evt2.png)
 
 This section continues event time line development with a swim lane now focussing on loading and pickup of a specific container at the Manufacturer's location and its delivery to the source port dockside. 
 
@@ -96,7 +100,7 @@ When the container arrives at source port dockside it may or may not be intime f
 
 #### Container shipping event timeline section 3 
 
-<img src="ship-dom-evt3.png" width="700">
+![ship-dom-evt3](./ship-dom-evt3.png)
 
 This section continues the event timelines with swim lanes relating to a specific container shipment and also to the movement of a ship potentially carrying hundreds of containers.
 
@@ -113,7 +117,7 @@ It introduces two new critical events:
   
 #### Container shipping event timeline section 4
 
-<img src="ship-dom-evt4.png" width="700">
+![ship-dom-evt4](./ship-dom-evt4.png)
 
 This segment of the event timeline deals with a single swim lane for the ship while it is moored in a dock facility at the source port, is having arriving containers destined for this port unloaded and new containers being loaded at his port. The port dock facility operator is coordinating many events in the yard to perform load unload operations. These steps - as noted in a red discussion "sticky" in the event storming timeline are repeated for many containers. The time line presented here captures representative high level events. It is straightforward to extend the analysis to open up additional layers of detail touching on operational optimizations and coordination at the cost of addiional complexity not essential to our reference example here.
 
@@ -121,11 +125,12 @@ Some of the events in this phase are now specialized to address needs of particu
 
 #### Container shipping event timeline section 5
 
-<img src="ship-dom-evt5.png" width="700">
+![ship-dom-evt5](./ship-dom-evt5.png)
 
 This segment of the event timeline captures events which occure in the blue water phase of the shipping, after the container ship has left the source port and is travelling owards but has not yet reached the destination port. 
 
 It is divided into two swim lanes the ship perspective and individual container perspectives. The ship perspective includes events relating to the entire ship:
+
 * leaving port.
 * reporting its current position.
 * deciding to alter planned course to avoid a weather event.
@@ -137,19 +142,22 @@ The upper swim lane capture events which are specific to a particular container.
 
 #### Container shipping event timeline sections 6 and 7 
 
-<img src="ship-dom-evt6.png" width="700">
+![ship-dom-evt6](./ship-dom-evt6.png)
 
 The remining event time line segments 6 and 7 deal with arrival at the destination port unload of the container and delivery to the Retailer's location. At the level of simplification in the reference architecture example, the steps for unloading a container at the destination port, clearing Customs and delivering it to are Retailer location are the symmetric image of the steps to pick up the container from the Manufacture location, clear it through export permissions and load onto the ship. 
 
 For these reason we just provide event timeline digrams for these steps withou going into further explanatory detail. 
 
-<img src="ship-dom-evt7.png" width="700">
+
+![ship-dom-evt7](./ship-dom-evt7.png)
 
 
-### Event storming the container shipment example part 2:  identify commands and event linkages  
-(This section of the example description covers activities identified as event storming workshop steps 4,5) in the generic description of the [event storming method](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/methodology/readme.md) . )
+### Step 2: Identify commands and event linkages
+  
 
-After capturing all events for the scenario and organizing them in a time line, the next step in event storming analysis is to identify the triggers for events and causal linkages between events.  
+> This section of the example description covers activities identified as event storming workshop steps 4,5) in the generic description of the [event storming method](https://www.ibm.com/cloud/garage/architectures/eventDrivenArchitecture/event-storming-methodology).
+
+After capturing all events for the scenario and organizing them in a time line, the next step in event storming analysis is to identify the triggers for events and causal linkages between events. 
 
 For each identified event in the timeline we ask "What triggered this event to occur?". Expected event trigger types are:
 * A human operator makes a decision and issues a command.
@@ -168,19 +176,22 @@ In the following subsections we show the results of command and event linkage an
 
 #### Container shipping Commands for order placement and land transport setup
 
-<img src="ship-dom-cmd1.png" width="700">
+![ship-dom-cmd1](./ship-dom-cmd1.png)
+
 
 This diagram shows the command, agent issuing events and policies triggering events for the order placement and land transport set up (at manufacturer location) sections of the event timeline generated in step 1
 
 #### Container shipping  event linkages for order placement setup 
 
-<img src="ship-dom-cmd1.2.png" width="700">
 
-The above diagram adds event linkages showing the causality chaining of events.
+![ship-dom-cmd1.2](./ship-dom-cmd1.2.png)
+
+The above diagram adds event linkages showing the causality chaining of events and business rules.
 
 #### Container shipping commands for pickup at Manufacturer's location
 
-<img src="ship-dom-cmd2.png" width="700">
+
+![ship-dom-cmd2](./ship-dom-cmd2.png)
 
 The above diagram is generated for the command and policies associated with pick up of a loaded container from the Manufacturer's location and delivery to the source port dockside.
 
@@ -188,13 +199,14 @@ The above diagram is generated for the command and policies associated with pick
 
 The diagram is self explanatory.
 
-<img src="ship-dom-cmd3.png" width="700">
+![ship-dom-cmd3](./ship-dom-cmd3.png)
 
-### Event storming the container shipment example part 3: Decision data, predictive insights and insight storming:
+### Step 3: Decision data, predictive insights and insight storming:
 
-(This section of the example description covers activities identified as event storming workshop step 8) in the generic description of the [event storming method](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/methodology/readme.md).
 
-Insight storming is extending the event storming workshop to identify and capture insightful predictive analytics, and it is introduced and described in [workshop execution Step 8 - Insight](https://github.com/ibm-cloud-architecture/refarch-eda/tree/master/docs/methodology/readme.md). 
+> This section of the example description covers activities identified as event storming workshop step 8 in the generic description of the [event storming method](https://www.ibm.com/cloud/garage/architectures/eventDrivenArchitecture/event-storming-methodology).
+
+Insight storming is extending the event storming workshop to identify and capture insightful predictive analytics, and it is introduced and described in [workshop execution Step 8 - Insight](https://www.ibm.com/cloud/garage/architectures/eventDrivenArchitecture/event-storming-methodology). 
 
 Predictive analytic insights are effectively probabilistic statements about which future events are likely to occur and what are the like properties of those events. They are typicaly generated using models created by data scientists or using artificial intelligence (AI) or machine learning (ML).  Business owners and stakeholders in the event driven solution have good intuitions on:
 * Which probabilistic insights are likely to lead to better decision making and action when a particular event occurs.
@@ -215,7 +227,7 @@ The shipping example includes the case where continuous sensor measurement data 
 
 A diagram for this flow generated from Insight storming is shown below. 
 
-<img src="ship-dom-insight1.png" width="700">
+![ship-dom-insight1](./ship-dom-insight1.png)
 
 In this diagram it is made clear the delivery of measured temperature, probably GPS position, and power consumption of the refrigeration unit for that container is a recurring "continuous" event stream. Each container might report once a minute; this ensures that an auditable record of container temperature is available from the event backbone or event sourcing.
 
@@ -225,6 +237,7 @@ This information is available as data to subject matter expert's dashboard seen 
 Some stateful analysis of the container temperature reports would make the readings more reliable; perhaps there need to be more than one out of range reading to issue the alert to avoid corrupted data false positives.
 
 If the business decision is made that the container's contents are spoiled:
+
 * A command is invoked to act on this decision.
 * The container refrigeration may be powered down (possible other sensing left active)
 * A policy based on terms and class of service of this particular shipment will determine:
@@ -246,7 +259,7 @@ We assume that possible corrective action includes resetting the thermostatic co
 
 An insight storming diagram which could be generated from discussion of these potentially useful insights and predictions is shown in the diagram below. 
 
-<img src="ship-dom-insight2.png" width="700">
+![ship-dom-insight2](./ship-dom-insight2.png)
 
 We have added an additional insight - namely that it may be possible to predict from the temperature observed in a container and the trend of power consumption of that refrigeration unit, that the unit is in danger of failing and should be inspected and possibly services as soon as possible. 
 
@@ -254,20 +267,22 @@ Insights about predicted risk of temperature based spoilage, and prediction of r
 
 #### Event stream processing for insights relating to the ship 
 
-<img src="ship-dom-insight3.png" width="700">
+![ship-dom-insight3](./ship-dom-insight3.png)
 
-### Event storming the container shipment example part 4:  Commands, linkages, data and context for order placement  
 
-(This section of the example description covers activities identified as EventStorming Workshop steps 6,7) in the generic description of the [event storming method](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/methodology/readme.md) . )
+### Step 4: Commands, linkages, data and context for order placement  
+
+> This section of the example description covers activities identified as EventStorming Workshop steps 6,7 in the generic description of the [event storming method](https://www.ibm.com/cloud/garage/architectures/eventDrivenArchitecture/event-storming-methodology).
 
 In particular, we look at identifying bounded contexts and identifying aggregates which will lead to a loosely coupled collection of microservices providing an agile EDA design for the example. 
 
 We drill down on understanding the order placement process when a container shipment is booked as the MVP context focus in which to explore our design at the next level of detail. 
 
+![ship-aggr-transport-quote](./ship-aggr-transport-quote.png)
 
-<img src="ship-aggr-transport-quote.png" width="700"> 
+![ship-aggr-shipment](./ship-aggr-shipment.png)
 
-<img src="ship-aggr-shipment.png" width="700">
+![ship-aggr-transp](./ship-aggr-transp.png)
 
-<img src="ship-aggr-transp.png" width="700">
+
 

@@ -7,7 +7,7 @@ Here is how to execute the business process step by step:
 ## Step 1: Manufacturer create an order:
 * Go to the http://kcsolution:3110 URL to access the demonstration home page:
 
-![](kc-home.png)
+![kc-home](kc-home.png)
 
 This page presents the process and some tiles that can be used to simulate the progression within the business process. The grey shadowed tiles are not actives. 
 

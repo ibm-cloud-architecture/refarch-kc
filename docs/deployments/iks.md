@@ -1,4 +1,6 @@
-# Prepare IBM Cloud Services to run the solution
+# IKS Deployment
+
+## Prepare IBM Cloud Services to run the solution
 
 IBM Cloud offers a set of services to run part of your event driven architecture. We are using the following services for our reference implementation:
 * [Kubernetes Service](https://cloud.ibm.com/containers-kubernetes/catalog/cluster)
@@ -7,7 +9,7 @@ IBM Cloud offers a set of services to run part of your event driven architecture
 
 At the high level the deployed solution will look like the following:
 
-![](ic-deployment.png)  
+![ic-deployment](ic-deployment.png)  
 
 ## Pre-requisites
 
@@ -75,8 +77,7 @@ To set the cluster config to your cluster use: `ibmcloud ks cluster-config <clus
 
 As it is recommended to ilosate your deployment from kubernetes default setting, create a namespace that can be the same as the container registry namespace name or something else. Below we create the browncompute namespace: `kubectl create namespace browncompute`.
 
-
-##  Event Streams Service on IBM Cloud
+## Event Streams Service on IBM Cloud
 
 To provision your service, go to the IBM Cloud Catalog and search for `Event Streams`. It is in the Integration category. Create the service and specify a name, a region, and a space. 
 
@@ -95,37 +96,77 @@ To provision your service, go to the IBM Cloud Catalog and search for `Event Str
 The documentation located [here](https://github.com/ibm-cloud-architecture/refarch-kc-streams#application-development-and-deployment) describes how to configure the IBM Cloud based Streaming Analytics Service and how to build/deploy the example application. 
 
 
-## Using API keys
-The Event streams broker api key is needed to connect any deployed consumers or producers within kubernetes cluster to access the service in IBM Cloud. To avoid sharing the key with public github we propose to define a kubernetes secret and deploy it to the IKS cluster.
+## Run the solution on IBM Cloud Kubernetes Services
 
-The template (file: api-secret-tmpl.yml) for this secret is in the docker folder. Use the following command to deploy the secret into kubernetes cluster under the browncompute namespace:
+The Event streams broker API key is needed to connect any deployed consumers or producers within kubernetes cluster to access the service in IBM Cloud. To avoid sharing the key with public github we propose to define a kubernetes secret and deploy it to the IKS cluster.
 
-```
-$ kubectl create -f api-secret.yml -n browncompute
-```
+1. Define a Event Stream API key secret: To use Event Streams, we need to get the API key and configure a secret to the `browncompute` namespace.  
+  ```
+  $ kubectl create secret generic eventstreams-apikey --from-literal=binding='<replace with api key>' -n browncompute
+  # Verify the secrets
+  $ kubectl get secrets -n browncompute
+  ```   
+  This secret is used by all the solution microservices which are using Kafka. The detail of how we use it with environment variables, is described in one of the project [here](https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/fleet-ms/README.md#run-on-ibm-cloud-with-kubernetes-service)  
 
-Verify it is configured:
-```
-$ kubectl describe secret es-secret -n browncompute
-```
-> Name:         es-secret  
- Namespace:    browncompute  
- Labels:       <none>  
- Annotations:  <none>  
- Type:  Opaque  
- Data  
- ====  
- apikey:  36 bytes  
+2. Define a secret to access the IBM CLoud docker image private repository so when your IKS instance accesses docker images it will authenticate. This is also mandatory when registry and clusters are not in the same region.   
+  ```
+  kubectl get secret bluemix-default-secret-regional -o yaml | sed 's/default/browncompute/g' | kubectl -n browncompute create -f -   
+  ```   
+  Verify the secret   
+  ```
+  $ kubectl get secrets -n browncompute  
+  ```   
+  You will see something like below.   
+   
+  | NAME  | TYPE  | DATA | AGE |  
+  | --- | --- | --- | --- |
+  | bluemix-browncompute-secret-regional   |  kubernetes.io/dockerconfigjson  |   1   |    22m  |
+  | default-token-ggwl2  |  kubernetes.io/service-account-token  | 3  |   41m  |  
+  | eventstreams-apikey  |  Opaque   |      1   | 24m  |   
 
-The secret will be accessed via environment variable so when defining pod we will add reference to this secret. Something like the following definition:
+  Now for each microservice of the solution, we have defined a helm chart or a script to deploy it to IKS.   
+3. Push images to your IBM Cloud private image repository. If not connected to IBM Cloud do the following:   
+  ```  
+  $ ibmcloud login -a https://api.us-east.bluemix.net
+  ```  
+  # Target the IBM Cloud Container Service region in which you want to work.   
+  ```
+  $ ibmcloud cs region-set us-east   
+  ```  
+  # Set the KUBECONFIG environment variable.   
+  ```
+  $ export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/fabio-wdc-07/kube-config-wdc07-fabio-wdc-07.yml   
+  ```  
+  # Verify you have access to your cluster by listing the node:   
+  ```
+  $ kubectl get nodes   
+  ```   
+  Then execute the script: `./scripts/pushToPrivate`  
+4. Deploy the helm charts for each components using the `scripts/deployHelms`.   
+5. Verify the deployments and pods:  
+    ```
+    $ kubectl get deployments -n browncompute
+    ```
 
-```
-    env:
-        - name: KAFKA_APIKEY
-            valueFrom:
-              secretKeyRef:
-              name: es-secret
-              key: apikey
-```
+  | NAME | DESIRED | CURRENT  | UP-TO-DATE  | AVAILABLE  | AGE |
+  | --- | --- | --- | --- | --- | --- |
+  | fleetms-deployment  |  1  |       1     |    1     |       1     |      23h |
+  | kc-ui              |  1  |  1  |  1   |  1  |     18h |
+  | ordercommandms-deployment | 1  | 1  | 1  |  1  |   1d |
+  | orderqueryms-deployment | 1  |   1 |  1  |  1  |   23h  |
+  | voyagesms-deployment |   1   |  1  |  1  |  1  |   19h |    
 
-See an example in the fleet ms [deployment.yml]()
+  ```  
+    $  kubectl get pods -n browncompute
+  ``` 
+
+  | NAME |                                       READY  |   STATUS  |  RESTARTS |  AGE |
+  | --- | --- | --- | --- | --- |
+  | fleetms-deployment-564698b998-7pb2n   |      1/1   |    Running  | 0    |      23h |
+  | kc-ui-749d7df9db-jl6tv          |           1/1      | Running  | 0       |   14h |
+  | ordercommandms-deployment-d6dc4fdc7-5wjtp |  1/1   |  Running  | 0      |    1d | 
+  | orderqueryms-deployment-5db96455f-6fqp5   |  1/1   |   Running |  0     |     23h |  
+  | voyagesms-deployment-6d7f8cdc8d-hnvq6     |  1/1   |    Running |  0     |     19h |   
+
+6. You can perform a smoke test with the `scripts/smokeTests`.   
+7. Access the kubernetes console from your IKS deployment to see the deployment   
