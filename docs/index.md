@@ -29,6 +29,7 @@ This quick [architecture note](design/architecture.md) presents the components w
 ## Deployment
 
 To make the solution running we need to have to prepare a set of products installed and running:
+
 * Event Streams
 * Streaming Analytics
 * Kubernetes Cluster (IBM Cloud Private or IBM Kubernetes Service on cloud) or Docker compose.
@@ -38,3 +39,9 @@ We can deploy the components of the solution into three environments:
 * **Public cloud (IBM Cloud)**, [see this article](deployments/iks.md) for details on how to prepare the needed services.
 * **Private cloud** (we are using IBM Cloud Private) and [see this article](deployments/icp.md) for details.
 * **[Local](deployments/local.md)** to your laptop, using docker images and docker compose.
+
+The scripts to build, deploy and tests all the solution components are defined in this source repository: [https://github.com/ibm-cloud-architecture/refarch-kc](https://github.com/ibm-cloud-architecture/refarch-kc). Each project has its own deep explanations.
+
+## Future readings
+
+
