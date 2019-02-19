@@ -238,6 +238,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#future-readings" title="Future readings" class="md-nav__link">
+    Future readings
+  </a>
+  
+</li>
+      
       
       
       
@@ -467,6 +474,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#future-readings" title="Future readings" class="md-nav__link">
+    Future readings
+  </a>
+  
+</li>
+      
       
       
       
@@ -507,16 +521,20 @@
 <h2 id="architecture">Architecture</h2>
 <p>This quick <a href="design/architecture/">architecture note</a> presents the components working together with the event backbone. </p>
 <h2 id="deployment">Deployment</h2>
-<p>To make the solution running we need to have to prepare a set of products installed and running:
-<em> Event Streams
-</em> Streaming Analytics
-* Kubernetes Cluster (IBM Cloud Private or IBM Kubernetes Service on cloud) or Docker compose.</p>
+<p>To make the solution running we need to have to prepare a set of products installed and running:</p>
+<ul>
+<li>Event Streams</li>
+<li>Streaming Analytics</li>
+<li>Kubernetes Cluster (IBM Cloud Private or IBM Kubernetes Service on cloud) or Docker compose.</li>
+</ul>
 <p>We can deploy the components of the solution into three environments:</p>
 <ul>
 <li><strong>Public cloud (IBM Cloud)</strong>, <a href="deployments/iks/">see this article</a> for details on how to prepare the needed services.</li>
 <li><strong>Private cloud</strong> (we are using IBM Cloud Private) and <a href="deployments/icp/">see this article</a> for details.</li>
 <li><strong><a href="deployments/local/">Local</a></strong> to your laptop, using docker images and docker compose.</li>
 </ul>
+<p>The scripts to build, deploy and tests all the solution components are defined in this source repository: <a href="https://github.com/ibm-cloud-architecture/refarch-kc">https://github.com/ibm-cloud-architecture/refarch-kc</a>. Each project has its own deep explanations.</p>
+<h2 id="future-readings">Future readings</h2>
                 
                   
                 

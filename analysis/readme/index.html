@@ -846,19 +846,21 @@
 <p>(This section of the example description covers activities identified as event storming workshop steps 1,2,3 in the generic description of the <a href="https://www.ibm.com/cloud/garage/architectures/eventDrivenArchitecture/event-storming-methodology">event storming method</a>. </p>
 <p>The initial step in event storming analysis is to capture all events, things which have happened at a point in time, and organize them into a timeline:</p>
 <ul>
-<li>each event goes on an orange "sticky note" </li>
-<li>parallel or independent processes may be separated with blue horizontal swim lanes</li>
-<li>critical event indicate a new stage, or pivot, in the flow shown with vertical blue bars.</li>
+<li>Each event goes on an orange "sticky note" </li>
+<li>Parallel or independent processes may be separated with blue horizontal swim lanes</li>
+<li>Critical event indicate a new stage, or pivot, in the flow shown with vertical blue bars.</li>
 </ul>
 <p>For the global shipment example described at a very high level above we came up with an event timeline shown in the set of diagrams below.
 (The event storming process captures these event timeline sections in charts on walls around the meeting room). </p>
 <h4 id="container-shipping-event-timeline-section-1">Container shipping event timeline section 1</h4>
 <p><img alt="ship-dom-evt1" src="../ship-dom-evt1.png" /></p>
-<p>This section of the event time line deals with initial contracts to ship container and startup actions - specifically:
-<em> Retailer and Manufacturer settling on an initial order for delivery of goods in a container.
-</em> Manufacturer placing order for shipment with Shipping Company.
-<em> Land transport arranged to pick up container and deliver to source port.
-</em> Container ship approach source port adjacent to Manufacturer's location. </p>
+<p>This section of the event time line deals with initial contracts to ship container and startup actions - specifically:  </p>
+<ul>
+<li>Retailer and Manufacturer setting on an initial order for delivery of goods in a container.</li>
+<li>Manufacturer placing order for shipment with Shipping Company.</li>
+<li>Land transport arranged to pick up container and deliver to source port.</li>
+<li>Container ship approach source port adjacent to Manufacturer's location. </li>
+</ul>
 <p>The events are organized into separate swim lanes for Manufacturer, Retailer and Ship perspectives operating in parallel. </p>
 <p>Swim lanes help to clearly separate ship events as it approaches the source port from container specific events with agreements to ship etc. There is no time coupling or precise causality between events in these two swim lanes.</p>
 <p>The red sticky note is a comment.</p>
@@ -875,16 +877,26 @@ In the following dockside phase there are interactions with Customs Officer to g
 <h4 id="container-shipping-event-timeline-section-3">Container shipping event timeline section 3</h4>
 <p><img alt="ship-dom-evt3" src="../ship-dom-evt3.png" /></p>
 <p>This section continues the event timelines with swim lanes relating to a specific container shipment and also to the movement of a ship potentially carrying hundreds of containers.</p>
-<p>It introduces two new critical events:
-<em> The Customs decision phase of event ends with a specific decision to clear a container for export or not, or possibly a request for additional inspecions or documents requiring more decision time 
-  * If the container is approved for export it can proceed to loading.
-  * If additional time is required for the clearance process, the original booking and expected delivery date may need to be modified.
-  * If export clearance is denied, then shipmen is cancelled and requesting parties notified.
-</em> Ship enters dock ready to start unloading and loading is a new critical event.
-  * Previous ship events in Event Timeline section 1 dealt with ship "booking" a load/unload timeslot at a dock in the source port 
-  * Also getting  national authority or Customs clearance to enter that jurisdiction 
-  * Now on arrival at the source port anchorage area, the ship requests permission to moor at an available dock facility
-  * The critical event when a ship is cleared and moored at a dock hence ready to start unloading and loading containers is the start of the next event phase - container loading (and unloading)</p>
+<p>It introduces two new critical events:</p>
+<ol>
+<li>
+<p>The Customs decision phase of event ends with a specific decision to clear a container for export or not, or possibly a request for additional inspecions or documents requiring more decision time: </p>
+<ul>
+<li>If the container is approved for export it can proceed to loading.  </li>
+<li>If additional time is required for the clearance process, the original booking and expected delivery date may need to be modified. </li>
+<li>If export clearance is denied, then shipmen is cancelled and requesting parties notified.</li>
+</ul>
+</li>
+<li>
+<p>Ship enters dock ready to start unloading and loading is a new critical event: </p>
+<ul>
+<li>Previous ship events in Event Timeline section 1 dealt with ship "booking" a load/unload timeslot at a dock in the source port.   </li>
+<li>Also getting  national authority or Customs clearance to enter that jurisdiction.    </li>
+<li>Now on arrival at the source port anchorage area, the ship requests permission to moor at an available dock facility.   </li>
+<li>The critical event when a ship is cleared and moored at a dock hence ready to start unloading and loading containers is the start of the next event phase - container loading (and unloading).   </li>
+</ul>
+</li>
+</ol>
 <h4 id="container-shipping-event-timeline-section-4">Container shipping event timeline section 4</h4>
 <p><img alt="ship-dom-evt4" src="../ship-dom-evt4.png" /></p>
 <p>This segment of the event timeline deals with a single swim lane for the ship while it is moored in a dock facility at the source port, is having arriving containers destined for this port unloaded and new containers being loaded at his port. The port dock facility operator is coordinating many events in the yard to perform load unload operations. These steps - as noted in a red discussion "sticky" in the event storming timeline are repeated for many containers. The time line presented here captures representative high level events. It is straightforward to extend the analysis to open up additional layers of detail touching on operational optimizations and coordination at the cost of addiional complexity not essential to our reference example here.</p>
@@ -898,9 +910,11 @@ In the following dockside phase there are interactions with Customs Officer to g
 <li>reporting its current position.</li>
 <li>deciding to alter planned course to avoid a weather event.</li>
 </ul>
-<p>The upper swim lane capture events which are specific to a particular container.
-<em> container sensors reporting on geolocation.
-</em> refrigerated container sensors reporting on humidity, carbon dioxide,  temperature in the container and power consumption of the refrigeration unit.</p>
+<p>The upper swim lane capture events which are specific to a particular container.</p>
+<ul>
+<li>container sensors reporting on geolocation.</li>
+<li>refrigerated container sensors reporting on humidity, carbon dioxide,  temperature in the container and power consumption of the refrigeration unit.</li>
+</ul>
 <h4 id="container-shipping-event-timeline-sections-6-and-7">Container shipping event timeline sections 6 and 7</h4>
 <p><img alt="ship-dom-evt6" src="../ship-dom-evt6.png" /></p>
 <p>The remining event time line segments 6 and 7 deal with arrival at the destination port unload of the container and delivery to the Retailer's location. At the level of simplification in the reference architecture example, the steps for unloading a container at the destination port, clearing Customs and delivering it to are Retailer location are the symmetric image of the steps to pick up the container from the Manufacture location, clear it through export permissions and load onto the ship. </p>
@@ -911,15 +925,14 @@ In the following dockside phase there are interactions with Customs Officer to g
 <p>This section of the example description covers activities identified as event storming workshop steps 4,5) in the generic description of the <a href="https://www.ibm.com/cloud/garage/architectures/eventDrivenArchitecture/event-storming-methodology">event storming method</a>.</p>
 </blockquote>
 <p>After capturing all events for the scenario and organizing them in a time line, the next step in event storming analysis is to identify the triggers for events and causal linkages between events. </p>
-<p>For each identified event in the timeline we ask "What triggered this event to occur?". Expected event trigger types are:
-<em> A human operator makes a decision and issues a command.
-</em> Some external system or sensor provides a stimulus.
-<em> An event results from some policy  - typically automated processing of a precursor event.
-</em> Completion of some determined period of elapsed time.</p>
-<p>For each event trigerred by a command 
-<em> the triggering command is identified in a blue (sticky) note 
-   * this may become a microservice api in a later implementation 
-</em>  the human persona issuing the command is identified and shown in a yellow note above this.</p>
+<p>For each identified event in the timeline we ask "What triggered this event to occur?". Expected event trigger types are:</p>
+<ul>
+<li>A human operator makes a decision and issues a command.</li>
+<li>Some external system or sensor provides a stimulus.</li>
+<li>An event results from some policy  - typically automated processing of a precursor event.</li>
+<li>Completion of some determined period of elapsed time.</li>
+</ul>
+<p>For each event trigerred by a command, the triggering command is identified in a blue (sticky) note. This may become a microservice api in a later implementation. The human persona issuing the command is identified and shown in a yellow note above this.</p>
 <p>For events trigerred by processing of some precursor events the trigerring policy explaining when and why this event occurs is summarized in a lilac colored note. Specific causal event linkages are added to the event storming diagram as blue directed (arrow) linkages.</p>
 <p>In the following subsections we show the results of command and event linkage analysis for some selected areas of the container shipping example.</p>
 <h4 id="container-shipping-commands-for-order-placement-and-land-transport-setup">Container shipping Commands for order placement and land transport setup</h4>
