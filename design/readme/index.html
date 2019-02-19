@@ -1,0 +1,1216 @@
+
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.0.1">
+    
+    
+      
+        <title>Design considerations and microservice identifications - Container Shipment EDA reference implementation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.982221ab.css">
+      
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.1f0bcf2b.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+    
+      <link rel="stylesheet" href="../../extra.css">
+    
+    
+      
+    
+    
+  </head>
+  
+    <body dir="ltr">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#from-analysis-to-microservice-specifications" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../.." title="Container Shipment EDA reference implementation" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
+              Container Shipment EDA reference implementation
+            </span>
+            <span class="md-header-nav__topic">
+              Design considerations and microservice identifications
+            </span>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../.." title="Container Shipment EDA reference implementation" class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </a>
+    Container Shipment EDA reference implementation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      Business Problem Statement
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        Business Problem Statement
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../introduction/" title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../analysis/readme/" title="Event storming analysis" class="md-nav__link">
+      Event storming analysis
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Design considerations and microservice identifications
+      </label>
+    
+    <a href="./" title="Design considerations and microservice identifications" class="md-nav__link md-nav__link--active">
+      Design considerations and microservice identifications
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#goals-and-outline-of-section" title="Goals and outline of section" class="md-nav__link">
+    Goals and outline of section
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starting-materials-generated-during-event-storming-and-analysis" title="Starting materials generated during Event Storming and Analysis" class="md-nav__link">
+    Starting materials generated during Event Storming and Analysis
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event-linked-microservices-design-structure" title="Event linked microservices design - structure" class="md-nav__link">
+    Event linked microservices design - structure
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#steps-in-the-design-process" title="Steps in the design process" class="md-nav__link">
+    Steps in the design process
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list-of-generic-steps" title="List of generic steps:" class="md-nav__link">
+    List of generic steps:
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-limit-the-context-and-scope-for-this-particular-build-sprint" title="Step 1: Limit the context and scope for this particular build / sprint" class="md-nav__link">
+    Step 1: Limit the context and scope for this particular build / sprint
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-identify-specific-microservices-in-each-aggregate" title="Step 2: Identify specific microservices in each aggregate" class="md-nav__link">
+    Step 2: Identify specific microservices in each aggregate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-generate-microservice-interaction-diagrams-for-the-build" title="Step 3: Generate microservice interaction diagrams for the build" class="md-nav__link">
+    Step 3: Generate microservice interaction diagrams for the build
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-specify-recovery-approach-in-case-a-microservice-fails" title="Step 4: Specify recovery approach in case a microservice fails" class="md-nav__link">
+    Step 4: Specify recovery approach in case a microservice fails
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concepts-and-rationale-underlying-the-design-approach" title="Concepts and rationale underlying the design approach" class="md-nav__link">
+    Concepts and rationale underlying the design approach
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#specific-application-to-container-shipment-example" title="Specific application to Container Shipment example" class="md-nav__link">
+    Specific application to Container Shipment example
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step1-context-and-scope-for-demonstration-build" title="Step1: Context and scope for demonstration build" class="md-nav__link">
+    Step1: Context and scope for demonstration build
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shipment-order-lifecycle-and-state-change-events" title="Shipment order lifecycle and state change events" class="md-nav__link">
+    Shipment order lifecycle and state change events
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-microservices-and-microservice-owned-data-for-demonstration-build" title="Step 2: microservices and microservice owned data for demonstration build" class="md-nav__link">
+    Step 2: microservices and microservice owned data for demonstration build
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#orders-aggregate" title="Orders Aggregate" class="md-nav__link">
+    Orders Aggregate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#voyages-aggregate" title="Voyages Aggregate" class="md-nav__link">
+    Voyages Aggregate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#containers-aggregate" title="Containers Aggregate" class="md-nav__link">
+    Containers Aggregate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fleetships-aggregate" title="Fleet/Ships Aggregate" class="md-nav__link">
+    Fleet/Ships Aggregate
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step3-specifing-all-interactions-in-a-logic-flow-for-the-demonstration-build" title="Step3: Specifing all interactions in a logic flow for the demonstration build" class="md-nav__link">
+    Step3: Specifing all interactions in a logic flow for the demonstration build
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#command-microservice-interactions-order-create-through-voyage-start-with-container-on-board" title="Command microservice interactions - order create through voyage start with container on board" class="md-nav__link">
+    Command microservice interactions - order create through voyage start with container on board
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-microservice-interaction-container-on-ship-at-sea-through-shipment-complete" title="Command microservice interaction - container on ship at sea through shipment complete" class="md-nav__link">
+    Command microservice interaction - container on ship at sea through shipment complete
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-microservice-service-cqrs-order-and-shipment-tracking-microservices" title="Query microservice service  - CQRS Order and  Shipment tracking microservices" class="md-nav__link">
+    Query microservice service  - CQRS Order and  Shipment tracking microservices
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#topics-event-types-and-the-event-emit-and-consumption-lists" title="Topics, event types and the event emit and consumption lists" class="md-nav__link">
+    Topics, event types and the event emit and consumption lists
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step4-data-recovery-considerations-for-this-demonstration-build" title="Step4: Data recovery considerations for this demonstration build" class="md-nav__link">
+    Step4: Data recovery considerations for this demonstration build
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../architecture/" title="Architecture" class="md-nav__link">
+      Architecture
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
+      Deployments
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        Deployments
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../deployments/reposlist/" title="Related repositories" class="md-nav__link">
+      Related repositories
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../deployments/local/" title="Run locally" class="md-nav__link">
+      Run locally
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../deployments/iks/" title="Run on IBM Cloud Kubernetes Services" class="md-nav__link">
+      Run on IBM Cloud Kubernetes Services
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../deployments/icp/" title="Run on IBM Cloud Private" class="md-nav__link">
+      Run on IBM Cloud Private
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../demo/readme/" title="Demonstration" class="md-nav__link">
+      Demonstration
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#goals-and-outline-of-section" title="Goals and outline of section" class="md-nav__link">
+    Goals and outline of section
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starting-materials-generated-during-event-storming-and-analysis" title="Starting materials generated during Event Storming and Analysis" class="md-nav__link">
+    Starting materials generated during Event Storming and Analysis
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event-linked-microservices-design-structure" title="Event linked microservices design - structure" class="md-nav__link">
+    Event linked microservices design - structure
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#steps-in-the-design-process" title="Steps in the design process" class="md-nav__link">
+    Steps in the design process
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list-of-generic-steps" title="List of generic steps:" class="md-nav__link">
+    List of generic steps:
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-limit-the-context-and-scope-for-this-particular-build-sprint" title="Step 1: Limit the context and scope for this particular build / sprint" class="md-nav__link">
+    Step 1: Limit the context and scope for this particular build / sprint
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-identify-specific-microservices-in-each-aggregate" title="Step 2: Identify specific microservices in each aggregate" class="md-nav__link">
+    Step 2: Identify specific microservices in each aggregate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-generate-microservice-interaction-diagrams-for-the-build" title="Step 3: Generate microservice interaction diagrams for the build" class="md-nav__link">
+    Step 3: Generate microservice interaction diagrams for the build
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-specify-recovery-approach-in-case-a-microservice-fails" title="Step 4: Specify recovery approach in case a microservice fails" class="md-nav__link">
+    Step 4: Specify recovery approach in case a microservice fails
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concepts-and-rationale-underlying-the-design-approach" title="Concepts and rationale underlying the design approach" class="md-nav__link">
+    Concepts and rationale underlying the design approach
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#specific-application-to-container-shipment-example" title="Specific application to Container Shipment example" class="md-nav__link">
+    Specific application to Container Shipment example
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step1-context-and-scope-for-demonstration-build" title="Step1: Context and scope for demonstration build" class="md-nav__link">
+    Step1: Context and scope for demonstration build
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shipment-order-lifecycle-and-state-change-events" title="Shipment order lifecycle and state change events" class="md-nav__link">
+    Shipment order lifecycle and state change events
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-microservices-and-microservice-owned-data-for-demonstration-build" title="Step 2: microservices and microservice owned data for demonstration build" class="md-nav__link">
+    Step 2: microservices and microservice owned data for demonstration build
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#orders-aggregate" title="Orders Aggregate" class="md-nav__link">
+    Orders Aggregate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#voyages-aggregate" title="Voyages Aggregate" class="md-nav__link">
+    Voyages Aggregate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#containers-aggregate" title="Containers Aggregate" class="md-nav__link">
+    Containers Aggregate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fleetships-aggregate" title="Fleet/Ships Aggregate" class="md-nav__link">
+    Fleet/Ships Aggregate
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step3-specifing-all-interactions-in-a-logic-flow-for-the-demonstration-build" title="Step3: Specifing all interactions in a logic flow for the demonstration build" class="md-nav__link">
+    Step3: Specifing all interactions in a logic flow for the demonstration build
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#command-microservice-interactions-order-create-through-voyage-start-with-container-on-board" title="Command microservice interactions - order create through voyage start with container on board" class="md-nav__link">
+    Command microservice interactions - order create through voyage start with container on board
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-microservice-interaction-container-on-ship-at-sea-through-shipment-complete" title="Command microservice interaction - container on ship at sea through shipment complete" class="md-nav__link">
+    Command microservice interaction - container on ship at sea through shipment complete
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-microservice-service-cqrs-order-and-shipment-tracking-microservices" title="Query microservice service  - CQRS Order and  Shipment tracking microservices" class="md-nav__link">
+    Query microservice service  - CQRS Order and  Shipment tracking microservices
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#topics-event-types-and-the-event-emit-and-consumption-lists" title="Topics, event types and the event emit and consumption lists" class="md-nav__link">
+    Topics, event types and the event emit and consumption lists
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step4-data-recovery-considerations-for-this-demonstration-build" title="Step4: Data recovery considerations for this demonstration build" class="md-nav__link">
+    Step4: Data recovery considerations for this demonstration build
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="from-analysis-to-microservice-specifications">From Analysis to Microservice Specifications</h1>
+<h2 id="goals-and-outline-of-section">Goals and outline of section</h2>
+<p>This section describes the design step which uses output from the event storming session and subsequent analysis and derives a set of micro services design specifications.</p>
+<p>The goals for the design step and the resulting specifications are: </p>
+<ul>
+<li>To support highly modular cloud native microservices. </li>
+<li>To adopt event coupled microservices - facilitating independent modification and evolution of each microservice separately.</li>
+<li>To allow applying event-driven patterns such as event sourcing, CQRS and SAGA. </li>
+</ul>
+<p>Since, we are delivering a demonstration application there will be some simulator / scaffolding / testing services mixed in with the required business processing.
+This is a common occurrence in agile development and it may be helpful to show how decision to scope and simplify a particular build and test step interacts with decisions relating strictly to microservices design.  </p>
+<p>Requirements for scalability, coupling of microservices <em>only</em> through the event back bone and eventual consistency differentiate this step from previous Event Storming and Domain Driven Design activities which were 100% business requirement driven.</p>
+<hr />
+<h2 id="starting-materials-generated-during-event-storming-and-analysis">Starting materials generated during Event Storming and Analysis</h2>
+<p>We make use of the following materials generated during Event Storming and analysis of the Container Shipment example problem: </p>
+<ul>
+<li>Event Sequence flow.</li>
+<li>Events – business description.</li>
+<li>Critical events. </li>
+<li>Aggregates and services:   <ul>
+<li>Users – role based user stories.   </li>
+<li>Commands.</li>
+<li>Event linkages.</li>
+<li>Policies. </li>
+<li>Event prediction and probability flows. </li>
+</ul>
+</li>
+<li>Conceptual Data Model.</li>
+</ul>
+<p>The derivation of these material was described in: <a href="../../analysis/readme/">Analysis</a>.</p>
+<hr />
+<h2 id="event-linked-microservices-design-structure">Event linked microservices design - structure</h2>
+<p>A complete microservices specification (the target of this design step) includes specifications of the following: </p>
+<ul>
+<li>Event Topics <ul>
+<li>Used to configure the Kafka Event Backbone </li>
+</ul>
+</li>
+<li>Event types within each event topic </li>
+<li>Microservices: <ul>
+<li>These are finer grained than aggregates </li>
+<li>May separate query and command; possibly multiple queries  </li>
+<li>May Separate whether simulation or business processing component </li>
+<li>Demonstration Control – main User Interface </li>
+<li>Scaffolding and testing services  - whether local and cloud versions </li>
+</ul>
+</li>
+<li>Microservice specification<ul>
+<li>Data within Each microservice</li>
+<li>APIs  ( Synchronous ) </li>
+<li>Topics and events Subscribed to</li>
+<li>Events published / emitted   </li>
+</ul>
+</li>
+<li>List of end to end interactions <ul>
+<li>List of logic segments per microservice </li>
+</ul>
+</li>
+<li>Recovery processing, scaling <ul>
+<li>We expect this to be highly patterned and template driven not requiring example-specific design </li>
+</ul>
+</li>
+</ul>
+<p>With the above information coding of each microservice and other components within a "sprint" should be straightforward.</p>
+<hr />
+<h2 id="steps-in-the-design-process">Steps in the design process</h2>
+<p>Here we describe in generic terms, each step in the process of deriving event-linked microservice specifications. In following section we will describe in more detail how each of these steps plays out in the specific context of the container shipment example.</p>
+<h3 id="list-of-generic-steps">List of generic steps:</h3>
+<h4 id="step-1-limit-the-context-and-scope-for-this-particular-build-sprint">Step 1: Limit the context and scope for this particular build / sprint</h4>
+<p>We assume that we are developing a particular build for a sprint within some agile development approach, deferring additional functions and complexity to later sprints:</p>
+<ul>
+<li>Working from the initial list of aggregates, select which aggregates will be included in this build</li>
+<li>For each aggregate possible choices are: <br />
+    (1) to completely skip and workaround the aggregate in this build <br />
+    (2) to include a full lifecycle implementation of the aggregate <br />
+    (3) to provide a simplified lifecycle implementation - typically a table of entities is initialized at start up, and state changes to existing entities are tracked   </li>
+<li>Determine whether there are simulation services or predictive analytics service to be included in the build </li>
+<li>Identify the external query APIs and command APIs which this build should support </li>
+<li>Create entity lifecycle diagrams for entites having a full lifecycle implementation in this build / sprint.</li>
+</ul>
+<h4 id="step-2-identify-specific-microservices-in-each-aggregate">Step 2: Identify specific microservices in each aggregate</h4>
+<ul>
+<li>Each aggregate will be implemented as some composition of: <br />
+    (1) a command microservice managing state changes to the entities in this aggregate<br />
+    (2) possibly one or more separate (CQRS) query services providing internal or external API query capabilities <br />
+    (3) additional simulation, predictive analytics or User Interface microservices   </li>
+<li>The command microservice will be built around and manage a collection of active entites for the aggregate, keyed by some primary key</li>
+<li>The separation of each aggregate into specific component microservices as outlined above, will be a complete list of microservices for the build / sprint. </li>
+<li>Identify the data collections, and collection organization (keying structure)  in each command and query microservice for this build.</li>
+</ul>
+<h4 id="step-3-generate-microservice-interaction-diagrams-for-the-build">Step 3: Generate microservice interaction diagrams for the build</h4>
+<ul>
+<li>The diagram will show API calls initiating state change. </li>
+<li>It shows for each interaction whether this is a synchronous API calls or an asynchronous event interaction via the event backbone.</li>
+<li>The diagram labels each specific event interaction between microservices trigerring a state change.</li>
+<li>Typically queries are synchronous API calls since the caller cannot usefully proceeed until a result is returned.</li>
+<li>
+<p>From this we can extract: <br />
+    (1) a complete list of event types on each topic, with information passed on each event type.<br />
+    (2) the complete list of “logic segments” for each microservice processing action in response to an API call or initiating event. </p>
+</li>
+<li>
+<p>When, at the next level of detail, the individual fields in each event are specified and typed, the <a href="https://github.com/cloudevents/spec">CloudEvents standard</a> should be assumed as a starting point.</p>
+</li>
+</ul>
+<h4 id="step-4-specify-recovery-approach-in-case-a-microservice-fails">Step 4: Specify recovery approach in case a microservice fails</h4>
+<ul>
+<li>If a microservice fails it will need to recover its internal state by resubscribing to one or more topics on the event backbone.  </li>
+<li>In general, command and query microservices will have a standard pattern for doing this.</li>
+<li>Any custom event filtering and service specific logic should be specified.</li>
+</ul>
+<h3 id="concepts-and-rationale-underlying-the-design-approach">Concepts and rationale underlying the design approach</h3>
+<p><em>What is the difference between event information stored in the event backbone and state data stored in the microservices?</em><br />
+The event information stored persistently in the event backbone is organized by topic and, within each topic, entirely by event time-of-occurrence. While the state information in a microservice is a list (collection) of all <strong>currently active</strong> entities of the owning aggregate (e.g. all orders, all voyages etc) and the <strong>current</strong> state of each such entity. The entity records are keyed by primary key, like an OrderID.
+While implementing microservice using event sourcing, CQRS, the persisted entity records are complementary to the historically organized information in the event backbone. </p>
+<p><em>When is it acceptable to be using synchronous interactions between services instead of asynchronous event interacts through the event backbone?</em> <br />
+For non-state-changing queries, for which the response is always instantaneously available a synchronous query call may be acceptable and will provide a simpler more understandable interface. Any processing which can be though of as being triggered by some state change in another aggregate should be modelled with an asynchronous event, because as the solution evolves other new microservices may also need to be aware of such event. We do not want to have to go back and change logic existing service where this event originated to have that microservice actively report the event to all potential consumers. </p>
+<p><em>How do we save microservices from having to maintain data collections with complex secondary indexing for which eventual consistency will be hard to implement?</em></p>
+<ul>
+<li>Each command  microservice should do all its state changing updates using the primary key lookup only for its entities.</li>
+<li>Each asynchronous event interaction between microservices should carry primary entityIds ( orderID, VoyageID, shipID) for any entities associated with the interaction.</li>
+<li>Each query which might require speciaoized secondary indexing to respond to queries can be implemented in a separate CQRS query service which subscribes to events  to do all internal updating and receives events from the event backbone in a ( Consistent) eventually correct order. </li>
+<li>This allows for recovery of any failed service by rebuilding it in "eventually correct" order.</li>
+</ul>
+<hr />
+<h2 id="specific-application-to-container-shipment-example">Specific application to Container Shipment example</h2>
+<p>In this section we discuss how the generic steps introduced in previous section can be applied for the Container shipping example:</p>
+<h3 id="step1-context-and-scope-for-demonstration-build">Step1: Context and scope for demonstration build</h3>
+<p>An initial scoping decision is that the demonstration will address shipment orders and shipment progress initiated by the "manufacturer" of the fresh goods with the shipment company. In the context of the example there is also discussion of manufacturer and retailer reaching some agreement on the goods to be delivered but this is not part of the demonstrated capabilities. </p>
+<p>The Event Storming analysis of the shipment problem was end-to-end and involved many aggregates including: Orders, Voyages, Trucking operations both at the source (manufacturer pickup)  and at the destination (retailer delivery), Customs and export interactions, Container loading into ship at source port and unloading from ship at destination port, containers and fleet of ships. To have a simple initial demonstration build showing the role of event-driven architecture and event coupled microservices, as an initial step towards development of a more complete system using agile incremental development and deployment, the initial demonstration build makes the following simplifications and scoping decisions:</p>
+<ul>
+<li>This build will have no implementation of: Trucking operations, Customs and export, or Dockside Handling aggregates </li>
+<li>It will show a full lifecyle for a manufacturer user to place an order for shipment, seeing a filled container placed on board ship transported to the destination port and delivered.  </li>
+<li>It will include a simulation service for ship movements - tracking the movement of ships carrying containers </li>
+<li>It will include simulation Container metrics such as temperature, current consumption while onboard ship  </li>
+<li>It will provide a query for a user to track an order and the current location and state of the associated shipment</li>
+<li>It will include a real time analytic solution to assess problems happening within containers</li>
+</ul>
+<p>Based on the scope selection above, active aggregates in the build will be:  </p>
+<ul>
+<li>Orders  - with support for a complete order lifecycle </li>
+<li>Voyages  - list of planned port to port passges with dates and manifests for each sip </li>
+<li>Containers - with allocation of a container to each order and temperature tracking of refrigerated containers </li>
+<li>Ships - with tracking of current voyage and current geographical position of each container ship </li>
+</ul>
+<p>The event backbone will be configured with a topic for each of the above aggregated. We expect to see multiple event types on each topic, but subscriptions and sequencing of events will be within these high level topics. </p>
+<p>Command APIs will be provided to: </p>
+<ul>
+<li>Place a new shipment order.   </li>
+<li>Track an existing order, to confirm its booking state or to resolve the actual location and status of the container in transit.   </li>
+<li>Modify an order request which could not be booked within the requested time window.   </li>
+</ul>
+<p>A more complete and complex build could include an API for a shipping company person to optimally and manually assign orders to voyages, but for this initial demonstration we will automate this process and assign orders automatilly to the first voyage found meeting the requested requirements.  Specifically, each order is assigned to the first located voyage: <br />
+<em> Going from the port nearest to pickup location<br />
+</em> To  the port nearest  the delivery location, <br />
+<em> Within the requested time window  for pickup and delivery <br />
+</em> With available capacity for an additional container on that voyage.</p>
+<p>Additional APIs will be need:
+<em> To initiate the overall demonstration 
+</em> To manage and view specific simulation component - container simulation and analytics and ship simulation and analytics. </p>
+<h3 id="shipment-order-lifecycle-and-state-change-events">Shipment order lifecycle and state change events</h3>
+<p>The scoping decisions for the demonstration build listed above are reflected in a shipment order life cycle diagram shown below.</p>
+<p><img alt="order-life-cycle" src="../order-life-cycle.png" /></p>
+<p>A shipment order is initially created with an API call made by a manufacturer, or via a user interface (See <a href="../../demo/readme/">demonstration script</a>). The order request specifies: </p>
+<ul>
+<li>The pickup location where empty container will be loaded </li>
+<li>The delivery location where the container is to be delivered to (we expect this to be in a remote country requiring a sea voyage) </li>
+<li>The shipment time window i.e.:  <ul>
+<li>Earliest date at which goods are available at pickup location for loading into the container </li>
+<li>Date by which delivery to the destination address is required <br />
+Since our initial demonstration build expects to show refrigeration behavior and track preservation of a cold chain, we assume that orders are for some commodity which requires refrigeration during its shipment. </li>
+</ul>
+</li>
+</ul>
+<p>A graphical view of this API with some additional field specification is provided in:</p>
+<p><img alt="Create order Request" src="../createOrderApi.png" />   </p>
+<p>When a new shipment order is placed, the shipping company must determine whether there is available capacity in some planned ship voyage which meets all the requirements specified by the manufacturer / customer. If there is a planned voyage with available capacity for additional container going from the source port nearest the pickup location to the destination port nearest to the delivery location then the order can transition to state=BOOKED and positive confirmation of the order returned to the requester. If no such voyage is available then the shipment order transitions to state=REJECTED (No Availability) and this is reported back to the requester. </p>
+<p>Once an order is BOOKED, then the expected dates and locations where for which a container will be needed are known. A request can be issued to book a specific (refrigerated) container for use with this shipment. We assume that the shipping company always has enough container available to meet expected shipment demand, hence the shipment order will transition to state=CONTAINER_ALLOCATED when this container booking is received. </p>
+<p>Since the scope for this demonstration build excluded the simulation of trucking operations to get the goods from the manufacturer's pickup location, export clearance and actual dockside loading operations, once an order has a container allocated it is "ready to go" and transitions to state=FULL_CONTAINER_VOYAGE_READY.  The actual event of recording the container as being on board ship and at sea will not happen until simulated time in the demonstration reaches the scheduled start of the voyage on which that container is booked and the container ship assigned to that voyage is in the source port and also ready to go. At that point in simulated time, the state of the shipment order changes from state = FULL_CONTAINER_VOYAGE_READY to state = CONTAINER_ON_SHIP.</p>
+<p>While the order has state = CONTAINER_ON_SHIP, then we will be receiving temperature information from the Container simulation and Ship position information from the ship simulation service. Both provide a continuous streaming souces of information which should be considered part of the extended shipment state. </p>
+<p>After some period of simulated time, the ship will reach the destination port of the voyage. At this time the order transitions to state = CONTAINER_OFF_SHIP since our scope excluded simulation of actual dockside unloading information. Since we are not modelling customs clearance or trucking operations, there are no further events to be modeled until the order state = CONTAINER_DELIVERED. </p>
+<p>Since we are not modelling invoicing and billing operations the Container can be deallocated from this order and returned to some pool of free containers. When that has occurred the order state can be considered state = ORDER_COMPLETED. </p>
+<p>We have described the nornal, exception-free path first. There are two exception cases modelled:  </p>
+<ul>
+<li>At the time a new shipment order is requested, there may be no voyage with available capacity meeting the location and time requirements of the request. When this occurs, the manufacturer/user is informed and the order state becomes state= REJECTED (No Availability). At this point, the user can modify the order with a second API requests changing dates or possibly locations. This retry request could still fail returning the order back to state = REJECTED ( No availability). Alternatively the changes in dates and location could be enough for an available voyage to be found. When this occurs the order will transition to state = BOOKED modified. </li>
+<li>If an API call to modify an order is made and the order is in some state different from state=REJECTED (No availability), we reject the API request. There could be race conditions, the order is in the process of being assigned to a voyage, or complex recovery issues. What if the order is already in a container and at sea when a modify order is received ?  Full treatment of these complex business specific issues is out of scope and avoided by the state check in the modify order call API call</li>
+<li>We also model the exception condition when the refrigeration unit in a container fails or is misset or over loaded. If the temperature in the container goes outside the service level range for that shipment the goods must be considered spoiled.  The order will transition from state = CONTAINER_ON_SHIP to  state = ORDER_SPOILED (Temperature out of Range). Some complex business recovery such as compensating the customer and possibly scheduling a replacement shipment may be required. The details will be contract specific and outside the scope, but we do include the use of Streaming event container analytics to detect the spoilage and use rule based real-time /edge adjustments of the refrigeration gear to avoid spoilage in the demonstration simulation.</li>
+</ul>
+<h3 id="step-2-microservices-and-microservice-owned-data-for-demonstration-build">Step 2: microservices and microservice owned data for demonstration build</h3>
+<p>In this step we fix the specific microservices for each aggregate and the data organization for each microservice.</p>
+<h4 id="orders-aggregate">Orders Aggregate</h4>
+<p>For Orders we are implementing the CQRS pattern and we will need an orders-command-ms which will maintain a list of all current active orders and the current state of each order. The order state will as described above. The collection of active orders will be keyed by orderID. The orders-command-ms will offer APIs for create order and modify order since these are external interactions. </p>
+<p>It makes sense to use CQRS and separate out order tracking into a separate oders-query-ms since: </p>
+<ul>
+<li>The demand for order tracking might have significantly more intense scalability needs than order commands. Orders are typically created once and changes state a handful of times. There could be many different users querying status of a particular orders independently and each requesting tracking multiple times for each order to determine if there is some delay expected.</li>
+<li>Order state tracking information should probably be organized by requesting customer NOT by order ID:   <ul>
+<li>since customers should be allowed to see status on their own orders but not on other customer's orders   </li>
+<li>when the shipping company is tracking an order it is most frequently doing so on behalf of a specific customer<br />
+With this approach orders-query-ms becomes a CQRS query service with internal state updated from the event backbone, and an order tracking API.</li>
+</ul>
+</li>
+</ul>
+<h4 id="voyages-aggregate">Voyages Aggregate</h4>
+<p>For Voyages we will need a voyages-command-ms which will maintain a list of all voyages and their current state. In any given run of the demonstration we will work with a fixed set of voyages - effectively the schedule for the container fleet - so there is no need for an API to create additional voyages. The voyage definition will be read from file when the build is initializing. We expect this voyage data to be well formed:</p>
+<ul>
+<li>each voyage has a container ship in the fleet allocated to make the voyage </li>
+<li>the voyages assigned to any one ship are properly "chained".  For the sequence of voyages assigned to any one container ship, the destination port of the nth voyage is always the start port of the (n+1)th voyage.</li>
+</ul>
+<p>The states of a voyage are:</p>
+<ul>
+<li>SCHEDULED - in this state it can accept order bookings, knows how much free space is available for additional bookings, and knows the orderIDs of each shipment already booked on the voyage </li>
+<li>IN_PROGRESS -  in this state it includes a manifest  a list of the orderIDs and containerIDs on board the ship </li>
+<li>COMPLETED - a voyage in the completed state supports tracing continers, may know which containers in the voyage were spoiled etc </li>
+</ul>
+<p>It will be helpful for the voyage-command-ms to include a query service to lookup voyages with a particular source port and destination port in a particular time windaw. This will help process booking request event but does not need to be an external API hence there is no strong argument for realizing this as a separate CQRS query service. </p>
+<h4 id="containers-aggregate">Containers Aggregate</h4>
+<p>For Containers we will use a containers-command-ms to maintain a list of defined containerIDs and track the state of each container. A fixed set of valid container IDs will be initialized at demonstration start time. As noted previously we will assume this to be enough for all requested orders to be assigned a container without availability issues. Since the collection of containers is fixed the component will not need a command API</p>
+<p>The container current state maintained in container-command-ms is:
+<em>  state = FREE - this container is not in use and is available to be assigned to a new shipment order 
+</em>  state = ALLOCATED - this container is allocated to an order orderID  and potentially in use for that shipment.</p>
+<p>We will be modelling and performing streaming analytics on temperature inside a (refrigerated) container. Hence there will be a separate services performing this streaming analytics and simulation: container-streaming-svc.<br />
+Conceptually, while a container is ALLOCATED to a shipment order with state = CONTAINER_ON_SHIP, its internal temperature and power usage will be maintained as streaming state by the container-streaming-svc. </p>
+<h4 id="fleetships-aggregate">Fleet/Ships Aggregate</h4>
+<p>For Ships we will have a monolithic fleet simulation service providing continuous simulation of ship position for each ship and modelling of ship events. 
+This service will include a UI to enable viewing the positions and states of the ships.
+It may have a separate UI to control the overall demonstration.
+There is no requirement for any separate microservice maintining additional information on ship state.</p>
+<h3 id="step3-specifing-all-interactions-in-a-logic-flow-for-the-demonstration-build">Step3: Specifing all interactions in a logic flow for the demonstration build</h3>
+<p>Using the understanding of the event flow from the Event Storming session, the scoping of this build, the list of microservices and data within each microservices developed in the steps above, we can write out in a complete interraction flow. This flow illustrates how the microservices are linked together via the Event backbone using event interractions for all non API interractions between distinct microservices. </p>
+<h4 id="command-microservice-interactions-order-create-through-voyage-start-with-container-on-board">Command microservice interactions - order create through voyage start with container on board</h4>
+<p>The diagram below shows all command interactions from initial order creation through voyage start. </p>
+<p><img alt="interactions1" src="../interactions1.png" /></p>
+<p>The grey (shaded) columns of processing blocks are organized to show processing by the different command microservices.</p>
+<ul>
+<li>Column 1 shows processing by the orders-command-ms</li>
+<li>Column 2 shows processing by the voyages-command-ms</li>
+<li>Column 3 shows processing by the containers-command-ms and in a later figure by containers-streaming-ms</li>
+<li>Column 4 shows processing by the fleet/ships-simulator-ms</li>
+</ul>
+<p>Comments on steps in the command flow:</p>
+<ul>
+<li>A new shipment order request is initiated with the synchronous createOrder API at top left <ul>
+<li>The orders-command-ms will create a new order record in its tale of active orders and populate it with order details.</li>
+<li>A <em>NewOrder</em> event is emitted on the Orders Topic. </li>
+<li>The generated orderID or the new shipment order is returned to the requester in the createOrder response. This enables the requester to query the status of an order and possibly modify the parameters of an unbooked order.  </li>
+</ul>
+</li>
+<li>The voyages-command-ms subscribes to all newOrder events on the Orders topic and tries to assign each new order to an available voyage:<ul>
+<li>This operation is simplified by internally maintaining some list of vayages organized by port pair ( Starting port - ending port combination) and by time within port pair.</li>
+<li>Using such a list each voyage matching the port pair requirement of the new order can be checked or available capacity.</li>
+<li>If a voyage meeting all requirements for the new order is found, a booking event is emitted; if not, a rejected (No availability) event is emitted.</li>
+<li>A booked event causes state change in both the voyage - available capacity reduced, new order added to bookings - and to the order. We choose to make both booking and rejected (no Availabiity) events on the Orders topic rather than the Voyages topic.</li>
+</ul>
+</li>
+<li>The orders-command-ms subscribes to <em>Orders: booking</em>  and to <em>Orders: Rejected (no availability)</em> events and updates the current state of the affected order with the received information.<ul>
+<li>For bookings, the current state of order is updated with the booking information including VoyageID and now specific pickup and delivery expected dates  </li>
+<li>A rejected order has its state updated to rejected. This enables the requester to modify the order, suggesting different required dates or locations and trigerring a new search for a voyage meeting the modified requirements.  </li>
+<li>Booked orders now have a specific schedule from the booked voyage of when they will need a container allocated for their use </li>
+<li>A <em>Containers: needEmpty</em> event is emitted to get a specific container allocated for use by the booked shipment</li>
+</ul>
+</li>
+<li>The containers-command-ms subscribes to <em>Containers: needEmpty</em> events and allocates an available container for each one:<ul>
+<li>This microservice is maintaining a list of all containers and their current states.</li>
+<li>For each incoming needEmpty event, it assigns a free container to that order and emits an <em>Orders: allocatedContainer</em> event specifying the containerID of the allocated container. </li>
+<li>It is very natural/necessary for the allocation of a container to be reported as an asynchronous event since this may occur at any time before the container is needed, possibly significanly later that he Containers:needEmpty event occurs </li>
+<li>We make  <em>Orders: allocatedContainer</em> an event on the Orders topic since that is the most significant state change which it drives.  </li>
+</ul>
+</li>
+<li>The orders-command-ms subscribes to all<em>Orders: allocatedContainer</em> events and updates the order current state with its allocated containerID   <ul>
+<li>Once an order is booked on a voyage and has a container allocated for it to use, the actual physical process of shipment canbegin at this point.</li>
+<li>Since the delivery of empty container, loading it with goods at the pick up site, truck operations to get it to dockside etc are out of scope for this build, we can consider the container ready for its voyage at this point. Hence the <em>Voyages:fullContainerReady</em> event is emitted at this point by the orders-command-ms. This event includes the containerID of the allocated container. </li>
+</ul>
+</li>
+<li>The voyages-command-ms subscribes to <em>Voyages: fullContainerReady</em> events and uses these to construct a complete manifest -  the list of  <containerID, orderID> pairs which will travel on this voyage </li>
+<li>At this point the voyage-command-ms interacts with the fleet/ships-simulation-ms to simulate start of voyage <ul>
+<li>We have shown this in the figure as a synchronous call to getNextVoyageInfo. This could also be handled with one or more event interactions </li>
+<li>The ship-simulator-ms will update the state of this ship to show the available containers and orders on board</li>
+<li>It will start the simulation of the ship moving on its course tocomplete the vogage</li>
+<li>The ship-simulator-ms willemit a <em>Voyages: ShipStartedVoyage</em>  event </li>
+</ul>
+</li>
+<li>The Voyages-command-ms receives this event and for each order/container in the manifest emits an <em>Orders: ContainerOnShip</em> event</li>
+<li>The orders-command-ms will subscribe to <em>Orders: ContainerOnShip</em> events and update the current state of each identified order with this information.</li>
+</ul>
+<h4 id="command-microservice-interaction-container-on-ship-at-sea-through-shipment-complete">Command microservice interaction - container on ship at sea through shipment complete</h4>
+<p>The diagram below shows all command interactions from container on ship in voyage through shipment delivered and order completed. </p>
+<p><img alt="interactions2" src="../interactions2.png" /></p>
+<p>As in the previous interaction diagram, the columns with grey/shaded processing blocks show work by (1) orders-command-ms (2) voyages-command-ms (3) containers-command-ms and containers-streaming-ms (4) fleet/ships-simulator service respectively.</p>
+<p>This diagram starts with containers on board a ship which is sailing on specific voyage and is at sea. </p>
+<ul>
+<li>The fleet/ships-simulator-ms repeatedly simulated movement of the ship along its course <ul>
+<li>It emits <em>Ships: GPSposition</em> events recording the position of the ship at different points in simulated time. </li>
+</ul>
+</li>
+<li>Similarly, while the ship is at sea, the container-streams-svc is continuously simulating temperature within the container and edge monitoring to adjust controls if necessary and to report a cold chain breach in that container if it occurs. <ul>
+<li>This will result in a repeated stream of <em>Containers: tempAndGpsState</em> events reporting the temperature, GPS coordinates and possibly power consumption of the container</li>
+<li>There could also be on or more <em>Containers: action</em> events to adjust or reset controls of the refrigeration unit in the container</li>
+<li>These adjustment event are initiated by predictive real-ime analytics on the container state</li>
+<li>If the temperature in the container goes out of range and there is a cold chain failure, a Containers: temperature Out of Range event is emitted</li>
+</ul>
+</li>
+<li>After some period of simulated time tracked by these ship position and container state repeated events, the ship will be simulated as arriving at the destination port of the voyage. <ul>
+<li>The ship-simulator-ms emits a <em>Voyages: ShipEndedVoyage</em> event  </li>
+</ul>
+</li>
+<li>The voyages-command-ms subscribes to <em>Voyages: ShipEndedVoyage</em> and for each such event, emits <em>Orders: containerOffShip</em><ul>
+<li>It can do this because the current state record for each voyage includes the manifest of <orderID, containerID> pairs which travelled on that voyage </li>
+<li>the current state of the voyage is updated to COMPLETED</li>
+</ul>
+</li>
+<li>The orders-command-ms subscribes to <em>Orders: containerOffShip</em> and updates the state of all orders which have completed their shipping leg as a result of completion of their booked voyage<ul>
+<li>Now, since simulation of the dockside unloading, customs processes, trucking operation to support deliver are out of scope for this build, we can consider the shipment delivered at this point </li>
+<li>orders-command-ms emits <em>Orders: containerDelivered</em> and marks this as current state of container </li>
+<li>With the shipment delivered, there is no further need for a container to be associated with this order; orders-command-ms emits <em>Containers: containerReleased</em></li>
+</ul>
+</li>
+<li>The containers-command-ms subscribes to <em>Containers: containerReleased</em>  and marks the current state of the identified container as FREE and available to be allocated to other shipment orders </li>
+<li>The order-command-ms considers process of the shipment order complete at this point <ul>
+<li>It emits <em>Orders: orderComplete</em> and marks this as the current state of the order </li>
+<li>A more complete and realistic build would statr invoicing and billing event at this poitn , but this was decided to be out of scope at this point </li>
+</ul>
+</li>
+<li>The fleet/ships-simulator-ms will continue at this point to start the next voyage in its planned itenerary and interact with voyages-command-ms to do this </li>
+<li>this is a cycled repetition of start of voyage interaction discussed previously </li>
+</ul>
+<h4 id="query-microservice-service-cqrs-order-and-shipment-tracking-microservices">Query microservice service  - CQRS Order and  Shipment tracking microservices</h4>
+<p>The diagram below shows all interactions with the shipment tracking microservice. This microservice subscribes to many events carrying required information and supports one or more query APIs for different flavors of order and shipment tracking </p>
+<p><img alt="interactions3" src="../interactions3.png" /></p>
+<p>There could be multiple flavors of order and shipment tracking query APIs supported:
+<em> Order confirmation query could address orders, bookings, rejections, modified orders etc 
+</em> Shipment state query could cover: container assignment, on board ship, ship position, off ship, delivery, etc 
+* Cold chain certification query could want to augment the above with a full temperature log of the container while in transit and expect reporting on temperature range violations. </p>
+<p>Since we are using a CQRS approach, and all queries are non state changing, we could combine these multiple query levels into a single microservice or separate them out into separate microservices. If query load is intense there could be multiple instances of each such query microservices with load balancing of user requests. </p>
+<p>The design of these different flavors query services is essentially the same.  The internal state data to respond to queries is obtained by subscribing to the necessary Topics. For cold chain and shipment reporting, this will involve all four topics Orders, Voyages, Containers and Ships.  Internally the data will be organized by requester of the order, then by orderID, then current state and possibly summaries of repeated event history. </p>
+<p>The inteaction diagram 3 above illustrates this organization. For any order and shipment tracking query service there are synchronous APIs offered at one side and subscribed events received at the other to gather required state information from the vent backbone.  </p>
+<h4 id="topics-event-types-and-the-event-emit-and-consumption-lists">Topics, event types and the event emit and consumption lists</h4>
+<p>From the interaction diagrams we can compile  a list of all event types which will occur in the build and check that they are organized into topics in a way which preserves all essential event sequencing. </p>
+<p>The diagram below lists the event types and topics, showing emitters ( publishers) and consumers ( subscribers) of each event type. </p>
+<p><img alt="topicsAndEvents" src="../topicsAndEvents.png" /></p>
+<h3 id="step4-data-recovery-considerations-for-this-demonstration-build">Step4: Data recovery considerations for this demonstration build</h3>
+<p>At this point the pattern for data recovery after a microservice failure is understood in principle, but specific recovery demonstration after a failure is out of scope at this point. </p>
+<p><a href="https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/ED-patterns.md">Read more on EDA design pattern...</a></p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../../analysis/readme/" title="Event storming analysis" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Event storming analysis
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../architecture/" title="Architecture" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Architecture
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.b806dc00.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
+      
+    
+  </body>
+</html>

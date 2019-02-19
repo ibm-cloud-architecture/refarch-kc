@@ -1,5 +1,0 @@
-docker push registry.ng.bluemix.net/ibmcaseeda/kc-orderqueryms
-docker push registry.ng.bluemix.net/ibmcaseeda/kc-ordercmdms
-docker push registry.ng.bluemix.net/ibmcaseeda/kc-fleetms
-docker push registry.ng.bluemix.net/ibmcaseeda/kc-voyagesms
-docker push registry.ng.bluemix.net/ibmcaseeda/kc-ui
