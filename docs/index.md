@@ -18,4 +18,23 @@ You will be greatly interested by the subjects addressed in this solution if you
 ## Business process statement
 In [this first chapter](introduction.md) we are presenting the business process for shipping fresh good over sees and detailing the event storming analysis workshop execution, and we are explaining how to transform analysis outcomes such as domain boundaries and aggregates to microservices. 
 
-## 
+## Design considerations
+In the [third chapter](design/readme.md) we are going in detail on the process analysis to define the requirements for the major microservices to implement.
+
+
+## Architecture
+
+This quick [architecture note](design/architecture.md) presents the components working together with the event backbone. 
+
+## Deployment
+
+To make the solution running we need to have to prepare a set of products installed and running:
+* Event Streams
+* Streaming Analytics
+* Kubernetes Cluster (IBM Cloud Private or IBM Kubernetes Service on cloud) or Docker compose.
+
+We can deploy the components of the solution into three environments:
+
+* **Public cloud (IBM Cloud)**, [see this article](deployments/iks.md) for details on how to prepare the needed services.
+* **Private cloud** (we are using IBM Cloud Private) and [see this article](deployments/icp.md) for details.
+* **[Local](deployments/local.md)** to your laptop, using docker images and docker compose.

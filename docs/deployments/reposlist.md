@@ -1,4 +1,6 @@
 # Related repositories
+This solution supports a set of related repositories which includes user interface, a set of microservices to implement the Event Sourcing and CQRS patterns, and to implement simulators and analytics content.
+In each repository we are explaining the design and implementation approach, how to build and run them for development purpose.
 
 The command `./scripts/clone.sh` in this project clones all the dependant repositories as part of the solution. 
 
