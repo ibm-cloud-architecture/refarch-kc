@@ -3,7 +3,15 @@ nav:
   - Home: index.md
   - Business Problem Statement:
     - Introduction: introduction.md
-    - Analysis: ./analysis/readme.md
+    - Event storming analysis: ./analysis/readme.md
+  - Design considerations and microservice identifications: ./design/readme.md
+  - Architecture: ./design/architecture.md
+  - Deployments:
+    - Related repositories: ./deployments/reposlist.md
+    - Run locally: ./deployments/local.md
+    - Run on IBM Cloud Kubernetes Services: ./deployments/iks.md
+    - Run on IBM Cloud Private: ./deployments/icp.md
+  - Demonstration: ./demo/readme.md
 
-theme: readthedocs
+theme: material
 extra_css: ["extra.css"]

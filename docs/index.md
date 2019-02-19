@@ -14,3 +14,8 @@ You will be greatly interested by the subjects addressed in this solution if you
 * An architect, you will get a deeper understanding on how all the components work together, and how to address resiliency, high availability.
 * A developer, you will get a broader view of the solution end to end and get existing starting code, and practices you may want to reuse during your future implementation. We focus on event driven solution in hybrid cloud addressing patterns and non-functional requirements as CI/CD, Test Driven Development, ...
 * A project manager, you may understand all the artifacts to develop in an EDA solution, and we may help in the future to do project estimation.
+
+## Business process statement
+In [this first chapter](introduction.md) we are presenting the business process for shipping fresh good over sees and detailing the event storming analysis workshop execution, and we are explaining how to transform analysis outcomes such as domain boundaries and aggregates to microservices. 
+
+## 

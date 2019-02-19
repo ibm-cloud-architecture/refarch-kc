@@ -1,4 +1,6 @@
-# Prepare IBM Cloud Services to run the solution
+# IKS Deployment
+
+## Prepare IBM Cloud Services to run the solution
 
 IBM Cloud offers a set of services to run part of your event driven architecture. We are using the following services for our reference implementation:
 * [Kubernetes Service](https://cloud.ibm.com/containers-kubernetes/catalog/cluster)
@@ -7,7 +9,7 @@ IBM Cloud offers a set of services to run part of your event driven architecture
 
 At the high level the deployed solution will look like the following:
 
-![](ic-deployment.png)  
+![ic-deployment](ic-deployment.png)  
 
 ## Pre-requisites
 

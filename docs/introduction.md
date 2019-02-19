@@ -1,6 +1,8 @@
 # Introduction
 As part of producing the IBM event driven point of view and reference architecture, we wanted to bring together a complete scenario which would cover all aspects of developing an event driven solutions including extended connections to devices/IOT and blockchain for trusted business trading networks. We felt that the shipping business could provide a good foundation for this and would enable us to show how to develop event driven solutions following the architecture patterns.
 
+## Business process statement
+
 The high level process can be represented in the following diagram, and is described in detailed in [this section](analysis/readme.md#high-level-view-of-the-shipment-process-flow):
 
 ![Shipment business process](./analysis/shipment-bp1.png)
@@ -16,3 +18,7 @@ We are using goods to be transported in refrigerator containers or reefer contai
 <img src="" width="300px" style="padding:20px;"></img>
 
 ![Reefer](./images/reefer.png)
+
+## Event storming analysis 
+
+We met with the business users and project stakeholder during an event storming workshop, and we are detailing the outcomes in the [next chapter >>](./analysis/readme.md)
