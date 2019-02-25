@@ -1,8 +1,11 @@
 #!/bin/bash
 export LDFLAGS=-L/usr/local/opt/openssl/lib
 export CPPFLAGS=-I/usr/local/opt/openssl/include
+if [[ $PWD = */scripts ]]; then
+ cd ..
+fi
 
-cd ../../refarch-kc-ms/fleet-ms/
+cd ../refarch-kc-ms/fleet-ms/
 ./scripts/buildDocker.sh
 
 cd ../voyages-ms
@@ -15,8 +18,4 @@ cd ../order-query-ms
 ./scripts/buildDocker.sh
 
 cd ../../refarch-kc-ui
-cd ui
-npm install -g @angular/cli
-npm install
-cd ..
 ./scripts/buildDocker.sh

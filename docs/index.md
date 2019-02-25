@@ -40,7 +40,9 @@ We can deploy the components of the solution into three environments:
 * **Private cloud** (we are using IBM Cloud Private) and [see this article](deployments/icp.md) for details.
 * **[Local](deployments/local.md)** to your laptop, using docker images and docker compose.
 
-The scripts to build, deploy and tests all the solution components are defined in this source repository: [https://github.com/ibm-cloud-architecture/refarch-kc](https://github.com/ibm-cloud-architecture/refarch-kc). Each project has its own deep explanations.
+### Pre-requisites
+
+The scripts to build, deploy and tests all the solution components, in one shot, are defined in this source repository: [https://github.com/ibm-cloud-architecture/refarch-kc](https://github.com/ibm-cloud-architecture/refarch-kc). But each project has its own installation explanations and scripts to build, package and unit tests them separately.  
 
 ## Future readings
 
