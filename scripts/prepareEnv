@@ -1,0 +1,34 @@
+#!/bin/bash
+echo "********************************"
+echo "Verify your environment and use docker to create needed images to avoid spoiling your computer"
+echo "********************************"
+
+echo "Do you have java 1.8?"
+
+jvm=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | grep 1.8)
+if [[ $? != 0 ]]
+then
+  echo "java failed"
+else 
+    echo $jvm
+fi
+
+echo "Do you have maven?"
+mvn=$(mvn -version 2>&1 | grep 3.5)
+if [[ $? != 0 ]]
+then
+  echo "mvn failed -> let build a docker java tools image to do not impact your environment"
+  docker build -f docker-java-tools -t ibmcase/javatools .
+else
+  echo $mvn
+fi
+
+echo "Do you have node?"
+nd=$(node --version | grep 11)
+if [[ $? != 0 ]]
+then
+  echo "node failed -> let build a docker node tools image to do not impact your environment"
+  docker build -f docker-node-tools -t ibmcase/nodetools .
+else
+  echo $nd
+fi

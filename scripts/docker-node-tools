@@ -1,0 +1,5 @@
+FROM node:11
+
+MAINTAINER "IBM Cloud Architecture Solution Engineering team"
+
+RUN apt-get update &&  npm install -g  @angular/cli

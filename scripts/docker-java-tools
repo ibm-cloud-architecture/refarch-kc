@@ -1,0 +1,5 @@
+FROM ibmjava:8-sdk
+
+MAINTAINER "IBM Cloud Architecture Solution Engineering team"
+
+RUN apt-get update && apt-get install -y maven

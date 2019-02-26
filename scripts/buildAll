@@ -5,6 +5,11 @@ if [[ $PWD = */scripts ]]; then
  cd ..
 fi
 
+if [[ $# -eq 0 ]];then
+  export kcenv="local"
+else
+  export kcenv=$1
+fi
 cd ../refarch-kc-ms/fleet-ms/
 ./scripts/buildDocker.sh
 
