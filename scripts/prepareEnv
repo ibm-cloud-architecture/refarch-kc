@@ -3,6 +3,10 @@ echo "********************************"
 echo "Verify your environment and use docker to create needed images to avoid spoiling your computer"
 echo "********************************"
 
+if [[ $PWD = */refarch-kc ]]; then
+ cd scripts
+fi
+
 echo "Do you have java 1.8?"
 
 jvm=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | grep 1.8)

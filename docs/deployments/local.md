@@ -8,7 +8,12 @@ To run the full solution locally you can use a kubernetes cluster like Minikube 
 1. In one Terminal window use our compose file to start the backend components: `$ cd docker &&  docker-compose -f backbone-compose.yml up`.    
 The first time the backend is started, you need to configure the Kafka topics we are using in the solution. The local script: `scripts/createLocalTopics.sh` will create them.
 > Note: Starting those components will create two folders in the docker folder: kafka1 and zookeeper1. Those folders could be deleted to restart from a fresh environment. 
-
+1. If not done yet, build the solution using the commands: 
+ ```
+ $ cd scripts
+ $ ./prepareEnv
+ $ ./buildAll
+ ```
 1. In a second terminal use our second compose file to start the web server and the other microservices: `$ docker-compose -f kc-solution-compose.yml up`
 
 1. Verify the different components work fine. You can use the different test scripts we have defined in each of the microservices or use the following URLs:

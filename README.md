@@ -4,6 +4,28 @@ The IBM Event Driven architecture reference implementation illustrates the deplo
 
 To read the detail of this implementation go to [the book view](http://ibm-cloud-architecture.github.io/refarch-kc)
 
+### Using the scripts for this root project
+
+We are delivering some scripts that could help to quickly get the solution cloned, built and deploy locally. Those bash tools are under the 'scripts` folder.
+
+* To clone all the related projects: `./scripts/clone.sh`
+* To assess your environment and build the docker images needed for build: `./scripts/prepareEnv`.
+* If you want to build a docker image so you do not need to install Java and Maven (This image will be used in the build of all the java based projects). Use the following commands under the `scripts` folder (prepareEnv shell script does it too):
+
+```
+$ docker build -t ibmcase/javatools -f docker-java-tools .
+$ ./imageStatus 
+> ibmcase/javatools    latest       6c85964f2385     4 seconds ago  563MB
+```
+* If you want to build a docker image so you do not need to install angular CLI, nodejs and npm last version, (prepareEnv shell script does it too) you can do:
+```
+$ docker build -t ibmcase/nodetools -f docker-node-tools .
+$ ./imageStatus
+> ibmcase/nodetools     latest     5bfbc87c143d     30 seconds  ago     1GB
+```
+* To build all the related projects: `buildAll`
+* To validate all services run perform a `smokeLocalTests`.
+
 
 ### Building this booklet locally
 

@@ -1,9 +1,0 @@
-#!/bin/bash
-a=$(mvn -version)
-echo $a
-if [[ -z "$a" ]] 
-then
-  echo no maven
-else
-  echo  maven
-fi
