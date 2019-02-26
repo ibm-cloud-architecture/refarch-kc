@@ -422,12 +422,16 @@
 <li>Get <a href="https://docs.docker.com/install/">docker and install</a> it (if not done yet)</li>
 <li>Get <a href="https://docs.docker.com/compose/install/">docker compose</a></li>
 <li>Assign at least 8GB of memory and may be 4 to 6 CPUs to your docker runtime. This is set in the Preferences menu and under the <code>Advanced</code> tab.</li>
-<li>
-<p>In one Terminal window use our compose file to start the backend components: <code>$ cd docker &amp;&amp;  docker-compose -f backbone-compose.yml up</code>.  <br />
-The first time the backend is started, you need to configure the Kafka topics we are using in the solution. The local script: <code>scripts/createLocalTopics.sh</code> will create them.</p>
-<blockquote>
-<p>Note: Starting those components will create two folders in the docker folder: kafka1 and zookeeper1. Those folders could be deleted to restart from a fresh environment. </p>
+<li>In one Terminal window use our compose file to start the backend components: <code>$ cd docker &amp;&amp;  docker-compose -f backbone-compose.yml up</code>.  <br />
+The first time the backend is started, you need to configure the Kafka topics we are using in the solution. The local script: <code>scripts/createLocalTopics.sh</code> will create them.<blockquote>
+<p>Note: Starting those components will create two folders in the docker folder: kafka1 and zookeeper1. Those folders could be deleted to restart from a fresh environment.  </p>
 </blockquote>
+</li>
+<li>
+<p>If not done yet, build the solution using the commands: 
+ <code>$ cd scripts
+ $ ./prepareEnv
+ $ ./buildAll</code></p>
 </li>
 <li>
 <p>In a second terminal use our second compose file to start the web server and the other microservices: <code>$ docker-compose -f kc-solution-compose.yml up</code></p>
