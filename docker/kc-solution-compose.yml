@@ -13,7 +13,7 @@ services:
         image: ibmcase/kc-ui:latest
         hostname: kcsolution
         ports:
-            - "3110:3010"
+            - "3010:3010"
         environment:
             KAFKA_BROKERS: kafka1:9092
             FLEET_MS_URL: http://simulator:9080/fleetms
