@@ -8,6 +8,9 @@ else
   iksname="fabio-wdc-07"
   nspace="browncompute"
 fi
+if [[ $PWD = */refarch-kc ]]; then
+ cd ./scripts
+fi
 echo "get worker node IP address for $iksname"
 ipadd=$(ibmcloud ks workers $iksname | grep kube | awk '{print $2}' | head -n 1)
 

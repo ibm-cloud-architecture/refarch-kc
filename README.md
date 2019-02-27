@@ -24,7 +24,7 @@ $ ./imageStatus
 > ibmcase/nodetools     latest     5bfbc87c143d     30 seconds  ago     1GB
 ```
 * To build all the related projects: `buildAll`
-* To validate all services run perform a `smokeLocalTests`.
+* To validate all services run correctly, execute the `smokeLocalTests` scripts.
 
 
 ### Building this booklet locally
