@@ -13,7 +13,7 @@ smokeTest(){
   results=$(./scripts/$3 2>&1 | grep $4)
   if [[ -z "$results" ]]
   then
-      echo "Not good for $1"
+      echo "Test failed or not perfect for $1"
   else
       echo "Smoke test for $1 works!: $results"
   fi
@@ -37,6 +37,18 @@ then
   cd ../docker
   docker-compose -f kc-solution-compose.yml up &
   cd ../scripts
+fi
+
+# Create an order for GoodManuf
+rep=$(curl http://localhost:11080/orders/byManuf/GoodManuf 2>&1 | grep GoodManuf)
+current=$(pwd)
+if [[ -z "$rep" ]]
+then
+  echo "Add an order from Good manuf for testing"
+  
+  cd  ../../refarch-kc-order-ms/order-command-ms/scripts/
+  ./createOrder.sh
+  cd $current
 fi
 
 smokeTest fleetms refarch-kc-ms/fleet-ms testGetFleetNames.sh KC-NorthAtlantic

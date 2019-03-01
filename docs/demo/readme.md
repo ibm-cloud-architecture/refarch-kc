@@ -9,28 +9,28 @@ Here is how to execute the business process step by step:
 
 ![kc-home](kc-home.png)
 
-This page presents the process and some tiles that can be used to simulate the progression within the business process. The grey shadowed tiles are not actives. 
+This page presents the simple version of the business process and the user interface tiles that can be used to simulate the progression within this business process. The grey shadowed tiles have not implemented logic. 
 
 From the `Initiate Orders - Manufacturer` we can have the manufacturer creating a new fresh product order to ship over sea.
 
-To represent different manufacturer the first select box is used to support different scenarios in the future. GoodManufacturer can be used. 
+To represent different manufacturers the first select box is used to support different scenarios in the future. 'GoodManuf' should be used. 
 
 ![](kc-manuf-select.png)
 
-Then a list of existing orders may be displayed. You can add order with the UI, but you can also use a script in the order command microservice project: https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/master/order-command-ms/scripts/createOrder.sh
+Once the manufacturer is selected a list of existing orders may be displayed. You can add order with the UI, but you can also use a script in the order command microservice project: https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/master/order-command-ms/scripts/createOrder.sh
 
-Here is an example to add an order to get a voyage from Oakland to Shanghai:
+Below is an example of how to use the createOrder script to add a 'GoodManuf's' order to book a voyage from Oakland to Shanghai for a fresh product:
 ```
-./createOrder.sh localhost:10080 ./orderOacklandToChinaCreateonso
+./createOrder.sh localhost:10080 ./orderOacklandToChinaCreate.json
 
 ```
 
 ![](kc-orders.png)
 
-> There is a lot happening here. The Angular is getting orders using the [orders.service.ts](https://github.com/ibm-cloud-architecture/refarch-kc-ui/blob/master/ui/src/app/features/orders/orders.service.ts) service from the BFF at the address: `http://localhost:3010/api/orders`.  
+> There is a lot happening here. The Angular is getting orders using the [orders.service.ts](https://github.com/ibm-cloud-architecture/refarch-kc-ui/blob/master/ui/src/app/features/orders/orders.service.ts) service within the BFF component at the address: `http://localhost:3010/api/orders`.  
 The BFF is calling the [Order Query Microservice](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/tree/master/order-query-ms) via a javascript client code: [getOrders(manuf) function.](https://github.com/ibm-cloud-architecture/refarch-kc-ui/blob/4b9d7d1241eaeeaee7fc01247a35b696f0b6d5b2/server/routes/OrderClient.ts#L12-L25). The Order Query microservice URL is defined in environment variable or defaulted in the config file. It is mapped to the deployed Order service. (e.g. http://ordercmd:9080/orders)
 
-Selecting one order using the `Arrow` icon open the details of the order:
+Selecting one order using the `Arrow` icon, allow the user to view the order details:
 
 ![](kc-order.png)
 
@@ -41,7 +41,8 @@ As illustrated in the CQRS diagram:
 the creation of the order goes to the [order command microservice](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/tree/master/order-command-ms) which publishes a `OrderCreated` event to the `orders` topic and then consumes it to persist the data to its database. See [source code here](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/6de424c443c05262ae013620f5f11b4a1b2e6f90/order-command-ms/src/main/java/ibm/labs/kc/order/command/service/OrderCRUDService.java#L51-L74)
 
 
-If you plug a orders consumer you can see the following trace wiht the status of the order being `pending` and the type of event being `OrderCreated`
+If you plug a 'orders topic' consumer you can see the following trace with the status of the order being `pending` and the type of event being `OrderCreated`. 
+
 ```json
 {"payload":{
     "orderID":"1fcccdf2-e29d-4b30-8e52-8116dc2a01ff",
