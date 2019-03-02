@@ -1,17 +1,30 @@
 # K Container integration tests
 
-This folder includs a set of tests to validate some of the event driven patterns like event sourcing with fail over, CQRS and Saga pattern with recovery and fail over.
+This folder includs a set of tests to validate some of the event-driven microservice patterns like event sourcing with fail over, CQRS and Saga pattern with recovery and fail over.
+
+These code samples are using Python to illustrate how to use Kafka python module from [this github.](https://github.com/confluentinc/confluent-kafka-python)
 
 ## How to proof the event sourcing
 
-To validate event sourcing we want to use the order event topic and add some events for the full order lifecycle. We want to validate the orders are sequential over time, and it is possible to replay the loading of events from time origin and from a last committed offset.
+To validate event sourcing we want to use the order event topic and add some events to cover the full order lifecycle. We want to validate the order events are sequential over time, and it is possible to replay the loading of events from time origin and from a last committed offset.
 
-The tests are under the es-it folder. The tests are done un python, so we can also illustrate how to use kafka python client API. To avoid impacting your environment we use a dockerfile to get the basic of python 3.6 and other needed module like kafka, http requests... So build your image using the command:
+The tests are under the es-it folder. The tests are done in python, so we can also illustrate how to use kafka python client API. To avoid impacting your environment we use a dockerfile to get the basic of python 3.6 and other needed modules like kafka, http requests... So build your image using the following command under current folder `itg-tests`:
 
-```
+```shell
 $ docker build -t ibmcase/python .
 ```
-With this image we will be able to run the different tests.
+With this image we will be able to run the different tests. For example the following commands will start a bash shell with the python environment, mounting the local filesystem into the docker /home folder, and connect to the same network as the Kafka broker and other KC solution components are running in:
+
+```shell
+$ docker run -v $(pwd):/home --network=docker_default -ti ibmcase/python bash
+root@fe61560d0cc4:/# 
+```
+From this shell we can execute our tests.
+
+```shell
+root@fe61560d0cc4:/# python EventSourcingTests.py
+```
+
 
 
 ## How to proof the SAGA pattern

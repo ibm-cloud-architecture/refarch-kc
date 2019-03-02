@@ -185,7 +185,9 @@ A shipment order is initially created with an API call made by a manufacturer, o
     * Earliest date at which goods are available at pickup location for loading into the container 
     * Date by which delivery to the destination address is required   
 Since our initial demonstration build expects to show refrigeration behavior and track preservation of a cold chain, we assume that orders are for some commodity which requires refrigeration during its shipment. 
-   
+
+> The states are represented in the order code in [this class](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/master/order-command-ms/src/main/java/ibm/labs/kc/order/command/model/Order.java), while the management of the state life cycle is done in the [OrderAdminService class](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/master/order-command-ms/src/main/java/ibm/labs/kc/order/command/service/OrderAdminService.java) when listening to events.
+
 A graphical view of this API with some additional field specification is provided in:
 
 ![Create order Request](./createOrderApi.png)   
