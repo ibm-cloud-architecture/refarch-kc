@@ -970,6 +970,9 @@ Since our initial demonstration build expects to show refrigeration behavior and
 </ul>
 </li>
 </ul>
+<blockquote>
+<p>The states are represented in the order code in <a href="https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/master/order-command-ms/src/main/java/ibm/labs/kc/order/command/model/Order.java">this class</a>, while the management of the state life cycle is done in the <a href="https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/master/order-command-ms/src/main/java/ibm/labs/kc/order/command/service/OrderAdminService.java">OrderAdminService class</a> when listening to events.</p>
+</blockquote>
 <p>A graphical view of this API with some additional field specification is provided in:</p>
 <p><img alt="Create order Request" src="../createOrderApi.png" />   </p>
 <p>When a new shipment order is placed, the shipping company must determine whether there is available capacity in some planned ship voyage which meets all the requirements specified by the manufacturer / customer. If there is a planned voyage with available capacity for additional container going from the source port nearest the pickup location to the destination port nearest to the delivery location then the order can transition to state=BOOKED and positive confirmation of the order returned to the requester. If no such voyage is available then the shipment order transitions to state=REJECTED (No Availability) and this is reported back to the requester. </p>

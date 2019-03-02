@@ -422,9 +422,15 @@
 <li>Get <a href="https://docs.docker.com/install/">docker and install</a> it (if not done yet)</li>
 <li>Get <a href="https://docs.docker.com/compose/install/">docker compose</a></li>
 <li>Assign at least 8GB of memory and may be 4 to 6 CPUs to your docker runtime. This is set in the Preferences menu and under the <code>Advanced</code> tab.</li>
+<li>Be sure to have the following hostnames: <code>kafka1 fleetms kcui simulator ordercmd orderquery</code> mapped to localhost. You can update your <code>/etc/hosts</code> file for that.</li>
+</ol>
+<pre><code>127.0.0.1   localhost kafka1 fleetms simulator ordercmd orderquery kcsolution 
+</code></pre>
+
+<ol>
 <li>In one Terminal window use our compose file to start the backend components: <code>$ cd docker &amp;&amp;  docker-compose -f backbone-compose.yml up</code>.  <br />
 The first time the backend is started, you need to configure the Kafka topics we are using in the solution. The local script: <code>scripts/createLocalTopics.sh</code> will create them.<blockquote>
-<p>Note: Starting those components will create two folders in the docker folder: kafka1 and zookeeper1. Those folders could be deleted to restart from a fresh environment.  </p>
+<p>Note: Starting those components will create two folders in the docker folder: <code>kafka1</code> and <code>zookeeper1</code>. Those folders could be deleted to restart from a fresh environment.  </p>
 </blockquote>
 </li>
 <li>
@@ -449,7 +455,7 @@ The first time the backend is started, you need to configure the Kafka topics we
 <h3 id="build">Build</h3>
 <p>This project includes some scripts to help build the full solution once all the repositories are cloned. If you have some problem during this integrated build we recommend going into each project to assess the build process in detail. Also for development purpose, going into each project, you can learn how to build and run locally.</p>
 <ul>
-<li>To be able to build you need npm, node, maven and docker:</li>
+<li>To be able to build without or docker image for building, you need npm, node, maven and docker:</li>
 <li>Get <a href="https://docs.docker.com/install/">docker and install</a> it (if not done yet).</li>
 <li>Get <a href="https://maven.apache.org/install.html">maven</a> and add it to your PATH</li>
 <li>

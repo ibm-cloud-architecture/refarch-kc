@@ -450,27 +450,27 @@
 <li>Go to the http://kcsolution:3110 URL to access the demonstration home page:</li>
 </ul>
 <p><img alt="kc-home" src="../kc-home.png" /></p>
-<p>This page presents the process and some tiles that can be used to simulate the progression within the business process. The grey shadowed tiles are not actives. </p>
+<p>This page presents the simple version of the business process and the user interface tiles that can be used to simulate the progression within this business process. The grey shadowed tiles have not implemented logic. </p>
 <p>From the <code>Initiate Orders - Manufacturer</code> we can have the manufacturer creating a new fresh product order to ship over sea.</p>
-<p>To represent different manufacturer the first select box is used to support different scenarios in the future. GoodManufacturer can be used. </p>
+<p>To represent different manufacturers the first select box is used to support different scenarios in the future. 'GoodManuf' should be used. </p>
 <p><img alt="" src="../kc-manuf-select.png" /></p>
-<p>Then a list of existing orders may be displayed. You can add order with the UI, but you can also use a script in the order command microservice project: https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/master/order-command-ms/scripts/createOrder.sh</p>
-<p>Here is an example to add an order to get a voyage from Oakland to Shanghai:</p>
-<pre><code>./createOrder.sh localhost:10080 ./orderOacklandToChinaCreateonso
+<p>Once the manufacturer is selected a list of existing orders may be displayed. You can add order with the UI, but you can also use a script in the order command microservice project: https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/master/order-command-ms/scripts/createOrder.sh</p>
+<p>Below is an example of how to use the createOrder script to add a 'GoodManuf's' order to book a voyage from Oakland to Shanghai for a fresh product:</p>
+<pre><code>./createOrder.sh localhost:10080 ./orderOacklandToChinaCreate.json
 
 </code></pre>
 
 <p><img alt="" src="../kc-orders.png" /></p>
 <blockquote>
-<p>There is a lot happening here. The Angular is getting orders using the <a href="https://github.com/ibm-cloud-architecture/refarch-kc-ui/blob/master/ui/src/app/features/orders/orders.service.ts">orders.service.ts</a> service from the BFF at the address: <code>http://localhost:3010/api/orders</code>.<br />
+<p>There is a lot happening here. The Angular is getting orders using the <a href="https://github.com/ibm-cloud-architecture/refarch-kc-ui/blob/master/ui/src/app/features/orders/orders.service.ts">orders.service.ts</a> service within the BFF component at the address: <code>http://localhost:3010/api/orders</code>.<br />
 The BFF is calling the <a href="https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/tree/master/order-query-ms">Order Query Microservice</a> via a javascript client code: <a href="https://github.com/ibm-cloud-architecture/refarch-kc-ui/blob/4b9d7d1241eaeeaee7fc01247a35b696f0b6d5b2/server/routes/OrderClient.ts#L12-L25">getOrders(manuf) function.</a>. The Order Query microservice URL is defined in environment variable or defaulted in the config file. It is mapped to the deployed Order service. (e.g. http://ordercmd:9080/orders)</p>
 </blockquote>
-<p>Selecting one order using the <code>Arrow</code> icon open the details of the order:</p>
+<p>Selecting one order using the <code>Arrow</code> icon, allow the user to view the order details:</p>
 <p><img alt="" src="../kc-order.png" /></p>
 <p>As illustrated in the CQRS diagram:</p>
 <p><img src="https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/cqrs-es-api.png" width="500px"></p>
 <p>the creation of the order goes to the <a href="https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/tree/master/order-command-ms">order command microservice</a> which publishes a <code>OrderCreated</code> event to the <code>orders</code> topic and then consumes it to persist the data to its database. See <a href="https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/6de424c443c05262ae013620f5f11b4a1b2e6f90/order-command-ms/src/main/java/ibm/labs/kc/order/command/service/OrderCRUDService.java#L51-L74">source code here</a></p>
-<p>If you plug a orders consumer you can see the following trace wiht the status of the order being <code>pending</code> and the type of event being <code>OrderCreated</code></p>
+<p>If you plug a 'orders topic' consumer you can see the following trace with the status of the order being <code>pending</code> and the type of event being <code>OrderCreated</code>. </p>
 <pre><code class="json">{&quot;payload&quot;:{
     &quot;orderID&quot;:&quot;1fcccdf2-e29d-4b30-8e52-8116dc2a01ff&quot;,
     &quot;productID&quot;:&quot;Carrot&quot;,
