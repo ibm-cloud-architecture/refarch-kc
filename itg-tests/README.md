@@ -16,7 +16,10 @@ $ docker build -t ibmcase/python .
 With this image we will be able to run the different tests. For example the following commands will start a bash shell with the python environment, mounting the local filesystem into the docker /home folder, and connect to the same network as the Kafka broker and other KC solution components are running in:
 
 ```shell
-$ docker run -v $(pwd):/home --network=docker_default -ti ibmcase/python bash
+$ pwd
+itg-tests
+./setenv.sh
+$ docker run -e KAFKA_BROKERS=$KAFKA_BROKERS -v $(pwd):/home --network=docker_default -ti ibmcase/python bash
 root@fe61560d0cc4:/# 
 ```
 From this shell we can execute our tests.

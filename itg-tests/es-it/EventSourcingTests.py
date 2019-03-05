@@ -8,8 +8,20 @@ import json
 import requests
 import time
 
-KAFKA_BROKERS=os.environ['KAFKA_BROKERS']
-ORDER_CMD_MS=os.environ['ORDER_CMD_MS']
+try:
+    KAFKA_BROKERS = os.environ['KAFKA_BROKERS']
+except KeyError:
+    KAFKA_BROKERS = "kafka1:9092"
+
+try:
+    ORDER_CMD_MS = os.environ['ORDER_CMD_MS']
+except KeyError:
+    ORDER_CMD_MS = "ordercmd:9080"
+
+try:
+    ORDER_QUERY_MS = os.environ['ORDER_QUERY_MS']
+except:
+    ORDER_QUERY_MS = "orderquery:9080"
 
 # listen to orders topic, verify orderCreated event was published
 from confluent_kafka import Consumer, KafkaError, Producer
@@ -26,18 +38,20 @@ orderConsumer.subscribe(['orders'])
 def pollNextOrder(orderID):
     gotIt = False
     order = {}
+
     while not gotIt:
-        msg = orderConsumer.poll(timeout=1.0)
+        msg = orderConsumer.poll(timeout=10.0)
         if msg is None:
+            print("no message")
             continue
         if msg.error():
             print("Consumer error: {}".format(msg.error()))
             continue
-        print('%% %s [%d] at offset %d with key %s:\n' %
+        print('pollNextOrder %% %s [%d] at offset %d with key %s:\n' %
                                  (msg.topic(), msg.partition(), msg.offset(),
                                   str(msg.key())))
         orderStr = msg.value().decode('utf-8')
-        print('Received message: {}'.format(orderStr))
+        print('pollNextOrder Received message: {}'.format(orderStr))
         orderEvent = json.loads(orderStr)
         if (orderEvent['payload']['orderID'] == orderID):
             gotIt = True
@@ -80,7 +94,7 @@ def delivery_report(err, msg):
 
 def postContainerAllocated(orderID):
     orderProducer = Producer({'bootstrap.servers': KAFKA_BROKERS})
-    data = {"timestamp": int(time.time()),"type":"OrderContainerAllocated","version":"1","payload": {"containerID": "c10","orderID":orderID}}
+    data = {"timestamp": int(time.time()),"type":"ContainerAllocated","version":"1","payload": {"containerID": "c10","orderID":orderID}}
     dataStr = json.dumps(data)
     orderProducer.produce('orders',dataStr.encode('utf-8'), callback=delivery_report)
     orderProducer.flush()
@@ -99,8 +113,9 @@ class TestEventSourcingHappyPath(unittest.TestCase):
         # 2- create order by doing a POST on /api/orders of the orders command service
         res = requests.post("http://" + ORDER_CMD_MS + "/orders",json=order)
         orderID=json.loads(res.text)['orderID']
+        orderID="f444adbf-ea0b-4944-9ec4-d9bca05e2624"
         self.assertIsNotNone(orderID)
-        print(' Got an order created with ID ' + orderID)
+        print('Post new order -> resp with ID ' + orderID)
         # 3- get OrderCreated Event
         orderEvent = pollNextOrder(orderID)
         self.assertEqual(orderEvent['type'], "OrderCreated")
@@ -110,8 +125,17 @@ class TestEventSourcingHappyPath(unittest.TestCase):
         voyage=orderEvent['payload']
         self.assertIsNotNone(voyage)
         self.assertIsNotNone(voyage['voyageID'])
+        # 4.2- Verify voyageId is in the query model 
+        res = requests.get("http://" + ORDER_QUERY_MS + "/orders/" + orderID)
+        voyageID=json.loads(res.text)['voyageID']
+        print(voyageID)
+        self.assertIsNotNone(voyageID)
         # 5- Simulate assignment of the container
         postContainerAllocated(orderID)
+        res = requests.get("http://" + ORDER_QUERY_MS + "/orders/" + orderID)
+        containerID=json.loads(res.text)['containerID']
+        print(containerID)
+        self.assertIsNotNone(containerID)
         # 6- list all events 
         orderEvents = getAllOrderedOrderEvents(orderID)
         for oe in orderEvents:
@@ -120,5 +144,6 @@ class TestEventSourcingHappyPath(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    print(KAFKA_BROKERS)
     unittest.main()
     orderConsumer.close()
