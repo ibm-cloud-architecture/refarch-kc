@@ -50,6 +50,12 @@ If there is no voyage found that matches the source and destination then the ord
 
 The test is `CancelledOrderTests.py`. It uses the OrderConsumer module.
 
+### Replay all events for a given key
+
+
+### Use transaction to support read-process-write in one atomic operation
+
+
 ## How to proof the SAGA pattern
 
 We want to validate the SAGA pattern to support the long-running, cross microservices, order transactions. The diagram is illustrating the use case we want to proof and tests:
