@@ -11,7 +11,8 @@ import time
 try:
     KAFKA_BROKERS = os.environ['KAFKA_BROKERS']
 except KeyError:
-    KAFKA_BROKERS = "kafka1:9092"
+    print("The KAFKA_BROKERS environment variable needs to be set.")
+    exit
 
 try:
     ORDER_CMD_MS = os.environ['ORDER_CMD_MS']
@@ -47,13 +48,13 @@ def pollNextOrder(orderID):
         if msg.error():
             print("Consumer error: {}".format(msg.error()))
             continue
-        print('pollNextOrder %% %s [%d] at offset %d with key %s:\n' %
-                                 (msg.topic(), msg.partition(), msg.offset(),
-                                  str(msg.key())))
+        print('@@@ pollNextOrder {} partition: [{}] at offset {} with key {}:\n'
+                .format(msg.topic(), msg.partition(), msg.offset(), str(msg.key())))
         orderStr = msg.value().decode('utf-8')
-        print('pollNextOrder Received message: {}'.format(orderStr))
+        print('@@@ pollNextOrder Received message: {}'.format(orderStr))
         orderEvent = json.loads(orderStr)
         if (orderEvent['payload']['orderID'] == orderID):
+            print('@@@@ got the matching order ')
             gotIt = True
     return orderEvent
 
@@ -76,6 +77,7 @@ def getAllOrderedOrderEvents(orderID):
             continue
         if msg.error():
             print("Consumer error: {}".format(msg.error()))
+            gotAll = True
             continue
         eventAsString = msg.value().decode('utf-8')
         orderEvent = json.loads(eventAsString)
@@ -100,6 +102,11 @@ def postContainerAllocated(orderID):
     orderProducer.flush()
 
 
+def getOrderQuery(orderID):
+    res = requests.get("http://" + ORDER_QUERY_MS + "/orders/" + orderID)
+    print(res.text)
+    return json.loads(res.text)
+
 '''
 Test the happy path for the state diagram as in 
 https://ibm-cloud-architecture.github.io/refarch-kc/design/readme/#shipment-order-lifecycle-and-state-change-events
@@ -110,32 +117,39 @@ class TestEventSourcingHappyPath(unittest.TestCase):
         f = open('../data/FreshProductOrder.json','r')
         order = json.load(f)
         f.close()
+        
         # 2- create order by doing a POST on /api/orders of the orders command service
         res = requests.post("http://" + ORDER_CMD_MS + "/orders",json=order)
         orderID=json.loads(res.text)['orderID']
-        orderID="f444adbf-ea0b-4944-9ec4-d9bca05e2624"
         self.assertIsNotNone(orderID)
-        print('Post new order -> resp with ID ' + orderID)
+        print('@@@@ Post new order -> resp with ID:' + orderID)
+        
         # 3- get OrderCreated Event
+        print('@@@@ wait for OrderCreated event with ID:' + orderID)
         orderEvent = pollNextOrder(orderID)
         self.assertEqual(orderEvent['type'], "OrderCreated")
+
         # 4- get next order event, should be assigned to a voyage
+        print('@@@@ wait for OrderAssigned event from the voyage service for ' + orderID)
         orderEvent = pollNextOrder(orderID)
         self.assertEqual(orderEvent['type'], "OrderAssigned")
         voyage=orderEvent['payload']
         self.assertIsNotNone(voyage)
         self.assertIsNotNone(voyage['voyageID'])
         # 4.2- Verify voyageId is in the query model 
-        res = requests.get("http://" + ORDER_QUERY_MS + "/orders/" + orderID)
-        voyageID=json.loads(res.text)['voyageID']
-        print(voyageID)
+        time.sleep(10)
+        orderQuery = getOrderQuery(orderID)
+        voyageID=orderQuery['voyageID']
         self.assertIsNotNone(voyageID)
+
         # 5- Simulate assignment of the container
+        print('@@@@ post container allocation to mockup missing container ms for ' + orderID)
         postContainerAllocated(orderID)
-        res = requests.get("http://" + ORDER_QUERY_MS + "/orders/" + orderID)
-        containerID=json.loads(res.text)['containerID']
-        print(containerID)
+        time.sleep(10)
+        orderQuery = getOrderQuery(orderID)
+        containerID=orderQuery['containerID']
         self.assertIsNotNone(containerID)
+        
         # 6- list all events 
         orderEvents = getAllOrderedOrderEvents(orderID)
         for oe in orderEvents:
@@ -144,6 +158,5 @@ class TestEventSourcingHappyPath(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    print(KAFKA_BROKERS)
     unittest.main()
     orderConsumer.close()

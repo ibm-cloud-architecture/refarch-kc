@@ -1,0 +1,9 @@
+{
+  "productID":"Fish",
+  "quantity":1,
+  "customerID": "FishFarm",
+  "expectedDeliveryDate":"2019-05-31T13:30Z",
+  "pickupDate":"2019-05-25T13:30Z",
+  "destinationAddress": {"street": "100 Main street", "city": "WrongSrc", "country": "USA", "state": "CA", "zipcode": "95053"},
+  "pickupAddress": {"street": "1 a new street", "city": "Shanghai", "country": "China", "state": "NE", "zipcode": "090"}
+}

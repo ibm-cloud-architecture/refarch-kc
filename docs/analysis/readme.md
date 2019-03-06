@@ -277,17 +277,20 @@ Insights about predicted risk of temperature based spoilage, and prediction of r
 
 ### Step 4: Commands, linkages, data and context for order placement  
 
-> This section of the example description covers activities identified as EventStorming Workshop steps 6,7 in the generic description of the [event storming method](https://www.ibm.com/cloud/garage/architectures/eventDrivenArchitecture/event-storming-methodology).
+> This section covers activities identified as EventStorming Workshop steps 6,7 in the generic description of the [event storming method](https://www.ibm.com/cloud/garage/architectures/eventDrivenArchitecture/event-storming-methodology).
 
-In particular, we look at identifying bounded contexts and identifying aggregates which will lead to a loosely coupled collection of microservices providing an agile EDA design for the example. 
+In particular, we look at identifying bounded contexts and identifying aggregates which will lead to a loosely coupled collection of microservices providing an agile event-driven design. 
 
-We drill down on understanding the order placement process when a container shipment is booked as the MVP context focus in which to explore our design at the next level of detail. 
-
-![ship-aggr-transport-quote](./ship-aggr-transport-quote.png)
+We drill down on understanding the order placement process when a container shipment is booked as the MVP context focus in which to explore our design at the next level of detail. We will focus the implementation on at least two aggregates: the shipment order, and container transportation.
 
 ![ship-aggr-shipment](./ship-aggr-shipment.png)
 
+An actor will create a shipment order from a user interface (a manufacturer staff) that will call a command for creating the order. The shipment order context will be mapped to a microservice. The implementation will generate a set of events.
+
+Same for container transportation.
 ![ship-aggr-transp](./ship-aggr-transp.png)
 
+
+For more information on the design considerations for this solution see [this related note.](../design/readme.md)
 
 

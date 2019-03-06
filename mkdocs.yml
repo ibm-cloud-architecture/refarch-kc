@@ -12,6 +12,7 @@ nav:
     - Run on IBM Cloud Kubernetes Services: ./deployments/iks.md
     - Run on IBM Cloud Private: ./deployments/icp.md
   - Demonstration: ./demo/readme.md
+  - Integration tests: ../itg-tests/README.md
 
 theme: material
 extra_css: ["extra.css"]
