@@ -372,6 +372,18 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../itg-tests/README.md" title="Integration tests" class="md-nav__link">
+      Integration tests
+    </a>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -417,7 +429,7 @@
                 
                 
                 <h1 id="run-locally">Run locally</h1>
-<p>To run the full solution locally you can use a kubernetes cluster like Minikube or Docker Edge, or use docker-compose. We propose to use docker-compose for local deployment, and here are the instructions to launch the backbone (kafka and zookeeper) and the solution components:</p>
+<p>To run the full solution locally you can use a kubernetes cluster like Minikube or Docker Edge with kubernetes, or use docker-compose. We propose to use docker-compose for local deployment, and here are the instructions to launch the backbone (kafka and zookeeper) and the solution components:</p>
 <ol>
 <li>Get <a href="https://docs.docker.com/install/">docker and install</a> it (if not done yet)</li>
 <li>Get <a href="https://docs.docker.com/compose/install/">docker compose</a></li>
@@ -428,17 +440,17 @@
 </code></pre>
 
 <ol>
-<li>In one Terminal window use our compose file to start the backend components: <code>$ cd docker &amp;&amp;  docker-compose -f backbone-compose.yml up</code>.  <br />
+<li>In one Terminal window, use our compose file to start the backend components: <code>$ cd docker &amp;&amp;  docker-compose -f backbone-compose.yml up</code>.  <br />
 The first time the backend is started, you need to configure the Kafka topics we are using in the solution. The local script: <code>scripts/createLocalTopics.sh</code> will create them.<blockquote>
 <p>Note: Starting those components will create two folders in the docker folder: <code>kafka1</code> and <code>zookeeper1</code>. Those folders could be deleted to restart from a fresh environment.  </p>
 </blockquote>
 </li>
-<li>
-<p>If not done yet, build the solution using the commands: 
- <code>$ cd scripts
+<li>If not done yet, build the solution using the commands: </li>
+</ol>
+<p><code>$ cd scripts
  $ ./prepareEnv
  $ ./buildAll</code></p>
-</li>
+<ol>
 <li>
 <p>In a second terminal use our second compose file to start the web server and the other microservices: <code>$ docker-compose -f kc-solution-compose.yml up</code></p>
 </li>
@@ -447,11 +459,12 @@ The first time the backend is started, you need to configure the Kafka topics we
 </li>
 <li>For the <a href="http://localhost:3010">user interface URL http://localhost:3010</a></li>
 <li>The Fleet Simulator <a href="http://localhost:9080/api/explorer/">API URL</a> or one of its operation to get the fleet names: http://localhost:9080/fleetms/fleets.</li>
-<li>Add an order with the `scripts/ in the refarch-kc-orders/ms/ </li>
+<li>Add an order with the <code>scripts/</code> in the refarch-kc-orders-ms project</li>
 <li>The voyages http://localhost:3100/voyage</li>
 <li>The order query microservice http://localhost:11080/orders/byManuf/GoodManuf</li>
 </ol>
-<p>Read the <a href="../../demo/readme/">demo script</a> to see how all those components work together to present the business process.</p>
+<p>or run a smoke test with the script: <code>localSmokeTests</code>.</p>
+<p>Read the <a href="../../demo/readme/">demo script</a> to see how all those components working together to demonstrate the business process.</p>
 <h3 id="build">Build</h3>
 <p>This project includes some scripts to help build the full solution once all the repositories are cloned. If you have some problem during this integrated build we recommend going into each project to assess the build process in detail. Also for development purpose, going into each project, you can learn how to build and run locally.</p>
 <ul>
@@ -479,7 +492,7 @@ The first time the backend is started, you need to configure the Kafka topics we
 </code></pre>
 
 <ul>
-<li>If you want to delete the docker images after that use the command:
+<li>If you want to delete the docker images after tesing the solution, use the command:
 <code>docker rmi $(docker -aq | grep ibmcase)</code></li>
 </ul>
                 

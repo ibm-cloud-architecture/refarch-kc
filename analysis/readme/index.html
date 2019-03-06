@@ -549,6 +549,18 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../itg-tests/README.md" title="Integration tests" class="md-nav__link">
+      Integration tests
+    </a>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -994,13 +1006,15 @@ This information is available as data to subject matter expert's dashboard seen 
 <p><img alt="ship-dom-insight3" src="../ship-dom-insight3.png" /></p>
 <h3 id="step-4-commands-linkages-data-and-context-for-order-placement">Step 4: Commands, linkages, data and context for order placement</h3>
 <blockquote>
-<p>This section of the example description covers activities identified as EventStorming Workshop steps 6,7 in the generic description of the <a href="https://www.ibm.com/cloud/garage/architectures/eventDrivenArchitecture/event-storming-methodology">event storming method</a>.</p>
+<p>This section covers activities identified as EventStorming Workshop steps 6,7 in the generic description of the <a href="https://www.ibm.com/cloud/garage/architectures/eventDrivenArchitecture/event-storming-methodology">event storming method</a>.</p>
 </blockquote>
-<p>In particular, we look at identifying bounded contexts and identifying aggregates which will lead to a loosely coupled collection of microservices providing an agile EDA design for the example. </p>
-<p>We drill down on understanding the order placement process when a container shipment is booked as the MVP context focus in which to explore our design at the next level of detail. </p>
-<p><img alt="ship-aggr-transport-quote" src="../ship-aggr-transport-quote.png" /></p>
+<p>In particular, we look at identifying bounded contexts and identifying aggregates which will lead to a loosely coupled collection of microservices providing an agile event-driven design. </p>
+<p>We drill down on understanding the order placement process when a container shipment is booked as the MVP context focus in which to explore our design at the next level of detail. We will focus the implementation on at least two aggregates: the shipment order, and container transportation.</p>
 <p><img alt="ship-aggr-shipment" src="../ship-aggr-shipment.png" /></p>
-<p><img alt="ship-aggr-transp" src="../ship-aggr-transp.png" /></p>
+<p>An actor will create a shipment order from a user interface (a manufacturer staff) that will call a command for creating the order. The shipment order context will be mapped to a microservice. The implementation will generate a set of events.</p>
+<p>Same for container transportation.
+<img alt="ship-aggr-transp" src="../ship-aggr-transp.png" /></p>
+<p>For more information on the design considerations for this solution see <a href="../../design/readme/">this related note.</a></p>
                 
                   
                 
