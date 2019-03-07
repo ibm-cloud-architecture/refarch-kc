@@ -124,24 +124,32 @@ The Event streams broker API key is needed to connect any deployed consumers or 
   | default-token-ggwl2  |  kubernetes.io/service-account-token  | 3  |   41m  |  
   | eventstreams-apikey  |  Opaque   |      1   | 24m  |   
 
-  Now for each microservice of the solution, we have defined a helm chart or a script to deploy it to IKS.   
+  Now for each microservice of the solution, we have defined a helm chart and a script (deployHelm) to deploy it to IKS.   
 3. Push images to your IBM Cloud private image repository. If not connected to IBM Cloud do the following:   
   ```  
   $ ibmcloud login -a https://api.us-east.bluemix.net
   ```  
   # Target the IBM Cloud Container Service region in which you want to work.   
   ```
-  $ ibmcloud cs region-set us-east   
+  $ ibmcloud ks region-set us-east   
   ```  
   # Set the KUBECONFIG environment variable.   
   ```
+  $ ibmcloud ks cluster-config fabio-wdc-07
   $ export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/fabio-wdc-07/kube-config-wdc07-fabio-wdc-07.yml   
   ```  
   # Verify you have access to your cluster by listing the node:   
   ```
   $ kubectl get nodes   
+
+  # login to the container registry
+  $ ibmcloud cr login
   ```   
   Then execute the script: `./scripts/pushToPrivate`  
+4. Verify the images are in you private repo:
+ ```
+ $ ibmcloud cr image-list
+ ```
 4. Deploy the helm charts for each components using the `scripts/deployHelms`.   
 5. Verify the deployments and pods:  
     ```
@@ -170,3 +178,8 @@ The Event streams broker API key is needed to connect any deployed consumers or 
 
 6. You can perform a smoke test with the `scripts/smokeTests`.   
 7. Access the kubernetes console from your IKS deployment to see the deployment   
+
+> It is possible to get an authentication / authorization issue when IKS service try to access the image from the private registry. This may be due to a security token expired. The following commands can be execute:
+  ```
+  
+  ```

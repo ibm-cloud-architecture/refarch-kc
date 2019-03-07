@@ -6,21 +6,21 @@ if [[ $PWD = */scripts ]]; then
 fi
 
 if [[ $# -eq 0 ]];then
-  export kcenv="local"
+  kcenv="local"
 else
-  export kcenv=$1
+  kcenv=$1
 fi
 cd ../refarch-kc-ms/fleet-ms/
-./scripts/buildDocker.sh
+./scripts/buildDocker.sh $kcenv
 
 cd ../voyages-ms
-./scripts/buildDocker.sh
+./scripts/buildDocker.sh $kcenv
 
 cd ../../refarch-kc-order-ms/order-command-ms
-./scripts/buildDocker.sh
+./scripts/buildDocker.sh $kcenv
 
 cd ../order-query-ms
-./scripts/buildDocker.sh
+./scripts/buildDocker.sh $kcenv
 
 cd ../../refarch-kc-ui
-./scripts/buildDocker.sh
+./scripts/buildDocker.sh $kcenv
