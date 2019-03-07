@@ -628,19 +628,26 @@ $ kubectl get nodes
 </tr>
 </tbody>
 </table>
-<p>Now for each microservice of the solution, we have defined a helm chart or a script to deploy it to IKS. <br />
+<p>Now for each microservice of the solution, we have defined a helm chart and a script (deployHelm) to deploy it to IKS. <br />
 3. Push images to your IBM Cloud private image repository. If not connected to IBM Cloud do the following: <br />
 <code>$ ibmcloud login -a https://api.us-east.bluemix.net</code><br />
   # Target the IBM Cloud Container Service region in which you want to work. <br />
-<code>$ ibmcloud cs region-set us-east</code><br />
+<code>$ ibmcloud ks region-set us-east</code><br />
   # Set the KUBECONFIG environment variable. <br />
-<code>$ export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/fabio-wdc-07/kube-config-wdc07-fabio-wdc-07.yml</code><br />
+<code>$ ibmcloud ks cluster-config fabio-wdc-07
+  $ export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/fabio-wdc-07/kube-config-wdc07-fabio-wdc-07.yml</code><br />
   # Verify you have access to your cluster by listing the node: <br />
-<code>$ kubectl get nodes</code> <br />
-  Then execute the script: <code>./scripts/pushToPrivate</code><br />
-4. Deploy the helm charts for each components using the <code>scripts/deployHelms</code>. <br />
-5. Verify the deployments and pods:<br />
-<code>$ kubectl get deployments -n browncompute</code></p>
+  ```
+  $ kubectl get nodes   </p>
+<p># login to the container registry
+  $ ibmcloud cr login
+  <code>Then execute the script: `./scripts/pushToPrivate`  
+4. Verify the images are in you private repo:</code>
+ $ ibmcloud cr image-list
+ <code>4. Deploy the helm charts for each components using the `scripts/deployHelms`.   
+5. Verify the deployments and pods:</code>
+    $ kubectl get deployments -n browncompute
+    ```</p>
 <table>
 <thead>
 <tr>
@@ -748,6 +755,11 @@ $ kubectl get nodes
 <li>You can perform a smoke test with the <code>scripts/smokeTests</code>.   </li>
 <li>Access the kubernetes console from your IKS deployment to see the deployment   </li>
 </ol>
+<blockquote>
+<p>It is possible to get an authentication / authorization issue when IKS service try to access the image from the private registry. This may be due to a security token expired. The following commands can be execute:
+  ```</p>
+</blockquote>
+<p>```</p>
                 
                   
                 
