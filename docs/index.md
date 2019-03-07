@@ -1,11 +1,16 @@
 # Container Shipment EDA reference implementation
+
 The IBM Event Driven architecture reference implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an [event driven architecture](https://github.com/ibm-cloud-architecture/refarch-eda) with event backbone, functions as service and microservices, and aims to illustrate the different event driven patterns like event sourcing, CQRS and Saga.
 
 ## What you will learn
+
 * How to apply the event storming methodology and workshop to analyze the business process for fresh good shipment over sees.
-* How to transform Domain Driven Design aggregates to microservices
-* How to implement the different microservices using the event-driven pattern like CQRS pattern with event sourcing done in Apache Kafka or IBM Events Streams
-* How to implement a Test Driven Development for the Order microservice uisng mockito to avoid Kafka dependency
+* How to transform Domain Driven Design aggregates to microservices.
+* How to implement the different microservices using the event-driven pattern like CQRS pattern with event sourcing done in Apache Kafka or IBM Events Streams.
+* How to deploy your solution to IBM Cloud Kubernetes service (Public cloud), or to IBM Cloud Private (kubernetes based) or run locally with Docker compose.
+* How to use event store (Kafka topics) as source for machine learning data source to build training and test sets.
+* How to implement a Test Driven Development for the Order microservice uisng mockito to avoid Kafka dependency.
+* Use python, nodejs, java Kafka APIs.
 
 ## Target Audiences
 
@@ -16,11 +21,12 @@ You will be greatly interested by the subjects addressed in this solution if you
 * A project manager, you may understand all the artifacts to develop in an EDA solution, and we may help in the future to do project estimation.
 
 ## Business process statement
+
 In [this first chapter](introduction.md) we are presenting the business process for shipping fresh good over sees and detailing the event storming analysis workshop execution, and we are explaining how to transform analysis outcomes such as domain boundaries and aggregates to microservices. 
 
 ## Design considerations
-In the [third chapter](design/readme.md) we are going in detail on the process analysis to define the requirements for the major microservices to implement.
 
+In the [third chapter](design/readme.md) we are going in detail on the process analysis to define the requirements for the major microservices to implement.
 
 ## Architecture
 
@@ -44,6 +50,8 @@ We can deploy the components of the solution into three environments:
 
 The scripts to build, deploy and tests all the solution components, in one shot, are defined in this source repository: [https://github.com/ibm-cloud-architecture/refarch-kc](https://github.com/ibm-cloud-architecture/refarch-kc). But each project has its own installation explanations and scripts to build, package and unit tests them separately.  
 
-## Future readings
+## Further readings
 
-
+* [Event driven architecture in IBM Garage method](https://www.ibm.com/cloud/garage/architectures/eventDrivenArchitecture)
+* [Event driven compagnion github with other best practices](https://ibm-cloud-architecture.github.io/refarch-eda/)
+* [Event-driven training journey](https://ibm-cloud-architecture.github.io/refarch-eda/eda-skill-journey/)
