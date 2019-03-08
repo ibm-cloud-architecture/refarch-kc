@@ -30,3 +30,4 @@ createTopic "bluewaterProblem" topics
 createTopic "orders" topics
 createTopic "errors" topics
 createTopic "containers" topics
+createTopic "containerMetrics" topics

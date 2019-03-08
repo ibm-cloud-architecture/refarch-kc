@@ -7,8 +7,8 @@ nav:
     - Event storming analysis: ./analysis/readme.md
   - Design considerations and microservice identifications: ./design/readme.md
   - Architecture: ./design/architecture.md
+  - Related repositories: ./deployments/reposlist.md
   - Deployments:
-    - Related repositories: ./deployments/reposlist.md
     - Run locally: ./deployments/local.md
     - Run on IBM Cloud Kubernetes Services: ./deployments/iks.md
     - Run on IBM Cloud Private: ./deployments/icp.md

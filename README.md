@@ -2,7 +2,7 @@
 
 The IBM Event Driven architecture reference implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an [event driven architecture](https://github.com/ibm-cloud-architecture/refarch-eda) with event backbone, functions as service and microservices, and aims to illustrate the different event driven patterns like event sourcing, CQRS and Saga.
 
-To read the detail of this implementation go to [the book view](http://ibm-cloud-architecture.github.io/refarch-kc)
+To read the detail of this implementation go to [the book view.](http://ibm-cloud-architecture.github.io/refarch-kc)
 
 ### Using the scripts for this root project
 
