@@ -36,7 +36,7 @@
     
     
       
-        <title>Introduction - Container Shipment EDA reference implementation</title>
+        <title>Container Shipment EDA reference implementation</title>
       
     
     
@@ -96,7 +96,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#introduction" tabindex="1" class="md-skip">
+      <a href="#k-container-integration-tests" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -121,7 +121,7 @@
               Container Shipment EDA reference implementation
             </span>
             <span class="md-header-nav__topic">
-              Introduction
+              Integration tests
             </span>
           
         </div>
@@ -241,12 +241,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
     
     <label class="md-nav__link" for="nav-2">
       Business Problem Statement
@@ -262,56 +260,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Introduction
-      </label>
-    
-    <a href="./" title="Introduction" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../introduction/" title="Introduction" class="md-nav__link">
       Introduction
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#business-process-statement" title="Business process statement" class="md-nav__link">
-    Business process statement
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#event-storming-analysis" title="Event storming analysis" class="md-nav__link">
-    Event storming analysis
-  </a>
-  
-</li>
-      
-      
-      
-      
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -444,11 +397,97 @@
       
       
 
+  
 
-  <li class="md-nav__item">
-    <a href="../itg-tests/" title="Integration tests" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Integration tests
+      </label>
+    
+    <a href="./" title="Integration tests" class="md-nav__link md-nav__link--active">
       Integration tests
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#building-the-python-environment-as-docker-image" title="Building the python environment as docker image" class="md-nav__link">
+    Building the python environment as docker image
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-proof-the-event-sourcing" title="How to proof the event sourcing" class="md-nav__link">
+    How to proof the event sourcing
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#happy-path-for-the-order-life-cycle" title="Happy path for the order life cycle" class="md-nav__link">
+    Happy path for the order life cycle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-exception-no-voyage-found" title="First exception no voyage found" class="md-nav__link">
+    First exception no voyage found
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replay-all-events-for-a-given-key" title="Replay all events for a given key" class="md-nav__link">
+    Replay all events for a given key
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-transaction-to-support-read-process-write-in-one-atomic-operation" title="Use transaction to support read-process-write in one atomic operation" class="md-nav__link">
+    Use transaction to support read-process-write in one atomic operation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-proof-the-saga-pattern" title="How to proof the SAGA pattern" class="md-nav__link">
+    How to proof the SAGA pattern
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
     
@@ -473,15 +512,56 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#business-process-statement" title="Business process statement" class="md-nav__link">
-    Business process statement
+  <a href="#building-the-python-environment-as-docker-image" title="Building the python environment as docker image" class="md-nav__link">
+    Building the python environment as docker image
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#event-storming-analysis" title="Event storming analysis" class="md-nav__link">
-    Event storming analysis
+  <a href="#how-to-proof-the-event-sourcing" title="How to proof the event sourcing" class="md-nav__link">
+    How to proof the event sourcing
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#happy-path-for-the-order-life-cycle" title="Happy path for the order life cycle" class="md-nav__link">
+    Happy path for the order life cycle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-exception-no-voyage-found" title="First exception no voyage found" class="md-nav__link">
+    First exception no voyage found
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replay-all-events-for-a-given-key" title="Replay all events for a given key" class="md-nav__link">
+    Replay all events for a given key
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-transaction-to-support-read-process-write-in-one-atomic-operation" title="Use transaction to support read-process-write in one atomic operation" class="md-nav__link">
+    Use transaction to support read-process-write in one atomic operation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-proof-the-saga-pattern" title="How to proof the SAGA pattern" class="md-nav__link">
+    How to proof the SAGA pattern
   </a>
   
 </li>
@@ -502,25 +582,60 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/ibm-cloud-architecture/refarch-kc/edit/master/docs/introduction.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/ibm-cloud-architecture/refarch-kc/edit/master/docs/itg-tests/README.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="introduction">Introduction</h1>
-<p>As part of producing the IBM event driven point of view and reference architecture, we wanted to bring together a complete scenario which would cover all aspects of developing an event driven solutions including extended connections to devices/IOT and blockchain for trusted business trading networks. We felt that the shipping business could provide a good foundation for this and would enable us to show how to develop event driven solutions following the architecture patterns.</p>
-<h2 id="business-process-statement">Business process statement</h2>
-<p>The high level process can be represented in the following diagram, and is described in detailed in <a href="../analysis/readme/#high-level-view-of-the-shipment-process-flow">this section</a>:</p>
-<p><img alt="Shipment business process" src="../analysis/shipment-bp1.png" /></p>
-<p>In developing the scenario, it became apparent that the event driven nature of business, extends across the business network, so we have widened the view in the scenario to consider the chain of parties involved in the shipping process, including importer, exporter, land transport and customs. To keep the scenario easy to understand, we have only considered the following cases:</p>
-<ol>
-<li>Importer Orders goods from exporter overseas</li>
-<li>Exporter becomes the customer of the shipping agent and uses 'K.Container' shipping service</li>
-<li>Shipping agent manages process of land transport loading, unloading and shipping. Through the scenario we can see the impact of “events”, which may delay or change the shipping process across all three parties.  </li>
-</ol>
-<p>We are using goods to be transported in refrigerator containers or reefer containers to keep the 'cold chain' of transported products.</p>
-<p><img src="" width="300px" style="padding:20px;"></img></p>
-<p><img alt="Reefer" src="../images/reefer.png" /></p>
-<h2 id="event-storming-analysis">Event storming analysis</h2>
-<p>We met with the business users and project stakeholder during an event storming workshop, and we are detailing the outcomes in the <a href="../analysis/readme/">next chapter &gt;&gt;</a></p>
+                <h1 id="k-container-integration-tests">K Container integration tests</h1>
+<p>This folder includes a set of tests to validate some of the event-driven microservice patterns like, event sourcing with fail over, CQRS and Saga pattern with recovery and fail over.</p>
+<p>These code samples are using Python to illustrate how to use Kafka python module from <a href="https://github.com/confluentinc/confluent-kafka-python">this github.</a></p>
+<h2 id="building-the-python-environment-as-docker-image">Building the python environment as docker image</h2>
+<p>To avoid impacting your environment we use a dockerfile to get the basic of python 3.6 and other needed modules like kafka, http requests... So build your image using the following command under current folder <code>itg-tests</code>:</p>
+<pre><code class="shell">$ docker build -t ibmcase/python .
+</code></pre>
+
+<p>With this image we will be able to run the different tests. For example the following commands will start a bash shell with the python environment, mounting the local filesystem into the docker /home folder, and connect to the same network as the Kafka broker and other KC solution components are running in:</p>
+<pre><code class="shell">$ pwd
+itg-tests
+. ./setenv.sh
+$ docker run -e KAFKA_BROKERS=$KAFKA_BROKERS -v $(pwd):/home --network=docker_default -ti ibmcase/python bash
+root@fe61560d0cc4:/# 
+</code></pre>
+
+<p>From this shell we can execute our tests.</p>
+<h2 id="how-to-proof-the-event-sourcing">How to proof the event sourcing</h2>
+<p>To validate event sourcing we want to use the order event topic (named <code>orders</code>) and add some events to cover the full order lifecycle. We want to validate the order events are sequential over time, and it is possible to replay the loading of events from time origin or from a last committed offset.</p>
+<p>The tests are under the es-it folder. The tests are done in python, so we can also illustrate how to use kafka python client API. </p>
+<h3 id="happy-path-for-the-order-life-cycle">Happy path for the order life cycle</h3>
+<p>Once the python image is build you can use the following command to run the first test that create an order, use Kafka consumer to get the different events and query the Order microservices. The code is documented and should be self-explanatory. The state diagram is <a href="https://ibm-cloud-architecture.github.io/refarch-kc/design/readme/#shipment-order-lifecycle-and-state-change-events">here</a></p>
+<pre><code class="shell">. ./setenv.sh
+$ docker run -e KAFKA_BROKERS=$KAFKA_BROKERS -v $(pwd):/home --network=docker_default -ti ibmcase/python bash
+root@fe61560d0cc4:/# cd home/es-it
+root@fe61560d0cc4:/# python EventSourcingTests.py
+</code></pre>
+
+<p>The implementation uses a set of constructs to poll the topic and may be timing out. Also it needs to filter out previous events and events not related to the created order. </p>
+<p><em>The code is deliveratly not optimized. The second test will use a OrderConsumer module to isolate the specific kafka code to consumer orders.</em></p>
+<h3 id="first-exception-no-voyage-found">First exception no voyage found</h3>
+<p>If there is no voyage found that matches the source and destination then the order is cancelled. The voyages definition is just a collection of json objects in the <a href="https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/voyages-ms">voyage-ms project</a>.</p>
+<p>The test is <code>CancelledOrderTests.py</code>. It uses the OrderConsumer module.</p>
+<h3 id="replay-all-events-for-a-given-key">Replay all events for a given key</h3>
+<h3 id="use-transaction-to-support-read-process-write-in-one-atomic-operation">Use transaction to support read-process-write in one atomic operation</h3>
+<h2 id="how-to-proof-the-saga-pattern">How to proof the SAGA pattern</h2>
+<p>We want to validate the SAGA pattern to support the long-running, cross microservices, order transactions. The diagram is illustrating the use case we want to proof and tests:</p>
+<p><img alt="" src="docs/saga-ctx.png" /></p>
+<p>What we need to proof for the happy path:
+<em> Send a new order to the order microservice via API with all the data to ship fresh goods from two countries separated by ocean
+</em> verify the status of the order is pending
+<em> The unique cross services key is the order ID
+</em> verify orderCreated event was published
+<em> verify voyage was allocated to order
+</em> verify container was allocated to order
+<em> verify ship has new containers added to its plan shipping plan 
+</em> verify the status of the order is assigned</p>
+<p>Business exeception error: no container for this type of load is available in this time frame. So the business response will be to keep the order in pending but trigger a business process for a customer representative to be in contact with the manufacturer for a remediation plan. </p>
+<ul>
+<li>Verify the response to the container service is an OrderUnfulled event.</li>
+</ul>
                 
                   
                 
@@ -541,7 +656,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href=".." title="Home" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../demo/readme/" title="Demonstration" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -550,25 +665,11 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Home
+                Demonstration
               </span>
             </div>
           </a>
         
-        
-          <a href="../analysis/readme/" title="Event storming analysis" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-              <span class="md-flex__ellipsis">
-                <span class="md-footer-nav__direction">
-                  Next
-                </span>
-                Event storming analysis
-              </span>
-            </div>
-            <div class="md-flex__cell md-flex__cell--shrink">
-              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
-            </div>
-          </a>
         
       </nav>
     </div>
