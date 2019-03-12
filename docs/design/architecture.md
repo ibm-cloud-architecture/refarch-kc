@@ -31,8 +31,8 @@ As presented in [the note about event driven microservice patterns](https://gith
 
 * **Fleet Service**: responsibles to group the ship (container carriers), in fleet, per major ocean. 
     * Information model: 
-       * Fleet has multiple ships,
-       * Ship has unique identifier (we will use its name), and a container capacity (represented as a matrix to make it simple), current position, status, voyage identifier for the voyage it is doing. 
+         * Fleet has multiple ships,
+         * Ship has unique identifier (we will use its name), and a container capacity (represented as a matrix to make it simple), current position, status, voyage identifier for the voyage it is doing. 
     * Events: Ship commission, ship position, load container event, unload container event, start itinerary X, arrive at port, docked,...
     * Operations: getFleets, get ships in a fleet, get ship by ID. CRUD Fleet and Ship.
     * Implementation in [this project.](https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/fleet-ms)
