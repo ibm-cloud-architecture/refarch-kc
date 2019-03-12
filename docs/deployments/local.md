@@ -7,10 +7,10 @@ To run the full solution locally you can use a kubernetes cluster like Minikube 
 1. Get [docker and install](https://docs.docker.com/install/) it (if not done yet)
 1. Get [docker compose](https://docs.docker.com/compose/install/)
 1. Assign at least 8GB of memory and may be 4 to 6 CPUs to your docker runtime. This is set in the Preferences menu and under the `Advanced` tab.
-1. Be sure to have the following hostnames: `kafka1 fleetms kcui simulator ordercmd orderquery` mapped to localhost. You can update your `/etc/hosts` file for that.
-```
-127.0.0.1	localhost kafka1 fleetms simulator ordercmd orderquery kcsolution 
-```
+1. Be sure to have the following hostnames: `kafka1 fleetms kcui simulator ordercmd orderquery` mapped to localhost. You can update your `/etc/hosts` file for that.   
+  ```
+  127.0.0.1	localhost kafka1 fleetms simulator ordercmd orderquery kcsolution 
+  ```
 1. If not already done, get a git client. See the folloing [installation instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). 
 1. Be sure to have cloned this repository using git command: `git clone https://github.com/ibm-cloud-architecture/refarch-kc/`
 
@@ -28,14 +28,14 @@ To run the full solution locally you can use a kubernetes cluster like Minikube 
 
 This project includes some scripts to help build the full solution once all the repositories are cloned. If you have some problem during this integrated build we recommend going into each project to assess the build process in detail. Also, for development purpose, going into each project, you can learn how to build and run locally.
 
-We are using polyglote implementations so if you do not want to overload your own laptop we propose to use docker images to get development environments for nodes, python and java. (Three separate images). This will help to do not pollute your computer. So if you want to do so here are three commands to build the three images (those images are also in docker hub). 
+We are using polyglote implementations so if you do not want to overload your own laptop with the different repositories, we propose to use docker images to get development environments for nodes, python and java. (Three separate images). This will help to do not pollute your computer. So if you want to do so here are three commands to build the three images (those images are also in docker hub). 
 
 ```sh
 cd scripts
 # build the image for java:
 docker build -f docker-java-tools -t ibmcase/javatools .
 # build the image for nodejs, angular, npm
-docker build -f docker-java-tools -t ibmcase/javatools .
+docker build -f docker-node-tools -t ibmcase/nodetools .
 # build the image for python
 cd ../itg-tests
 docker build  -t ibmcase/python .
