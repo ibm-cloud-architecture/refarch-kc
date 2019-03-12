@@ -36,7 +36,7 @@
     
     
       
-        <title>Run locally - Container Shipment EDA reference implementation</title>
+        <title>Run locally with Docker Compose - Container Shipment EDA reference implementation</title>
       
     
     
@@ -96,7 +96,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#run-locally" tabindex="1" class="md-skip">
+      <a href="#run-with-docker-compose" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -121,7 +121,7 @@
               Container Shipment EDA reference implementation
             </span>
             <span class="md-header-nav__topic">
-              Run locally
+              Run locally with Docker Compose
             </span>
           
         </div>
@@ -357,11 +357,11 @@
     
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
-        Run locally
+        Run locally with Docker Compose
       </label>
     
-    <a href="./" title="Run locally" class="md-nav__link md-nav__link--active">
-      Run locally
+    <a href="./" title="Run locally with Docker Compose" class="md-nav__link md-nav__link--active">
+      Run locally with Docker Compose
     </a>
     
       
@@ -375,8 +375,29 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#build" title="Build" class="md-nav__link">
-    Build
+  <a href="#pre-requisites" title="Pre requisites" class="md-nav__link">
+    Pre requisites
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start-kafka-and-zookeeper" title="Start Kafka and Zookeeper" class="md-nav__link">
+    Start Kafka and Zookeeper
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build-the-solution" title="Build the solution" class="md-nav__link">
+    Build the solution
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start-all-the-microservices" title="Start all the microservices" class="md-nav__link">
+    Start all the microservices
   </a>
   
 </li>
@@ -466,8 +487,29 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#build" title="Build" class="md-nav__link">
-    Build
+  <a href="#pre-requisites" title="Pre requisites" class="md-nav__link">
+    Pre requisites
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start-kafka-and-zookeeper" title="Start Kafka and Zookeeper" class="md-nav__link">
+    Start Kafka and Zookeeper
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build-the-solution" title="Build the solution" class="md-nav__link">
+    Build the solution
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start-all-the-microservices" title="Start all the microservices" class="md-nav__link">
+    Start all the microservices
   </a>
   
 </li>
@@ -491,8 +533,9 @@
                   <a href="https://github.com/ibm-cloud-architecture/refarch-kc/edit/master/docs/deployments/local.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="run-locally">Run locally</h1>
-<p>To run the full solution locally you can use a kubernetes cluster like Minikube or Docker Edge with kubernetes, or use docker-compose. We propose to use docker-compose for local deployment, and here are the instructions to launch the backbone (kafka and zookeeper) and the solution components:</p>
+                <h1 id="run-with-docker-compose">Run with Docker Compose</h1>
+<p>To run the full solution locally you can use a kubernetes cluster like Minikube or Docker Edge with kubernetes, or use docker-compose. We propose to use docker-compose for local deployment.</p>
+<h2 id="pre-requisites">Pre requisites</h2>
 <ol>
 <li>Get <a href="https://docs.docker.com/install/">docker and install</a> it (if not done yet)</li>
 <li>Get <a href="https://docs.docker.com/compose/install/">docker compose</a></li>
@@ -503,43 +546,43 @@
 </code></pre>
 
 <ol>
-<li>In one Terminal window, use our compose file to start the backend components: <code>$ cd docker &amp;&amp;  docker-compose -f backbone-compose.yml up</code>.  <br />
-The first time the backend is started, you need to configure the Kafka topics we are using in the solution. The local script: <code>scripts/createLocalTopics.sh</code> will create them.<blockquote>
+<li>If not already done, get a git client. See the folloing <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">installation instructions</a>. </li>
+<li>Be sure to have cloned this repository using git command: <code>git clone https://github.com/ibm-cloud-architecture/refarch-kc/</code></li>
+</ol>
+<h2 id="start-kafka-and-zookeeper">Start Kafka and Zookeeper</h2>
+<ol>
+<li>
+<p>In one Terminal window, use our compose file to start the backend components:   </p>
+<p><code>$ cd docker &amp;&amp;  docker-compose -f backbone-compose.yml up</code>.</p>
+</li>
+<li>
+<p>The first time the backend is started, you need to configure the Kafka topics we are using in the solution. The local script: <code>scripts/createLocalTopics.sh</code> will create them.</p>
+<blockquote>
 <p>Note: Starting those components will create two folders in the docker folder: <code>kafka1</code> and <code>zookeeper1</code>. Those folders could be deleted to restart from a fresh environment.  </p>
 </blockquote>
 </li>
-<li>If not done yet, build the solution using the commands: </li>
 </ol>
-<p><code>$ cd scripts
- $ ./prepareEnv
- $ ./buildAll</code></p>
-<ol>
-<li>
-<p>In a second terminal use our second compose file to start the web server and the other microservices: <code>$ docker-compose -f kc-solution-compose.yml up</code></p>
-</li>
-<li>
-<p>Verify the different components work fine. You can use the different test scripts we have defined in each of the microservices or use the following URLs:</p>
-</li>
-<li>For the <a href="http://localhost:3010">user interface URL http://localhost:3010</a></li>
-<li>The Fleet Simulator <a href="http://localhost:9080/api/explorer/">API URL</a> or one of its operation to get the fleet names: http://localhost:9080/fleetms/fleets.</li>
-<li>Add an order with the <code>scripts/</code> in the refarch-kc-orders-ms project</li>
-<li>The voyages http://localhost:3100/voyage</li>
-<li>The order query microservice http://localhost:11080/orders/byManuf/GoodManuf</li>
-</ol>
-<p>or run a smoke test with the script: <code>localSmokeTests</code>.</p>
-<p>Read the <a href="../../demo/readme/">demo script</a> to see how all those components working together to demonstrate the business process.</p>
-<h3 id="build">Build</h3>
-<p>This project includes some scripts to help build the full solution once all the repositories are cloned. If you have some problem during this integrated build we recommend going into each project to assess the build process in detail. Also for development purpose, going into each project, you can learn how to build and run locally.</p>
+<h2 id="build-the-solution">Build the solution</h2>
+<p>This project includes some scripts to help build the full solution once all the repositories are cloned. If you have some problem during this integrated build we recommend going into each project to assess the build process in detail. Also, for development purpose, going into each project, you can learn how to build and run locally.</p>
+<p>We are using polyglote implementations so if you do not want to overload your own laptop we propose to use docker images to get development environments for nodes, python and java. (Three separate images). This will help to do not pollute your computer. So if you want to do so here are three commands to build the three images (those images are also in docker hub). </p>
+<pre><code class="sh">cd scripts
+# build the image for java:
+docker build -f docker-java-tools -t ibmcase/javatools .
+# build the image for nodejs, angular, npm
+docker build -f docker-java-tools -t ibmcase/javatools .
+# build the image for python
+cd ../itg-tests
+docker build  -t ibmcase/python .
+</code></pre>
+
 <ul>
-<li>To be able to build without or docker image for building, you need npm, node, maven and docker:</li>
+<li>To be able to build without our docker image for building, you need npm, node, maven and docker:  <ul>
 <li>Get <a href="https://docs.docker.com/install/">docker and install</a> it (if not done yet).</li>
-<li>Get <a href="https://maven.apache.org/install.html">maven</a> and add it to your PATH</li>
-<li>
-<p>Get <a href="https://nodejs.org/en/">node and npm</a></p>
+<li>Get <a href="https://maven.apache.org/install.html">maven</a> and add it to your PATH.</li>
+<li>Get <a href="https://nodejs.org/en/">node and npm</a></li>
+</ul>
 </li>
-<li>
-<p>Build all projects in one command by executing: <code>scripts/buildAll</code></p>
-</li>
+<li>Build all projects in one command by executing: <code>scripts/buildAll</code> from this project. This command may use the docker images  build previously if they are visible via the command <code>docker images</code>. If not it will build using maven, npm and angular cli.</li>
 <li>Use the <code>scripts/imageStatus</code> script to verify your docker images are built:</li>
 </ul>
 <pre><code> ibmcase/kc-ui                                        latest              c89827424689        15 hours ago        596MB  
@@ -558,6 +601,22 @@ The first time the backend is started, you need to configure the Kafka topics we
 <li>If you want to delete the docker images after tesing the solution, use the command:
 <code>docker rmi $(docker -aq | grep ibmcase)</code></li>
 </ul>
+<h2 id="start-all-the-microservices">Start all the microservices</h2>
+<ol>
+<li>
+<p>In a second terminal windows, use our second docker compose file to start the web server and the other microservices: <code>$ docker-compose -f kc-solution-compose.yml up</code></p>
+</li>
+<li>
+<p>Verify the different components work fine. You can use the different test scripts we have defined in each of the microservices or use the following URLs:</p>
+</li>
+<li>For the <a href="http://localhost:3010">user interface URL http://localhost:3010</a></li>
+<li>The Fleet Simulator <a href="http://localhost:9080/api/explorer/">API URL</a> or one of its operation to get the fleet names: <a href="http://localhost:9080/fleetms/fleets">http://localhost:9080/fleetms/fleets</a>.</li>
+<li>Add an order with the <code>scripts/</code> in the refarch-kc-orders-ms project</li>
+<li>The voyages <a href="http://localhost:3100/voyage">http://localhost:3100/voyage</a></li>
+<li>The order query microservice <a href="http://localhost:11080/orders/byManuf/GoodManuf">http://localhost:11080/orders/byManuf/GoodManuf</a></li>
+</ol>
+<p>or run the smoke tests with the script: <code>localSmokeTests</code>.</p>
+<p>Read the <a href="../../demo/readme/">demo script</a> to see how all those components working together to demonstrate the business process.</p>
                 
                   
                 

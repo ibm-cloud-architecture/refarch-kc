@@ -398,8 +398,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../deployments/local/" title="Run locally" class="md-nav__link">
-      Run locally
+    <a href="../../deployments/local/" title="Run locally with Docker Compose" class="md-nav__link">
+      Run locally with Docker Compose
     </a>
   </li>
 
@@ -538,9 +538,11 @@
 <p>As presented in <a href="https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/README.md#understanding-event-driven-microservice-patterns">the note about event driven microservice patterns</a>, we are using a set of event-driven design patterns to develop this solution. One of them is the <strong>sub domain decomposition</strong>. From the analysis output we have the aggregates, actors and data that are helping us to extract a set of subdomains.</p>
 <ul>
 <li><strong>Fleet Service</strong>: responsibles to group the ship (container carriers), in fleet, per major ocean. <ul>
-<li>Information model: </li>
+<li>Information model: <ul>
 <li>Fleet has multiple ships,</li>
 <li>Ship has unique identifier (we will use its name), and a container capacity (represented as a matrix to make it simple), current position, status, voyage identifier for the voyage it is doing. </li>
+</ul>
+</li>
 <li>Events: Ship commission, ship position, load container event, unload container event, start itinerary X, arrive at port, docked,...</li>
 <li>Operations: getFleets, get ships in a fleet, get ship by ID. CRUD Fleet and Ship.</li>
 <li>Implementation in <a href="https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/fleet-ms">this project.</a></li>
