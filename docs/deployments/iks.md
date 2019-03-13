@@ -226,9 +226,8 @@ $ kubectl get deployments -n browncompute
   | voyagesms-deployment-6d7f8cdc8d-hnvq6     |  1/1   |    Running |  0     |     19h |   
 
 * You can perform a smoke test with the `scripts/smokeTestsIKS` or you can try to access some of the read APIs using the web browser. So first to get the public IP address of your cluster, go to the `Worker Nodes` view of the Clusters console.  Then to get the service exposed NodePort use `kubectl get services -n browncompute` and then get the port number mapped from one of the exposed ports (9080, 3010, 3000...):
-  * fleetms: here is an example of URL : http://<Public IP>:31300/fleetms/fleets
-  * UI: http://<Public IP>:31010/
-  * voyages: 
+  * fleetms: here is an example of URL : http://Public IP:31300/fleetms/fleets
+  * UI: http://Public IP:31010/
 * Access the kubernetes console from your IKS deployment to see the deployment   
 
 
