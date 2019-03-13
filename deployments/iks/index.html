@@ -922,9 +922,8 @@ $ ibmcloud cr login
 </table>
 <ul>
 <li>You can perform a smoke test with the <code>scripts/smokeTestsIKS</code> or you can try to access some of the read APIs using the web browser. So first to get the public IP address of your cluster, go to the <code>Worker Nodes</code> view of the Clusters console.  Then to get the service exposed NodePort use <code>kubectl get services -n browncompute</code> and then get the port number mapped from one of the exposed ports (9080, 3010, 3000...):</li>
-<li>fleetms: here is an example of URL : http://<Public IP>:31300/fleetms/fleets</li>
-<li>UI: http://<Public IP>:31010/</li>
-<li>voyages: </li>
+<li>fleetms: here is an example of URL : http://Public IP:31300/fleetms/fleets</li>
+<li>UI: http://Public IP:31010/</li>
 <li>Access the kubernetes console from your IKS deployment to see the deployment   </li>
 </ul>
                 
