@@ -1,12 +1,15 @@
 site_name: Container Shipment EDA reference implementation
 repo_url: https://github.com/ibm-cloud-architecture/refarch-kc
 nav:
-  - Home: index.md
-  - Business Problem Statement:
+  - Welcome: index.md
+  - Business problem statement:
     - Introduction: introduction.md
     - Event storming analysis: ./analysis/readme.md
   - Design considerations and microservice identifications: ./design/readme.md
   - Architecture: ./design/architecture.md
+  - Development practices:
+    - Order microservice with CQRS and Event Sourcing: https://github.com/ibm-cloud-architecture/refarch-kc-order-ms
+    - Container microservice with event sourcing and Kafka streams: https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/kstreams/
   - Related repositories: ./deployments/reposlist.md
   - Deployments:
     - Run locally with Docker Compose: ./deployments/local.md

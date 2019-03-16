@@ -45,11 +45,11 @@ As presented in [the note about event driven microservice patterns](https://gith
     * Information model: Booking id , customer, pickup location, pickup after date, deliver location, expected deliver date, order status, assigned container  
     * Events: order placed, order assigned to voyage( sets VoyageID, ship ID ), container assigned to order ( Sets container ID), Landorder, Transport associated with pickup container, Order status event, Order billing/accounting event
     * Operations: CRUD on order, update order status
-     * Implementation in [this project.](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms)
+     * Implementation in [the order ms projects.](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms)
 * **Container Service**: 
     * Information model: Container Id, Container temperature, container position, container condition ( maintenance goods), current associated order
     * Events: 
     * Operations: CRUD on container
-    * (not yet implemented)
+    * Implementation in [the container ms project.](https://github.com/ibm-cloud-architecture/refarch-kc-container-ms)
 * Customs and Export Service (not yet implemented)
 * Land Transport Service: (not yet implemented)

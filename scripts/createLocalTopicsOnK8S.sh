@@ -1,33 +1,36 @@
 echo "Create topics for the KC solutions on your local kafka"
-ns="browncompute"
+ns="streams"
+zooksvc="rolling-streams-ibm-es-zookeeper-fixed-ip-svc-0"
 
 echo "Kafka pod name is..."
-kpof=$(kubectl get pods -n browncompute| grep kafka | awk '{print $1}')
-if [ -z $kpof ]
+kpof=$(kubectl get pods -n $ns| grep kafka | awk '{print $1;}'| head -1)
+if [[ -z $kpof ]]
 then
   echo "Kafka not installed locally on your kubernetes cluster"
+  exit
 else 
-  echo $kpof
+  echo "Use this pod: $kpof"
 fi
 
-echo "Get topic list"
-docker exec  -ti $kafka /bin/bash -c "kafka-topics --list --zookeeper zookeeper1:2181" > topics
-
+echo "Get topic list from kafka pod"
+kubectl exec  -n $ns  -ti $kpof -- bash -c "/opt/kafka/bin/kafka-topics.sh --list --zookeeper $zooksvc:2181" > topics
 createTopic(){
-    bc=$(tail -n+2 $2 | grep  $1)
+    bc=$(tail -n+2 topics | grep  $1)
     echo $bc
     if [ -z "$bc" ]
     then
         echo "create " $1
-        kubectl exec  -ti $kpof -n $ns   -- bash -c "/opt/kafka/bin/kafka-topics.sh --create  --zookeeper gc-client-zookeeper-svc.greencompute.svc.cluster.local:2181 --replication-factor 1 --partitions 1 --topic $1"
+        kubectl exec -n $ns  -ti $kpof   -- bash -c "/opt/kafka/bin/kafka-topics.sh --create  --zookeeper $zooksvc:2181 --replication-factor 1 --partitions 1 --topic $1"
   else 
         echo $1 " topic already created"
     fi
 }
-createTopic "bluewaterContainer" topics
-createTopic "bluewaterShip" topics
-createTopic "bluewaterProblem" topics
-createTopic "orders" topics
-createTopic "errors" topics
-createTopic "containers" topics
-createTopic "containerMetrics" topics
+createTopic "bluewaterContainer" 
+createTopic "bluewaterShip" 
+createTopic "bluewaterProblem" 
+createTopic "orders" 
+createTopic "errors" 
+createTopic "containers" 
+createTopic "containerMetrics" 
+
+rm topics
