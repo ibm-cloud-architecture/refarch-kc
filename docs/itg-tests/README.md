@@ -69,9 +69,10 @@ The test is `CancelledOrderTests.py`. It uses the OrderConsumer module.
 
 We want to validate the SAGA pattern to support the long-running, cross microservices, order transactions. The diagram is illustrating the use case we want to proof and tests:
 
-![](docs/saga-ctx.png)
+![](./saga-ctx.png)
 
 What we need to proof for the happy path:
+
 * Send a new order to the order microservice via API with all the data to ship fresh goods from two countries separated by ocean
 * verify the status of the order is pending
 * The unique cross services key is the order ID
