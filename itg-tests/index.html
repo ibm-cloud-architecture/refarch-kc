@@ -688,16 +688,18 @@ root@fe61560d0cc4:/# python EventSourcingTests.py
 <h3 id="use-transaction-to-support-read-process-write-in-one-atomic-operation">Use transaction to support read-process-write in one atomic operation</h3>
 <h2 id="how-to-proof-the-saga-pattern">How to proof the SAGA pattern</h2>
 <p>We want to validate the SAGA pattern to support the long-running, cross microservices, order transactions. The diagram is illustrating the use case we want to proof and tests:</p>
-<p><img alt="" src="docs/saga-ctx.png" /></p>
-<p>What we need to proof for the happy path:
-<em> Send a new order to the order microservice via API with all the data to ship fresh goods from two countries separated by ocean
-</em> verify the status of the order is pending
-<em> The unique cross services key is the order ID
-</em> verify orderCreated event was published
-<em> verify voyage was allocated to order
-</em> verify container was allocated to order
-<em> verify ship has new containers added to its plan shipping plan 
-</em> verify the status of the order is assigned</p>
+<p><img alt="" src="saga-ctx.png" /></p>
+<p>What we need to proof for the happy path:</p>
+<ul>
+<li>Send a new order to the order microservice via API with all the data to ship fresh goods from two countries separated by ocean</li>
+<li>verify the status of the order is pending</li>
+<li>The unique cross services key is the order ID</li>
+<li>verify orderCreated event was published</li>
+<li>verify voyage was allocated to order</li>
+<li>verify container was allocated to order</li>
+<li>verify ship has new containers added to its plan shipping plan </li>
+<li>verify the status of the order is assigned</li>
+</ul>
 <p>Business exeception error: no container for this type of load is available in this time frame. So the business response will be to keep the order in pending but trigger a business process for a customer representative to be in contact with the manufacturer for a remediation plan. </p>
 <ul>
 <li>Verify the response to the container service is an OrderUnfulled event.</li>
