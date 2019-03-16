@@ -231,8 +231,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../.." title="Home" class="md-nav__link">
-      Home
+    <a href="../.." title="Welcome" class="md-nav__link">
+      Welcome
     </a>
   </li>
 
@@ -247,11 +247,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
     
     <label class="md-nav__link" for="nav-2">
-      Business Problem Statement
+      Business problem statement
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-2">
-        Business Problem Statement
+        Business problem statement
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -366,6 +366,54 @@
       
 
 
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
+      Development practices
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        Development practices
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="https://github.com/ibm-cloud-architecture/refarch-kc-order-ms" title="Order microservice with CQRS and Event Sourcing" class="md-nav__link">
+      Order microservice with CQRS and Event Sourcing
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/kstreams/" title="Container microservice with event sourcing and Kafka streams" class="md-nav__link">
+      Container microservice with event sourcing and Kafka streams
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
   <li class="md-nav__item">
     <a href="../../deployments/reposlist/" title="Related repositories" class="md-nav__link">
       Related repositories
@@ -380,13 +428,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
     
-    <label class="md-nav__link" for="nav-6">
+    <label class="md-nav__link" for="nav-7">
       Deployments
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-6">
+      <label class="md-nav__title" for="nav-7">
         Deployments
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -559,14 +607,14 @@
 <li>Information model: Booking id , customer, pickup location, pickup after date, deliver location, expected deliver date, order status, assigned container  </li>
 <li>Events: order placed, order assigned to voyage( sets VoyageID, ship ID ), container assigned to order ( Sets container ID), Landorder, Transport associated with pickup container, Order status event, Order billing/accounting event</li>
 <li>Operations: CRUD on order, update order status</li>
-<li>Implementation in <a href="https://github.com/ibm-cloud-architecture/refarch-kc-order-ms">this project.</a></li>
+<li>Implementation in <a href="https://github.com/ibm-cloud-architecture/refarch-kc-order-ms">the order ms projects.</a></li>
 </ul>
 </li>
 <li><strong>Container Service</strong>: <ul>
 <li>Information model: Container Id, Container temperature, container position, container condition ( maintenance goods), current associated order</li>
 <li>Events: </li>
 <li>Operations: CRUD on container</li>
-<li>(not yet implemented)</li>
+<li>Implementation in <a href="https://github.com/ibm-cloud-architecture/refarch-kc-container-ms">the container ms project.</a></li>
 </ul>
 </li>
 <li>Customs and Export Service (not yet implemented)</li>
