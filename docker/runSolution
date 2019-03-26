@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if [[ $# -eq 0 ]];then
+    echo "Select environment (default is local Kafka) or (icp | ic)"
+    read kcenv
+    if [ -z $kcenv ]
+    then
+        kcenv="LOCAL"
+    fi
+else
+  kcenv=$1
+fi
+
+if [[ "$kcenv" == "LOCAL" ]];then
+  export KAFKA_BROKERS="kafka1:9092"
+  export KAFKA_ENV="LOCAL"
+  export KAFKA_APIKEY=" "
+fi
+
+if [[ "$kcenv" == "iks" ]];then
+  export $KAFKA_BROKERS=kafka03-prod02.messagehub.services.us-south.bluemix.net:9093,kafka01-prod02.messagehub.services.us-south.bluemix.net:9093,kafka02-prod02.messagehub.services.us-south.bluemix.net:9093,kafka05-prod02.messagehub.services.us-south.bluemix.net:9093,kafka04-prod02.messagehub.services.us-south.bluemix.net:9093
+  export KAFKA_ENV="IBMCLOUD"
+  export KAFKA_APIKEY=" "
+fi 
+echo $KAFKA_ENV
+echo $KAFKA_BROKERS
+docker-compose -f kc-solution-compose.yml up
