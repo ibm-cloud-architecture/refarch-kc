@@ -27,6 +27,7 @@ else
   echo $mvn
 fi
 
+
 echo "Do you have node?"
 nd=$(node --version | grep 11)
 if [[ $? != 0 ]]
@@ -36,3 +37,21 @@ then
 else
   echo $nd
 fi
+
+echo "Do you have python?"
+pv=$(python -V 2>&1 | awk '{ print $2}' | grep "3.")
+if [[ $? != 0 || -z $pv ]]
+then
+  echo "Prefer python 3.0 ... verifying your docker images"
+  di=$(docker images 2>&1 | grep "ibmcase/python" )
+  if [[ -z $di ]]
+  then
+    echo "Build a python image"
+    docker build -f ../itg-tests/Dockerfile -t ibmcase/python .
+  else
+    echo good to go
+  fi
+else
+  echo "Good python version $pv"
+fi
+

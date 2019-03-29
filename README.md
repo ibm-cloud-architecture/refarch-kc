@@ -2,11 +2,11 @@
 
 The IBM Event Driven architecture reference implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an [event driven architecture](https://github.com/ibm-cloud-architecture/refarch-eda) with event backbone, functions as service and microservices, and aims to illustrate the different event driven patterns like event sourcing, CQRS and Saga.
 
-To read the detail of this implementation go to [the book view.](http://ibm-cloud-architecture.github.io/refarch-kc)
+To read the detail of this project go to [the book view.](http://ibm-cloud-architecture.github.io/refarch-kc)
 
 ### Using the scripts for this root project
 
-We are delivering some scripts that could help to quickly get the solution cloned, built and deploy locally. Those bash tools are under the 'scripts` folder.
+We are delivering some scripts which could help you to quickly get the solution cloned, built and deployed locally. Those bash scripts are under the 'scripts` folder.
 
 * To clone all the related projects: `./scripts/clone.sh`
 * To assess your environment and build the docker images needed for build: `./scripts/prepareEnv`.
@@ -23,6 +23,8 @@ $ docker build -t ibmcase/nodetools -f docker-node-tools .
 $ ./imageStatus
 > ibmcase/nodetools     latest     5bfbc87c143d     30 seconds  ago     1GB
 ```
+* All integration tests in this project are done using python 3. So we encourage to build the image for a python tuned environment
+
 * To build all the related projects: `buildAll`
 * To validate all services run correctly, execute the `smokeLocalTests` scripts.
 

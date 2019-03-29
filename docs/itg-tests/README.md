@@ -1,6 +1,6 @@
 # K Container integration tests
 
-This folder includes a set of tests to validate some of the event-driven microservice patterns like, event sourcing with fail over, CQRS and Saga pattern with recovery and fail over. (See our summary on those patterns [here]())
+The `itg-tests` folder includes a set of tests to validate some of the event-driven microservice patterns like, event sourcing with fail over, CQRS and Saga patterns with recovery and fail over. (See our summary on those patterns [here](https://ibm-cloud-architecture.github.io/refarch-eda/evt-microservices/ED-patterns/))
 
 These code samples are using Python to illustrate how to use Kafka python module from [this github.](https://github.com/confluentinc/confluent-kafka-python)
 
@@ -26,8 +26,9 @@ From this shell we can execute our tests.
 
 To validate event sourcing we want to use the order event topic (named `orders`) and add some events to cover the full order lifecycle. We want to validate the order events are sequential over time, and it is possible to replay the loading of events from time origin or from a last committed offset.
 
+The tests are under the `itg-tests/es-it` folder. The tests are done in python:
 
-The tests are under the es-it folder. The tests are done in python, so we can also illustrate how to use kafka python client API. 
+* [EventSourcingTests.py](https://github.com/ibm-cloud-architecture/refarch-kc/blob/master/itg-tests/es-it/EventSourcingTests.py) uses the event backbone, and the order microservices. The setenv.sh script sets the needed environment variables. 
 
 ### Happy path for the order life cycle
 

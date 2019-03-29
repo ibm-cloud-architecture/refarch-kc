@@ -2,6 +2,7 @@
 # validate the order is added and a order created event was added
 # It assumes the event broker (kafka) and all the solution services are running locally (by default)
 # If these tests have to run against remote deployed solution the following environment variables are used:
+# KAFKA_BROKERS, ORDER_CMD_MS (URL end point for the Command microservice, ORDER_QUERY_MS' for the query ms)
 import unittest
 import os
 import json
