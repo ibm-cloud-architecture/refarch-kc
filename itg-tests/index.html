@@ -648,7 +648,7 @@
                 
                 
                 <h1 id="k-container-integration-tests">K Container integration tests</h1>
-<p>This folder includes a set of tests to validate some of the event-driven microservice patterns like, event sourcing with fail over, CQRS and Saga pattern with recovery and fail over. (See our summary on those patterns <a href="">here</a>)</p>
+<p>The <code>itg-tests</code> folder includes a set of tests to validate some of the event-driven microservice patterns like, event sourcing with fail over, CQRS and Saga patterns with recovery and fail over. (See our summary on those patterns <a href="https://ibm-cloud-architecture.github.io/refarch-eda/evt-microservices/ED-patterns/">here</a>)</p>
 <p>These code samples are using Python to illustrate how to use Kafka python module from <a href="https://github.com/confluentinc/confluent-kafka-python">this github.</a></p>
 <h2 id="building-the-python-environment-as-docker-image">Building the python environment as docker image</h2>
 <p>To avoid impacting your environment we use a dockerfile to get the basic of python 3.7.x and other needed modules like kafka, http requests, pytest... So build your image using the following command under current folder <code>itg-tests</code>:</p>
@@ -666,7 +666,10 @@ root@fe61560d0cc4:/#
 <p>From this shell we can execute our tests.</p>
 <h2 id="how-to-proof-the-event-sourcing">How to proof the event sourcing</h2>
 <p>To validate event sourcing we want to use the order event topic (named <code>orders</code>) and add some events to cover the full order lifecycle. We want to validate the order events are sequential over time, and it is possible to replay the loading of events from time origin or from a last committed offset.</p>
-<p>The tests are under the es-it folder. The tests are done in python, so we can also illustrate how to use kafka python client API. </p>
+<p>The tests are under the <code>itg-tests/es-it</code> folder. The tests are done in python:</p>
+<ul>
+<li><a href="https://github.com/ibm-cloud-architecture/refarch-kc/blob/master/itg-tests/es-it/EventSourcingTests.py">EventSourcingTests.py</a> uses the event backbone, and the order microservices. The setenv.sh script sets the needed environment variables. </li>
+</ul>
 <h3 id="happy-path-for-the-order-life-cycle">Happy path for the order life cycle</h3>
 <p>A classical happy path for a event-driven microservice is to receive a command to do something (could be an API operation (POST a new order)), validate the command, create a new event (OrderCreated) and append it to event log, then update its internal state, and may be run side effect like returning a response to the command initiator, or trigger a call to an external service to initiate a business process or a business task.  </p>
 <p>Once the python image is build you can use the following command to run the first test that create an order, use Kafka consumer to get the different events and query the Order microservices. The code is documented and should be self-explanatory. The order state diagram is <a href="https://ibm-cloud-architecture.github.io/refarch-kc/design/readme/#shipment-order-lifecycle-and-state-change-events">presented here.</a></p>
