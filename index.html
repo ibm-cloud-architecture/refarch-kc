@@ -293,22 +293,16 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#deployment" title="Deployment" class="md-nav__link">
-    Deployment
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#pre-requisites" title="Pre-requisites" class="md-nav__link">
     Pre-requisites
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#deployments" title="Deployments" class="md-nav__link">
+    Deployments
+  </a>
   
 </li>
       
@@ -602,22 +596,16 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#deployment" title="Deployment" class="md-nav__link">
-    Deployment
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#pre-requisites" title="Pre-requisites" class="md-nav__link">
     Pre-requisites
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#deployments" title="Deployments" class="md-nav__link">
+    Deployments
+  </a>
   
 </li>
       
@@ -667,26 +655,26 @@
 <li>A project manager, you may understand all the artifacts to develop in an EDA solution, and we may help in the future to do project estimation.</li>
 </ul>
 <h2 id="business-process-statement">Business process statement</h2>
-<p>In <a href="introduction/">this first chapter</a> we are presenting the business process for shipping fresh good over sees and detailing the event storming analysis workshop execution, and we are explaining how to transform analysis outcomes such as domain boundaries and aggregates to microservices. </p>
+<p>In <a href="introduction/">this first chapter</a> we are presenting the business process for shipping fresh good over sees and detailing the process analysis using and event centric workshop: "the event storming analysis workshop". The transcript of this analysis is detailed in <a href="analysis/readme/">this chapter</a>. </p>
 <h2 id="design-considerations">Design considerations</h2>
-<p>In the <a href="design/readme/">third chapter</a> we are going in detail on the process analysis to define the requirements for the major microservices to implement.</p>
+<p>In the <a href="design/readme/">third chapter</a> we are detailing how to transform the analysis outcomes into some light design, enough to start coding some microservice.</p>
 <h2 id="architecture">Architecture</h2>
-<p>This quick <a href="design/architecture/">architecture note</a> presents the components working together with the event backbone. </p>
-<h2 id="deployment">Deployment</h2>
+<p>This quick <a href="design/architecture/">architecture note</a> presents the solution components working together with the event backbone. </p>
+<h2 id="pre-requisites">Pre-requisites</h2>
 <p>To make the solution running we need to have to prepare a set of products installed and running:</p>
 <ul>
 <li>Event Streams</li>
 <li>Streaming Analytics</li>
 <li>Kubernetes Cluster (IBM Cloud Private or IBM Kubernetes Service on cloud) or Docker compose.</li>
 </ul>
+<p>The scripts to build, deploy and tests all the solution components, are defined in this source repository: <a href="https://github.com/ibm-cloud-architecture/refarch-kc">https://github.com/ibm-cloud-architecture/refarch-kc</a> under the scripts folder. But each project has its own installation explanations and scripts to build, package and unit tests them separately.  </p>
+<h2 id="deployments">Deployments</h2>
 <p>We can deploy the components of the solution into three environments:</p>
 <ul>
 <li><strong>Public cloud (IBM Cloud)</strong>, <a href="deployments/iks/">see this article</a> for details on how to prepare the needed services.</li>
 <li><strong>Private cloud</strong> (we are using IBM Cloud Private) and <a href="deployments/icp/">see this article</a> for details.</li>
 <li><strong><a href="deployments/local/">Local</a></strong> to your laptop, using docker images and docker compose.</li>
 </ul>
-<h3 id="pre-requisites">Pre-requisites</h3>
-<p>The scripts to build, deploy and tests all the solution components, in one shot, are defined in this source repository: <a href="https://github.com/ibm-cloud-architecture/refarch-kc">https://github.com/ibm-cloud-architecture/refarch-kc</a>. But each project has its own installation explanations and scripts to build, package and unit tests them separately.  </p>
 <h2 id="further-readings">Further readings</h2>
 <ul>
 <li><a href="https://www.ibm.com/cloud/garage/architectures/eventDrivenArchitecture">Event driven architecture in IBM Garage method</a></li>
