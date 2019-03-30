@@ -22,17 +22,17 @@ You will be greatly interested by the subjects addressed in this solution if you
 
 ## Business process statement
 
-In [this first chapter](introduction.md) we are presenting the business process for shipping fresh good over sees and detailing the event storming analysis workshop execution, and we are explaining how to transform analysis outcomes such as domain boundaries and aggregates to microservices. 
+In [this first chapter](introduction.md) we are presenting the business process for shipping fresh good over sees and detailing the process analysis using and event centric workshop: "the event storming analysis workshop". The transcript of this analysis is detailed in [this chapter](analysis/readme.md). 
 
 ## Design considerations
 
-In the [third chapter](design/readme.md) we are going in detail on the process analysis to define the requirements for the major microservices to implement.
+In the [third chapter](design/readme.md) we are detailing how to transform the analysis outcomes into some light design, enough to start coding some microservice.
 
 ## Architecture
 
-This quick [architecture note](design/architecture.md) presents the components working together with the event backbone. 
+This quick [architecture note](design/architecture.md) presents the solution components working together with the event backbone. 
 
-## Deployment
+## Pre-requisites
 
 To make the solution running we need to have to prepare a set of products installed and running:
 
@@ -40,15 +40,16 @@ To make the solution running we need to have to prepare a set of products instal
 * Streaming Analytics
 * Kubernetes Cluster (IBM Cloud Private or IBM Kubernetes Service on cloud) or Docker compose.
 
+The scripts to build, deploy and tests all the solution components, are defined in this source repository: [https://github.com/ibm-cloud-architecture/refarch-kc](https://github.com/ibm-cloud-architecture/refarch-kc) under the scripts folder. But each project has its own installation explanations and scripts to build, package and unit tests them separately.  
+
+## Deployments
+
 We can deploy the components of the solution into three environments:
 
 * **Public cloud (IBM Cloud)**, [see this article](deployments/iks.md) for details on how to prepare the needed services.
 * **Private cloud** (we are using IBM Cloud Private) and [see this article](deployments/icp.md) for details.
 * **[Local](deployments/local.md)** to your laptop, using docker images and docker compose.
 
-### Pre-requisites
-
-The scripts to build, deploy and tests all the solution components, in one shot, are defined in this source repository: [https://github.com/ibm-cloud-architecture/refarch-kc](https://github.com/ibm-cloud-architecture/refarch-kc). But each project has its own installation explanations and scripts to build, package and unit tests them separately.  
 
 ## Further readings
 
