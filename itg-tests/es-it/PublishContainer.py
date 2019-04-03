@@ -25,6 +25,7 @@ TOPIC_NAME = "containers"
 def parseArguments():
     if len(sys.argv) <= 1:
         print("Set the number of container ID to send and the event type")
+        exit(1)
     NB_EVENTS = int(sys.argv[1])
     EVT_TYPE = sys.argv[2]
     print("The arguments are: " , str(sys.argv))
@@ -41,12 +42,11 @@ def prepareProducer():
     producer_options = {
             'bootstrap.servers':  KAFKA_BROKERS,
             'security.protocol': 'SASL_SSL',
-            'ssl.ca.location': '/etc/ssl/certs',
+            'ssl.ca.location': 'es-cert.pem',
             'sasl.mechanisms': 'PLAIN',
             'sasl.username': 'token',
             'sasl.password': KAFKA_APIKEY,
             'api.version.request': True,
-            'broker.version.fallback': '0.10.2.1',
             'log.connection.close' : False,
              'client.id': 'kafka-python-container-test-producer',
         }

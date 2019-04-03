@@ -6,14 +6,25 @@ echo "Kafka pod name is..."
 kpof=$(kubectl get pods -n $ns| grep kafka | awk '{print $1;}'| head -1)
 if [[ -z $kpof ]]
 then
-  echo "Kafka not installed locally on your kubernetes cluster"
+  echo "Kafka not installed on your kubernetes cluster"
   exit
 else 
   echo "Use this pod: $kpof"
 fi
 
+echo "Zookeeper svc name is..."
+zooksvc=$(kubectl get svc -n streams | grep zoo | awk '{print $1;}' | head -1)
+if [[ -z $zooksvc ]]
+then
+  echo "Zookeeper not installed on your kubernetes cluster"
+  exit
+else
+ echo "Use this zookeeper: $zooksvc"
+fi
+
 echo "Get topic list from kafka pod"
 kubectl exec  -n $ns  -ti $kpof -- bash -c "/opt/kafka/bin/kafka-topics.sh --list --zookeeper $zooksvc:2181" > topics
+
 createTopic(){
     bc=$(tail -n+2 topics | grep  $1)
     echo $bc
@@ -25,6 +36,7 @@ createTopic(){
         echo $1 " topic already created"
     fi
 }
+
 createTopic "bluewaterContainer" 
 createTopic "bluewaterShip" 
 createTopic "bluewaterProblem" 

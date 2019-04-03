@@ -24,3 +24,6 @@ cd ../order-query-ms
 
 cd ../../refarch-kc-ui
 ./scripts/buildDocker.sh $kcenv
+
+cd ../../refarch-kc-container-ms/kstreams
+./scripts/buildDocker.sh $kcenv

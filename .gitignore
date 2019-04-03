@@ -1,6 +1,7 @@
 docker/kafka1/
 docker/zookeeper1/
 docker/api-secret.yml
-certs/es-cert.*
+certs/
 scripts/localToICP
 site/
+itg-tests/es-it/*.pem

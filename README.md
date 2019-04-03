@@ -1,16 +1,19 @@
 # K Container Shipment EDA reference implementation
 
-The IBM Event Driven architecture reference implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an [event driven architecture](https://github.com/ibm-cloud-architecture/refarch-eda) with event backbone, functions as service and microservices, and aims to illustrate the different event driven patterns like event sourcing, CQRS and Saga.
+The IBM Event Driven architecture reference implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an [event driven architecture](https://ibm-cloud-architecture.github.io/refarch-eda) with event backbone, functions as service and microservices, and aims to illustrate the different event driven patterns like event sourcing, CQRS and Saga.
 
-To read the detail of this project go to [the book view.](http://ibm-cloud-architecture.github.io/refarch-kc)
+As our content is like a living book, for better reading experience go to [the book view.](http://ibm-cloud-architecture.github.io/refarch-kc)
 
-### Using the scripts for this root project
+## Clone, build, smoke tests...
 
 We are delivering some scripts which could help you to quickly get the solution cloned, built and deployed locally. Those bash scripts are under the 'scripts` folder.
 
 * To clone all the related projects: `./scripts/clone.sh`
 * To assess your environment and build the docker images needed for build: `./scripts/prepareEnv`.
-* If you want to build a docker image so you do not need to install Java and Maven (This image will be used in the build of all the java based projects). Use the following commands under the `scripts` folder (prepareEnv shell script does it too):
+
+### Build
+
+If you want to build a docker image so you do not need to install Java and Maven (This image will be used in the build of all the java based projects). Use the following commands under the `scripts` folder (prepareEnv shell script does it for you):
 
 ```
 $ docker build -t ibmcase/javatools -f docker-java-tools .
@@ -23,7 +26,12 @@ $ docker build -t ibmcase/nodetools -f docker-node-tools .
 $ ./imageStatus
 > ibmcase/nodetools     latest     5bfbc87c143d     30 seconds  ago     1GB
 ```
-* All integration tests in this project are done using python 3. So we encourage to build the image for a python tuned environment
+* All integration tests in this project are done using python 3. So we encourage to build our "python tuned" environment using the command:
+
+```
+$ docker build -t ibmcase/pythontools -f docker-python-tools .
+
+```
 
 * To build all the related projects: `buildAll`
 * To validate all services run correctly, execute the `smokeLocalTests` scripts.
