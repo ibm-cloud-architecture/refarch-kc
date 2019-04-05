@@ -1,6 +1,6 @@
 # Container Shipment EDA reference implementation
 
-The IBM Event Driven architecture reference implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an [event driven architecture](https://ibm-cloud-architecture.github.io/refarch-eda/) with event backbone, functions as service and microservices, and aims to illustrate the different event driven patterns like event sourcing, CQRS and Saga.
+The IBM Event Driven architecture reference implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an [event driven architecture](https://ibm-cloud-architecture.github.io/refarch-eda/) with event backbone, functions as service and microservices. It aims to illustrate the different event driven patterns like event sourcing, CQRS and Saga and give a lot of best practices around implementing event driven microservices. 
 
 ## What you will learn
 
@@ -10,7 +10,9 @@ The IBM Event Driven architecture reference implementation illustrates the deplo
 * How to deploy your solution to IBM Cloud Kubernetes service (Public cloud), or to IBM Cloud Private (kubernetes based) or run locally with Docker compose.
 * How to use event store (Kafka topics) as source for machine learning data source to build training and test sets.
 * How to implement a Test Driven Development for the Order microservice uisng mockito to avoid Kafka dependency.
-* Use python, nodejs, java Kafka APIs.
+* How to implement the same container management microservices in python, nodejs, java microprofile 2 with Kafka streams API, and springboot, kafka template and PostgreSQL.
+
+This is a lot, not all is done yet. But consider this content as a living book, with the left side representing major subjects and each subject with its own table of contents. 
 
 ## Target Audiences
 
@@ -22,25 +24,25 @@ You will be greatly interested by the subjects addressed in this solution if you
 
 ## Business process statement
 
-In [this first chapter](introduction.md) we are presenting the business process for shipping fresh good over sees and detailing the process analysis using and event centric workshop: "the event storming analysis workshop". The transcript of this analysis is detailed in [this chapter](analysis/readme.md). 
+In [this first chapter](introduction.md) we are presenting the business process for shipping fresh good over sees and we are detailing the analysis we have done in San Francisco in November 2108 using the event storming analysis workshop. You could read more on how to organize and execute such workshop [here](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/readme/). The workshop execution transcript is detailed in [a second chapter](analysis/readme.md). 
 
 ## Design considerations
 
-In the [third chapter](design/readme.md) we are detailing how to transform the analysis outcomes into some light design, enough to start coding some microservice.
+In the [third chapter](design/readme.md) we are detailing how to transform the analysis outcomes into some light design, conceptual view, just enough to start coding some microservices.
 
 ## Architecture
 
-This quick [architecture note](design/architecture.md) presents the solution components working together with the event backbone. 
+This quick [architecture chapter](design/architecture.md) presents the solution components working together with the event backbone. 
 
 ## Pre-requisites
 
-To make the solution running we need to have to prepare a set of products installed and running:
+The end to end solution can be demonstrated from a unique user interface and involve multiple microservices deployed independently. As some of those components are using IBM products or IBM Cloud service, you may need to provision such services. We propose a local environment running on laptop. As of now only Mac is supported. But the solution is also deployed on IBM Cloud and is tested to run on IBM Cloud Private. So basically we need the following:
 
-* Event Streams
+* Event Streams or Kafka
 * Streaming Analytics
 * Kubernetes Cluster (IBM Cloud Private or IBM Kubernetes Service on cloud) or Docker compose.
 
-The scripts to build, deploy and tests all the solution components, are defined in this source repository: [https://github.com/ibm-cloud-architecture/refarch-kc](https://github.com/ibm-cloud-architecture/refarch-kc) under the scripts folder. But each project has its own installation explanations and scripts to build, package and unit tests them separately.  
+The scripts to build, deploy and tests all the solution components, are defined in this source repository: [https://github.com/ibm-cloud-architecture/refarch-kc](https://github.com/ibm-cloud-architecture/refarch-kc) under the `scripts` folder. But each project has its own installation explanations and scripts to build, package, tests and deploy to Kubernetes.  
 
 ## Deployments
 
@@ -50,6 +52,17 @@ We can deploy the components of the solution into three environments:
 * **Private cloud** (we are using IBM Cloud Private) and [see this article](deployments/icp.md) for details.
 * **[Local](deployments/local.md)** to your laptop, using docker images and docker compose.
 
+## To be finished
+
+The following items are not yet completed:
+
+* Microprofile 2.2 container service with kafka streams
+* Springboot - kafka template for container
+* An end to end automated test scenario
+* A demonstration script to present the process execution from end users point of view
+* A set of tests to validate event sourcing, and Saga patterns
+* Cold chain predictive model
+* Container predictive maintenance model and deployment.
 
 ## Further readings
 

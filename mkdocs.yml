@@ -8,8 +8,10 @@ nav:
   - Design considerations and microservice identifications: ./design/readme.md
   - Architecture: ./design/architecture.md
   - Development practices:
-    - Order microservice with CQRS and Event Sourcing: https://github.com/ibm-cloud-architecture/refarch-kc-order-ms
+    - Order microservice with CQRS and Event Sourcing: https://ibm-cloud-architecture.github.io/refarch-kc-order-ms
     - Container microservice with event sourcing and Kafka streams: https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/kstreams/
+    - Container microservice with Python:  https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/flask
+    - Container microservice with Springboot - Spring Kafka and PostgreSQL:  https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/springboot
   - Related repositories: ./deployments/reposlist.md
   - Deployments:
     - Run locally with Docker Compose: ./deployments/local.md

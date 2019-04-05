@@ -1,0 +1,24 @@
+if [[ $# -eq 0 ]];then
+  kcenv="LOCAL"
+else
+  kcenv=$1
+fi
+
+case "$kcenv" in
+   IBMCLOUD)
+        export KAFKA_BROKERS=kafka03-prod02.messagehub.services.us-south.bluemix.net:9093,kafka01-prod02.messagehub.services.us-south.bluemix.net:9093,kafka02-prod02.messagehub.services.us-south.bluemix.net:9093,kafka04-prod02.messagehub.services.us-south.bluemix.net:9093,kafka05-prod02.messagehub.services.us-south.bluemix.net:9093
+        export KAFKA_APIKEY=<>
+        export KAFKA_ENV=IBMCLOUD
+        ;;
+   ICP)
+        export KAFKA_BROKERS=<>
+        export KAFKA_ENV=ICP
+        export KAFKA_APIKEY=<>
+    ;;
+   LOCAL)
+        export KAFKA_BROKERS=kafka1:9092
+        export ORDER_CMD_MS=ordercmd:10080
+        export ORDER_QUERY_MS=orderquery:11080
+        export CONTAINER_MS=containerkstreams:12080
+   ;;
+esac

@@ -37,6 +37,7 @@ then
    ipadd=169.61.93.29
 fi
 echo $ipadd
+
 # smokeTest fleetms refarch-kc-ms/fleet-ms testGetFleetNames.sh
 
 # smokeTest voyagesms refarch-kc-ms/voyages-ms testGetVoyages.sh
