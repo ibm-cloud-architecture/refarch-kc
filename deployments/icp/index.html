@@ -334,7 +334,7 @@
 
 
   <li class="md-nav__item">
-    <a href="https://github.com/ibm-cloud-architecture/refarch-kc-order-ms" title="Order microservice with CQRS and Event Sourcing" class="md-nav__link">
+    <a href="https://ibm-cloud-architecture.github.io/refarch-kc-order-ms" title="Order microservice with CQRS and Event Sourcing" class="md-nav__link">
       Order microservice with CQRS and Event Sourcing
     </a>
   </li>
@@ -348,6 +348,30 @@
   <li class="md-nav__item">
     <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/kstreams/" title="Container microservice with event sourcing and Kafka streams" class="md-nav__link">
       Container microservice with event sourcing and Kafka streams
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/flask" title="Container microservice with Python" class="md-nav__link">
+      Container microservice with Python
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/springboot" title="Container microservice with Springboot - Spring Kafka and PostgreSQL" class="md-nav__link">
+      Container microservice with Springboot - Spring Kafka and PostgreSQL
     </a>
   </li>
 
@@ -458,6 +482,26 @@
     Configure topics and secrets
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#topics" title="Topics" class="md-nav__link">
+    Topics
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-key" title="API Key" class="md-nav__link">
+    API Key
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -504,8 +548,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#code-dependencies" title="Code dependencies" class="md-nav__link">
-    Code dependencies
+  <a href="#code-considerations" title="Code considerations" class="md-nav__link">
+    Code considerations
   </a>
   
 </li>
@@ -621,6 +665,26 @@
     Configure topics and secrets
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#topics" title="Topics" class="md-nav__link">
+    Topics
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-key" title="API Key" class="md-nav__link">
+    API Key
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -667,8 +731,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#code-dependencies" title="Code dependencies" class="md-nav__link">
-    Code dependencies
+  <a href="#code-considerations" title="Code considerations" class="md-nav__link">
+    Code considerations
   </a>
   
 </li>
@@ -736,9 +800,11 @@
 <p>The installation is documented in the product documentation and in our <a href="https://ibm-cloud-architecture.github.io/refarch-eda/deployments/eventstreams/">own note here.</a></p>
 <p>If not done go to the console 'toolbox tab' and download the Event Streams CLI and install it on top of ICP CLI using <code>cloudctl plugin install ./es-plugin</code>. Once installed, the IBM Event Streams CLI is invoked using <code>cloudctl es</code>.</p>
 <h2 id="configure-topics-and-secrets">Configure topics and secrets</h2>
-<p>To access the console, connect to the ICP console and select the deployment named something like: "*-es-ui-deploy" under the <code>streams</code> namespace. You can create the topics using the Event Streams console</p>
+<p>To access the console, connect to the ICP console and select the deployment named something like: "*-es-ui-deploy" under the <code>streams</code> namespace. </p>
+<h3 id="topics">Topics</h3>
+<p>You can create the topics using the Event Streams console:</p>
 <p><img alt="" src="../es-icp-topics.png" />  </p>
-<p>or the use a set of commands like below, which is done in the <code>scripts/createLocalTopicsOnK8S.sh</code> </p>
+<p>or the use a set of commands like below, which are done for you in the script: <code>scripts/createLocalTopicsOnK8S.sh</code>.</p>
 <pre><code class="shell"># get the name of the Kafka pod
 $ kubectl get pods  -n streams | grep kafka | awk '{print $1;}'
 &gt; rolling-streams-ibm-es-kafka-sts-0                              
@@ -751,11 +817,13 @@ rolling-streams-ibm-es-zookeeper-fixed-ip-svc-0
 $ kubectl exec -n streams  -ti rolling-streams-ibm-es-kafka-sts-0   -- bash -c &quot;/opt/kafka/bin/kafka-topics.sh --create  --zookeeper $zooksvc:2181 --replication-factor 1 --partitions 1 --topic orders&quot;
 </code></pre>
 
-<p>Define an API key. You can specify keys at the topic and consumer group levels or use a unique key for all topics and all consumer groups. Once you have the API key define a <code>secret</code> named "eventstreams-apikey" with the command:</p>
+<h3 id="api-key">API Key</h3>
+<p>Define an API key using the Event Stream Console. You can specify keys at the topic and consumer group levels or use a unique key for all topics and all consumer groups. Once you have the API key, define a <code>secret</code> named "eventstreams-apikey" with the command:</p>
 <pre><code class="shell"> $ kubectl create secret generic eventstreams-apikey --from-literal=binding='&lt;api-key&gt;' -n greencompute
  $ kubectl describe secrets -n greencompute
 </code></pre>
 
+<p>This <code>eventstreams-apikey</code> secret will be used in the Helm chart settings and kubernetes deployment descriptor (see <a href="#code-considerations">this section</a> later in this article).</p>
 <h2 id="private-docker-registry">Private docker registry</h2>
 <p>When deploying ICP, operators can define a private registry that will be used to host the docker images created. To get the URL goes to the ICP console, then Manage &gt; Helm repositories (e.g. https://streamer.icp:8443/helm-repo/charts). </p>
 <p><img alt="" src="../icp-repos.png" /></p>
@@ -859,23 +927,62 @@ streams    rolling-streams-ibm-es-zook-c4c0-0    100m (1%)     100m (1%)   750Mi
 
 </code></pre>
 
-<h3 id="code-dependencies">Code dependencies</h3>
-<p>Using the following command we can assess the advertiser.listerners address and port number. When running local the localhost:9092 is where the broker is listening to connetion. When deploying to kubernetes there are 3 different listeners: local to the cluster, secured or not, and external to the cluster.</p>
+<p>The REST endpoint for the health resource could look at the connection to the brokers and other internal state to assess the state of the consumers and producers and retun 503 in case of unhealthy container.</p>
+<h3 id="code-considerations">Code considerations</h3>
+<p>Using the following command we can assess the <code>advertiser.listerners</code> address and port number. When running local the <code>localhost:9092</code> is where the broker is listening to connetion. When deploying to kubernetes there are 3 different listeners: internal to the cluster, secured or not, and external to the cluster.</p>
 <pre><code class="shell">$ cloudctl es broker-config 0 | grep listeners
 advertised.listeners   INTERNAL://:9092,INTERNAL_SECURE://:8084,EXTERNAL://9.46.64.104:31244  
 </code></pre>
 
 <p>You code to be portable between IKS and ICP needs to get brokers advertiser addresses, API KEY from environment variables, and for SSL certificates use mount point and Java keystore. Easy written than done. Let go into details. </p>
-<p><TBC></p>
-<p>Before connecting a client, ensure the necessary certificates are configured within your client environment. </p>
-<p>Use the TLS and CA certificates if you provided them during installation, or export the self-signed public certificate from the browser. When consumers and producers are Java based code we need to keep certificate in Java Keystore. The easiest way is to modify the dockerfile to copy the cert file and use the keytool to configure the Java Keystore. Something like</p>
-<pre><code class="Dockerfile">COPY es-cert.der /tmp/es-cert.der
-RUN  echo yes | keytool -importcert -alias startssl -keystore \
-    $JAVA_HOME/lib/security/cacerts -storepass changeit -file /tmp/es-cert.der 
+<p>The API key is defined in a secret named <code>eventstreams-apikey</code> as presented <a href="#api-key">above</a>. The deployment is declaring that the <code>KAFKA_APIKEY</code> is using this secret using the following declaration:</p>
+<pre><code class="yaml">- env:
+    - name: KAFKA_APIKEY
+        valueFrom: 
+            secretKeyRef:
+                name: eventstreams-apikey
+                key: binding
 </code></pre>
 
-<p>So if we deploy to local environment or IKS we will not use the same approach, so we may need to control the dockerfile with environment variables and scripts. </p>
+<p>As introduced in <a href="https://ibm.github.io/event-streams/getting-started/client/">this event streams note</a> the code sets the kafka properties needed to connect to the backbone. The API key is used as password for the SASL_JAAS_CONFIG, so the code gets it from the environment variables:</p>
+<pre><code class="java">properties.put(SaslConfigs.SASL_JAAS_CONFIG,
+        &quot;org.apache.kafka.common.security.plain.PlainLoginModule required username=\&quot;token\&quot; password=\&quot;&quot;
+          + env.get(&quot;KAFKA_APIKEY&quot;) + &quot;\&quot;;&quot;);
+</code></pre>
+
+<p>Now for the CA certificates, we need to specify two environment variables: one for the truststore location and one for the truststore password and use one secret to keep the password. </p>
+<pre><code class="java">    properties.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, env.get(&quot;JKS_LOCATION&quot;));
+    properties.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, env.get(&quot;TRUSTSTORE_PWD&quot;));
+</code></pre>
+
+<p>The environment variables are added to the Deployment yaml file.</p>
+<pre><code class="yaml"> - name: JKS_LOCATION
+   value: &quot;{{ .Values.eventstreams.jks_location }}&quot;
+- name: TRUSTSTORE_PWD
+    valueFrom: 
+        secretKeyRef:
+            name: truststore_pwd
+            key: binding 
+
+</code></pre>
+
+<p>And one new secret is created, while the path to the JKS_LOCATION will be in the Liberty server folder and set in the Values.yaml. </p>
+<pre><code class="shell">$ kubectl create secret generic truststore-pwd --from-literal=binding='&lt;truststore_pwd&gt;' -n greencompute
+</code></pre>
+
+<p>For the certificate itself use the TLS and CA certificates if you provided them during ICP installation, or export the self-signed public certificate (a file named <code>es-cert.jks</code>) from the Event Streams console.</p>
+<p><img alt="" src="../es-icp-connection.png" />   </p>
+<p>When consumers and producers are Java based, we need to keep certificate in Java Keystore. The easiest way is to modify the dockerfile to copy the cert file into a folder in the Liberty server scope (e.g. <code>liberty/wlp/usr/servers/defaultServer/resources/security</code> ) or doing it in the build script.</p>
+<p>Also as the application is doing outbound call using SSL, we need to add some configuration to the server.xml, see the <a href="https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_config_ssl_outbound.html">product documentation on how to configure SSL outbound.</a></p>
 <h3 id="troubleshouting">Troubleshouting</h3>
+<p>Here is a way to assess, within the kafka container, how the message arrived on a topic:</p>
+<pre><code class="shell">$ kubectl exec -ti rolling-streams-ibm-es-kafka-sts-0 -n streams bash
+nobody@rolling-streams-ibm-es-kafka-sts-0 $ cd /opt/kafka/bin
+nobody@rolling-streams-ibm-es-kafka-sts-0:/opt/kafka/bin$ ./kafka-console-consumer.sh --bootstrap-server rolling-streams-ibm-es-kafka-broker-svc-0.streams.svc.cluster.local:9092 --topic containers --from-beginning
+
+&gt; {&quot;timestamp&quot;: 1554338808, &quot;type&quot;: &quot;ContainerAdded&quot;, &quot;version&quot;: &quot;1&quot;, &quot;containerID&quot;: &quot;c_0&quot;, &quot;payload&quot;: {&quot;containerID&quot;: &quot;c_0&quot;, &quot;type&quot;: &quot;Reefer&quot;, &quot;status&quot;: &quot;atDock&quot;, &quot;city&quot;: &quot;Oakland&quot;, &quot;brand&quot;: &quot;brand-reefer&quot;, &quot;capacity&quot;: 100}}
+</code></pre>
+
 <h4 id="no-resolvable-bootstrap-urls-given-in-bootstrapservers">No resolvable bootstrap urls given in bootstrap.servers</h4>
 <p>It is obvious reason, but when deploying a kafka consumer or producer on Kubernetes it is important to know which name to use. As the communication will be on the overlay network we should use the internal broker name. The name will be linked to the deployed configuration of Kafka or event streams. Here are a set of commands to debug that:</p>
 <pre><code class="shell"># Get the namespace name for the deployed kafka instance
