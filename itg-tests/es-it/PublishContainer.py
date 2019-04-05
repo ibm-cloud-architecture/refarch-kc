@@ -54,7 +54,7 @@ def prepareProducer():
 
 def sendContainerEvent(producer,eventType,idx):
     for i in range(0,idx,1):
-        cid = "d_" + str(i)
+        cid = "c_" + str(i)
         tstamp = int(time.time())
         data = {"timestamp": tstamp,
             "type": eventType,

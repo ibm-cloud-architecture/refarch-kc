@@ -8,11 +8,15 @@ If not done go to the console 'toolbox tab' and download the Event Streams CLI a
 
 ## Configure topics and secrets
 
-To access the console, connect to the ICP console and select the deployment named something like: "*-es-ui-deploy" under the `streams` namespace. You can create the topics using the Event Streams console
+To access the console, connect to the ICP console and select the deployment named something like: "*-es-ui-deploy" under the `streams` namespace. 
+
+### Topics
+
+You can create the topics using the Event Streams console:
 
 ![](es-icp-topics.png)  
 
- or the use a set of commands like below, which is done in the `scripts/createLocalTopicsOnK8S.sh ` 
+or the use a set of commands like below, which are done for you in the script: `scripts/createLocalTopicsOnK8S.sh `.
 
 ```shell
 # get the name of the Kafka pod
@@ -27,13 +31,15 @@ rolling-streams-ibm-es-zookeeper-fixed-ip-svc-0
 $ kubectl exec -n streams  -ti rolling-streams-ibm-es-kafka-sts-0   -- bash -c "/opt/kafka/bin/kafka-topics.sh --create  --zookeeper $zooksvc:2181 --replication-factor 1 --partitions 1 --topic orders"
 ```
 
+### API Key
 
-Define an API key. You can specify keys at the topic and consumer group levels or use a unique key for all topics and all consumer groups. Once you have the API key define a `secret` named "eventstreams-apikey" with the command:
+Define an API key using the Event Stream Console. You can specify keys at the topic and consumer group levels or use a unique key for all topics and all consumer groups. Once you have the API key, define a `secret` named "eventstreams-apikey" with the command:
 
 ```shell
  $ kubectl create secret generic eventstreams-apikey --from-literal=binding='<api-key>' -n greencompute
  $ kubectl describe secrets -n greencompute
 ```
+This `eventstreams-apikey` secret will be used in the Helm chart settings and kubernetes deployment descriptor (see [this section](#code-considerations) later in this article).
 
 ## Private docker registry
 
@@ -158,10 +164,11 @@ In kafka there are others things to consider. For liveness an open port respondi
 
 ``` 
 
+The REST endpoint for the health resource could look at the connection to the brokers and other internal state to assess the state of the consumers and producers and retun 503 in case of unhealthy container.
 
-### Code dependencies
+### Code considerations
 
-Using the following command we can assess the advertiser.listerners address and port number. When running local the localhost:9092 is where the broker is listening to connetion. When deploying to kubernetes there are 3 different listeners: local to the cluster, secured or not, and external to the cluster.
+Using the following command we can assess the `advertiser.listerners` address and port number. When running local the `localhost:9092` is where the broker is listening to connetion. When deploying to kubernetes there are 3 different listeners: internal to the cluster, secured or not, and external to the cluster.
 
 ```shell
 $ cloudctl es broker-config 0 | grep listeners
@@ -170,21 +177,71 @@ advertised.listeners   INTERNAL://:9092,INTERNAL_SECURE://:8084,EXTERNAL://9.46.
 
 You code to be portable between IKS and ICP needs to get brokers advertiser addresses, API KEY from environment variables, and for SSL certificates use mount point and Java keystore. Easy written than done. Let go into details. 
 
-<TBC>
+The API key is defined in a secret named `eventstreams-apikey` as presented [above](#api-key). The deployment is declaring that the `KAFKA_APIKEY` is using this secret using the following declaration:
 
-Before connecting a client, ensure the necessary certificates are configured within your client environment. 
+```yaml
+- env:
+    - name: KAFKA_APIKEY
+        valueFrom: 
+            secretKeyRef:
+                name: eventstreams-apikey
+                key: binding
+```
+As introduced in [this event streams note](https://ibm.github.io/event-streams/getting-started/client/) the code sets the kafka properties needed to connect to the backbone. The API key is used as password for the SASL_JAAS_CONFIG, so the code gets it from the environment variables:
 
-Use the TLS and CA certificates if you provided them during installation, or export the self-signed public certificate from the browser. When consumers and producers are Java based code we need to keep certificate in Java Keystore. The easiest way is to modify the dockerfile to copy the cert file and use the keytool to configure the Java Keystore. Something like
-
-```Dockerfile
-COPY es-cert.der /tmp/es-cert.der
-RUN  echo yes | keytool -importcert -alias startssl -keystore \
-    $JAVA_HOME/lib/security/cacerts -storepass changeit -file /tmp/es-cert.der 
+```java
+properties.put(SaslConfigs.SASL_JAAS_CONFIG,
+        "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"token\" password=\""
+          + env.get("KAFKA_APIKEY") + "\";");
 ```
 
-So if we deploy to local environment or IKS we will not use the same approach, so we may need to control the dockerfile with environment variables and scripts. 
+Now for the CA certificates, we need to specify two environment variables: one for the truststore location and one for the truststore password and use one secret to keep the password. 
+
+```java
+    properties.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, env.get("JKS_LOCATION"));
+    properties.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, env.get("TRUSTSTORE_PWD"));
+```
+
+The environment variables are added to the Deployment yaml file.
+
+```yaml
+ - name: JKS_LOCATION
+   value: "{{ .Values.eventstreams.jks_location }}"
+- name: TRUSTSTORE_PWD
+    valueFrom: 
+        secretKeyRef:
+            name: truststore_pwd
+            key: binding 
+
+```
+
+And one new secret is created, while the path to the JKS_LOCATION will be in the Liberty server folder and set in the Values.yaml. 
+
+```shell
+$ kubectl create secret generic truststore-pwd --from-literal=binding='<truststore_pwd>' -n greencompute
+```
+
+For the certificate itself use the TLS and CA certificates if you provided them during ICP installation, or export the self-signed public certificate (a file named `es-cert.jks`) from the Event Streams console.
+
+![](es-icp-connection.png)   
+
+When consumers and producers are Java based, we need to keep certificate in Java Keystore. The easiest way is to modify the dockerfile to copy the cert file into a folder in the Liberty server scope (e.g. `liberty/wlp/usr/servers/defaultServer/resources/security` ) or doing it in the build script.
+
+Also as the application is doing outbound call using SSL, we need to add some configuration to the server.xml, see the [product documentation on how to configure SSL outbound.](https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_config_ssl_outbound.html)
+
 
 ### Troubleshouting
+
+Here is a way to assess, within the kafka container, how the message arrived on a topic:
+
+```shell
+$ kubectl exec -ti rolling-streams-ibm-es-kafka-sts-0 -n streams bash
+nobody@rolling-streams-ibm-es-kafka-sts-0 $ cd /opt/kafka/bin
+nobody@rolling-streams-ibm-es-kafka-sts-0:/opt/kafka/bin$ ./kafka-console-consumer.sh --bootstrap-server rolling-streams-ibm-es-kafka-broker-svc-0.streams.svc.cluster.local:9092 --topic containers --from-beginning
+
+> {"timestamp": 1554338808, "type": "ContainerAdded", "version": "1", "containerID": "c_0", "payload": {"containerID": "c_0", "type": "Reefer", "status": "atDock", "city": "Oakland", "brand": "brand-reefer", "capacity": 100}}
+```
+
 
 #### No resolvable bootstrap urls given in bootstrap.servers
 

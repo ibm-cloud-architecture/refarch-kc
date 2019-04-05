@@ -8,7 +8,7 @@ echo $kafka
 # get current topics
 docker exec  -ti $kafka /bin/bash -c "kafka-topics --list --zookeeper zookeeper1:2181" > topics
 createTopic(){
-    bc=$(tail -n+2 $2 | grep  $1)
+    bc=$(tail -n+2 topics| grep  $1)
     echo $bc
     if [ -z "$bc" ]
     then
@@ -19,11 +19,13 @@ createTopic(){
     fi
 }
 
-createTopic "bluewaterContainer" topics
-createTopic "bluewaterShip" topics
-createTopic "bluewaterProblem" topics
-createTopic "orders" topics
-createTopic "errors" topics
-createTopic "containers" topics
-createTopic "containerMetrics" topics
+createTopic "bluewaterContainer" 
+createTopic "bluewaterShip" 
+createTopic "bluewaterProblem" 
+createTopic "orders" 
+createTopic "errors" 
+createTopic "containers" 
+createTopic "containerMetrics" 
+createTopic "rejected-orders"
+createTopic "allocated-orders"
 rm topics

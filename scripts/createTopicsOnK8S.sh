@@ -32,7 +32,7 @@ createTopic(){
     then
         echo "create " $1
         kubectl exec -n $ns  -ti $kpof   -- bash -c "/opt/kafka/bin/kafka-topics.sh --create  --zookeeper $zooksvc:2181 --replication-factor 1 --partitions 1 --topic $1"
-  else 
+    else 
         echo $1 " topic already created"
     fi
 }
@@ -41,6 +41,8 @@ createTopic "bluewaterContainer"
 createTopic "bluewaterShip" 
 createTopic "bluewaterProblem" 
 createTopic "orders" 
+createTopic "rejected-orders"
+createTopic "allocated-orders"
 createTopic "errors" 
 createTopic "containers" 
 createTopic "containerMetrics" 
