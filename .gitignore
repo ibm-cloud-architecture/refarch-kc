@@ -3,5 +3,6 @@ docker/zookeeper1/
 docker/api-secret.yml
 certs/
 scripts/localToICP
+scripts/setenv.sh
 site/
 itg-tests/es-it/*.pem

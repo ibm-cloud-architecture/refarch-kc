@@ -6,7 +6,7 @@ if [[ $PWD = */scripts ]]; then
 fi
 
 if [[ $# -eq 0 ]];then
-  kcenv="local"
+  kcenv="LOCAL"
 else
   kcenv=$1
 fi
