@@ -105,19 +105,22 @@ The documentation located [here](https://github.com/ibm-cloud-architecture/refar
 ## Run the solution on IBM Cloud Kubernetes Services
 
 ### Event stream API key
+
 The Event streams broker API key is needed to connect any deployed consumers or producers within kubernetes cluster to access the service in IBM Cloud. To avoid sharing security keys, we propose to define a kubernetes secret and deploy it to the IKS cluster.
 
-* Define a Event Stream API key secret: To use Event Streams, we need to get the API key and configure a secret under the `browncompute` namespace.  
-  ```
-  $ kubectl create secret generic eventstreams-apikey --from-literal=binding='<replace with api key>' -n browncompute
-  # Verify the secrets
-  $ kubectl describe secrets -n browncompute
-  ```   
-  This secret is used by all the solution microservices which are using Kafka / Event Streams. The detail of how we use it with environment variables, is described in one of the project [here](https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/fleet-ms/README.md#run-on-ibm-cloud-with-kubernetes-service)  
+Define a Event Stream API key secret: To use Event Streams, we need to get the API key and configure a secret under the `browncompute` namespace.  
+
+```shell
+$ kubectl create secret generic eventstreams-apikey --from-literal=binding='<replace with api key>' -n browncompute
+# Verify the secrets
+$ kubectl describe secrets -n browncompute
+```   
+
+This secret is used by all the solution microservices which are using Kafka / Event Streams. The detail of how we use it with environment variables, is described in one of the project [here](https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/fleet-ms/README.md#run-on-ibm-cloud-with-kubernetes-service)  
 
 ### Private Registry Token
 
-Each helm chart specify the name of an image to load to create the containers / pods. The image name is from an private repository. To let kubernetes scheduler being able to access the registry we need to define a secret to hold the security token. Here is an extract of a deployment yaml referencing the `browncompute-registry-secret` secret.
+Each helm chart specify the name of an image to load to create the containers / pods. The image name is from a private repository. To let kubernetes scheduler being able to access the registry, we need to define a secret to hold the security token. Here is an extract of a deployment yaml referencing the `browncompute-registry-secret` secret.
 
 ```yaml
 spec:
@@ -163,10 +166,10 @@ You will see something like below.
 | default-token-ggwl2  |  kubernetes.io/service-account-token  | 3  |   41m  |  
 | eventstreams-apikey  |  Opaque   |      1   | 24m  |   
 
-Now for each microservice of the solution, we have defined a helm chart and a script (deployHelm) to deploy it to IKS. 
+Now for each microservice as part of the solution, we have defined helm chart and a script (deployHelm) to deploy to IKS. 
 
 This step is done one time only.
-See product documentation [for detail.](https://console.bluemix.net/docs/containers/cs_dedicated_tokens.html)
+See also the product documentation [for more detail.](https://console.bluemix.net/docs/containers/cs_dedicated_tokens.html)
 
 ### Push images
 

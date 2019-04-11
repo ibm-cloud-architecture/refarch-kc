@@ -2,9 +2,17 @@
 
 This demo script is using the localhost deployment with a mapping of the host name kcsolution to localhost defined in the `/etc/hosts` file. For IBM Cloud change the hostname accordingly. 
 
-Here is how to execute the business process step by step:
+Here is how to execute the business process step by step using the demonstration APIs and some scripts. 
+
+## Pre-requisites
+
+Set the following IP address - hostname mapping:
+
+* Hostname `kcsolution` to map to localhost when running on local computer
+* 
 
 ## Step 1: Manufacturer create an order:
+
 * Go to the http://kcsolution:3110 URL to access the demonstration home page:
 
 ![kc-home](kc-home.png)
