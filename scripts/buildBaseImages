@@ -1,0 +1,17 @@
+
+echo "----- Verify ibmcloud database CLI is in your environment"
+
+ev=$(ibmcloud cdb deployables-show 2>&1 | grep "not a registered command")
+if [[ $? != 0 ]]
+then
+   ibmcloud plugin install cloud-databases   
+fi
+ibmcloud cdb deployment-cacert Green-DB-PostgreSQL > ../certs/postgresql.pem
+
+echo "----- Transform pem certificates to java der format"
+ openssl x509 -in ../certs/postgresql.pem -inform pem -out ../certs/postgresql.der -outform der
+ openssl x509 -in ../certs/es-cert.pem -inform pem -out ../certs/es-cert.der -outform der
+
+ echo "---- Build base image for liberty"
+ docker build -f docker-kc-liberty -t ibmcase/kc-base-liberty ..
+ docker tag ibmcase/kc-base-liberty us.icr.io/ibmcaseeda/kc-base-liberty

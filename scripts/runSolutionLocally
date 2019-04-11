@@ -1,0 +1,13 @@
+#!/bin/bash
+root_folder=$(cd $(dirname $0); cd ..; pwd)
+. ./script/setenv.sh LOCAL
+
+kafka=$(docker-compose -f ./docker/backbone-compose.yml ps | grep kafka | awk '{ print $1}')
+if [[ $? != 0  ]]
+then
+    docker-compose -f ./docker/backbone-compose.yml up &
+fi
+
+
+
+docker-compose -f kc-solution-compose.yml up &
