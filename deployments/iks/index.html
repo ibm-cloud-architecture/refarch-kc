@@ -777,15 +777,15 @@ $ kubectl get nodes
 <h2 id="run-the-solution-on-ibm-cloud-kubernetes-services">Run the solution on IBM Cloud Kubernetes Services</h2>
 <h3 id="event-stream-api-key">Event stream API key</h3>
 <p>The Event streams broker API key is needed to connect any deployed consumers or producers within kubernetes cluster to access the service in IBM Cloud. To avoid sharing security keys, we propose to define a kubernetes secret and deploy it to the IKS cluster.</p>
-<ul>
-<li>Define a Event Stream API key secret: To use Event Streams, we need to get the API key and configure a secret under the <code>browncompute</code> namespace.<br />
-<code>$ kubectl create secret generic eventstreams-apikey --from-literal=binding='&lt;replace with api key&gt;' -n browncompute
-  # Verify the secrets
-  $ kubectl describe secrets -n browncompute</code> <br />
-  This secret is used by all the solution microservices which are using Kafka / Event Streams. The detail of how we use it with environment variables, is described in one of the project <a href="https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/fleet-ms/README.md#run-on-ibm-cloud-with-kubernetes-service">here</a>  </li>
-</ul>
+<p>Define a Event Stream API key secret: To use Event Streams, we need to get the API key and configure a secret under the <code>browncompute</code> namespace.  </p>
+<pre><code class="shell">$ kubectl create secret generic eventstreams-apikey --from-literal=binding='&lt;replace with api key&gt;' -n browncompute
+# Verify the secrets
+$ kubectl describe secrets -n browncompute
+</code></pre>
+
+<p>This secret is used by all the solution microservices which are using Kafka / Event Streams. The detail of how we use it with environment variables, is described in one of the project <a href="https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/fleet-ms/README.md#run-on-ibm-cloud-with-kubernetes-service">here</a>  </p>
 <h3 id="private-registry-token">Private Registry Token</h3>
-<p>Each helm chart specify the name of an image to load to create the containers / pods. The image name is from an private repository. To let kubernetes scheduler being able to access the registry we need to define a secret to hold the security token. Here is an extract of a deployment yaml referencing the <code>browncompute-registry-secret</code> secret.</p>
+<p>Each helm chart specify the name of an image to load to create the containers / pods. The image name is from a private repository. To let kubernetes scheduler being able to access the registry, we need to define a secret to hold the security token. Here is an extract of a deployment yaml referencing the <code>browncompute-registry-secret</code> secret.</p>
 <pre><code class="yaml">spec:
       imagePullSecrets:
         - name: browncompute-registry-secret
@@ -851,9 +851,9 @@ $ kubectl --namespace browncompute create secret docker-registry browncompute-re
 </tr>
 </tbody>
 </table>
-<p>Now for each microservice of the solution, we have defined a helm chart and a script (deployHelm) to deploy it to IKS. </p>
+<p>Now for each microservice as part of the solution, we have defined helm chart and a script (deployHelm) to deploy to IKS. </p>
 <p>This step is done one time only.
-See product documentation <a href="https://console.bluemix.net/docs/containers/cs_dedicated_tokens.html">for detail.</a></p>
+See also the product documentation <a href="https://console.bluemix.net/docs/containers/cs_dedicated_tokens.html">for more detail.</a></p>
 <h3 id="push-images">Push images</h3>
 <p>This step is done each time you want to deploy the solution to IKS. When using continuous deployment, this step will be automated.</p>
 <p>If you are not connected to IBM Cloud, do the following:   </p>
