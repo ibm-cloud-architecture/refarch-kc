@@ -1,6 +1,7 @@
 FROM websphere-liberty:19.0.0.3-microProfile2
 LABEL maintainer="IBM Java Engineering at IBM Cloud"
-# This is the common image for websphere liberty to include the SSL certicates too
+# This is the common image for websphere liberty to include the SSL certicates needed
+# when deploying service in IKS or ICP
 
 # Work on Event Stream Certificate
 COPY ./certs/es-cert.der  /tmp/es-cert.der

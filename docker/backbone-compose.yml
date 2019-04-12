@@ -1,7 +1,7 @@
 version: '3'
 services:
     zookeeper1:
-        image: zookeeper:latest
+        image: wurstmeister/zookeeper
         hostname: zookeeper1
         ports:
             - "2181:2181"
@@ -13,7 +13,7 @@ services:
             - ./zookeeper1/data:/data
             - ./zookeeper1/datalog:/datalog
     kafka1:
-        image: confluentinc/cp-kafka:5.0.0
+        image: wurstmeister/kafka
         hostname: kafka1
         ports:
             - "9092:9092"
@@ -27,5 +27,6 @@ services:
             KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
         volumes:
             - ./kafka1/data:/var/lib/kafka/data
+            - /var/run/docker.sock:/var/run/docker.sock
         depends_on:
             - zookeeper1

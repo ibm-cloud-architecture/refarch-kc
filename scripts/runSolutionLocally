@@ -8,6 +8,6 @@ then
     docker-compose -f ./docker/backbone-compose.yml up &
 fi
 
-
+solution=$(docker-compose -f ./docker/kc-solution-compose.yml ps | grep kafka | awk '{ print $1}')
 
 docker-compose -f kc-solution-compose.yml up &

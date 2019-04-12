@@ -1,5 +1,6 @@
 # IKS Deployment
 
+In this document, you will learn 
 ## Prepare IBM Cloud Services to run the solution
 
 IBM Cloud offers a set of services to run part of your event driven architecture. We are using the following services for our reference implementation:

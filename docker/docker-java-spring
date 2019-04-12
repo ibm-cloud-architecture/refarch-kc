@@ -1,0 +1,11 @@
+FROM ibmjava:8-sfj
+LABEL maintainer="IBM Java Engineering at IBM Cloud"
+COPY 
+RUN  \
+    echo yes | keytool -importcert -alias postgresql -keystore \
+      $JAVA_HOME/lib/security/cacerts -storepass changeit -file /postgresql.crt.der
+
+ENV JAVA_OPTS="" 
+ENV POSTGRESQL_URL=""
+ENV POSTGRESQL_USER=""
+ENV POSTGRESQL_PWD=""

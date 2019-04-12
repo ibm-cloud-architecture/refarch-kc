@@ -34,30 +34,31 @@ In the [third chapter](design/readme.md) we are detailing how to transform the a
 
 This quick [architecture chapter](design/architecture.md) presents the solution components working together with the event backbone. 
 
-## Pre-requisites
+## Build and Run
 
-The end to end solution can be demonstrated from a unique user interface and involve multiple microservices deployed independently. As some of those components are using IBM products or IBM Cloud service, you may need to provision such services. We propose a local environment running on laptop. As of now only Mac is supported. But the solution is also deployed on IBM Cloud and is tested to run on IBM Cloud Private. So basically we need the following:
+The end to end solution can be demonstrated from a unique user interface and it involves multiple microservices deployed independently. As some of those components are using IBM products or IBM Cloud services, you need to provision such services. We propose to develop with an hybrid environment, using IBM Cloud services, local environment running on your laptop and IBM private cloud cluster (optional). As of now only Mac and Linux development workstation are supported. For the Java development we used Eclipse 2019 edition. So basically we need the following:
 
-* Event Streams or Kafka
-* Streaming Analytics
+* Event Streams on IBM Cloud public or private or Kafka docker image.
+* Streaming Analytics on IBM Cloud public or on ICP for Data.
 * Kubernetes Cluster (IBM Cloud Private or IBM Kubernetes Service on cloud) or Docker compose.
+* Postgresql service in IBM Cloud. This database is used by one service, built with Spring boot, that can be plug and play. It is optional. We want to illustrate with this implementation a reversible practice where we start development on the cloud and migrate to private cloud.
 
-The scripts to build, deploy and tests all the solution components, are defined in this source repository: [https://github.com/ibm-cloud-architecture/refarch-kc](https://github.com/ibm-cloud-architecture/refarch-kc) under the `scripts` folder. But each project has its own installation explanations and scripts to build, package, tests and deploy to Kubernetes.  
+The scripts to build, deploy and tests all the solution components, are defined in this source repository: [https://github.com/ibm-cloud-architecture/refarch-kc](https://github.com/ibm-cloud-architecture/refarch-kc) under the `scripts` folder. But each project has its own installation explanations and scripts to build, package, tests and deploy to the different Kubernetes deployment (private and public). We will go in detail on how to use all those scripts and what they do.
 
 ## Deployments
 
-We can deploy the components of the solution into three environments:
+We can deploy the components of the solution into three different environments:
 
+* **[Local](deployments/local.md)** to your laptop, using docker images and docker compose. 
 * **Public cloud (IBM Cloud)**, [see this article](deployments/iks.md) for details on how to prepare the needed services.
 * **Private cloud** (we are using IBM Cloud Private) and [see this article](deployments/icp.md) for details.
-* **[Local](deployments/local.md)** to your laptop, using docker images and docker compose.
 
-## To be finished
+
+## Still project under development
 
 The following items are not yet completed:
 
 * Microprofile 2.2 container service with kafka streams
-* Springboot - kafka template for container
 * An end to end automated test scenario
 * A demonstration script to present the process execution from end users point of view
 * A set of tests to validate event sourcing, and Saga patterns
