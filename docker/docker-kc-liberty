@@ -5,15 +5,13 @@ LABEL maintainer="IBM Java Engineering at IBM Cloud"
 
 # Work on Event Stream Certificate
 COPY ./certs/es-cert.der  /tmp/es-cert.der
-COPY ./certs/postgresql.der  /tmp/postgresql.der
 USER root
 
 RUN apt-get update -q -y && apt-get dist-upgrade -q -y 
 RUN \
     echo yes | keytool -importcert -alias eventstream -keystore \
       $JAVA_HOME/lib/security/cacerts -storepass changeit -file /tmp/es-cert.der \
-    && echo yes | keytool -importcert -alias postgresql -keystore \
-      $JAVA_HOME/lib/security/cacerts -storepass changeit -file /tmp/postgresql.der
+
 USER 1001
 ARG LICENSE_JAR_URL
 ENV KAFKA_BROKERS=""
