@@ -43,15 +43,15 @@ The end to end solution can be demonstrated from a unique user interface and it 
 * Kubernetes Cluster (IBM Cloud Private or IBM Kubernetes Service on cloud) or Docker compose.
 * Postgresql service in IBM Cloud. This database is used by one service, built with Spring boot, that can be plug and play. It is optional. We want to illustrate with this implementation a reversible practice where we start development on the cloud and migrate to private cloud.
 
-The scripts to build, deploy and tests all the solution components, are defined in this source repository: [https://github.com/ibm-cloud-architecture/refarch-kc](https://github.com/ibm-cloud-architecture/refarch-kc) under the `scripts` folder. But each project has its own installation explanations and scripts to build, package, tests and deploy to the different Kubernetes deployment (private and public). We will go in detail on how to use all those scripts and what they do.
+The scripts to build, deploy and test all the solution components, are defined in this source repository: [https://github.com/ibm-cloud-architecture/refarch-kc](https://github.com/ibm-cloud-architecture/refarch-kc) under the `scripts` folder. But each project has its own installation explanations and scripts to build, package, test and deploy to the different Kubernetes deployment (private and public). We will detail how to use all those scripts and what they do.
 
 ## Deployments
 
 We can deploy the components of the solution into three different environments:
 
-* **[Local](deployments/local.md)** to your laptop, using docker images and docker compose. 
-* **Public cloud (IBM Cloud)**, [see this article](deployments/iks.md) for details on how to prepare the needed services.
-* **Private cloud** (we are using IBM Cloud Private) and [see this article](deployments/icp.md) for details.
+* **[Local](deployments/local.md)** to your laptop, using docker images and docker compose you can run the full solution. 
+* **Public cloud (IBM Cloud)**, [see this article](deployments/iks.md) for details on how to prepare the needed services and to deploy the solution to IKS.
+* **Private cloud** (we are using IBM Cloud Private), [see this article](deployments/icp.md) for details.
 
 
 ## Still project under development
