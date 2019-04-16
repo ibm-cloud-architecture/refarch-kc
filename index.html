@@ -707,13 +707,13 @@
 <li>Kubernetes Cluster (IBM Cloud Private or IBM Kubernetes Service on cloud) or Docker compose.</li>
 <li>Postgresql service in IBM Cloud. This database is used by one service, built with Spring boot, that can be plug and play. It is optional. We want to illustrate with this implementation a reversible practice where we start development on the cloud and migrate to private cloud.</li>
 </ul>
-<p>The scripts to build, deploy and tests all the solution components, are defined in this source repository: <a href="https://github.com/ibm-cloud-architecture/refarch-kc">https://github.com/ibm-cloud-architecture/refarch-kc</a> under the <code>scripts</code> folder. But each project has its own installation explanations and scripts to build, package, tests and deploy to the different Kubernetes deployment (private and public). We will go in detail on how to use all those scripts and what they do.</p>
+<p>The scripts to build, deploy and test all the solution components, are defined in this source repository: <a href="https://github.com/ibm-cloud-architecture/refarch-kc">https://github.com/ibm-cloud-architecture/refarch-kc</a> under the <code>scripts</code> folder. But each project has its own installation explanations and scripts to build, package, test and deploy to the different Kubernetes deployment (private and public). We will detail how to use all those scripts and what they do.</p>
 <h2 id="deployments">Deployments</h2>
 <p>We can deploy the components of the solution into three different environments:</p>
 <ul>
-<li><strong><a href="deployments/local/">Local</a></strong> to your laptop, using docker images and docker compose. </li>
-<li><strong>Public cloud (IBM Cloud)</strong>, <a href="deployments/iks/">see this article</a> for details on how to prepare the needed services.</li>
-<li><strong>Private cloud</strong> (we are using IBM Cloud Private) and <a href="deployments/icp/">see this article</a> for details.</li>
+<li><strong><a href="deployments/local/">Local</a></strong> to your laptop, using docker images and docker compose you can run the full solution. </li>
+<li><strong>Public cloud (IBM Cloud)</strong>, <a href="deployments/iks/">see this article</a> for details on how to prepare the needed services and to deploy the solution to IKS.</li>
+<li><strong>Private cloud</strong> (we are using IBM Cloud Private), <a href="deployments/icp/">see this article</a> for details.</li>
 </ul>
 <h2 id="still-project-under-development">Still project under development</h2>
 <p>The following items are not yet completed:</p>
