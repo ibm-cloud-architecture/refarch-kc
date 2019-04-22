@@ -8,6 +8,7 @@ RUN apt-get update && \
 
  # attach volumes
 VOLUME /volume/gitrepo
+VOLUME root/.m2
 
 # create working directory
 RUN mkdir -p /local/gitrepo
