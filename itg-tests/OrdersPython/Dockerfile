@@ -7,4 +7,4 @@ COPY . /usr/src/app
 RUN pip install -r requirements.txt
 
 ENTRYPOINT [ "python3", "-u", "OrderConsumer.py" ]
-CMD [ "" ]
+

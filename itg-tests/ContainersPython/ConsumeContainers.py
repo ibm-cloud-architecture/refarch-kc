@@ -12,6 +12,11 @@ try:
 except KeyError:
     print("The KAFKA_APIKEY environment variable not set... assume local deployment")
 
+try:
+    KAFKA_ENV = os.environ['KAFKA_ENV']
+except KeyError:
+    KAFKA_ENV='LOCAL'
+
 CID = "c_1"
 TOPIC_NAME="containers"
 
@@ -21,9 +26,20 @@ def parseArguments():
         exit(1)
     CID = sys.argv[1]
     print("The arguments are: " , str(sys.argv))
+    print(KAFKA_ENV)
+    print(KAFKA_BROKERS)
+    print(KAFKA_APIKEY)
 
 def prepareConsumer():
-    options = {
+    if (KAFKA_ENV == 'LOCAL'):
+        options ={
+            'bootstrap.servers':  KAFKA_BROKERS,
+            'auto.offset.reset': 'earliest',
+            'enable.auto.commit': True,
+            'group.id': 'kafka-python-container-test-consumer'
+        }
+    else:
+        options = {
             'bootstrap.servers':  KAFKA_BROKERS,
             'security.protocol': 'SASL_SSL',
             'ssl.ca.location': 'es-cert.pem',
@@ -32,7 +48,7 @@ def prepareConsumer():
             'sasl.password': KAFKA_APIKEY,
             'auto.offset.reset': 'earliest',
             'enable.auto.commit': True,
-            'group.id': 'kafka-python-container-test-consumer',
+            'group.id': 'kafka-python-container-test-consumer'
         }
     return Consumer(options)
 
