@@ -1,0 +1,11 @@
+apiVersion: securityenforcement.admission.cloud.ibm.com/v1beta1
+kind: ImagePolicy
+namespace: greencompute
+metadata:
+  name: postgresql-image-policy
+spec:
+  repositories:
+    - name: docker.io/*
+      policy:
+        va:
+          enabled: false
