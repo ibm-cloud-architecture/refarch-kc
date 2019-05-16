@@ -2,6 +2,8 @@
 
 The IBM Event Driven architecture reference implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an [event driven architecture](https://ibm-cloud-architecture.github.io/refarch-eda/) with event backbone, functions as service and microservices. It aims to illustrate the different event driven patterns like event sourcing, CQRS and Saga and give a lot of best practices around implementing event driven microservices. 
 
+Updated 05/14/2019.
+
 ## What you will learn
 
 * How to apply the event storming methodology and workshop to analyze the business process for fresh good shipment over sees.
@@ -38,12 +40,12 @@ This quick [architecture chapter](design/architecture.md) presents the solution 
 
 The end to end solution can be demonstrated from a unique user interface and it involves multiple microservices deployed independently. As some of those components are using IBM products or IBM Cloud services, you need to provision such services. We propose to develop with an hybrid environment, using IBM Cloud services, local environment running on your laptop and IBM private cloud cluster (optional). As of now only Mac and Linux development workstation are supported. For the Java development we used Eclipse 2019 edition. So basically we need the following:
 
-* Event Streams on IBM Cloud public or private or Kafka docker image.
+* Event Streams instance on IBM Cloud public or Event streams on IBM Cloud private or a Kafka docker image to run locally.
 * Streaming Analytics on IBM Cloud public or on ICP for Data.
-* Kubernetes Cluster (IBM Cloud Private or IBM Kubernetes Service on cloud) or Docker compose.
-* Postgresql service in IBM Cloud. This database is used by one service, built with Spring boot, that can be plug and play. It is optional. We want to illustrate with this implementation a reversible practice where we start development on the cloud and migrate to private cloud.
+* Kubernetes Cluster (IBM Cloud Private or IBM Kubernetes Service on cloud) or Docker compose to run locally.
+* Postgresql service in IBM Cloud. This database is used by one service, built with Spring boot, that can be plug and play. It is optional. We want to illustrate with this implementation a reversibility practice where we start development on the cloud and migrate to private cloud.
 
-The scripts to build, deploy and test all the solution components, are defined in this source repository: [https://github.com/ibm-cloud-architecture/refarch-kc](https://github.com/ibm-cloud-architecture/refarch-kc) under the `scripts` folder. But each project has its own installation explanations and scripts to build, package, test and deploy to the different Kubernetes deployment (private and public). We will detail how to use all those scripts and what they do.
+The scripts to build, deploy and test all the solution components, are defined in this source repository: [https://github.com/ibm-cloud-architecture/refarch-kc](https://github.com/ibm-cloud-architecture/refarch-kc) under the `scripts` folder. But each project has its own installation explanations and scripts to build, package, test and deploy to the different Kubernetes deployment (private and public). We recommend studying those scripts.
 
 ## Deployments
 

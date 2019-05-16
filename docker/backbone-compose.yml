@@ -28,8 +28,9 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
         depends_on:
             - zookeeper1
-    postgres-db:
+    postgresql:
         image: postgres
+        hostname: postgresql
         restart: always
         ports:
             - "5432:5432"

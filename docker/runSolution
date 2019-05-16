@@ -1,9 +1,0 @@
-#!/bin/bash
-if [[ $# -eq 0 ]];then
-  kcenv="LOCAL"
-else
-  kcenv=$1
-fi
-
-. ../scripts/setenv.sh $kcenv
-docker-compose -f kc-solution-compose.yml up

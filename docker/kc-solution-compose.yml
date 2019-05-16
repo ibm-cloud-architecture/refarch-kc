@@ -54,4 +54,16 @@ services:
             KAFKA_ENV: ${KAFKA_ENV}
             KAFKA_BROKERS: ${KAFKA_BROKERS}
             KAFKA_APIKEY: ${KAFKA_APIKEY}
-
+    springcontainerms:
+        image: ibmcase/kc-springcontainerms:latest
+        hostname: springcontainerms
+        ports:
+            - "12081:8080"
+        environment:
+            KAFKA_ENV: ${KAFKA_ENV}
+            KAFKA_BROKERS: ${KAFKA_BROKERS}
+            KAFKA_APIKEY: ${KAFKA_APIKEY}
+            POSTGRESQL_URL: ${POSTGRESQL_URL}
+            POSTGRESQL_USER: ${POSTGRESQL_USER}
+            POSTGRESQL_PWD: ${POSTGRESQL_PWD}
+            POSTGRESQL_CA_PEM: ${POSTGRESQL_CA_PEM}

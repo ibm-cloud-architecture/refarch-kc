@@ -1,13 +1,33 @@
 #!/bin/bash
-root_folder=$(cd $(dirname $0); cd ..; pwd)
-. ./script/setenv.sh LOCAL
 
-kafka=$(docker-compose -f ./docker/backbone-compose.yml ps | grep kafka | awk '{ print $1}')
-if [[ $? != 0  ]]
-then
-    docker-compose -f ./docker/backbone-compose.yml up &
+if [[ $PWD = */scripts ]]; then
+ cd ..
 fi
 
-solution=$(docker-compose -f ./docker/kc-solution-compose.yml ps | grep kafka | awk '{ print $1}')
+source ./scripts/setenv.sh LOCAL
 
-docker-compose -f kc-solution-compose.yml up &
+cd docker
+
+
+kafka=$(docker-compose -f backbone-compose.yml ps | grep kafka | grep Up | awk '{ print $1}')
+if [[ $kafka != "docker_kafka1_1" ]]
+then
+    echo "@@@ Start back end"
+    rm -r kafka1 zookeeper1
+    docker-compose -f backbone-compose.yml up 2>backend.logs &
+    sleep 15
+    ../scripts/createLocalTopics.sh
+else
+    echo "@@@ Back end services are running"
+    docker exec  -ti $kafka /bin/bash -c "/opt/kafka/bin/kafka-topics.sh --list --zookeeper zookeeper1:2181"
+fi
+
+
+solution=$(docker-compose -f kc-solution-compose.yml ps | grep simulator | grep Up | awk '{ print $1}')
+if [[ $solution == "docker_simulator_1" ]]
+then
+    echo "@@@ Start all solution microservices"
+    docker-compose -f kc-solution-compose.yml up 2>&1 1>solution.logs &
+else
+    echo "@@@ all solution microservices are running"
+fi

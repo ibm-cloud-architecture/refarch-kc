@@ -1,0 +1,5 @@
+Creating network "docker_default" with the default driver
+Creating docker_zookeeper1_1 ... 
+Creating docker_postgresql_1 ... 
+[2A[2KCreating docker_zookeeper1_1 ... [32mdone[0m[2BCreating docker_kafka1_1     ... 
+[2A[2KCreating docker_postgresql_1 ... [32mdone[0m[2B[1A[2KCreating docker_kafka1_1     ... [32mdone[0m[1B
