@@ -11,6 +11,10 @@ case "$kcenv" in
         export KAFKA_ADMIN_URL= "https://kafka-admin-prod02.messagehub.services.us-south.bluemix.net:443"
         export KAFKA_ENV=IBMCLOUD
         export CA_LOCATION="./Certificates.pem"
+        export POSTGRESQL_URL="jdbc:postgresql://<>.databases.appdomain.cloud:<>/ibmclouddb?sslmode=verify-full&sslfactory=org.postgresql.ssl.NonValidatingFactory"
+        export POSTGRESQL_USER="ibm_cloud_<>"
+        export POSTGRESQL_PWD="<>"
+        export POSTGRESQL_CA_PEM=""
         ;;
    ICP)
         export KAFKA_BROKERS=<>
@@ -23,5 +27,9 @@ case "$kcenv" in
         export ORDER_CMD_MS=ordercmd:10080
         export ORDER_QUERY_MS=orderquery:11080
         export CONTAINER_SPRING_MS="containerkstreams:12081"
+        export POSTGRESQL_URL="jdbc:postgresql://postgres:5432/postgres"
+        export POSTGRESQL_USER="postgres"
+        export POSTGRESQL_PWD="supersecret"
+        export POSTGRESQL_CA_PEM=""
    ;;
 esac

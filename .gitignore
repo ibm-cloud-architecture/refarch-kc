@@ -6,3 +6,5 @@ scripts/localToICP
 scripts/setenv.sh
 site/
 itg-tests/es-it/*.pem
+postgres-data/
+docker/*.logs

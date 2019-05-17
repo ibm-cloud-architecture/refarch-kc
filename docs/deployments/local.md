@@ -6,7 +6,7 @@ In this document we present how to set up, step by step, your local environment 
 
 ![](local-deployment.png)
 
-Every microservice run in container and two separate docker compose files defined reusable backend services and application specific services.
+Every microservices run in container and two separate docker compose files define reusable the backend services (kafka, zookeeper, postgresql) and the application specific services.
 
 ## Pre requisites 
 
@@ -16,10 +16,10 @@ Every microservice run in container and two separate docker compose files define
 
 ![](docker-preferences.png)
 
-* Be sure to have the following hostnames: `kafka1 postgresql fleetms kcui simulator ordercmd orderquery springcontainerms` mapped to localhost. You can update your `/etc/hosts` with the following line.  
+* Be sure to have the following hostnames: `kafka1 postgresql fleetms kcui simulator ordercmd orderquery springcontainerms postgres` mapped to localhost. You can update your `/etc/hosts` with the following line.  
 
 ```
-  127.0.0.1	localhost kafka1 postgresql fleetms kcui simulator ordercmd orderquery kcsolution springcontainerms 
+  127.0.0.1	localhost kafka1 postgresql fleetms kcui simulator ordercmd orderquery kcsolution springcontainerms postgres
 ```
 
 * If not already done, get a git client. See the following [installation instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). 
@@ -39,18 +39,22 @@ refarch-kc-streams
      * Get [docker and install](https://docs.docker.com/install/) it (if not done yet).
      * Get [maven](https://maven.apache.org/install.html) and add it to your PATH.
      * Get [node and npm](https://nodejs.org/en/)
-     * For python you can use the one from your computer, but we encourage you to use our python docker image. See the [build section](#build-the-solution) below.
 
-## Start Kafka and Zookeeper
+* Most of our integration tests are done in python. To avoid impacting your own python environment, we defined a docker file for this. Go to the `docker` folder and run the following command: `docker build -f docker-python-tools -t ibmcase/python .`. See also the [build section](#build-the-solution) below.
+
+* In the refarch-kc rename `./script/setenv.sh.tmpl` to `./script/setenv.sh`, and modify the variables according to your settings. This file is used by a lot of scripts to set the environment to use for deployment: LOCAL, IBMCLOUD, ICP.
+
+## Start Kafka, Zookeeper and Postgresql
 
 * In one Terminal window, under the `refarch-kc` folder, use our compose file to start the backend components:   
 
-  `$ cd docker &&  docker-compose -f backbone-compose.yml up`.
+  `$ cd docker &&  docker-compose -f backbone-compose.yml up 2>&1 1>backend.logs &`.
 
 It will take some time as it download zookeeper and kafka docker images from dockerhub. When started you should see the following trace:
 ```
 Creating docker_zookeeper1_1 ... done
 Creating docker_kafka1_1     ... done
+Creating docker_postgresql_1 ... done
 Attaching to docker_zookeeper1_1, docker_kafka1_1
 ....
 ```
@@ -72,7 +76,7 @@ cd docker
 docker build -f docker-java-tools -t ibmcase/javatools .
 # build the image for nodejs, angular, npm
 docker build -f docker-node-tools -t ibmcase/nodetools .
-# build the image for python
+# If already done, build the image for python
 docker build  -f docker-python-tools -t ibmcase/python .
 ```
 
@@ -117,13 +121,14 @@ $ source ../scripts/setenv.sh LOCAL
 # Then use docker compose to start all the services
 $ docker-compose -f kc-solution-compose.yml up
 ```
+We have also defined a script to start back end and solution services: `./script/runSolutionLocally`.
 
 1. Verify the different components work fine. You can use the different test scripts we have defined in each of the microservices or use the following URLs:
   * For the [user interface URL http://localhost:3010](http://localhost:3010)
   * The Fleet Simulator [API URL](http://localhost:9080/api/explorer/) or one of its operation to get the fleet names: [http://localhost:9080/fleetms/fleets](http://localhost:9080/fleetms/fleets).
-  * Add an order with the `./scripts/createOrder.sh` in the refarch-kc-orders-ms/order-command-ms project, then look at the orders via the API:  http://localhost:10080/orders
+  * Add an order with the python program under `refarch-kc/itg-tests/OrdersPython` folder, using the script `addOrder.sh`
   * The voyages [http://localhost:3100/voyage](http://localhost:3100/voyage) microservices returns the small list of voyages.
-  * Using the order query microservice [http://localhost:11080/orders/byManuf/GoodManuf](http://localhost:11080/orders/byManuf/GoodManuf) you can get the orders of the "GoodManuf" customer.
+  * Using the order query microservice [http://localhost:11080/orders/byManuf/GoodManuf](http://localhost:11080/orders/byManuf/GoodManuf) you should see the orders of the "GoodManuf" customer.
 
 or run the smoke tests with the script: `localSmokeTests`.
 

@@ -19,12 +19,12 @@ then
     ../scripts/createLocalTopics.sh
 else
     echo "@@@ Back end services are running"
-    docker exec  -ti $kafka /bin/bash -c "/opt/kafka/bin/kafka-topics.sh --list --zookeeper zookeeper1:2181"
+    docker exec  -ti docker_kafka1_1 /bin/bash -c "/opt/kafka/bin/kafka-topics.sh --list --zookeeper zookeeper1:2181"
 fi
 
 
 solution=$(docker-compose -f kc-solution-compose.yml ps | grep simulator | grep Up | awk '{ print $1}')
-if [[ $solution == "docker_simulator_1" ]]
+if [[ $solution != "docker_simulator_1" ]]
 then
     echo "@@@ Start all solution microservices"
     docker-compose -f kc-solution-compose.yml up 2>&1 1>solution.logs &
