@@ -1,19 +1,22 @@
 #!/bin/bash
-if [[ $PWD = */refarch-kc ]]; then
- cd ./scripts
+if [[ $PWD != */refarch-kc ]]; then
+ echo "Run smoke tests from refarch-kc folder"
+ exit 1
 fi
-echo " ====== Local smoke test to validate all component"
 
+echo " ====== Local smoke tests to validate all components"
+source ./scripts/setenv.sh LOCAL
 
 smokeTest(){
   echo "#########################"
-  echo "Smoke test $1"
+  echo "Smoke test $1 $PWD
+  "
   
-  cd ../../$2
-  results=$(./scripts/$3 2>&1 | grep $4)
+  results=$(../$2/scripts/$3 2>&1 | grep $4)
+  echo $results
   if [[ -z "$results" ]]
   then
-      echo "Test failed or not perfect for $1"
+      echo "Test failed or is not perfect for $1"
   else
       echo "Smoke test for $1 works!: $results"
   fi
@@ -23,20 +26,16 @@ smokeTest(){
 rep=$(curl http://localhost:9092 2>&1 | grep reply)
 if [[ -z "$rep" ]] 
 then
-  echo "I need to start kafka and zookeeper."
-  cd ../docker
-  docker-compose -f backbone-compose.yml up &
-  cd ../scripts
+  echo "You need to start kafka and zookeeper using the ./scripts/runSolutionLocally script"
+  exit 1
 fi
 
 # Verify the services run
 rep=$(curl http://localhost:3010/ 2>&1| grep app-root)
 if [[ -z "$rep" ]] 
 then
-  echo "The web app for demonstration is not running, let try to start the solution with docker compose"
-  cd ../docker
-  docker-compose -f kc-solution-compose.yml up &
-  cd ../scripts
+  echo "The web app for demonstration is not running! Verify with docker ps, and may be run ./scripts/runSolutionLocally script"
+  exit 1
 fi
 
 # Create an order for GoodManuf
@@ -46,7 +45,7 @@ if [[ -z "$rep" ]]
 then
   echo "Add an order from Good manuf for testing"
   
-  cd  ../../refarch-kc-order-ms/order-command-ms/scripts/
+  cd  ../refarch-kc-order-ms/order-command-ms/scripts/
   ./createOrder.sh
   cd $current
 fi
