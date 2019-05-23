@@ -13,11 +13,11 @@ nav:
     - Container microservice with Python:  https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/flask
     - Container microservice with Springboot - Spring Kafka and PostgreSQL:  https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/springboot
   - Related repositories: ./deployments/reposlist.md
-  - Deployments:
+  - Build and run:
     - Run locally with Docker Compose: ./deployments/local.md
     - Run on IBM Cloud Kubernetes Services: ./deployments/iks.md
     - Run on IBM Cloud Private: ./deployments/icp.md
-  - Demonstration: ./demo/readme.md
+  - Demonstration script: ./demo/readme.md
   - Integration tests: ./itg-tests/README.md
 
 theme: 

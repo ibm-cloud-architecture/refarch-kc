@@ -1,12 +1,14 @@
 # IKS Deployment
 
-In this document, you will learn 
+In this document, you will learn how to deploy the solution microservices into IBM Cloud Kubernetes services, how to use some of the back end services, like event streams and postgresql on IBM Cloud while running the solution locally, or only some services locally.
+
 ## Prepare IBM Cloud Services to run the solution
 
 IBM Cloud offers a set of services to run part of your event driven architecture. We are using the following services for our reference implementation:
 * [Kubernetes Service](https://cloud.ibm.com/containers-kubernetes/catalog/cluster)
 * [Streaming Analytics Service](https://cloud.ibm.com/catalog/services/streaming-analytics)
 * [Event Streams](https://cloud.ibm.com/catalog/services/event-streams)
+* And if you want to use the container service with springboot and postgresql, you need [postegresql]()
 
 At the high level the deployed solution will look like the following:
 
