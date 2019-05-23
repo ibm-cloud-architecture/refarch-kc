@@ -405,11 +405,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" checked>
     
     <label class="md-nav__link" for="nav-7">
-      Deployments
+      Build and run
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-7">
-        Deployments
+        Build and run
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -568,8 +568,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../demo/readme/" title="Demonstration" class="md-nav__link">
-      Demonstration
+    <a href="../../demo/readme/" title="Demonstration script" class="md-nav__link">
+      Demonstration script
     </a>
   </li>
 
@@ -702,12 +702,13 @@
                 
                 
                 <h1 id="iks-deployment">IKS Deployment</h1>
-<p>In this document, you will learn </p>
+<p>In this document, you will learn how to deploy the solution microservices into IBM Cloud Kubernetes services, how to use some of the back end services, like event streams and postgresql on IBM Cloud while running the solution locally, or only some services locally.</p>
 <h2 id="prepare-ibm-cloud-services-to-run-the-solution">Prepare IBM Cloud Services to run the solution</h2>
 <p>IBM Cloud offers a set of services to run part of your event driven architecture. We are using the following services for our reference implementation:
 <em> <a href="https://cloud.ibm.com/containers-kubernetes/catalog/cluster">Kubernetes Service</a>
 </em> <a href="https://cloud.ibm.com/catalog/services/streaming-analytics">Streaming Analytics Service</a>
-* <a href="https://cloud.ibm.com/catalog/services/event-streams">Event Streams</a></p>
+<em> <a href="https://cloud.ibm.com/catalog/services/event-streams">Event Streams</a>
+</em> And if you want to use the container service with springboot and postgresql, you need <a href="">postegresql</a></p>
 <p>At the high level the deployed solution will look like the following:</p>
 <p><img alt="ic-deployment" src="../ic-deployment.png" />  </p>
 <h2 id="pre-requisites">Pre-requisites</h2>

@@ -405,11 +405,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" checked>
     
     <label class="md-nav__link" for="nav-7">
-      Deployments
+      Build and run
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-7">
-        Deployments
+        Build and run
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -527,8 +527,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../demo/readme/" title="Demonstration" class="md-nav__link">
-      Demonstration
+    <a href="../../demo/readme/" title="Demonstration script" class="md-nav__link">
+      Demonstration script
     </a>
   </li>
 
@@ -621,26 +621,26 @@
                 
                 <h1 id="run-the-solution-on-your-laptop">Run the solution on your laptop</h1>
 <p>Updated 05/14/2019.</p>
-<p>In this document we present how to set up, step by step, your local environment with some components deployed on IBM Cloud. To run the full solution locally you can use a kubernetes cluster, like Minikube or Docker Edge with kubernetes, or use docker-compose. We propose to use docker-compose for local deployment. The environment we put in place looks as the diagram below:</p>
+<p>In this document we present how to set up and run the solution on your local laptop (Tested on mac). We propose to use docker-compose for local deployment. The environment we put in place looks as the diagram below:</p>
 <p><img alt="" src="../local-deployment.png" /></p>
-<p>Every microservices run in container and two separate docker compose files define reusable the backend services (kafka, zookeeper, postgresql) and the application specific services.</p>
+<p>Every microservices run in container and two separate docker compose files define reusable backend services (kafka, zookeeper, postgresql) and the application specific services. The docker-compose files are under the <code>docker</code> folder of this project.</p>
 <h2 id="pre-requisites">Pre requisites</h2>
 <ul>
 <li>Get <a href="https://docs.docker.com/install/">docker engine and install</a> it (if not done yet.) To verify docker runs fine use the command <code>docker version</code>. We run on v19.03 community edition.</li>
-<li>Get <a href="https://docs.docker.com/compose/install/">docker compose</a>. To verify it runs enter <code>docker-compose version</code>. We run 1.24.</li>
+<li>Get <a href="https://docs.docker.com/compose/install/">docker compose</a>. To verify it runs enter <code>docker-compose version</code>. We run version 1.24.</li>
 <li>Assign at least 8GB of memory and may be 4 to 6 CPUs to your docker runtime. This is set in the Docker's Preferences menu and under the <code>Advanced</code> tab.</li>
 </ul>
 <p><img alt="" src="../docker-preferences.png" /></p>
 <ul>
-<li>Be sure to have the following hostnames: <code>kafka1 postgresql fleetms kcui simulator ordercmd orderquery springcontainerms postgres</code> mapped to localhost. You can update your <code>/etc/hosts</code> with the following line.  </li>
+<li>Be sure to have the following hostnames: <code>kafka1 postgresql fleetms kcui simulator ordercmd orderquery springcontainerms postgres</code> mapped to <code>localhost</code> in your <code>/etc/hosts</code> file.  </li>
 </ul>
 <pre><code>  127.0.0.1 localhost kafka1 postgresql fleetms kcui simulator ordercmd orderquery kcsolution springcontainerms postgres
 </code></pre>
 
 <ul>
 <li>If not already done, get a git client. See the following <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">installation instructions</a>. </li>
-<li>Be sure to have cloned this repository using git command: <code>git clone https://github.com/ibm-cloud-architecture/refarch-kc/</code>. Open a terminal and go to the <code>refarch-kc</code> folder.</li>
-<li>Use the command <code>./script/clone.sh</code> to get all the solution repositories. You should have at least the following:</li>
+<li>Be sure to have cloned this repository using git command: <code>git clone https://github.com/ibm-cloud-architecture/refarch-kc/</code>. Open a terminal window and go to the <code>refarch-kc</code> folder.</li>
+<li>Use the command <code>./script/clone.sh</code> to get all the solution repositories. You should have at least the following repositories:</li>
 </ul>
 <pre><code>refarch-kc-container-ms
 refarch-kc-order-ms
@@ -652,21 +652,20 @@ refarch-kc-streams
 
 <ul>
 <li>
-<p>We propose you to have two choices to build the solution: installing node, python and maven or use our own docker images for running those tools. You can mix too, if for example you already develop on nodejs or Java you may want to leverage your own settings. See the <a href="#build-the-solution">build section</a> below.</p>
+<p>We propose you to have two choices to build the solution: installing node, python and maven or use our own docker images for running those tools. You can mix too, if for example you already develop on nodejs or Java you may want to leverage your own settings. If you do not want to impact your python environmenr, you can user our docker image. See the <a href="#build-the-solution">build section</a> below.</p>
 </li>
 <li>
-<p>To be able to build without our docker image for building, you need npm, node, maven and docker:  </p>
+<p>To be able to build without our docker images, you need npm, node, maven and docker:  </p>
 <ul>
-<li>Get <a href="https://docs.docker.com/install/">docker and install</a> it (if not done yet).</li>
 <li>Get <a href="https://maven.apache.org/install.html">maven</a> and add it to your PATH.</li>
 <li>Get <a href="https://nodejs.org/en/">node and npm</a></li>
 </ul>
 </li>
 <li>
-<p>Most of our integration tests are done in python. To avoid impacting your own python environment, we defined a docker file for this. Go to the <code>docker</code> folder and run the following command: <code>docker build -f docker-python-tools -t ibmcase/python .</code>. See also the <a href="#build-the-solution">build section</a> below.</p>
+<p>Most of our integration tests are done in python. To avoid impacting your own python environment, we defined a docker file to build an image with the necessary python library. Go to the <code>docker</code> folder and run the following command: <code>docker build -f docker-python-tools -t ibmcase/python .</code>. See also the <a href="#build-the-solution">build section</a> below for more explanations.</p>
 </li>
 <li>
-<p>In the refarch-kc rename <code>./script/setenv.sh.tmpl</code> to <code>./script/setenv.sh</code>, and modify the variables according to your settings. This file is used by a lot of scripts to set the environment to use for deployment: LOCAL, IBMCLOUD, ICP.</p>
+<p>In the <code>refarch-kc</code> rename <code>./script/setenv.sh.tmpl</code> to <code>./script/setenv.sh</code>, and modify the environment variables according to your settings. This file is used by a lot of scripts in the solution to set the target deployment environment: LOCAL, IBMCLOUD, ICP.</p>
 </li>
 </ul>
 <h2 id="start-kafka-zookeeper-and-postgresql">Start Kafka, Zookeeper and Postgresql</h2>
@@ -682,15 +681,15 @@ Attaching to docker_zookeeper1_1, docker_kafka1_1
 ....
 </code></pre>
 
-<ul>
-<li>The first time the kafka backbone is started, you need to configure the Kafka topics used in the solution. The local script: <code>scripts/createLocalTopics.sh</code> will create them.</li>
-</ul>
 <blockquote>
 <p>Note: Starting those components will create two folders in the docker folder: <code>kafka1</code> and <code>zookeeper1</code>. Those folders could be deleted to restart from a fresh environment.  </p>
 </blockquote>
+<ul>
+<li>The first time the kafka backbone is started, you need to configure the Kafka topics used in the solution. The local script: <code>scripts/createLocalTopics.sh</code> will create them.</li>
+</ul>
 <h2 id="build-the-solution">Build the solution</h2>
-<p>This project includes some scripts to help build the full solution once all the repositories are cloned. If you have any problem during this integrated build we recommend going into each project to assess the build process in detail. Also, for development purpose, going into each project, you can learn how to build and run locally.</p>
-<p>We are using polyglote implementations so if you do not want to overload your own laptop with the different repositories, we propose to use docker images to get development environments for nodes, python and java. (Three separate images). This will help you to do not pollute your computer. 
+<p>This project includes some scripts to help build the full solution once all the repositories are cloned. If you have any problem during this integrated build we recommend going into each project to assess the build process in detail. </p>
+<p>We are using polyglote implementations so if you do not want to overload your own laptop with the different library, we propose to use docker images to get development environments for nodes, python and java. (Three separate images). This will help you to do not pollute your computer. 
 If you want to use those images, run the three commands below: to build the three images (those images are also in docker hub). </p>
 <pre><code class="sh">cd docker
 # build the image for java:
@@ -743,21 +742,23 @@ $ source ../scripts/setenv.sh LOCAL
 $ docker-compose -f kc-solution-compose.yml up
 </code></pre>
 
-<p>We have also defined a script to start back end and solution services: <code>./script/runSolutionLocally</code>.</p>
+<p>We have also defined a script to start back end and the solution services in one command: <code>./script/runSolutionLocally</code>.</p>
 <ol>
-<li>Verify the different components work fine. You can use the different test scripts we have defined in each of the microservices or use the following URLs:</li>
+<li>Verify the different components work fine. You can use the different test scripts we have defined in each of the microservice projects or use the following URLs:</li>
 <li>For the <a href="http://localhost:3010">user interface URL http://localhost:3010</a></li>
 <li>The Fleet Simulator <a href="http://localhost:9080/api/explorer/">API URL</a> or one of its operation to get the fleet names: <a href="http://localhost:9080/fleetms/fleets">http://localhost:9080/fleetms/fleets</a>.</li>
 <li>Add an order with the python program under <code>refarch-kc/itg-tests/OrdersPython</code> folder, using the script <code>addOrder.sh</code></li>
 <li>The voyages <a href="http://localhost:3100/voyage">http://localhost:3100/voyage</a> microservices returns the small list of voyages.</li>
 <li>Using the order query microservice <a href="http://localhost:11080/orders/byManuf/GoodManuf">http://localhost:11080/orders/byManuf/GoodManuf</a> you should see the orders of the "GoodManuf" customer.</li>
 </ol>
-<p>or run the smoke tests with the script: <code>localSmokeTests</code>.</p>
-<p>Read the <a href="../../demo/readme/">demo script</a> to see how all those components working together to demonstrate the business process.</p>
+<p>or run the smoke tests with the script: <code>scripts/localSmokeTests</code>.</p>
+<p>Read the <a href="../../demo/readme/">demo script</a> to see how all those components are working together to demonstrate the business process end to end.</p>
 <h2 id="some-tricks">Some tricks</h2>
-<p>With docker-compose you can use the command: <code></code> to stop the solution. You should see the following error message: <code>ERROR: error while removing network: network docker_default id e867... has active endpoints</code>. This is normal as the docker network is still running as the backend services are running. </p>
-<p>Clean all docker images: <code>docker rmi -f $(docker images | grep ibmcase | awk '{print $3}')</code></p>
-<p>Stop one of the service with docker compote, for example the order command service: <code>docker-compose -f kc-solution-compose.yml  stop ordercmd</code> </p>
+<ul>
+<li>With docker-compose you can use the command: <code></code> to stop the solution. You should see the following error message: <code>ERROR: error while removing network: network docker_default id e867... has active endpoints</code>. This is normal as the docker network is still running as the backend services are running. </li>
+<li>Clean all docker images: <code>docker rmi -f $(docker images | grep ibmcase | awk '{print $3}')</code></li>
+<li>Stop one of the service with docker compote, for example the order command service: <code>docker-compose -f kc-solution-compose.yml  stop ordercmd</code> </li>
+</ul>
                 
                   
                 
