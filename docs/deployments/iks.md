@@ -8,9 +8,9 @@ IBM Cloud offers a set of services to run part of your event driven architecture
 * [Kubernetes Service](https://cloud.ibm.com/containers-kubernetes/catalog/cluster)
 * [Streaming Analytics Service](https://cloud.ibm.com/catalog/services/streaming-analytics)
 * [Event Streams](https://cloud.ibm.com/catalog/services/event-streams)
-* And if you want to use the container service with springboot and postgresql, you need [postegresql]()
+* And if you want to use the container service with springboot and postgresql, you need [postgresql](https://cloud.ibm.com/catalog/services/databases-for-postgresql)
 
-At the high level the deployed solution will look like the following:
+At the high level the deployed solution will look like in the following figure:
 
 ![ic-deployment](ic-deployment.png)  
 
