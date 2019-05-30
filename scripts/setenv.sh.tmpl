@@ -14,7 +14,9 @@ case "$kcenv" in
         export POSTGRESQL_URL="jdbc:postgresql://<>.databases.appdomain.cloud:<>/ibmclouddb?sslmode=verify-full&sslfactory=org.postgresql.ssl.NonValidatingFactory"
         export POSTGRESQL_USER="ibm_cloud_<>"
         export POSTGRESQL_PWD="<>"
-        export POSTGRESQL_CA_PEM=""
+        export POSTGRESQL_CA_PEM="$(cat ./postgresql.crt)"
+        export TRUSTSTORE_PWD="changeit"
+        export IC_POSTGRES_SERV="Green-DB-PostgreSQL"
         ;;
    ICP)
         export KAFKA_BROKERS=<>
