@@ -501,6 +501,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-postgresql-service" title="The postgresql service" class="md-nav__link">
+    The postgresql service
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#run-the-solution-on-ibm-cloud-kubernetes-services" title="Run the solution on IBM Cloud Kubernetes Services" class="md-nav__link">
     Run the solution on IBM Cloud Kubernetes Services
   </a>
@@ -511,6 +518,13 @@
           <li class="md-nav__item">
   <a href="#event-stream-api-key" title="Event stream API key" class="md-nav__link">
     Event stream API key
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-url-as-secret" title="Postgresql URL as secret" class="md-nav__link">
+    Postgresql URL as secret
   </a>
   
 </li>
@@ -649,6 +663,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-postgresql-service" title="The postgresql service" class="md-nav__link">
+    The postgresql service
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#run-the-solution-on-ibm-cloud-kubernetes-services" title="Run the solution on IBM Cloud Kubernetes Services" class="md-nav__link">
     Run the solution on IBM Cloud Kubernetes Services
   </a>
@@ -659,6 +680,13 @@
           <li class="md-nav__item">
   <a href="#event-stream-api-key" title="Event stream API key" class="md-nav__link">
     Event stream API key
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-url-as-secret" title="Postgresql URL as secret" class="md-nav__link">
+    Postgresql URL as secret
   </a>
   
 </li>
@@ -702,92 +730,149 @@
                 
                 
                 <h1 id="iks-deployment">IKS Deployment</h1>
-<p>In this document, you will learn how to deploy the solution microservices into IBM Cloud Kubernetes services, how to use some of the back end services, like event streams and postgresql on IBM Cloud while running the solution locally, or only some services locally.</p>
+<p>In this document, you will learn how to deploy different microservices as part of the solution into IBM Cloud Kubernetes services, how to use IBM Event Streams and postgresql on IBM Cloud while running the solution locally, or only some services locally.
+First you need to configure the needed services. </p>
 <h2 id="prepare-ibm-cloud-services-to-run-the-solution">Prepare IBM Cloud Services to run the solution</h2>
-<p>IBM Cloud offers a set of services to run part of your event driven architecture. We are using the following services for our reference implementation:
-<em> <a href="https://cloud.ibm.com/containers-kubernetes/catalog/cluster">Kubernetes Service</a>
-</em> <a href="https://cloud.ibm.com/catalog/services/streaming-analytics">Streaming Analytics Service</a>
-<em> <a href="https://cloud.ibm.com/catalog/services/event-streams">Event Streams</a>
-</em> And if you want to use the container service with springboot and postgresql, you need <a href="https://cloud.ibm.com/catalog/services/databases-for-postgresql">postgresql</a></p>
-<p>At the high level the deployed solution will look like in the following figure:</p>
+<p>IBM Cloud offers a set of services to run part of your event driven solution. We are using the following services:</p>
+<ul>
+<li><a href="https://cloud.ibm.com/containers-kubernetes/catalog/cluster">Kubernetes Service</a></li>
+<li><a href="https://cloud.ibm.com/catalog/services/streaming-analytics">Streaming Analytics Service</a> - As of now it is optional.</li>
+<li><a href="https://cloud.ibm.com/catalog/services/event-streams">Event Streams</a></li>
+<li>And if you want to use the container microservice with springboot and postgresql, you need <a href="https://cloud.ibm.com/catalog/services/databases-for-postgresql">postgresql</a></li>
+</ul>
+<p>At the high level the deployed solution on IKS, will look like in the following figure:</p>
 <p><img alt="ic-deployment" src="../ic-deployment.png" />  </p>
+<p>At least five microservices will be deployed (six if the container manager microservice is deployed) and three services created. You do not need to deploy <code>Streaming Analytics</code> service as it is still under construction.</p>
+<p>Here is a dependency graph:</p>
+<p><img alt="" src="../ms-dependencies.png" /></p>
 <h2 id="pre-requisites">Pre-requisites</h2>
 <ul>
 <li>Create an account on <a href="https://cloud.ibm.com">IBM Cloud</a>.</li>
 <li>Install the following CLIs:<ul>
 <li><a href="https://docs.docker.com/install/">Docker CLI</a></li>
 <li><a href="https://cloud.ibm.com/docs/cli/reference/ibmcloud/download_cli.html#install_use">IBM Cloud CLI</a></li>
-<li>IBM Cloud Kubernetes Service <a href="https://cloud.ibm.com/docs/cli/reference/ibmcloud/extend_cli.html#plug-ins">plug-in</a> using the following command:
-  <code>sh
-  $ ibmcloud plugin install container-service -r Bluemix</code></li>
 <li><a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">Kubernetes CLI</a></li>
-<li>IBM Cloud Container Registry plug-in
-  <code>sh
-  $ ibmcloud plugin install container-registry -r Bluemix</code></li>
+<li>IBM Cloud Kubernetes Service <a href="https://cloud.ibm.com/docs/cli/reference/ibmcloud/extend_cli.html#plug-ins">plug-in</a> using the following command:</li>
 </ul>
 </li>
 </ul>
+<pre><code>ibmcloud plugin install container-service -r Bluemix
+</code></pre>
+
+<ul>
+<li>Install IBM Cloud Container Registry CLI plug-in, using the command:</li>
+</ul>
+<pre><code>ibmcloud plugin install container-registry -r Bluemix
+</code></pre>
+
 <p>The following diagram illustrates the command lines interface and how they interact with IBM Cloud components:</p>
 <p><img alt="" src="../ic-cli-comp.png" /></p>
-<p>All our docker images for this solution are in public docker registry: dockerhub under the <a href="https://cloud.docker.com/u/ibmcase"><code>ibmcase</code> namespace</a>. But all the helm charts to deploy each component of the solution use private repository like: <code>us.icr.io/ibmcaseeda/</code>. As it is recommended to use your own private image repository, we are presenting a quick summary of what to do in the next section.</p>
+<p>Each helm chart to deploy each component of the solution uses the private repository like: <code>us.icr.io/ibmcaseeda/</code>. As it is recommended to use your own private image repository, we are presenting a quick summary of what to do to define your own private registry in the next section.</p>
 <h2 id="define-an-image-private-repository">Define an image private repository</h2>
-<p>Use the <a href="https://cloud.ibm.com/containers-kubernetes/catalog/registry">docker container image private registry</a> to push your images and then deploy them to IBM Kubernetes Service. When deploying enterprise application it is strongly recommended to use private registry to protect your images from being used and changed by unauthorized users. Private registries must be set up by the cluster admin to ensure that the credentials to access the private registry are available to the cluster users. In the Catalog Use the <code>Containers</code> category and <code>Container Registry</code> tile. Create the repository with the <code>create</code> button. You can share a repository between multi IKS clusters within the same region.</p>
+<p>Use the <a href="https://cloud.ibm.com/containers-kubernetes/catalog/registry">docker container image private registry</a> to push your images and then deploy them to IBM Kubernetes Service. When deploying enterprise application it is strongly recommended to use private registry to protect your images from being used and changed by unauthorized users. Private registries must be set up by the cluster administrator to ensure that the credentials to access the private registry are available to the cluster users. </p>
+<p>In the IBM Cloud Catalog, use the <code>Containers</code> category and <code>Container Registry</code> tile. Create the repository with the <code>create</code> button. You can share a repository between multi IKS clusters within the same region.</p>
 <p>Once you access your registry, create a namespace for your solution. We used <code>ibmcaseeda</code> name. </p>
-<p><em>The namespace can also be created with the command: <code>ibmcloud cr namespace-add ibmcaseeda</code></em> </p>
+<p>*The namespace can also be created with the command: </p>
+<pre><code>ibmcloud cr namespace-add ibmcaseeda
+</code></pre>
+
+<p>Here is a screen shot of the created image repository:</p>
 <p><img alt="" src="../iks-registry-ns.png" /></p>
 <p>We will use this namespace when tagging the docker images for our microservices. Here is an example of tagging:</p>
 <pre><code class="shell">docker tag ibmcase/kc-ui us.icr.io/ibmcaseeda/kc-ui:latest
 </code></pre>
 
-<p>To see the images in your private registry you can use the user interface at <a href="https://cloud.ibm.com/containers-kubernetes/registry/main/private">https://cloud.ibm.com/containers-kubernetes/registry/main/private</a> or the command: <code>ibmcloud cr image-list</code>
-But first let add a kubernetes cluster.</p>
-<h2 id="kubernetes-cluster-service">Kubernetes Cluster Service</h2>
-<p>If you need to know more about kubernetes, read the <a href="https://kubernetes.io/docs/tutorials/kubernetes-basics/">basic concepts here</a>, see also our summary <a href="https://jbcodeforce.github.io/#/studies">here</a>.</p>
-<p>To create the cluster follow <a href="https://console.bluemix.net/docs/containers/cs_tutorials.html#cs_cluster_tutorial">this tutorial</a>.</p>
-<p>Here is an image of our cluster, with 3 nodes and the smallest configuration:</p>
-<p><img alt="" src="../iks-cluster.png" /> </p>
-<p>To access to the cluster use the following command:</p>
-<pre><code class="sh"># login to IBM Cloud. Do not need to be done each time.
-$ ibmcloud login -a https://api.us-east.bluemix.net
-
-# Target the IBM Cloud Container Service region in which you want to work.
-$ ibmcloud ks region-set us-east
-
-# You may need to update the CLI, as it changes quite often
-$ ibmcloud plugin update container-service
-
-# Set the KUBECONFIG environment variable.
-$ export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/fabio-wdc-07/kube-config-wdc07-fabio-wdc-07.yml
-
-# Verify you have access to your cluster by listing the node:
-$ kubectl get nodes
+<p>To see the images in your private registry you can use the user interface at <a href="https://cloud.ibm.com/containers-kubernetes/registry/main/private">https://cloud.ibm.com/containers-kubernetes/registry/main/private</a> or the command: </p>
+<pre><code>ibmcloud cr image-list
 </code></pre>
 
-<p>To set the cluster config to your cluster use: <code>ibmcloud ks cluster-config &lt;cluster_name_or_ID&gt;</code></p>
-<p>As it is recommended to ilosate your deployment from kubernetes default setting, create a namespace that can be the same as the container registry namespace name or something else. Below we create the browncompute namespace: <code>kubectl create namespace browncompute</code>.</p>
+<p>But first let add a kubernetes cluster.</p>
+<h2 id="kubernetes-cluster-service">Kubernetes Cluster Service</h2>
+<p>If you need to know more about kubernetes, read the <a href="https://kubernetes.io/docs/tutorials/kubernetes-basics/">basic concepts here</a>.</p>
+<p>To create the cluster follow <a href="https://console.bluemix.net/docs/containers/cs_tutorials.html#cs_cluster_tutorial">this tutorial</a>.</p>
+<p>Here is an image of our cluster, with three nodes and the smallest possible configuration:</p>
+<p><img alt="" src="../iks-cluster.png" /> </p>
+<p>To access to the cluster use the following commands:</p>
+<ul>
+<li>Login to IBM Cloud. Do not need to be done each time.</li>
+</ul>
+<pre><code class="sh">ibmcloud login -a https://api.us-east.bluemix.net
+</code></pre>
+
+<ul>
+<li>Target the IBM Cloud Container Service region in which you want to work.</li>
+</ul>
+<pre><code>ibmcloud ks region-set us-east
+</code></pre>
+
+<ul>
+<li>You may need to update the CLI, as it changes quite often</li>
+</ul>
+<pre><code>ibmcloud plugin update container-service
+</code></pre>
+
+<ul>
+<li>Set the KUBECONFIG environment variable.</li>
+</ul>
+<pre><code>export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/fabio-wdc-07/kube-config-wdc07-fabio-wdc-07.yml
+</code></pre>
+
+<ul>
+<li>Verify you have access to your cluster by listing the node:</li>
+</ul>
+<pre><code>kubectl get nodes
+</code></pre>
+
+<p>To set the cluster config to your cluster use: </p>
+<pre><code>ibmcloud ks cluster-config &lt;cluster_name_or_ID&gt;
+</code></pre>
+
+<p>As it is recommended to ilosate your deployment from kubernetes default setting, create a namespace that can be the same as the container registry namespace name or something else. Below we create the browncompute namespace: </p>
+<pre><code>kubectl create namespace browncompute
+</code></pre>
+
 <h2 id="event-streams-service-on-ibm-cloud">Event Streams Service on IBM Cloud</h2>
-<p>To provision your service, go to the IBM Cloud Catalog and search for <code>Event Streams</code>. It is in the Integration category. Create the service and specify a name, a region, and a space. </p>
+<p>To provision your service, go to the IBM Cloud Catalog and search for <code>Event Streams</code>. It is in the <em>Integration</em> category. Create the service and specify a name, a region, and a space. </p>
 <ul>
 <li>In the service credentials create new credentials to get the Kafka broker list, the admim URL and the api_key needed to authenticate the consumers or producers.</li>
 </ul>
 <p><img alt="" src="../IES-IC-credentials.png" /></p>
-<p>We will use a kubernetes secret to define the api key (see detail <a href="#using-api-keys">in this section</a>)
-* In the Manage panel add the topics needed for the solution. We need at least the following:</p>
+<p>We will use a kubernetes secret to define the api key (see detail <a href="#using-api-keys">in this section</a>)</p>
+<ul>
+<li>In the <em>Manage</em> panel add the topics needed for the solution. We need at least the following:</li>
+</ul>
 <p><img alt="" src="../IES-IC-topics.png" /> </p>
 <h2 id="streaming-analytics-service">Streaming Analytics Service</h2>
+<p>This service is only need when doing real time analytics with Streaming analytics service. </p>
 <p>The documentation located <a href="https://github.com/ibm-cloud-architecture/refarch-kc-streams#application-development-and-deployment">here</a> describes how to configure the IBM Cloud based Streaming Analytics Service and how to build/deploy the example application. </p>
+<h2 id="the-postgresql-service">The postgresql service</h2>
+<p>The container manager microservice persist the Reefer container inventory in postgresql, we are detailing the installation intructions in a <a href="https://ibm-cloud-architecture.github.io/refarch-eda/deployments/postgresql/">separate note</a>.</p>
+<blockquote>
+<p>If you do not plan to use this container manager service you do not need to create a Postgresql service.</p>
+</blockquote>
 <h2 id="run-the-solution-on-ibm-cloud-kubernetes-services">Run the solution on IBM Cloud Kubernetes Services</h2>
 <h3 id="event-stream-api-key">Event stream API key</h3>
 <p>The Event streams broker API key is needed to connect any deployed consumers or producers within kubernetes cluster to access the service in IBM Cloud. To avoid sharing security keys, we propose to define a kubernetes secret and deploy it to the IKS cluster.</p>
-<p>Define a Event Stream API key secret: To use Event Streams, we need to get the API key and configure a secret under the <code>browncompute</code> namespace.  </p>
-<pre><code class="shell">$ kubectl create secret generic eventstreams-apikey --from-literal=binding='&lt;replace with api key&gt;' -n browncompute
-# Verify the secrets
-$ kubectl describe secrets -n browncompute
+<ul>
+<li>Define a Event Stream API key secret: to use Event Streams, we need to get the API key and configure a secret under the <code>browncompute</code> namespace.  </li>
+</ul>
+<pre><code class="shell">kubectl create secret generic eventstreams-apikey --from-literal=binding='&lt;replace with api key&gt;' -n browncompute
 </code></pre>
 
-<p>This secret is used by all the solution microservices which are using Kafka / Event Streams. The detail of how we use it with environment variables, is described in one of the project <a href="https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/fleet-ms/README.md#run-on-ibm-cloud-with-kubernetes-service">here</a>  </p>
+<ul>
+<li>Verify the secrets:</li>
+</ul>
+<pre><code>kubectl describe secrets -n browncompute
+</code></pre>
+
+<p>This secret is used by all the solution microservices which are using Kafka / Event Streams. The detail of how we use it with environment variables, is described in one of the project <a href="https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/fleet-ms/README.md#run-on-ibm-cloud-with-kubernetes-service">here.</a></p>
+<h3 id="postgresql-url-as-secret">Postgresql URL as secret</h3>
+<p>Applying the same approach as above, copy the Postgresql URL as defined in the Postegresql service credential and execute the following command:</p>
+<pre><code>kubectl create secret generic postgresql-url --from-literal=binding='&lt;replace with postgresql-url&gt;' -n browncompute
+</code></pre>
+
 <h3 id="private-registry-token">Private Registry Token</h3>
-<p>Each helm chart specify the name of an image to load to create the containers / pods. The image name is from a private repository. To let kubernetes scheduler being able to access the registry, we need to define a secret to hold the security token. Here is an extract of a deployment yaml referencing the <code>browncompute-registry-secret</code> secret.</p>
+<p>Each helm chart specifies the name of the docker image to load to create the containers / pods. The image name is from a private repository. To let kubernetes scheduler being able to access the registry, we need to define a secret to hold the security token. Here is an extract of a deployment yaml file referencing the <code>browncompute-registry-secret</code> secret.</p>
 <pre><code class="yaml">spec:
       imagePullSecrets:
         - name: browncompute-registry-secret
@@ -798,31 +883,51 @@ $ kubectl describe secrets -n browncompute
 </code></pre>
 
 <p><em>Using secret is also mandatory when registry and clusters are not in the same region.</em></p>
-<pre><code class="shell"># Verify current secrets for a give namespace
-$ kubectl describe secrets -n browncompute
-
-# Get a security token: you can use permanent or renewable one:
-$ ibmcloud cr token-add --description &quot;private registry secret for browncompute&quot; --non-expiring -q
-
-# To list the token use the command
-$  ibmcloud cr tokens
-TOKEN ID     READONLY   EXPIRY   DESCRIPTION   
-2b5ff00e-a..  true       0       token for somebody
-3dbf72eb-6..  true       0       private registry secret for browncompute
-
-# To get the token for a given token identifier
-$ ibmcloud cr token-get cce5a800-...
-
-# Define the secret to store the token information
-$ kubectl --namespace browncompute create secret docker-registry browncompute-registry-secret  --docker-server=&lt;registry_url&gt; --docker-username=token --docker-password=&lt;token_value&gt; --docker-email=&lt;docker_email&gt;
-
+<ul>
+<li>Verify current secrets for a give namespace</li>
+</ul>
+<pre><code class="shell">kubectl describe secrets -n browncompute
 </code></pre>
 
-<p>Verify the secret   </p>
-<pre><code>$ kubectl get secrets -n browncompute  
+<ul>
+<li>Get a security token: you can use permanent or renewable one:</li>
+</ul>
+<pre><code>ibmcloud cr token-add --description &quot;private registry secret for browncompute&quot; --non-expiring -q
+</code></pre>
+
+<ul>
+<li>To list the token use the command</li>
+</ul>
+<pre><code>ibmcloud cr tokens
+</code></pre>
+
+<p>The result:</p>
+<blockquote>
+<p>TOKEN ID     READONLY   EXPIRY   DESCRIPTION <br />
+ 2b5ff00e-a..  true       0       token for somebody
+ 3dbf72eb-6..  true       0       private registry secret for browncompute</p>
+</blockquote>
+<ul>
+<li>To get the token for a given token identifier</li>
+</ul>
+<pre><code>ibmcloud cr token-get cce5a800-...
+</code></pre>
+
+<ul>
+<li>Define the secret to store the Event stream API key token information:</li>
+</ul>
+<pre><code>kubectl --namespace browncompute create secret docker-registry 
+browncompute-registry-secret  --docker-server=&lt;registry_url&gt; --docker-username=token --docker-password=&lt;token_value&gt; --docker-email=&lt;docker_email&gt;
+</code></pre>
+
+<ul>
+<li>Verify the secret   </li>
+</ul>
+<pre><code>kubectl get secrets -n browncompute  
 </code></pre>
 
 <p>You will see something like below.   </p>
+<blockquote>
 <table>
 <thead>
 <tr>
@@ -853,44 +958,58 @@ $ kubectl --namespace browncompute create secret docker-registry browncompute-re
 </tr>
 </tbody>
 </table>
+</blockquote>
 <p>Now for each microservice as part of the solution, we have defined helm chart and a script (deployHelm) to deploy to IKS. </p>
 <p>This step is done one time only.
 See also the product documentation <a href="https://console.bluemix.net/docs/containers/cs_dedicated_tokens.html">for more detail.</a></p>
 <h3 id="push-images">Push images</h3>
-<p>This step is done each time you want to deploy the solution to IKS. When using continuous deployment, this step will be automated.</p>
+<p>The following steps are done each time you want to deploy the solution to IKS. When using continuous deployment, these steps will be automated.</p>
 <p>If you are not connected to IBM Cloud, do the following:   </p>
-<pre><code class="sh">$ ibmcloud login -a https://api.us-east.bluemix.net
+<pre><code class="sh">ibmcloud login -a https://api.us-east.bluemix.net
+</code></pre>
 
-# Target the IBM Cloud Container Service region in which you want to work.   
-$ ibmcloud ks region-set us-east   
+<ul>
+<li>Target the IBM Cloud Container Service region in which you want to work.   </li>
+</ul>
+<pre><code>ibmcloud ks region-set us-east   
+</code></pre>
 
-# Set the KUBECONFIG environment variable.   
+<ul>
+<li>Set the KUBECONFIG environment variable.   </li>
+</ul>
+<pre><code>ibmcloud ks cluster-config fabio-wdc-07
+</code></pre>
 
-$ ibmcloud ks cluster-config fabio-wdc-07
+<pre><code>export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/fabio-wdc-07/kube-config-wdc07-fabio-wdc-07.yml   
+</code></pre>
 
-$ export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/fabio-wdc-07/kube-config-wdc07-fabio-wdc-07.yml   
+<ul>
+<li>Verify you have access to your cluster by listing the node:   </li>
+</ul>
+<pre><code>kubectl get nodes   
+</code></pre>
 
-# Verify you have access to your cluster by listing the node:   
-$ kubectl get nodes   
-
-# login to the container registry
-$ ibmcloud cr login
+<ul>
+<li>login to the container registry</li>
+</ul>
+<pre><code>ibmcloud cr login
 </code></pre>
 
 <p>Then execute the script: <code>./scripts/pushToPrivate</code>  to deploy all component, or go to each repository and use the script <code>deployHelm</code>.</p>
 <ul>
-<li>
-<p>Verify the images are in you private repo:
- <code>$ ibmcloud cr image-list</code></p>
-</li>
-<li>
-<p>Deploy the helm charts for each components using the <code>scripts/deployHelms</code>.   </p>
-</li>
-<li>Verify the deployments and pods:  </li>
+<li>Verify the images are in you private repo:</li>
 </ul>
-<pre><code>$ kubectl get deployments -n browncompute
+<pre><code>ibmcloud cr image-list
 </code></pre>
 
+<ul>
+<li>Deploy the helm charts for each components using the <code>scripts/deployHelms</code>.   </li>
+<li>Verify the deployments and pods:  </li>
+</ul>
+<pre><code>kubectl get deployments -n browncompute
+</code></pre>
+
+<blockquote>
 <table>
 <thead>
 <tr>
@@ -945,7 +1064,11 @@ $ ibmcloud cr login
 </tr>
 </tbody>
 </table>
-<p><code>$  kubectl get pods -n browncompute</code> </p>
+</blockquote>
+<pre><code>kubectl get pods -n browncompute
+</code></pre>
+
+<blockquote>
 <table>
 <thead>
 <tr>
@@ -994,6 +1117,7 @@ $ ibmcloud cr login
 </tr>
 </tbody>
 </table>
+</blockquote>
 <ul>
 <li>You can perform a smoke test with the <code>scripts/smokeTestsIKS</code> or you can try to access some of the read APIs using the web browser. So first to get the public IP address of your cluster, go to the <code>Worker Nodes</code> view of the Clusters console.  Then to get the service exposed NodePort use <code>kubectl get services -n browncompute</code> and then get the port number mapped from one of the exposed ports (9080, 3010, 3000...):</li>
 <li>fleetms: here is an example of URL : http://Public IP:31300/fleetms/fleets</li>
