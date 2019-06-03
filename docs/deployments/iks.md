@@ -147,7 +147,7 @@ The documentation located [here](https://github.com/ibm-cloud-architecture/refar
 
 ## The postgresql service
 
-The container manager microservice persist the Reefer container inventory in postgresql, we are detailing the installation intructions in a [separate note](https://ibm-cloud-architecture.github.io/refarch-eda/deployments/postgresql/).
+The container manager microservice persists the Reefer container inventory in postgresql. To install the service follow the [product documentation here](https://cloud.ibm.com/catalog/services/databases-for-postgresql).
 
 > If you do not plan to use this container manager service you do not need to create a Postgresql service.
 
@@ -171,12 +171,51 @@ kubectl describe secrets -n browncompute
 
 This secret is used by all the solution microservices which are using Kafka / Event Streams. The detail of how we use it with environment variables, is described in one of the project [here.](https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/fleet-ms/README.md#run-on-ibm-cloud-with-kubernetes-service)
 
-### Postgresql URL as secret
+### Postgresql URL, User, PWD and CA certificate as secrets
 
 Applying the same approach as above, copy the Postgresql URL as defined in the Postegresql service credential and execute the following command:
 ```
 kubectl create secret generic postgresql-url --from-literal=binding='<replace with postgresql-url>' -n browncompute
 ```
+
+For the user:
+
+```
+kubectl create secret generic postgresql-user --from-literal=binding='ibm_cloud_c...' -n browncompute
+```
+
+For the user password:
+
+```
+kubectl create secret generic postgresql-pwd --from-literal=binding='<password from the service credential>.' -n browncompute
+```
+
+For the SSL certificate:
+
+* Get the certificate using the name of the postgresql service:
+
+```
+ibmcloud cdb deployment-cacert $IC_POSTGRES_SERV > postgresql.crt
+```
+
+* Then add it into an environment variable
+
+```
+export POSTGRESQL_CA_PEM="$(cat ./postgresql.crt)"
+```
+
+* Then define a secret:
+
+```
+kubectl
+create secret generic postgresql-ca-pem --from-literal=binding="$POSTGRESQL_CA_PEM" -n browncompute
+```
+
+Now those variables and secrets are used in the deployment.yml file of the service that needs them. Like the Springboot container microservice. Here is an example of such settings:
+
+```
+```
+
 
 ### Private Registry Token
 
