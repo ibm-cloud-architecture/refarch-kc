@@ -523,8 +523,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#postgresql-url-as-secret" title="Postgresql URL as secret" class="md-nav__link">
-    Postgresql URL as secret
+  <a href="#postgresql-url-user-pwd-and-ca-certificate-as-secrets" title="Postgresql URL, User, PWD and CA certificate as secrets" class="md-nav__link">
+    Postgresql URL, User, PWD and CA certificate as secrets
   </a>
   
 </li>
@@ -685,8 +685,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#postgresql-url-as-secret" title="Postgresql URL as secret" class="md-nav__link">
-    Postgresql URL as secret
+  <a href="#postgresql-url-user-pwd-and-ca-certificate-as-secrets" title="Postgresql URL, User, PWD and CA certificate as secrets" class="md-nav__link">
+    Postgresql URL, User, PWD and CA certificate as secrets
   </a>
   
 </li>
@@ -846,7 +846,7 @@ First you need to configure the needed services. </p>
 <p>This service is only need when doing real time analytics with Streaming analytics service. </p>
 <p>The documentation located <a href="https://github.com/ibm-cloud-architecture/refarch-kc-streams#application-development-and-deployment">here</a> describes how to configure the IBM Cloud based Streaming Analytics Service and how to build/deploy the example application. </p>
 <h2 id="the-postgresql-service">The postgresql service</h2>
-<p>The container manager microservice persist the Reefer container inventory in postgresql, we are detailing the installation intructions in a <a href="https://ibm-cloud-architecture.github.io/refarch-eda/deployments/postgresql/">separate note</a>.</p>
+<p>The container manager microservice persists the Reefer container inventory in postgresql. To install the service follow the <a href="https://cloud.ibm.com/catalog/services/databases-for-postgresql">product documentation here</a>.</p>
 <blockquote>
 <p>If you do not plan to use this container manager service you do not need to create a Postgresql service.</p>
 </blockquote>
@@ -866,10 +866,41 @@ First you need to configure the needed services. </p>
 </code></pre>
 
 <p>This secret is used by all the solution microservices which are using Kafka / Event Streams. The detail of how we use it with environment variables, is described in one of the project <a href="https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/fleet-ms/README.md#run-on-ibm-cloud-with-kubernetes-service">here.</a></p>
-<h3 id="postgresql-url-as-secret">Postgresql URL as secret</h3>
+<h3 id="postgresql-url-user-pwd-and-ca-certificate-as-secrets">Postgresql URL, User, PWD and CA certificate as secrets</h3>
 <p>Applying the same approach as above, copy the Postgresql URL as defined in the Postegresql service credential and execute the following command:</p>
 <pre><code>kubectl create secret generic postgresql-url --from-literal=binding='&lt;replace with postgresql-url&gt;' -n browncompute
 </code></pre>
+
+<p>For the user:</p>
+<pre><code>kubectl create secret generic postgresql-user --from-literal=binding='ibm_cloud_c...' -n browncompute
+</code></pre>
+
+<p>For the user password:</p>
+<pre><code>kubectl create secret generic postgresql-pwd --from-literal=binding='&lt;password from the service credential&gt;.' -n browncompute
+</code></pre>
+
+<p>For the SSL certificate:</p>
+<ul>
+<li>Get the certificate using the name of the postgresql service:</li>
+</ul>
+<pre><code>ibmcloud cdb deployment-cacert $IC_POSTGRES_SERV &gt; postgresql.crt
+</code></pre>
+
+<ul>
+<li>Then add it into an environment variable</li>
+</ul>
+<pre><code>export POSTGRESQL_CA_PEM=&quot;$(cat ./postgresql.crt)&quot;
+</code></pre>
+
+<ul>
+<li>Then define a secret:</li>
+</ul>
+<pre><code>kubectl
+create secret generic postgresql-ca-pem --from-literal=binding=&quot;$POSTGRESQL_CA_PEM&quot; -n browncompute
+</code></pre>
+
+<p>Now those variables and secrets are used in the deployment.yml file of the service that needs them. Like the Springboot container microservice. Here is an example of such settings:</p>
+<pre><code></code></pre>
 
 <h3 id="private-registry-token">Private Registry Token</h3>
 <p>Each helm chart specifies the name of the docker image to load to create the containers / pods. The image name is from a private repository. To let kubernetes scheduler being able to access the registry, we need to define a secret to hold the security token. Here is an extract of a deployment yaml file referencing the <code>browncompute-registry-secret</code> secret.</p>
