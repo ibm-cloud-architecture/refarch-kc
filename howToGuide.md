@@ -66,6 +66,8 @@ kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic allocated-orde
 
 7. Enter `exit` to come out of it.
 
+TBD - Look at an alternative 
+
 ## Fleet ms
 
 1. Go to the repo
@@ -172,6 +174,21 @@ helm install chart/orderqueryms/ --name orderquery --set image.repository=ibmcas
 
 ## Container ms
 
+### Getting the certs for PostgreSQL
+
+PostgreSQL (Using the cloud instance)
+
+Spring Container MS
+
+$ ibmcloud cdb deployment-cacert <your-DB-PostgreSQL>
+# if you do not have the cloud database plugin does the following and rerun previous command:
+$ ibmcloud plugin install cloud-databases
+
+# transform
+$ openssl x509 -in postgressql.crt -out postgressql.crt.der -outform der
+# save in keystore
+$ keytool -keystore clienttruststore -alias postgresql -import -file postgressql.crt.der -storepass changeit
+
 1. Go to the repo
 
 ```
@@ -202,6 +219,12 @@ docker run --name springcontainerms \
   -p 8080:8080 -ti  ibmcase/kc-springcontainerms
 ```
 
+4. Deploy on minikube
+
+```
+helm install chart/springcontainerms/ --name containerms --set image.repository=ibmcase/kc-springcontainerms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafka-cp-kafka:9092 --set eventstreams.env=local --namespace greencompute
+```
+
 ## Web
 
 1. Go to the repo
@@ -220,4 +243,10 @@ $ ./scripts/buildDocker.sh
 
 ```
 docker run -it --name kcsolution -e KAFKA_BROKERS="<your_kafka_brokers>" -e FLEET_MS_URL="<fleetms_url" ORDER_MS_URL="<orderms_url>" VOYAGE_MS_URL="<voyagems_url>" --link fleetms:fleetms --link voyages:voyages --link ordercmd:ordercmd --link orderquery:orderquery --link springcontainerms:springcontainerms -d -p 3110:3010 ibmcase/kc-ui
+```
+
+4. Deploy on minikube
+
+```
+helm install chart/kc-ui/ --name kcsolution --set image.repository=ibmcase/kc-ui --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafka-cp-kafka:9092 --set eventstreams.env=local --namespace greencompute
 ```
