@@ -147,9 +147,17 @@ The documentation located [here](https://github.com/ibm-cloud-architecture/refar
 
 ## The postgresql service
 
-The container manager microservice persist the Reefer container inventory in postgresql, we are detailing the installation intructions in a [separate note](https://ibm-cloud-architecture.github.io/refarch-eda/deployments/postgresql/).
+The container manager microservice persists the Reefer container inventory in postgresql. To install the service follow the [product documentation here](https://cloud.ibm.com/catalog/services/databases-for-postgresql).
 
 > If you do not plan to use this container manager service you do not need to create a Postgresql service.
+
+When the service is configured, you need to create some credentials and retreive the following values for the different configurations:
+
+* postgres.username
+* postgres.password
+* postgres.composed which will be map to a JDBC URL.
+
+![](postgres-credentials.png)
 
 ## Run the solution on IBM Cloud Kubernetes Services
 
@@ -171,12 +179,66 @@ kubectl describe secrets -n browncompute
 
 This secret is used by all the solution microservices which are using Kafka / Event Streams. The detail of how we use it with environment variables, is described in one of the project [here.](https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/fleet-ms/README.md#run-on-ibm-cloud-with-kubernetes-service)
 
-### Postgresql URL as secret
+### Postgresql URL, User, PWD and CA certificate as secrets
 
 Applying the same approach as above, copy the Postgresql URL as defined in the Postegresql service credential and execute the following command:
 ```
 kubectl create secret generic postgresql-url --from-literal=binding='<replace with postgresql-url>' -n browncompute
 ```
+
+For the user:
+
+```
+kubectl create secret generic postgresql-user --from-literal=binding='ibm_cloud_c...' -n browncompute
+```
+
+For the user password:
+
+```
+kubectl create secret generic postgresql-pwd --from-literal=binding='<password from the service credential>.' -n browncompute
+```
+
+For the SSL certificate:
+
+* Get the certificate using the name of the postgresql service:
+
+```
+ibmcloud cdb deployment-cacert $IC_POSTGRES_SERV > postgresql.crt
+```
+
+* Then add it into an environment variable
+
+```
+export POSTGRESQL_CA_PEM="$(cat ./postgresql.crt)"
+```
+
+* Then define a secret:
+
+```
+kubectl
+create secret generic postgresql-ca-pem --from-literal=binding="$POSTGRESQL_CA_PEM" -n browncompute
+```
+
+Now those variables and secrets are used in the deployment.yml file of the service that needs them. Like the Springboot container microservice. Here is an example of such settings:
+
+```yaml
+- name: POSTGRESQL_CA_PEM 
+  valueFrom: 
+    secretKeyRef:
+      name: postgresql-ca-pem
+      key: binding
+- name: POSTGRESQL_USER 
+  valueFrom: 
+    secretKeyRef:
+      name: postgresql-user
+      key: binding
+- name: POSTGRESQL_PWD 
+  valueFrom: 
+    secretKeyRef:
+      name: postgresql-pwd
+      key: binding
+```
+
 
 ### Private Registry Token
 
@@ -195,17 +257,20 @@ spec:
 *Using secret is also mandatory when registry and clusters are not in the same region.*
 
 * Verify current secrets for a give namespace
+
 ```shell
 kubectl describe secrets -n browncompute
 ```
 
 * Get a security token: you can use permanent or renewable one:
-```
+
+```shell
 ibmcloud cr token-add --description "private registry secret for browncompute" --non-expiring -q
 ```
 
 * To list the token use the command
-```
+
+```shell
 ibmcloud cr tokens
 ```
 The result:
@@ -214,19 +279,21 @@ The result:
  3dbf72eb-6..  true       0       private registry secret for browncompute
 
 * To get the token for a given token identifier
-```
+
+```shell
 ibmcloud cr token-get cce5a800-...
 ```
 
 * Define the secret to store the Event stream API key token information:
-```
+
+```shell
 kubectl --namespace browncompute create secret docker-registry 
 browncompute-registry-secret  --docker-server=<registry_url> --docker-username=token --docker-password=<token_value> --docker-email=<docker_email>
 ```
 
 * Verify the secret   
   
-```
+```shell
 kubectl get secrets -n browncompute  
 ```   
 
@@ -247,45 +314,52 @@ See also the product documentation [for more detail.](https://console.bluemix.ne
 
 The following steps are done each time you want to deploy the solution to IKS. When using continuous deployment, these steps will be automated.
 
-If you are not connected to IBM Cloud, do the following:   
-```sh
+If you are not connected to IBM Cloud, do the following:  
+
+```shell
 ibmcloud login -a https://api.us-east.bluemix.net
 ```
 
-* Target the IBM Cloud Container Service region in which you want to work.   
-```
+* Target the IBM Cloud Container Service region in which you want to work.
+
+```shell
 ibmcloud ks region-set us-east   
 ```
 
-* Set the KUBECONFIG environment variable.   
-```
+* Set the KUBECONFIG environment variable.
+
+```shell
 ibmcloud ks cluster-config fabio-wdc-07
 ```
 
-```
+```shell
 export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/fabio-wdc-07/kube-config-wdc07-fabio-wdc-07.yml   
 ```
 
-* Verify you have access to your cluster by listing the node:   
-```
+* Verify you have access to your cluster by listing the node:
+
+```shell
 kubectl get nodes   
 ```
 
 * login to the container registry
-```
+
+```shell
 ibmcloud cr login
 ```   
 
 Then execute the script: `./scripts/pushToPrivate`  to deploy all component, or go to each repository and use the script `deployHelm`.
 
 * Verify the images are in you private repo:
-```
+
+```shell
 ibmcloud cr image-list
 ```
 
 * Deploy the helm charts for each components using the `scripts/deployHelms`.   
 * Verify the deployments and pods:  
-```
+
+```shell
 kubectl get deployments -n browncompute
 ```
 >  | NAME | DESIRED | CURRENT  | UP-TO-DATE  | AVAILABLE  | AGE |
@@ -296,7 +370,7 @@ kubectl get deployments -n browncompute
   | orderqueryms-deployment | 1  |   1 |  1  |  1  |   23h  |
   | voyagesms-deployment |   1   |  1  |  1  |  1  |   19h |    
 
-```  
+```shell
 kubectl get pods -n browncompute
 ``` 
 
@@ -308,8 +382,27 @@ kubectl get pods -n browncompute
   | orderqueryms-deployment-5db96455f-6fqp5   |  1/1   |   Running |  0     |     23h |  
   | voyagesms-deployment-6d7f8cdc8d-hnvq6     |  1/1   |    Running |  0     |     19h |   
 
-* You can perform a smoke test with the `scripts/smokeTestsIKS` or you can try to access some of the read APIs using the web browser. So first to get the public IP address of your cluster, go to the `Worker Nodes` view of the Clusters console.  Then to get the service exposed NodePort use `kubectl get services -n browncompute` and then get the port number mapped from one of the exposed ports (9080, 3010, 3000...):
+* You can perform a smoke test with the `scripts/smokeTestsIKS` or you can try to access some of the read APIs using the web browser. So first to get the public IP address of your cluster, go to the `Worker Nodes` view of the Clusters console.  
+
+![](iks-cluster.png)
+
+Then to get the service exposed NodePort use `kubectl get services -n browncompute` and then get the port number mapped from one of the exposed ports (9080, 3010, 3000...):
+
+```
+kubectl get services -n browncompute
+NAME                      TYPE       CLUSTER-IP         PORT(S)                         
+fleetms-service           NodePort   172.21.234.250     9080:31300/TCP,9443:31962/TCP  
+kc-ui-service             NodePort   172.21.130.130     3010:31010/TCP                 
+ordercommandms-service    NodePort   172.21.75.48       9080:31200/TCP,9443:31931/TCP  
+orderqueryms-service      NodePort   172.21.223.212     9080:31100/TCP,9443:30176/TCP  
+springcontainerms-service NodePort   172.21.254.144     8080:32302/TCP                 
+voyagesms-service         NodePort   172.21.31.43       3000:31000/TCP                 
+```
+
   * fleetms: here is an example of URL : http://Public IP:31300/fleetms/fleets
   * UI: http://Public IP:31010/
-* Access the kubernetes console from your IKS deployment to see the deployment   
+  * For containers: http://public IP:32302/containers
+* Access the kubernetes console from your IKS deployment to see the deployed solution:
+
+![](iks-deployments.png)
 

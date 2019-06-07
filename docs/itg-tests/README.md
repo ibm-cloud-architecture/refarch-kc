@@ -6,17 +6,18 @@ These code samples are using Python to illustrate how to use Kafka python module
 
 ## Building the python environment as docker image
 
-To avoid impacting your environment we use a dockerfile to get the basic of python 3.7.x and other needed modules like kafka, http requests, pytest... So build your image using the following command under current folder `itg-tests`:
+To avoid impacting your environment we use a dockerfile to get the basic of python 3.7.x and other needed modules like kafka, http requests, pytest... So build your image using the following command under the `docker` folder:
 
 ```shell
 $ docker build -t ibmcase/python .
 ```
+
 With this image we will be able to run the different tests. For example, the following commands will start a bash shell with the python environment, mounting the local filesystem into the docker /home folder, and connect to the same network as the Kafka broker and other KC solution components are running in:
 
 ```shell
 $ pwd
 itg-tests
-. ./setenv.sh
+$ source ../scripts/setenv.sh LOCAL
 $ docker run -e KAFKA_BROKERS=$KAFKA_BROKERS -v $(pwd):/home --network=docker_default -ti ibmcase/python bash
 root@fe61560d0cc4:/# 
 ```

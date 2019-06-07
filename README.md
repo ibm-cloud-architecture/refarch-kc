@@ -44,6 +44,7 @@ The content of this repository is written with markdown files, packaged with [Mk
 As this implementation solution is part of the Event Driven architeture reference architecture, the [contribution policies](./CONTRIBUTING.md) apply the same way here.
 
 **Contributors:**
+
 * [Jerome Boyer](https://www.linkedin.com/in/jeromeboyer/)
 * [Martin Siegenthaler](https://www.linkedin.com/in/martin-siegenthaler-7654184/)
 * [David Engebretsen](https://www.linkedin.com/in/david-engebretsen/)
