@@ -26,12 +26,12 @@ case "$kcenv" in
     ;;
    LOCAL)
         export KAFKA_BROKERS=kafka1:9092
+        export KAFKA_ENV="LOCAL"
         export ORDER_CMD_MS=ordercmd:10080
         export ORDER_QUERY_MS=orderquery:11080
         export CONTAINER_SPRING_MS="containerkstreams:12081"
-        export POSTGRESQL_URL="jdbc:postgresql://postgres:5432/postgres"
+        export POSTGRESQL_URL="jdbc:postgresql://postgresql1:5432/postgres"
         export POSTGRESQL_USER="postgres"
         export POSTGRESQL_PWD="supersecret"
-        export POSTGRESQL_CA_PEM=""
    ;;
 esac
