@@ -36,7 +36,7 @@
     
     
       
-        <title>Introduction - Container Shipment EDA reference implementation</title>
+        <title>Security - Container Shipment EDA reference implementation</title>
       
     
     
@@ -96,7 +96,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#introduction" tabindex="1" class="md-skip">
+      <a href="#security" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -121,7 +121,7 @@
               Container Shipment EDA reference implementation
             </span>
             <span class="md-header-nav__topic">
-              Introduction
+              Security
             </span>
           
         </div>
@@ -241,12 +241,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
     
     <label class="md-nav__link" for="nav-2">
       Business problem statement
@@ -262,56 +260,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Introduction
-      </label>
-    
-    <a href="./" title="Introduction" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../introduction/" title="Introduction" class="md-nav__link">
       Introduction
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#business-process-statement" title="Business process statement" class="md-nav__link">
-    Business process statement
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#event-storming-analysis" title="Event storming analysis" class="md-nav__link">
-    Event storming analysis
-  </a>
-  
-</li>
-      
-      
-      
-      
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -518,7 +471,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../security" title="Security" class="md-nav__link">
+    <a href="." title="Security" class="md-nav__link">
       Security
     </a>
   </li>
@@ -569,15 +522,15 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#business-process-statement" title="Business process statement" class="md-nav__link">
-    Business process statement
+  <a href="#ibm-cloud" title="IBM Cloud" class="md-nav__link">
+    IBM Cloud
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#event-storming-analysis" title="Event storming analysis" class="md-nav__link">
-    Event storming analysis
+  <a href="#certificate-java-truststore-docker" title="Certificate - Java Truststore - Docker" class="md-nav__link">
+    Certificate - Java Truststore - Docker
   </a>
   
 </li>
@@ -598,25 +551,38 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/ibm-cloud-architecture/refarch-kc/edit/master/docs/introduction.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/ibm-cloud-architecture/refarch-kc/edit/master/docs/security.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="introduction">Introduction</h1>
-<p>As part of producing the IBM event driven point of view and reference architecture, we wanted to bring together a complete scenario which would cover all aspects of developing an event driven solutions including extended connections to devices/IOT and blockchain for trusted business trading networks. We felt that the shipping business could provide a good foundation for this and would enable us to show how to develop event driven solutions following the architecture patterns.</p>
-<h2 id="business-process-statement">Business process statement</h2>
-<p>The high level process can be represented in the following diagram, and is described in detailed in <a href="../analysis/readme/#high-level-view-of-the-shipment-process-flow">this section</a>:</p>
-<p><img alt="Shipment business process" src="../analysis/shipment-bp1.png" /></p>
-<p>In developing the scenario, it became apparent that the event driven nature of business, extends across the business network, so we have widened the view in the scenario to consider the chain of parties involved in the shipping process, including importer, exporter, land transport and customs. To keep the scenario easy to understand, we have only considered the following cases:</p>
-<ol>
-<li>Importer Orders goods from exporter overseas</li>
-<li>Exporter becomes the customer of the shipping agent and uses 'K.Container' shipping service</li>
-<li>Shipping agent manages process of land transport loading, unloading and shipping. Through the scenario we can see the impact of “events”, which may delay or change the shipping process across all three parties.  </li>
-</ol>
-<p>We are using goods to be transported in refrigerator containers or reefer containers to keep the 'cold chain' of transported products.</p>
-<p><img src="" width="300px" style="padding:20px;"></img></p>
-<p><img alt="Reefer" src="../images/reefer.png" /></p>
-<h2 id="event-storming-analysis">Event storming analysis</h2>
-<p>We met with the business users and project stakeholder during an event storming workshop, and we are detailing the outcomes in the <a href="../analysis/readme/">next chapter &gt;&gt;</a></p>
+                <h1 id="security">Security</h1>
+<p>This section addresses some challenges and best practices to support security for event-driven microservice integrating Kafka consumer or producer, or both, into the code, and CI/CD platform.</p>
+<p>Kafka <a href="https://ibm-cloud-architecture.github.io/refarch-eda/kafka/consumers/">consumers</a> and <a href="https://ibm-cloud-architecture.github.io/refarch-eda/kafka/producers/">producers</a> need at least the broker URLs, the security API key in the case of Event Stream deployed on IBM Cloud public or private, and the SSL certificate as the communication is encrypted. </p>
+<p>Applying the "store config in the environment" rule of <a href="https://12factor.net/">the 12 factors</a> manisfesto, we are using the following environment variables:</p>
+<pre><code>export KAFKA_BROKERS=&quot;localhost:9092&quot;
+export KAFKA_APIKEY=&quot;nokey&quot;
+export KAFKA_ENV=&quot;LOCAL&quot;
+export POSTGRESQL_URL=&quot;jdbc:postgresql://localhost:5432/postgres&quot;
+export POSTGRESQL_USER=&quot;postgres&quot;
+export POSTGRESQL_PWD=&quot;supersecret&quot;
+export POSTGRESQL_CA_PEM=&quot;&quot;
+</code></pre>
+
+<p>The settings above are for running locally on the developer's laptop. To support the different environment (LOCAL, ICP, IBMCLOUD), we have a <code>scripts/setenv.sh</code> bash script to help export those variables. We are providing a template for this file in the file: <a href="https://github.com/ibm-cloud-architecture/refarch-kc/blob/master/scripts/setenv.sh.tmpl">setenv.sh.tmpl</a> </p>
+<p>The settings are a little bit different for public cloud and private cloud. </p>
+<h2 id="ibm-cloud">IBM Cloud</h2>
+<p>For public cloud we need to get the credentials for Event Streams service (see the explanations and figures in <a href="../deployments/iks/#event-streams-service-on-ibm-cloud">this note</a>) and for the postgresql service in <a href="../deployments/iks/#the-postgresql-service">this note</a>. </p>
+<p>For the Postgresql certificate the following command helps to get it. You may need to install the cloud database CLI with the command <code>ibmcloud plugin install cloud-databases</code></p>
+<pre><code>ibmcloud cdb deployment-cacert &lt;name-of-postgres-service&gt; &gt; postgresql.crt
+</code></pre>
+
+<p>This file will be used for adding certificate in the Java Truststore. </p>
+<h2 id="certificate-java-truststore-docker">Certificate - Java Truststore - Docker</h2>
+<p>We have encoutered some challenges to inject SSL certificate in truststore when using Docker build stage. We have implemented scripts to do the following:</p>
+<ul>
+<li>add certificate to trustore using openssl and  keytool. <a href="https://github.com/ibm-cloud-architecture/refarch-kc-container-ms/blob/master/SpringContainerMS/scripts/add_certificates.sh">This script</a> has to be run during the build stage, as unit tests are run inside the docker it needs to get certificate for maven, but it also need to execute when the container start in the deployed cluster. See the multi-stages <a href="https://github.com/ibm-cloud-architecture/refarch-kc-container-ms/blob/master/SpringContainerMS/Dockerfile">dockerfile here</a>.</li>
+<li>a startup script to start the java application, but calling the add certificate script and set the Java options.</li>
+</ul>
+<p>The <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/springboot/">Springboot implementation</a> of the container management microservice uses this approach. Environment variables are used for passing values to maven, for the build and unit tests, and to Java for runtime. </p>
                 
                   
                 
@@ -633,41 +599,6 @@
       
         
 <footer class="md-footer">
-  
-    <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid">
-        
-          <a href=".." title="Introduction" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-            <div class="md-flex__cell md-flex__cell--shrink">
-              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
-            </div>
-            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-              <span class="md-flex__ellipsis">
-                <span class="md-footer-nav__direction">
-                  Previous
-                </span>
-                Introduction
-              </span>
-            </div>
-          </a>
-        
-        
-          <a href="../analysis/readme/" title="Event storming analysis" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-              <span class="md-flex__ellipsis">
-                <span class="md-footer-nav__direction">
-                  Next
-                </span>
-                Event storming analysis
-              </span>
-            </div>
-            <div class="md-flex__cell md-flex__cell--shrink">
-              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
-            </div>
-          </a>
-        
-      </nav>
-    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">

@@ -231,8 +231,8 @@
 
 
   <li class="md-nav__item">
-    <a href=".." title="Welcome" class="md-nav__link">
-      Welcome
+    <a href=".." title="Introduction" class="md-nav__link">
+      Introduction
     </a>
   </li>
 
@@ -403,11 +403,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
     
     <label class="md-nav__link" for="nav-7">
-      Build and run
+      Deployments
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-7">
-        Build and run
+        Deployments
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -448,6 +448,18 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/cicd" title="Example of ci/cd" class="md-nav__link">
+      Example of ci/cd
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -459,8 +471,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../demo/readme/" title="Demonstration script" class="md-nav__link">
-      Demonstration script
+    <a href="../security" title="Security" class="md-nav__link">
+      Security
     </a>
   </li>
 
@@ -570,6 +582,18 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../demo/readme/" title="Demonstration script" class="md-nav__link">
+      Demonstration script
+    </a>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -675,14 +699,14 @@
 <p>The <code>itg-tests</code> folder includes a set of tests to validate some of the event-driven microservice patterns like, event sourcing with fail over, CQRS and Saga patterns with recovery and fail over. (See our summary on those patterns <a href="https://ibm-cloud-architecture.github.io/refarch-eda/evt-microservices/ED-patterns/">here</a>)</p>
 <p>These code samples are using Python to illustrate how to use Kafka python module from <a href="https://github.com/confluentinc/confluent-kafka-python">this github.</a></p>
 <h2 id="building-the-python-environment-as-docker-image">Building the python environment as docker image</h2>
-<p>To avoid impacting your environment we use a dockerfile to get the basic of python 3.7.x and other needed modules like kafka, http requests, pytest... So build your image using the following command under current folder <code>itg-tests</code>:</p>
+<p>To avoid impacting your environment we use a dockerfile to get the basic of python 3.7.x and other needed modules like kafka, http requests, pytest... So build your image using the following command under the <code>docker</code> folder:</p>
 <pre><code class="shell">$ docker build -t ibmcase/python .
 </code></pre>
 
 <p>With this image we will be able to run the different tests. For example, the following commands will start a bash shell with the python environment, mounting the local filesystem into the docker /home folder, and connect to the same network as the Kafka broker and other KC solution components are running in:</p>
 <pre><code class="shell">$ pwd
 itg-tests
-. ./setenv.sh
+$ source ../scripts/setenv.sh LOCAL
 $ docker run -e KAFKA_BROKERS=$KAFKA_BROKERS -v $(pwd):/home --network=docker_default -ti ibmcase/python bash
 root@fe61560d0cc4:/# 
 </code></pre>
@@ -751,7 +775,7 @@ root@fe61560d0cc4:/# python EventSourcingTests.py
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../demo/readme/" title="Demonstration script" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../deployments/icp/" title="Run on IBM Cloud Private" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -760,11 +784,25 @@ root@fe61560d0cc4:/# python EventSourcingTests.py
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Demonstration script
+                Run on IBM Cloud Private
               </span>
             </div>
           </a>
         
+        
+          <a href="../demo/readme/" title="Demonstration script" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Demonstration script
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
         
       </nav>
     </div>

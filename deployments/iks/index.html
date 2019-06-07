@@ -231,8 +231,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../.." title="Welcome" class="md-nav__link">
-      Welcome
+    <a href="../.." title="Introduction" class="md-nav__link">
+      Introduction
     </a>
   </li>
 
@@ -405,11 +405,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" checked>
     
     <label class="md-nav__link" for="nav-7">
-      Build and run
+      Deployments
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-7">
-        Build and run
+        Deployments
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -571,6 +571,18 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/cicd" title="Example of ci/cd" class="md-nav__link">
+      Example of ci/cd
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -582,8 +594,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../demo/readme/" title="Demonstration script" class="md-nav__link">
-      Demonstration script
+    <a href="../../security" title="Security" class="md-nav__link">
+      Security
     </a>
   </li>
 
@@ -596,6 +608,18 @@
   <li class="md-nav__item">
     <a href="../../itg-tests/" title="Integration tests" class="md-nav__link">
       Integration tests
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../demo/readme/" title="Demonstration script" class="md-nav__link">
+      Demonstration script
     </a>
   </li>
 
@@ -850,6 +874,13 @@ First you need to configure the needed services. </p>
 <blockquote>
 <p>If you do not plan to use this container manager service you do not need to create a Postgresql service.</p>
 </blockquote>
+<p>When the service is configured, you need to create some credentials and retreive the following values for the different configurations:</p>
+<ul>
+<li>postgres.username</li>
+<li>postgres.password</li>
+<li>postgres.composed which will be map to a JDBC URL.</li>
+</ul>
+<p><img alt="" src="../postgres-credentials.png" /></p>
 <h2 id="run-the-solution-on-ibm-cloud-kubernetes-services">Run the solution on IBM Cloud Kubernetes Services</h2>
 <h3 id="event-stream-api-key">Event stream API key</h3>
 <p>The Event streams broker API key is needed to connect any deployed consumers or producers within kubernetes cluster to access the service in IBM Cloud. To avoid sharing security keys, we propose to define a kubernetes secret and deploy it to the IKS cluster.</p>
@@ -900,7 +931,22 @@ create secret generic postgresql-ca-pem --from-literal=binding=&quot;$POSTGRESQL
 </code></pre>
 
 <p>Now those variables and secrets are used in the deployment.yml file of the service that needs them. Like the Springboot container microservice. Here is an example of such settings:</p>
-<pre><code></code></pre>
+<pre><code class="yaml">- name: POSTGRESQL_CA_PEM 
+  valueFrom: 
+    secretKeyRef:
+      name: postgresql-ca-pem
+      key: binding
+- name: POSTGRESQL_USER 
+  valueFrom: 
+    secretKeyRef:
+      name: postgresql-user
+      key: binding
+- name: POSTGRESQL_PWD 
+  valueFrom: 
+    secretKeyRef:
+      name: postgresql-pwd
+      key: binding
+</code></pre>
 
 <h3 id="private-registry-token">Private Registry Token</h3>
 <p>Each helm chart specifies the name of the docker image to load to create the containers / pods. The image name is from a private repository. To let kubernetes scheduler being able to access the registry, we need to define a secret to hold the security token. Here is an extract of a deployment yaml file referencing the <code>browncompute-registry-secret</code> secret.</p>
@@ -923,13 +969,13 @@ create secret generic postgresql-ca-pem --from-literal=binding=&quot;$POSTGRESQL
 <ul>
 <li>Get a security token: you can use permanent or renewable one:</li>
 </ul>
-<pre><code>ibmcloud cr token-add --description &quot;private registry secret for browncompute&quot; --non-expiring -q
+<pre><code class="shell">ibmcloud cr token-add --description &quot;private registry secret for browncompute&quot; --non-expiring -q
 </code></pre>
 
 <ul>
 <li>To list the token use the command</li>
 </ul>
-<pre><code>ibmcloud cr tokens
+<pre><code class="shell">ibmcloud cr tokens
 </code></pre>
 
 <p>The result:</p>
@@ -941,20 +987,20 @@ create secret generic postgresql-ca-pem --from-literal=binding=&quot;$POSTGRESQL
 <ul>
 <li>To get the token for a given token identifier</li>
 </ul>
-<pre><code>ibmcloud cr token-get cce5a800-...
+<pre><code class="shell">ibmcloud cr token-get cce5a800-...
 </code></pre>
 
 <ul>
 <li>Define the secret to store the Event stream API key token information:</li>
 </ul>
-<pre><code>kubectl --namespace browncompute create secret docker-registry 
+<pre><code class="shell">kubectl --namespace browncompute create secret docker-registry 
 browncompute-registry-secret  --docker-server=&lt;registry_url&gt; --docker-username=token --docker-password=&lt;token_value&gt; --docker-email=&lt;docker_email&gt;
 </code></pre>
 
 <ul>
 <li>Verify the secret   </li>
 </ul>
-<pre><code>kubectl get secrets -n browncompute  
+<pre><code class="shell">kubectl get secrets -n browncompute  
 </code></pre>
 
 <p>You will see something like below.   </p>
@@ -995,49 +1041,49 @@ browncompute-registry-secret  --docker-server=&lt;registry_url&gt; --docker-user
 See also the product documentation <a href="https://console.bluemix.net/docs/containers/cs_dedicated_tokens.html">for more detail.</a></p>
 <h3 id="push-images">Push images</h3>
 <p>The following steps are done each time you want to deploy the solution to IKS. When using continuous deployment, these steps will be automated.</p>
-<p>If you are not connected to IBM Cloud, do the following:   </p>
-<pre><code class="sh">ibmcloud login -a https://api.us-east.bluemix.net
+<p>If you are not connected to IBM Cloud, do the following:  </p>
+<pre><code class="shell">ibmcloud login -a https://api.us-east.bluemix.net
 </code></pre>
 
 <ul>
-<li>Target the IBM Cloud Container Service region in which you want to work.   </li>
+<li>Target the IBM Cloud Container Service region in which you want to work.</li>
 </ul>
-<pre><code>ibmcloud ks region-set us-east   
+<pre><code class="shell">ibmcloud ks region-set us-east   
 </code></pre>
 
 <ul>
-<li>Set the KUBECONFIG environment variable.   </li>
+<li>Set the KUBECONFIG environment variable.</li>
 </ul>
-<pre><code>ibmcloud ks cluster-config fabio-wdc-07
+<pre><code class="shell">ibmcloud ks cluster-config fabio-wdc-07
 </code></pre>
 
-<pre><code>export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/fabio-wdc-07/kube-config-wdc07-fabio-wdc-07.yml   
+<pre><code class="shell">export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/fabio-wdc-07/kube-config-wdc07-fabio-wdc-07.yml   
 </code></pre>
 
 <ul>
-<li>Verify you have access to your cluster by listing the node:   </li>
+<li>Verify you have access to your cluster by listing the node:</li>
 </ul>
-<pre><code>kubectl get nodes   
+<pre><code class="shell">kubectl get nodes   
 </code></pre>
 
 <ul>
 <li>login to the container registry</li>
 </ul>
-<pre><code>ibmcloud cr login
+<pre><code class="shell">ibmcloud cr login
 </code></pre>
 
 <p>Then execute the script: <code>./scripts/pushToPrivate</code>  to deploy all component, or go to each repository and use the script <code>deployHelm</code>.</p>
 <ul>
 <li>Verify the images are in you private repo:</li>
 </ul>
-<pre><code>ibmcloud cr image-list
+<pre><code class="shell">ibmcloud cr image-list
 </code></pre>
 
 <ul>
 <li>Deploy the helm charts for each components using the <code>scripts/deployHelms</code>.   </li>
 <li>Verify the deployments and pods:  </li>
 </ul>
-<pre><code>kubectl get deployments -n browncompute
+<pre><code class="shell">kubectl get deployments -n browncompute
 </code></pre>
 
 <blockquote>
@@ -1096,7 +1142,7 @@ See also the product documentation <a href="https://console.bluemix.net/docs/con
 </tbody>
 </table>
 </blockquote>
-<pre><code>kubectl get pods -n browncompute
+<pre><code class="shell">kubectl get pods -n browncompute
 </code></pre>
 
 <blockquote>
@@ -1150,11 +1196,27 @@ See also the product documentation <a href="https://console.bluemix.net/docs/con
 </table>
 </blockquote>
 <ul>
-<li>You can perform a smoke test with the <code>scripts/smokeTestsIKS</code> or you can try to access some of the read APIs using the web browser. So first to get the public IP address of your cluster, go to the <code>Worker Nodes</code> view of the Clusters console.  Then to get the service exposed NodePort use <code>kubectl get services -n browncompute</code> and then get the port number mapped from one of the exposed ports (9080, 3010, 3000...):</li>
+<li>You can perform a smoke test with the <code>scripts/smokeTestsIKS</code> or you can try to access some of the read APIs using the web browser. So first to get the public IP address of your cluster, go to the <code>Worker Nodes</code> view of the Clusters console.  </li>
+</ul>
+<p><img alt="" src="../iks-cluster.png" /></p>
+<p>Then to get the service exposed NodePort use <code>kubectl get services -n browncompute</code> and then get the port number mapped from one of the exposed ports (9080, 3010, 3000...):</p>
+<pre><code>kubectl get services -n browncompute
+NAME                      TYPE       CLUSTER-IP         PORT(S)                         
+fleetms-service           NodePort   172.21.234.250     9080:31300/TCP,9443:31962/TCP  
+kc-ui-service             NodePort   172.21.130.130     3010:31010/TCP                 
+ordercommandms-service    NodePort   172.21.75.48       9080:31200/TCP,9443:31931/TCP  
+orderqueryms-service      NodePort   172.21.223.212     9080:31100/TCP,9443:30176/TCP  
+springcontainerms-service NodePort   172.21.254.144     8080:32302/TCP                 
+voyagesms-service         NodePort   172.21.31.43       3000:31000/TCP                 
+</code></pre>
+
+<ul>
 <li>fleetms: here is an example of URL : http://Public IP:31300/fleetms/fleets</li>
 <li>UI: http://Public IP:31010/</li>
-<li>Access the kubernetes console from your IKS deployment to see the deployment   </li>
+<li>For containers: http://public IP:32302/containers</li>
+<li>Access the kubernetes console from your IKS deployment to see the deployed solution:</li>
 </ul>
+<p><img alt="" src="../iks-deployments.png" /></p>
                 
                   
                 
