@@ -23,11 +23,20 @@ def prepareProducer():
             'bootstrap.servers':  KAFKA_BROKERS,
             'group.id': 'python-container-producer'
         }
-    else:
+    elif (KAFKA_ENV == 'ICP'):
         options = {
             'bootstrap.servers':  KAFKA_BROKERS,
             'security.protocol': 'SASL_SSL',
             'ssl.ca.location': 'es-cert.pem',
+            'sasl.mechanisms': 'PLAIN',
+            'sasl.username': 'token',
+            'sasl.password': KAFKA_APIKEY,
+            'group.id': 'python-container-producer',
+        }
+    else:
+        options = {
+            'bootstrap.servers':  KAFKA_BROKERS,
+             'security.protocol': 'SASL_SSL',
             'sasl.mechanisms': 'PLAIN',
             'sasl.username': 'token',
             'sasl.password': KAFKA_APIKEY,

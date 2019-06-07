@@ -1,7 +1,7 @@
 site_name: Container Shipment EDA reference implementation
 repo_url: https://github.com/ibm-cloud-architecture/refarch-kc
 nav:
-  - Welcome: index.md
+  - Introduction: index.md
   - Business problem statement:
     - Introduction: introduction.md
     - Event storming analysis: ./analysis/readme.md
@@ -13,12 +13,15 @@ nav:
     - Container microservice with Python:  https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/flask
     - Container microservice with Springboot - Spring Kafka and PostgreSQL:  https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/springboot
   - Related repositories: ./deployments/reposlist.md
-  - Build and run:
+  - Deployments:
     - Run locally with Docker Compose: ./deployments/local.md
     - Run on IBM Cloud Kubernetes Services: ./deployments/iks.md
     - Run on IBM Cloud Private: ./deployments/icp.md
-  - Demonstration script: ./demo/readme.md
+    - Example of ci/cd: https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/cicd
+  - Security: security
   - Integration tests: ./itg-tests/README.md
+  - Demonstration script: ./demo/readme.md
+
 
 theme: 
   name: material
