@@ -66,7 +66,16 @@ kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic allocated-orde
 
 7. Enter `exit` to come out of it.
 
-TBD - Look at an alternative 
+8. Deploy postgresql using helm.
+
+```
+helm install --name postgre-db \
+  --set postgresqlPassword=supersecret \
+  --set persistence.enabled=false \
+    stable/postgresql --namespace greencompute
+```
+
+TBD - Look at an alternative for kafka
 
 ## Fleet ms
 
@@ -217,6 +226,16 @@ docker run --name springcontainerms \
   -e POSTGRESQL_PWD=$POSTGRESQL_PWD \
   -e TRUSTSTORE_PWD=${TRUSTSTORE_PWD} \
   -p 8080:8080 -ti  ibmcase/kc-springcontainerms
+```
+
+4. Create required secrets.
+
+```
+kubectl create secret generic postgresql-url --from-literal=binding='jdbc:postgresql://postgre-db-postgresql:5432/postgres' -n greencompute
+
+kubectl create secret generic postgresql-user --from-literal=binding='postgres' -n greencompute
+
+kubectl create secret generic postgresql-pwd --from-literal=binding='supersecret' -n greencompute
 ```
 
 4. Deploy on minikube
