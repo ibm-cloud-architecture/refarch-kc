@@ -1,24 +1,6 @@
-## Get the app
-
-git clone https://github.com/ibm-cloud-architecture/refarch-kc.git
-
-cd refarch-kc/
-
-./scripts/clone.sh
+# Minikube deployment
 
 ## Setting up Kafka and Zookeeper
-
-### On Docker
-
-1. Deploying Kafka and Zookeeper on Docker
-
-```
-$ cd docker && docker-compose -f backbone-compose.yml up -d >& backend.logs
-
-$ ./scripts/createLocalTopics.sh
-```
-
-### On Minikube
 
 1. Create a namespace.
 

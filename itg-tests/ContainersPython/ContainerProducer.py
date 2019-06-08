@@ -1,5 +1,5 @@
-import os, time, json, sys
-from confluent_kafka import KafkaError, Producer
+import os, time, sys
+from kafka.KcProducer import KafkaProducer
 
 try:
     KAFKA_BROKERS = os.environ['KAFKA_BROKERS']
@@ -17,47 +17,6 @@ try:
 except KeyError:
     KAFKA_ENV='LOCAL'
 
-def prepareProducer():
-    if (KAFKA_ENV == 'LOCAL'):
-        options ={
-            'bootstrap.servers':  KAFKA_BROKERS,
-            'group.id': 'python-container-producer'
-        }
-    elif (KAFKA_ENV == 'ICP'):
-        options = {
-            'bootstrap.servers':  KAFKA_BROKERS,
-            'security.protocol': 'SASL_SSL',
-            'ssl.ca.location': 'es-cert.pem',
-            'sasl.mechanisms': 'PLAIN',
-            'sasl.username': 'token',
-            'sasl.password': KAFKA_APIKEY,
-            'group.id': 'python-container-producer',
-        }
-    else:
-        options = {
-            'bootstrap.servers':  KAFKA_BROKERS,
-             'security.protocol': 'SASL_SSL',
-            'sasl.mechanisms': 'PLAIN',
-            'sasl.username': 'token',
-            'sasl.password': KAFKA_APIKEY,
-            'group.id': 'python-container-producer',
-        }
-    return Producer(options)
-
-def delivery_report(err, msg):
-    """ Called once for each message produced to indicate delivery result.
-        Triggered by poll() or flush(). """
-    if err is not None:
-        print('Message delivery failed: {}'.format(err))
-    else:
-        print('Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
-
-
-def publishContainerEvent(eventToSend):
-    containerProducer = prepareProducer()
-    dataStr = json.dumps(eventToSend)
-    containerProducer.produce('containers',key=eventToSend['containerID'],value=dataStr.encode('utf-8'), callback=delivery_report)
-    containerProducer.flush()
 
 def createContainer(id):
     print('Create container')
@@ -79,8 +38,11 @@ def parseArguments():
     print("The arguments are: " , str(sys.argv))
     return ID
 
+
 if __name__ == '__main__':
     CID=parseArguments()
     evt = createContainer(CID)
     print(evt)
-    publishContainerEvent(evt)
+    kp = KafkaProducer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_APIKEY)
+    kp.prepareProducer("ContainerProducerPython")
+    kp.publishEvent('containers',evt,"containerID")
