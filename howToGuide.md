@@ -1,3 +1,13 @@
+# Reefer Container Shipment solution - EDA reference implementation
+
+As part of producing the IBM event driven point of view and reference architecture, we wanted to bring together a complete scenario which would cover all aspects of developing an event driven solutions including extended connections to devices/IOT and blockchain for trusted business trading networks. We felt that the shipping business could provide a good foundation for this and would enable us to show how to develop event driven solutions following the architecture patterns.
+
+## TL;TR
+
+If you want to just get the code, build and run we propose running locally with Minikube or Docker-compose.
+
+To build and run the solution locally, please follow the below instructions.
+
 ## Get the app
 
 git clone https://github.com/ibm-cloud-architecture/refarch-kc.git
@@ -26,47 +36,39 @@ $ ./scripts/createLocalTopics.sh
 kubectl create namespace greencompute
 ```
 
+2. Add the helm repo.
+
+```
+helm repo add bitnami https://charts.bitnami.com
+```
+
 2. Deploy kafka and zookeeper using helm
 
 ```
-helm install --name kafka --set persistence.enabled=false confluentinc/cp-helm-charts --namespace greencompute
+helm install --set persistence.enabled=false --name my-release bitnami/kafka --namespace greencompute
 ```
 
 3. Deploy kafka client pod.
 
 ```
-kubectl apply -f ./minikube/kafka_client.yaml -n greencompute
+export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=my-release,app.kubernetes.io/component=kafka" -o jsonpath="{.items[0].metadata.name}")
 ```
 
-4. Log into the Pod
+4. Create the topics.
 
 ```
-kubectl exec -it kafka-client bash -n greencompute
+kubectl exec -it $POD_NAME -- kafka-topics.sh --create --zookeeper my-release-zookeeper:2181 --replication-factor 1 --partitions 1 --topic bluewaterContainer
+kubectl exec -it $POD_NAME -- kafka-topics.sh --create --zookeeper my-release-zookeeper:2181 --replication-factor 1 --partitions 1 --topic bluewaterShip
+kubectl exec -it $POD_NAME -- kafka-topics.sh --create --zookeeper my-release-zookeeper:2181 --replication-factor 1 --partitions 1 --topic bluewaterProblem
+kubectl exec -it $POD_NAME -- kafka-topics.sh --create --zookeeper my-release-zookeeper:2181 --replication-factor 1 --partitions 1 --topic orders
+kubectl exec -it $POD_NAME -- kafka-topics.sh --create --zookeeper my-release-zookeeper:2181 --replication-factor 1 --partitions 1 --topic errors
+kubectl exec -it $POD_NAME -- kafka-topics.sh --create --zookeeper my-release-zookeeper:2181 --replication-factor 1 --partitions 1 --topic containers
+kubectl exec -it $POD_NAME -- kafka-topics.sh --create --zookeeper my-release-zookeeper:2181 --replication-factor 1 --partitions 1 --topic containerMetrics
+kubectl exec -it $POD_NAME -- kafka-topics.sh --create --zookeeper my-release-zookeeper:2181 --replication-factor 1 --partitions 1 --topic rejected-orders
+kubectl exec -it $POD_NAME -- kafka-topics.sh --create --zookeeper my-release-zookeeper:2181 --replication-factor 1 --partitions 1 --topic allocated-orders
 ```
 
-5. Go to `bin` folder.
-
-```
-$ cd bin
-```
-
-6. Create the topics.
-
-```
-kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic bluewaterContainer --create --partitions 1 --replication-factor 1 --if-not-exists
-kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic bluewaterShip --create --partitions 1 --replication-factor 1 --if-not-exists
-kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic bluewaterProblem --create --partitions 1 --replication-factor 1 --if-not-exists
-kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic orders --create --partitions 1 --replication-factor 1 --if-not-exists
-kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic errors --create --partitions 1 --replication-factor 1 --if-not-exists
-kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic containers --create --partitions 1 --replication-factor 1 --if-not-exists
-kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic containerMetrics --create --partitions 1 --replication-factor 1 --if-not-exists
-kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic rejected-orders --create --partitions 1 --replication-factor 1 --if-not-exists
-kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic allocated-orders --create --partitions 1 --replication-factor 1 --if-not-exists
-```
-
-7. Enter `exit` to come out of it.
-
-8. Deploy postgresql using helm.
+5. Deploy postgresql using helm.
 
 ```
 helm install --name postgre-db \
@@ -74,8 +76,6 @@ helm install --name postgre-db \
   --set persistence.enabled=false \
     stable/postgresql --namespace greencompute
 ```
-
-TBD - Look at an alternative for kafka
 
 ## Fleet ms
 
