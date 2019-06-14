@@ -1,17 +1,29 @@
 # Reefer Container Shipment solution - EDA reference implementation
 
-The IBM Event Driven architecture reference implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an [event driven architecture](https://ibm-cloud-architecture.github.io/refarch-eda) with event backbone, functions as service and microservices, and aims to illustrate the different event driven patterns like event sourcing, CQRS and Saga.
+The IBM Event Driven architecture reference implementation solution illustrates the deployment of real time analytics on event streams in the context of container shipment in an [event driven architecture](https://ibm-cloud-architecture.github.io/refarch-eda) with event backbone, functions as service and evnt-driven microservices, and aims to illustrate the different event driven patterns like event sourcing, CQRS and Saga. There is a lot of content, so consider this to be a living book, for better reading experience go to [the book view.](http://ibm-cloud-architecture.github.io/refarch-kc)
 
-As our content is like a living book, for better reading experience go to [the book view.](http://ibm-cloud-architecture.github.io/refarch-kc)
+## TL;TR
 
-## Clone, build, smoke tests...
+If you want to just get the code, build and run we propose running locally with Minikube or Docker-compose. 
 
-To buils and run the solution locally we are delivering some scripts which could help you to quickly get the solution cloned, built and deployed. Those bash scripts are under the 'scripts` folder.
+To build and run the solution locally we are delivering some scripts which should help you to quickly get the solution cloned, built and deployed. Those bash scripts are under the `scripts` folder of this project.
 
-* To clone all the related projects: `./scripts/clone.sh`
-* To assess your environment and build the docker images needed for build: `./scripts/prepareEnv`.
+```
+git clone https://github.com/ibm-cloud-architecture/refarch-kc.git
+```
 
-We recomment to read the detail in [this note](http://ibm-cloud-architecture.github.io/refarch-kc/deployments/local/).
+```
+cd refarch
+./scripts/clone.sh
+```
+
+* To assess your environment and build the docker images needed for build: 
+
+```
+./scripts/prepareEnv
+```
+
+For docker-compose we recommend reading [this note](http://ibm-cloud-architecture.github.io/refarch-kc/deployments/local/) for Minikube [this separate note](http://ibm-cloud-architecture.github.io/refarch-kc/deployments/minikube/)
 
 
 ### Building this booklet locally

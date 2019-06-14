@@ -1,5 +1,5 @@
-import os,json,sys
-from confluent_kafka import Consumer, KafkaError
+import os,sys
+from kafka.KcConsumer import KafkaConsumer
 
 try:
     KAFKA_BROKERS = os.environ['KAFKA_BROKERS']
@@ -30,55 +30,9 @@ def parseArguments():
     print(KAFKA_BROKERS)
     print(KAFKA_APIKEY)
 
-def prepareConsumer():
-    if (KAFKA_ENV == 'LOCAL'):
-        options ={
-            'bootstrap.servers':  KAFKA_BROKERS,
-            'auto.offset.reset': 'earliest',
-            'enable.auto.commit': True,
-            'group.id': 'kafka-python-container-test-consumer'
-        }
-    else:
-        options = {
-            'bootstrap.servers':  KAFKA_BROKERS,
-            'security.protocol': 'SASL_SSL',
-            'ssl.ca.location': 'es-cert.pem',
-            'sasl.mechanisms': 'PLAIN',
-            'sasl.username': 'token',
-            'sasl.password': KAFKA_APIKEY,
-            'auto.offset.reset': 'earliest',
-            'enable.auto.commit': True,
-            'group.id': 'kafka-python-container-test-consumer'
-        }
-    return Consumer(options)
-
-def traceResponse(msg):
-    containerAsStr = msg.value().decode('utf-8')
-    print('@@@ pollNextOrder {} partition: [{}] at offset {} with key {}:\n\tvalue: {}'
-                .format(msg.topic(), msg.partition(), msg.offset(), str(msg.key()), containerAsStr ))
-    return containerAsStr
-
-def pollNextContainer(consumer,cid):
-    gotIt = False
-    containerEvent = {}
-    while not gotIt:
-        msg = consumer.poll(timeout=10.0)
-        if msg is None:
-            continue
-        if msg.error():
-            print("Consumer error: {}".format(msg.error()))
-            if ("PARTITION_EOF" in msg.error()):
-                gotIt= True
-            continue
-        containerAsStr = traceResponse(msg)
-        containerEvent = json.loads(containerAsStr)
-        if (containerEvent['payload']['containerID'] == cid):
-            gotIt = True
-    return containerEvent
-
 if __name__ == '__main__':
     parseArguments()
-    consumer = prepareConsumer()
-    consumer.subscribe([TOPIC_NAME])
-    pollNextContainer(consumer,CID)
+    consumer = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_APIKEY,TOPIC_NAME)
+    consumer.prepareConsumer()
+    consumer.pollNextEvent(CID,'containerID')
     consumer.close()

@@ -6,7 +6,7 @@ As part of producing the IBM event driven point of view and reference architectu
 
 If you want to just get the code, build and run we propose running locally with Minikube or Docker-compose.
 
-To build and run the solution locally, please follow the below instructions.
+To build and run the solution locally using minikube, please follow the below instructions.
 
 ## Get the app
 
@@ -16,19 +16,9 @@ cd refarch-kc/
 
 ./scripts/clone.sh
 
+# Minikube deployment
+
 ## Setting up Kafka and Zookeeper
-
-### On Docker
-
-1. Deploying Kafka and Zookeeper on Docker
-
-```
-$ cd docker && docker-compose -f backbone-compose.yml up -d >& backend.logs
-
-$ ./scripts/createLocalTopics.sh
-```
-
-### On Minikube
 
 1. Create a namespace.
 
@@ -51,7 +41,7 @@ helm install --set persistence.enabled=false --name my-release bitnami/kafka --n
 3. Deploy kafka client pod.
 
 ```
-export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=my-release,app.kubernetes.io/component=kafka" -o jsonpath="{.items[0].metadata.name}")
+export POD_NAME=$(kubectl get pods --namespace greencompute -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=my-release,app.kubernetes.io/component=kafka" -o jsonpath="{.items[0].metadata.name}")
 ```
 
 4. Create the topics.
@@ -91,13 +81,7 @@ $ cd refarch-kc-ms/fleet-ms
 $ ./scripts/buildDocker.sh
 ```
 
-3. Deploy on docker
-
-```
-$ docker run -it --name fleetms -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -d -p 9080:9080 -p 9444:9443 ibmcase/kc-fleetms
-```
-
-4. Deploy on minikube
+3. Deploy on minikube
 
 ```
 helm install chart/fleetms/ --name fleetms --set image.repository=ibmcase/kc-fleetms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafka-cp-kafka:9092 --set eventstreams.env=local --namespace greencompute
@@ -117,13 +101,7 @@ $ cd refarch-kc-ms/voyages-ms
 $ ./scripts/buildDocker.sh
 ```
 
-3. Deploy on docker
-
-```
-$ docker run -it --name voyages -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -e KAFKA_APIKEY="<your_kafka_api_key>" -d -p 3100:3000 ibmcase/kc-voyagesms
-```
-
-4. Deploy on minikube
+3. Deploy on minikube
 
 ```
 helm install chart/voyagesms/ --name voyages --set image.repository=ibmcase/kc-voyagesms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafka-cp-kafka:9092 --set eventstreams.env=local --namespace greencompute
@@ -143,13 +121,7 @@ $ cd refarch-kc-order-ms/order-command-ms
 $ ./scripts/buildDocker.sh
 ```
 
-3. Deploy on docker
-
-```
-$ docker run -it --name ordercmd -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -e KAFKA_APIKEY="<your_kafka_api_key>" -d -p 10080:9080 ibmcase/kc-ordercommandms
-```
-
-4. Deploy on minikube
+3. Deploy on minikube
 
 ```
 helm install chart/ordercommandms/ --name ordercmd --set image.repository=ibmcase/kc-ordercommandms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafka-cp-kafka:9092 --set eventstreams.env=local --namespace greencompute
@@ -169,34 +141,13 @@ $ cd refarch-kc-order-ms/order-query-ms
 $ ./scripts/buildDocker.sh
 ```
 
-3. Deploy on docker
-
-```
-$ docker run -it --name orderquery -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -e KAFKA_APIKEY="<your_kafka_api_key>" -d -p 11080:9080 ibmcase/kc-orderqueryms
-```
-
-4. Deploy on minikube
+3. Deploy on minikube
 
 ```
 helm install chart/orderqueryms/ --name orderquery --set image.repository=ibmcase/kc-orderqueryms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafka-cp-kafka:9092 --set eventstreams.env=local --namespace greencompute
 ```
 
 ## Container ms
-
-### Getting the certs for PostgreSQL
-
-PostgreSQL (Using the cloud instance)
-
-Spring Container MS
-
-$ ibmcloud cdb deployment-cacert <your-DB-PostgreSQL>
-# if you do not have the cloud database plugin does the following and rerun previous command:
-$ ibmcloud plugin install cloud-databases
-
-# transform
-$ openssl x509 -in postgressql.crt -out postgressql.crt.der -outform der
-# save in keystore
-$ keytool -keystore clienttruststore -alias postgresql -import -file postgressql.crt.der -storepass changeit
 
 1. Go to the repo
 
@@ -210,25 +161,7 @@ cd refarch-kc-container-ms/SpringContainerMS
 $ ./scripts/buildDocker.sh
 ```
 
-ENV can be LOCAL, IBMCLOUD or ICP based on where you need to deploy.
-
-3. Deploy on docker
-
-```
-docker run --name springcontainerms \
---network docker_default \
-  -e KAFKA_ENV=$KAFKA_ENV \
-  -e KAFKA_BROKERS=$KAFKA_BROKERS \
-  -e KAFKA_APIKEY=$KAFKA_APIKEY \
-  -e POSTGRESQL_URL=$POSTGRESQL_URL \
-  -e POSTGRESQL_CA_PEM="$POSTGRESQL_CA_PEM" \
-  -e POSTGRESQL_USER=$POSTGRESQL_USER \
-  -e POSTGRESQL_PWD=$POSTGRESQL_PWD \
-  -e TRUSTSTORE_PWD=${TRUSTSTORE_PWD} \
-  -p 8080:8080 -ti  ibmcase/kc-springcontainerms
-```
-
-4. Create required secrets.
+3. Create required secrets.
 
 ```
 kubectl create secret generic postgresql-url --from-literal=binding='jdbc:postgresql://postgre-db-postgresql:5432/postgres' -n greencompute

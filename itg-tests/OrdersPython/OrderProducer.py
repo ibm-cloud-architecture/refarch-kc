@@ -1,5 +1,5 @@
 import os, time, json, sys
-from confluent_kafka import KafkaError, Producer
+from kafka.KcProducer import KafkaProducer
 
 try:
     KAFKA_BROKERS = os.environ['KAFKA_BROKERS']
@@ -16,38 +16,6 @@ try:
     KAFKA_ENV = os.environ['KAFKA_ENV']
 except KeyError:
     KAFKA_ENV='LOCAL'
-
-def delivery_report(err, msg):
-    """ Called once for each message produced to indicate delivery result.
-        Triggered by poll() or flush(). """
-    if err is not None:
-        print('Message delivery failed: {}'.format(err))
-    else:
-        print('Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
-
-def prepareProducer():
-    if (KAFKA_ENV == 'LOCAL'):
-        options ={
-            'bootstrap.servers':  KAFKA_BROKERS,
-            'group.id': 'python-orders-producer'
-        }
-    else:
-        options = {
-            'bootstrap.servers':  KAFKA_BROKERS,
-            'security.protocol': 'SASL_SSL',
-            'ssl.ca.location': 'es-cert.pem',
-            'sasl.mechanisms': 'PLAIN',
-            'sasl.username': 'token',
-            'sasl.password': KAFKA_APIKEY,
-            'group.id': 'python-orders-producer',
-        }
-    return Producer(options)
-
-def publishOrderEvent(eventToSend):
-    orderProducer = prepareProducer()
-    dataStr = json.dumps(eventToSend)
-    orderProducer.produce('orders',key=eventToSend['orderID'],value=dataStr.encode('utf-8'), callback=delivery_report)
-    orderProducer.flush()
 
 def createOrder(id):
     print('Create order')
@@ -74,4 +42,6 @@ if __name__ == '__main__':
     OID=parseArguments()
     evt = createOrder(OID)
     print(evt)
-    publishOrderEvent(evt)
+    kp = KafkaProducer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_APIKEY)
+    kp.prepareProducer("OrderProducerPython")
+    kp.publishEvent('orders',evt,"orderID")

@@ -1,5 +1,5 @@
-import os,json,sys
-from confluent_kafka import Consumer, KafkaError, Producer
+import os,sys
+from kafka.KcConsumer import KafkaConsumer
 
 try:
     KAFKA_BROKERS = os.environ['KAFKA_BROKERS']
@@ -27,54 +27,9 @@ def parseArguments():
     OID = sys.argv[1]
     print("The arguments are: " , str(sys.argv))
 
-# See https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md
-def prepareConsumer():
-    if (KAFKA_ENV == 'LOCAL'):
-        options ={
-            'bootstrap.servers':  KAFKA_BROKERS,
-            'auto.offset.reset': 'earliest',
-            'enable.auto.commit': True,
-            'group.id': 'kafka-python-container-test-consumer'
-        }
-    else:
-        options = {
-            'bootstrap.servers':  KAFKA_BROKERS,
-            'security.protocol': 'SASL_SSL',
-            'ssl.ca.location': 'es-cert.pem',
-            'sasl.mechanisms': 'PLAIN',
-            'sasl.username': 'token',
-            'sasl.password': KAFKA_APIKEY,
-            'auto.offset.reset': 'earliest',
-            'enable.auto.commit': True,
-            'group.id': 'python-orders-consume',
-        }
-    return Consumer(options)
-
-def traceResponse(msg):
-    orderStr = msg.value().decode('utf-8')
-    print('@@@ pollNextOrder {} partition: [{}] at offset {} with key {}:\n\tvalue: {}'
-                .format(msg.topic(), msg.partition(), msg.offset(), str(msg.key()), orderStr ))
-    return orderStr
-
-def pollNextOrder(orderConsumer,orderID):
-    gotIt = False
-    orderEvent = {}
-    while not gotIt:
-        msg = orderConsumer.poll(timeout=10.0)
-        if msg is None:
-            continue
-        if msg.error():
-            print("Consumer error: {}".format(msg.error()))
-            continue
-        orderStr = traceResponse(msg)
-        orderEvent = json.loads(orderStr)
-        if (orderEvent['payload']['orderID'] == orderID):
-            gotIt = True
-    return orderEvent
-
 if __name__ == '__main__':
     parseArguments()
-    orderConsumer = prepareConsumer()
-    orderConsumer.subscribe([TOPIC_NAME])
-    pollNextOrder(orderConsumer,OID)
+    orderConsumer = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_APIKEY,TOPIC_NAME)
+    orderConsumer.prepareConsumer()
+    orderConsumer.pollNextEvent(OID,'orderID')
     orderConsumer.close()
