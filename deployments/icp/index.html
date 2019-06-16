@@ -841,31 +841,30 @@
 <p>You can create the topics using the Event Streams console:</p>
 <p><img alt="" src="../es-icp-topics.png" />  </p>
 <p>or the use a set of commands like below, which are done for you in the script: <code>scripts/createLocalTopicsOnK8S.sh</code>.</p>
-<pre><code class="shell"># get the name of the Kafka pod
-$ kubectl get pods  -n streams | grep kafka | awk '{print $1;}'
+<div class="codehilite"><pre><span></span><span class="c1"># get the name of the Kafka pod</span>
+$ kubectl get pods  -n streams <span class="p">|</span> grep kafka <span class="p">|</span> awk <span class="s1">&#39;{print $1;}&#39;</span>
 &gt; rolling-streams-ibm-es-kafka-sts-0                              
 rolling-streams-ibm-es-kafka-sts-1                               
 rolling-streams-ibm-es-kafka-sts-2
-# Then get the name of the zookeeper service:
-$ kubectl get svc -n streams | grep zoo | awk '{print $1;}' | head -1
+<span class="c1"># Then get the name of the zookeeper service:</span>
+$ kubectl get svc -n streams <span class="p">|</span> grep zoo <span class="p">|</span> awk <span class="s1">&#39;{print $1;}&#39;</span> <span class="p">|</span> head -1
 rolling-streams-ibm-es-zookeeper-fixed-ip-svc-0
-# Then remote exec a shell on one of this broker to configure the topic - for example the &quot;orders&quot; topic
-$ kubectl exec -n streams  -ti rolling-streams-ibm-es-kafka-sts-0   -- bash -c &quot;/opt/kafka/bin/kafka-topics.sh --create  --zookeeper $zooksvc:2181 --replication-factor 1 --partitions 1 --topic orders&quot;
-</code></pre>
+<span class="c1"># Then remote exec a shell on one of this broker to configure the topic - for example the &quot;orders&quot; topic</span>
+$ kubectl <span class="nb">exec</span> -n streams  -ti rolling-streams-ibm-es-kafka-sts-0   -- bash -c <span class="s2">&quot;/opt/kafka/bin/kafka-topics.sh --create  --zookeeper </span><span class="nv">$zooksvc</span><span class="s2">:2181 --replication-factor 1 --partitions 1 --topic orders&quot;</span>
+</pre></div>
 
 <h3 id="api-key">API Key</h3>
 <p>Define an API key using the Event Stream Console. You can specify keys at the topic and consumer group levels or use a unique key for all topics and all consumer groups. Once you have the API key, define a <code>secret</code> named "eventstreams-apikey" with the command:</p>
-<pre><code class="shell"> $ kubectl create secret generic eventstreams-apikey --from-literal=binding='&lt;api-key&gt;' -n greencompute
+<p><div class="codehilite"><pre><span></span> $ kubectl create secret generic eventstreams-apikey --from-literal<span class="o">=</span><span class="nv">binding</span><span class="o">=</span><span class="s1">&#39;&lt;api-key&gt;&#39;</span> -n greencompute
  $ kubectl describe secrets -n greencompute
-</code></pre>
-
-<p>This <code>eventstreams-apikey</code> secret will be used in the Helm chart settings and kubernetes deployment descriptor (see <a href="#code-considerations">this section</a> later in this article).</p>
+</pre></div>
+This <code>eventstreams-apikey</code> secret will be used in the Helm chart settings and kubernetes deployment descriptor (see <a href="#code-considerations">this section</a> later in this article).</p>
 <h2 id="private-docker-registry">Private docker registry</h2>
 <p>When deploying ICP, operators can define a private registry that will be used to host the docker images created. To get the URL goes to the ICP console, then Manage &gt; Helm repositories (e.g. https://streamer.icp:8443/helm-repo/charts). </p>
 <p><img alt="" src="../icp-repos.png" /></p>
 <h2 id="namespace">Namespace</h2>
 <p>Create a namespace to isolate the application within the solution. (e.g. greencompute)</p>
-<pre><code class="shell">$ kubectl get namespaces
+<div class="codehilite"><pre><span></span>$ kubectl get namespaces
 NAME           STATUS    AGE
 cert-manager   Active    42d
 default        Active    42d
@@ -877,7 +876,7 @@ kube-system    Active    42d
 platform       Active    42d
 services       Active    42d
 streams        Active    42d
-</code></pre>
+</pre></div>
 
 <h2 id="common-deployment-configuration">Common deployment configuration</h2>
 <p>The repository name will be different if we deploy on IKS and ICP, also on IKs there is a password and api to access the registry that are persisted in a k8s secret. </p>
@@ -898,113 +897,109 @@ streams        Active    42d
 <h2 id="resilience">Resilience</h2>
 <p>A microservice needs to be resilient to failures and to be able to restart often on another machine for availability. In the case of kafka we address, in <a href="https://ibm-cloud-architecture.github.io/refarch-eda/kafka/readme/#high-availability-in-the-context-of-kubernetes-deployment">this note</a>, the fact that we need anti-affinity rules to get brokers running on different nodes, and be sure to have at least 3 brokers running in parallel. For Zookeepers be sure to have at least 3 instances and co located with a broker. </p>
 <p><img alt="" src="../es-icp-health.png" /></p>
-<p>There are three stateful set defined in the deployed event streams products as illustrated below:</p>
-<pre><code class="shell">$ kubectl get sts -n streams
+<p>There are three stateful set defined in the deployed event streams products as illustrated below:
+<div class="codehilite"><pre><span></span>$ kubectl get sts -n streams
 NAME                               DESIRED   CURRENT   AGE
-rolling-streams-ibm-es-elas-ad8d   2         2         40d
-rolling-streams-ibm-es-kafka-sts   3         3         40d
-rolling-streams-ibm-es-zook-c4c0   3         3         40d
-</code></pre>
-
+rolling-streams-ibm-es-elas-ad8d   <span class="m">2</span>         <span class="m">2</span>         40d
+rolling-streams-ibm-es-kafka-sts   <span class="m">3</span>         <span class="m">3</span>         40d
+rolling-streams-ibm-es-zook-c4c0   <span class="m">3</span>         <span class="m">3</span>         40d
+</pre></div></p>
 <p>Also a <code>kubectl describe nodes</code> execution will show the clear allocation of kafka pods on the 3 worker nodes"</p>
-<pre><code>ExternalID:                  xxxxxxxx.170
-Non-terminated Pods:         (11 in total)
-Namespace             Name             CPU Requests  CPU Limits   Memory Requests  Memory Limits
----------             ----             ------------  ----------   ---------------  -------------
-        0 (0%)
-streams    rolling-streams-ibm-es-kafka-sts-2     1 (12%)       1 (12%)      3548Mi (11%)     3548Mi (11%)
-streams    rolling-streams-ibm-es-zook-c4c0-2     100m (1%)     100m (1%)    750Mi (2%)       1Gi (3%)
+<div class="codehilite"><pre><span></span><span class="n">ExternalID</span><span class="p">:</span>                  <span class="n">xxxxxxxx</span><span class="p">.</span><span class="mi">170</span>
+<span class="n">Non</span><span class="o">-</span><span class="n">terminated</span> <span class="n">Pods</span><span class="p">:</span>         <span class="p">(</span><span class="mi">11</span> <span class="ow">in</span> <span class="n">total</span><span class="p">)</span>
+<span class="k">Namespace</span>             <span class="nn">Name</span>             <span class="n">CPU</span> <span class="n">Requests</span>  <span class="n">CPU</span> <span class="n">Limits</span>   <span class="n">Memory</span> <span class="n">Requests</span>  <span class="n">Memory</span> <span class="n">Limits</span>
+<span class="o">---------</span>             <span class="o">----</span>             <span class="o">------------</span>  <span class="o">----------</span>   <span class="o">---------------</span>  <span class="o">-------------</span>
+        <span class="mi">0</span> <span class="p">(</span><span class="mi">0</span><span class="err">%</span><span class="p">)</span>
+<span class="n">streams</span>    <span class="n">rolling</span><span class="o">-</span><span class="n">streams</span><span class="o">-</span><span class="n">ibm</span><span class="o">-</span><span class="n">es</span><span class="o">-</span><span class="n">kafka</span><span class="o">-</span><span class="n">sts</span><span class="o">-</span><span class="mi">2</span>     <span class="mi">1</span> <span class="p">(</span><span class="mi">12</span><span class="err">%</span><span class="p">)</span>       <span class="mi">1</span> <span class="p">(</span><span class="mi">12</span><span class="err">%</span><span class="p">)</span>      <span class="mi">3548</span><span class="n">Mi</span> <span class="p">(</span><span class="mi">11</span><span class="err">%</span><span class="p">)</span>     <span class="mi">3548</span><span class="n">Mi</span> <span class="p">(</span><span class="mi">11</span><span class="err">%</span><span class="p">)</span>
+<span class="n">streams</span>    <span class="n">rolling</span><span class="o">-</span><span class="n">streams</span><span class="o">-</span><span class="n">ibm</span><span class="o">-</span><span class="n">es</span><span class="o">-</span><span class="n">zook</span><span class="o">-</span><span class="n">c4c0</span><span class="o">-</span><span class="mi">2</span>     <span class="mi">100</span><span class="n">m</span> <span class="p">(</span><span class="mi">1</span><span class="err">%</span><span class="p">)</span>     <span class="mi">100</span><span class="n">m</span> <span class="p">(</span><span class="mi">1</span><span class="err">%</span><span class="p">)</span>    <span class="mi">750</span><span class="n">Mi</span> <span class="p">(</span><span class="mi">2</span><span class="err">%</span><span class="p">)</span>       <span class="mi">1</span><span class="n">Gi</span> <span class="p">(</span><span class="mi">3</span><span class="err">%</span><span class="p">)</span>
 
-ExternalID:                  xxxxxxxx.65
-Non-terminated Pods:         (14 in total)
+<span class="n">ExternalID</span><span class="p">:</span>                  <span class="n">xxxxxxxx</span><span class="p">.</span><span class="mi">65</span>
+<span class="n">Non</span><span class="o">-</span><span class="n">terminated</span> <span class="n">Pods</span><span class="p">:</span>         <span class="p">(</span><span class="mi">14</span> <span class="ow">in</span> <span class="n">total</span><span class="p">)</span>
 
-streams    rolling-streams-ibm-es-kafka-sts-1     1 (12%)       1 (12%)  3548Mi (11%)   3548Mi (11%)
-streams    rolling-streams-ibm-es-zook-c4c0-1     100m (1%)     100m (1%)  750Mi (2%)     1Gi (3%)
+<span class="n">streams</span>    <span class="n">rolling</span><span class="o">-</span><span class="n">streams</span><span class="o">-</span><span class="n">ibm</span><span class="o">-</span><span class="n">es</span><span class="o">-</span><span class="n">kafka</span><span class="o">-</span><span class="n">sts</span><span class="o">-</span><span class="mi">1</span>     <span class="mi">1</span> <span class="p">(</span><span class="mi">12</span><span class="err">%</span><span class="p">)</span>       <span class="mi">1</span> <span class="p">(</span><span class="mi">12</span><span class="err">%</span><span class="p">)</span>  <span class="mi">3548</span><span class="n">Mi</span> <span class="p">(</span><span class="mi">11</span><span class="err">%</span><span class="p">)</span>   <span class="mi">3548</span><span class="n">Mi</span> <span class="p">(</span><span class="mi">11</span><span class="err">%</span><span class="p">)</span>
+<span class="n">streams</span>    <span class="n">rolling</span><span class="o">-</span><span class="n">streams</span><span class="o">-</span><span class="n">ibm</span><span class="o">-</span><span class="n">es</span><span class="o">-</span><span class="n">zook</span><span class="o">-</span><span class="n">c4c0</span><span class="o">-</span><span class="mi">1</span>     <span class="mi">100</span><span class="n">m</span> <span class="p">(</span><span class="mi">1</span><span class="err">%</span><span class="p">)</span>     <span class="mi">100</span><span class="n">m</span> <span class="p">(</span><span class="mi">1</span><span class="err">%</span><span class="p">)</span>  <span class="mi">750</span><span class="n">Mi</span> <span class="p">(</span><span class="mi">2</span><span class="err">%</span><span class="p">)</span>     <span class="mi">1</span><span class="n">Gi</span> <span class="p">(</span><span class="mi">3</span><span class="err">%</span><span class="p">)</span>
 
-ExternalID:                  xxxxxxx.127
-Non-terminated Pods:         (14 in total)
-streams    rolling-streams-ibm-es-kafka-sts-0    1 (12%)       1 (12%)     3548Mi (11%)     3548Mi (11%)
-streams    rolling-streams-ibm-es-zook-c4c0-0    100m (1%)     100m (1%)   750Mi (2%)       1Gi (3%)
-</code></pre>
+<span class="n">ExternalID</span><span class="p">:</span>                  <span class="n">xxxxxxx</span><span class="p">.</span><span class="mi">127</span>
+<span class="n">Non</span><span class="o">-</span><span class="n">terminated</span> <span class="n">Pods</span><span class="p">:</span>         <span class="p">(</span><span class="mi">14</span> <span class="ow">in</span> <span class="n">total</span><span class="p">)</span>
+<span class="n">streams</span>    <span class="n">rolling</span><span class="o">-</span><span class="n">streams</span><span class="o">-</span><span class="n">ibm</span><span class="o">-</span><span class="n">es</span><span class="o">-</span><span class="n">kafka</span><span class="o">-</span><span class="n">sts</span><span class="o">-</span><span class="mi">0</span>    <span class="mi">1</span> <span class="p">(</span><span class="mi">12</span><span class="err">%</span><span class="p">)</span>       <span class="mi">1</span> <span class="p">(</span><span class="mi">12</span><span class="err">%</span><span class="p">)</span>     <span class="mi">3548</span><span class="n">Mi</span> <span class="p">(</span><span class="mi">11</span><span class="err">%</span><span class="p">)</span>     <span class="mi">3548</span><span class="n">Mi</span> <span class="p">(</span><span class="mi">11</span><span class="err">%</span><span class="p">)</span>
+<span class="n">streams</span>    <span class="n">rolling</span><span class="o">-</span><span class="n">streams</span><span class="o">-</span><span class="n">ibm</span><span class="o">-</span><span class="n">es</span><span class="o">-</span><span class="n">zook</span><span class="o">-</span><span class="n">c4c0</span><span class="o">-</span><span class="mi">0</span>    <span class="mi">100</span><span class="n">m</span> <span class="p">(</span><span class="mi">1</span><span class="err">%</span><span class="p">)</span>     <span class="mi">100</span><span class="n">m</span> <span class="p">(</span><span class="mi">1</span><span class="err">%</span><span class="p">)</span>   <span class="mi">750</span><span class="n">Mi</span> <span class="p">(</span><span class="mi">2</span><span class="err">%</span><span class="p">)</span>       <span class="mi">1</span><span class="n">Gi</span> <span class="p">(</span><span class="mi">3</span><span class="err">%</span><span class="p">)</span>
+</pre></div>
 
 <p>So how to ensure resiliency for consumer and producer? We are addressing in separate the discussions for <a href="https://ibm-cloud-architecture.github.io/refarch-eda/kafka/consumers/">consumer</a> and <a href="https://ibm-cloud-architecture.github.io/refarch-eda/kafka/producers/">producer</a>.</p>
 <h3 id="monitoring">Monitoring</h3>
 <p>There are two liveness mechanisms in kubernetes, the readiness (is the service ready to receive requests?) and the liveness (is the container running?). In case of readiness failure the service is removed from the available end points, while in case of liveness failure the container is restarted.</p>
 <p>In kafka there are others things to consider. For liveness an open port responding should be fine. For readiness we want to verify if the replicas are working, or the borkers are not overloaded, and may be when there is degradation it should not accept more connections. Below is an extract of the statefulset for monitoring the kafka containers:</p>
-<pre><code class="json">&quot;containers&quot;: [
-          {
-            &quot;name&quot;: &quot;kafka&quot;,
-            &quot;livenessProbe&quot;: {
-              &quot;httpGet&quot;: {
-                &quot;path&quot;: &quot;/liveness&quot;,
-                &quot;port&quot;: 7070,
-                &quot;scheme&quot;: &quot;HTTP&quot;
-              },
-              &quot;initialDelaySeconds&quot;: 360,
-              &quot;timeoutSeconds&quot;: 1,
-              &quot;periodSeconds&quot;: 15,
-              &quot;successThreshold&quot;: 1,
-              &quot;failureThreshold&quot;: 3
-            },
-            &quot;readinessProbe&quot;: {
-              &quot;httpGet&quot;: {
-                &quot;path&quot;: &quot;/readiness&quot;,
-                &quot;port&quot;: 7070,
-                &quot;scheme&quot;: &quot;HTTP&quot;
-              },
-              &quot;initialDelaySeconds&quot;: 120,
-              &quot;timeoutSeconds&quot;: 1,
-              &quot;periodSeconds&quot;: 15,
-              &quot;successThreshold&quot;: 1,
-              &quot;failureThreshold&quot;: 1
-            },
-          }]
-]
-
-</code></pre>
+<div class="codehilite"><pre><span></span><span class="s2">&quot;containers&quot;</span><span class="err">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;kafka&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;livenessProbe&quot;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="nt">&quot;httpGet&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/liveness&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;port&quot;</span><span class="p">:</span> <span class="mi">7070</span><span class="p">,</span>
+                <span class="nt">&quot;scheme&quot;</span><span class="p">:</span> <span class="s2">&quot;HTTP&quot;</span>
+              <span class="p">},</span>
+              <span class="nt">&quot;initialDelaySeconds&quot;</span><span class="p">:</span> <span class="mi">360</span><span class="p">,</span>
+              <span class="nt">&quot;timeoutSeconds&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+              <span class="nt">&quot;periodSeconds&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+              <span class="nt">&quot;successThreshold&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+              <span class="nt">&quot;failureThreshold&quot;</span><span class="p">:</span> <span class="mi">3</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;readinessProbe&quot;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="nt">&quot;httpGet&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/readiness&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;port&quot;</span><span class="p">:</span> <span class="mi">7070</span><span class="p">,</span>
+                <span class="nt">&quot;scheme&quot;</span><span class="p">:</span> <span class="s2">&quot;HTTP&quot;</span>
+              <span class="p">},</span>
+              <span class="nt">&quot;initialDelaySeconds&quot;</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
+              <span class="nt">&quot;timeoutSeconds&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+              <span class="nt">&quot;periodSeconds&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+              <span class="nt">&quot;successThreshold&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+              <span class="nt">&quot;failureThreshold&quot;</span><span class="p">:</span> <span class="mi">1</span>
+            <span class="p">},</span>
+          <span class="p">}]</span>
+<span class="err">]</span>
+</pre></div>
 
 <p>The REST endpoint for the health resource could look at the connection to the brokers and other internal state to assess the state of the consumers and producers and retun 503 in case of unhealthy container.</p>
 <h3 id="code-considerations">Code considerations</h3>
 <p>Using the following command we can assess the <code>advertiser.listerners</code> address and port number. When running local the <code>localhost:9092</code> is where the broker is listening to connetion. When deploying to kubernetes there are 3 different listeners: internal to the cluster, secured or not, and external to the cluster.</p>
-<pre><code class="shell">$ cloudctl es broker-config 0 | grep listeners
+<div class="codehilite"><pre><span></span>$ cloudctl es broker-config <span class="m">0</span> <span class="p">|</span> grep listeners
 advertised.listeners   INTERNAL://:9092,INTERNAL_SECURE://:8084,EXTERNAL://9.46.64.104:31244  
-</code></pre>
+</pre></div>
 
 <p>You code to be portable between IKS and ICP needs to get brokers advertiser addresses, API KEY from environment variables, and for SSL certificates use mount point and Java keystore. Easy written than done. Let go into details. </p>
 <p>The API key is defined in a secret named <code>eventstreams-apikey</code> as presented <a href="#api-key">above</a>. The deployment is declaring that the <code>KAFKA_APIKEY</code> is using this secret using the following declaration:</p>
-<pre><code class="yaml">- env:
-    - name: KAFKA_APIKEY
-        valueFrom: 
-            secretKeyRef:
-                name: eventstreams-apikey
-                key: binding
-</code></pre>
-
-<p>As introduced in <a href="https://ibm.github.io/event-streams/getting-started/client/">this event streams note</a> the code sets the kafka properties needed to connect to the backbone. The API key is used as password for the SASL_JAAS_CONFIG, so the code gets it from the environment variables:</p>
-<pre><code class="java">properties.put(SaslConfigs.SASL_JAAS_CONFIG,
-        &quot;org.apache.kafka.common.security.plain.PlainLoginModule required username=\&quot;token\&quot; password=\&quot;&quot;
-          + env.get(&quot;KAFKA_APIKEY&quot;) + &quot;\&quot;;&quot;);
-</code></pre>
+<p><div class="codehilite"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">env</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">KAFKA_APIKEY</span>
+        <span class="l l-Scalar l-Scalar-Plain">valueFrom</span><span class="p p-Indicator">:</span> 
+            <span class="nt">secretKeyRef</span><span class="p">:</span>
+                <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eventstreams-apikey</span>
+                <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">binding</span>
+</pre></div>
+As introduced in <a href="https://ibm.github.io/event-streams/getting-started/client/">this event streams note</a> the code sets the kafka properties needed to connect to the backbone. The API key is used as password for the SASL_JAAS_CONFIG, so the code gets it from the environment variables:</p>
+<div class="codehilite"><pre><span></span><span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">SaslConfigs</span><span class="o">.</span><span class="na">SASL_JAAS_CONFIG</span><span class="o">,</span>
+        <span class="s">&quot;org.apache.kafka.common.security.plain.PlainLoginModule required username=\&quot;token\&quot; password=\&quot;&quot;</span>
+          <span class="o">+</span> <span class="n">env</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;KAFKA_APIKEY&quot;</span><span class="o">)</span> <span class="o">+</span> <span class="s">&quot;\&quot;;&quot;</span><span class="o">);</span>
+</pre></div>
 
 <p>Now for the CA certificates, we need to specify two environment variables: one for the truststore location and one for the truststore password and use one secret to keep the password. </p>
-<pre><code class="java">    properties.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, env.get(&quot;JKS_LOCATION&quot;));
-    properties.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, env.get(&quot;TRUSTSTORE_PWD&quot;));
-</code></pre>
+<div class="codehilite"><pre><span></span>    <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">SslConfigs</span><span class="o">.</span><span class="na">SSL_TRUSTSTORE_LOCATION_CONFIG</span><span class="o">,</span> <span class="n">env</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;JKS_LOCATION&quot;</span><span class="o">));</span>
+    <span class="n">properties</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">SslConfigs</span><span class="o">.</span><span class="na">SSL_TRUSTSTORE_PASSWORD_CONFIG</span><span class="o">,</span> <span class="n">env</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;TRUSTSTORE_PWD&quot;</span><span class="o">));</span>
+</pre></div>
 
 <p>The environment variables are added to the Deployment yaml file.</p>
-<pre><code class="yaml"> - name: JKS_LOCATION
-   value: &quot;{{ .Values.eventstreams.jks_location }}&quot;
-- name: TRUSTSTORE_PWD
-    valueFrom: 
-        secretKeyRef:
-            name: truststore_pwd
-            key: binding 
-
-</code></pre>
+<div class="codehilite"><pre><span></span> <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">JKS_LOCATION</span>
+   <span class="nt">value</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">.Values.eventstreams.jks_location</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">TRUSTSTORE_PWD</span>
+    <span class="l l-Scalar l-Scalar-Plain">valueFrom</span><span class="p p-Indicator">:</span> 
+        <span class="nt">secretKeyRef</span><span class="p">:</span>
+            <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">truststore_pwd</span>
+            <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">binding</span> 
+</pre></div>
 
 <p>And one new secret is created, while the path to the JKS_LOCATION will be in the Liberty server folder and set in the Values.yaml. </p>
-<pre><code class="shell">$ kubectl create secret generic truststore-pwd --from-literal=binding='&lt;truststore_pwd&gt;' -n greencompute
-</code></pre>
+<div class="codehilite"><pre><span></span>$ kubectl create secret generic truststore-pwd --from-literal<span class="o">=</span><span class="nv">binding</span><span class="o">=</span><span class="s1">&#39;&lt;truststore_pwd&gt;&#39;</span> -n greencompute
+</pre></div>
 
 <p>For the certificate itself use the TLS and CA certificates if you provided them during ICP installation, or export the self-signed public certificate (a file named <code>es-cert.jks</code>) from the Event Streams console.</p>
 <p><img alt="" src="../es-icp-connection.png" />   </p>
@@ -1012,63 +1007,62 @@ advertised.listeners   INTERNAL://:9092,INTERNAL_SECURE://:8084,EXTERNAL://9.46.
 <p>Also as the application is doing outbound call using SSL, we need to add some configuration to the server.xml, see the <a href="https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_config_ssl_outbound.html">product documentation on how to configure SSL outbound.</a></p>
 <h3 id="troubleshouting">Troubleshouting</h3>
 <p>Here is a way to assess, within the kafka container, how the message arrived on a topic:</p>
-<pre><code class="shell">$ kubectl exec -ti rolling-streams-ibm-es-kafka-sts-0 -n streams bash
-nobody@rolling-streams-ibm-es-kafka-sts-0 $ cd /opt/kafka/bin
+<div class="codehilite"><pre><span></span>$ kubectl <span class="nb">exec</span> -ti rolling-streams-ibm-es-kafka-sts-0 -n streams bash
+nobody@rolling-streams-ibm-es-kafka-sts-0 $ <span class="nb">cd</span> /opt/kafka/bin
 nobody@rolling-streams-ibm-es-kafka-sts-0:/opt/kafka/bin$ ./kafka-console-consumer.sh --bootstrap-server rolling-streams-ibm-es-kafka-broker-svc-0.streams.svc.cluster.local:9092 --topic containers --from-beginning
 
-&gt; {&quot;timestamp&quot;: 1554338808, &quot;type&quot;: &quot;ContainerAdded&quot;, &quot;version&quot;: &quot;1&quot;, &quot;containerID&quot;: &quot;c_0&quot;, &quot;payload&quot;: {&quot;containerID&quot;: &quot;c_0&quot;, &quot;type&quot;: &quot;Reefer&quot;, &quot;status&quot;: &quot;atDock&quot;, &quot;city&quot;: &quot;Oakland&quot;, &quot;brand&quot;: &quot;brand-reefer&quot;, &quot;capacity&quot;: 100}}
-</code></pre>
+&gt; <span class="o">{</span><span class="s2">&quot;timestamp&quot;</span>: <span class="m">1554338808</span>, <span class="s2">&quot;type&quot;</span>: <span class="s2">&quot;ContainerAdded&quot;</span>, <span class="s2">&quot;version&quot;</span>: <span class="s2">&quot;1&quot;</span>, <span class="s2">&quot;containerID&quot;</span>: <span class="s2">&quot;c_0&quot;</span>, <span class="s2">&quot;payload&quot;</span>: <span class="o">{</span><span class="s2">&quot;containerID&quot;</span>: <span class="s2">&quot;c_0&quot;</span>, <span class="s2">&quot;type&quot;</span>: <span class="s2">&quot;Reefer&quot;</span>, <span class="s2">&quot;status&quot;</span>: <span class="s2">&quot;atDock&quot;</span>, <span class="s2">&quot;city&quot;</span>: <span class="s2">&quot;Oakland&quot;</span>, <span class="s2">&quot;brand&quot;</span>: <span class="s2">&quot;brand-reefer&quot;</span>, <span class="s2">&quot;capacity&quot;</span>: <span class="m">100</span><span class="o">}}</span>
+</pre></div>
 
 <h4 id="no-resolvable-bootstrap-urls-given-in-bootstrapservers">No resolvable bootstrap urls given in bootstrap.servers</h4>
 <p>It is obvious reason, but when deploying a kafka consumer or producer on Kubernetes it is important to know which name to use. As the communication will be on the overlay network we should use the internal broker name. The name will be linked to the deployed configuration of Kafka or event streams. Here are a set of commands to debug that:</p>
-<pre><code class="shell"># Get the namespace name for the deployed kafka instance
+<p><div class="codehilite"><pre><span></span><span class="c1"># Get the namespace name for the deployed kafka instance</span>
 $ kubectl get namespaces
 &gt; ... 
 &gt; streams Active &lt;x&gt;d
-# Look at the name of the services of the 
+<span class="c1"># Look at the name of the services of the </span>
 $ kubectl get svc -n streams
-&gt; rolling-streams-ibm-es-kafka-broker-svc-0         ClusterIP   None           &lt;none&gt;        9092/TCP,8093/TCP,9094/TCP,7070/TCP                               40d
-rolling-streams-ibm-es-kafka-broker-svc-1         ClusterIP   None           &lt;none&gt;        9092/TCP,8093/TCP,9094/TCP,7070/TCP                               40d
-rolling-streams-ibm-es-kafka-broker-svc-2         ClusterIP   None           &lt;none&gt;        9092/TCP,8093/TCP,9094/TCP,7070/TCP    
-# Verify the name lookup with busybox... deploy busybox
+&gt; rolling-streams-ibm-es-kafka-broker-svc-0         ClusterIP   None           &lt;none&gt;        <span class="m">9092</span>/TCP,8093/TCP,9094/TCP,7070/TCP                               40d
+rolling-streams-ibm-es-kafka-broker-svc-1         ClusterIP   None           &lt;none&gt;        <span class="m">9092</span>/TCP,8093/TCP,9094/TCP,7070/TCP                               40d
+rolling-streams-ibm-es-kafka-broker-svc-2         ClusterIP   None           &lt;none&gt;        <span class="m">9092</span>/TCP,8093/TCP,9094/TCP,7070/TCP    
+<span class="c1"># Verify the name lookup with busybox... deploy busybox</span>
 $  kubectl apply -f https://k8s.io/examples/admin/dns/busybox.yaml
-$  kubectl exec -ti busybox -n default -- nslookup streams
-&gt; Server:    10.0.0.10
-Address 1: 10.0.0.10 kube-dns.kube-system.svc.cluster.local
+$  kubectl <span class="nb">exec</span> -ti busybox -n default -- nslookup streams
+&gt; Server:    <span class="m">10</span>.0.0.10
+Address <span class="m">1</span>: <span class="m">10</span>.0.0.10 kube-dns.kube-system.svc.cluster.local
 
 Name:      streams
-Address 1: 10.1.12.101 indexmgr.rolling-streams-ibm-es-indexmgr-svc.streams.svc.cluster.local
-Address 2: 10.1.12.102 rolling-streams-ibm-es-elas-ad8d-0.rolling-streams-ibm-es-elastic-svc.streams.svc.cluster.local
-Address 3: 10.1.31.245 rolling-streams-ibm-es-elas-ad8d-1.rolling-streams-ibm-es-elastic-svc.streams.svc.cluster.local
-Address 4: 10.1.12.97 10-1-12-97.rolling-streams-ibm-es-kafka-broker-svc-1.streams.svc.cluster.local
-Address 5: 10.1.12.88 10-1-12-88.rolling-streams-ibm-es-zookeeper-fixed-ip-svc-1.streams.svc.cluster.local
-Address 6: 10.1.193.198 10-1-193-198.rolling-streams-ibm-es-zookeeper-fixed-ip-svc-2.streams.svc.cluster.local
-Address 7: 10.1.31.249 10-1-31-249.rolling-streams-ibm-es-zookeeper-fixed-ip-svc-0.streams.svc.cluster.local
-Address 8: 10.0.48.98 rolling-streams-ibm-es-rest-svc.streams.svc.cluster.local
-Address 9: 10.0.104.180 rolling-streams-ibm-es-rest-proxy-svc.streams.svc.cluster.local
-Address 10: 10.0.9.68 rolling-streams-ibm-es-zookeeper-fixed-ip-svc-2.streams.svc.cluster.local
-Address 11: 10.1.193.253 10-1-193-253.rolling-streams-ibm-es-kafka-broker-svc-2.streams.svc.cluster.local
-Address 12: 10.0.187.135 rolling-streams-ibm-es-zookeeper-fixed-ip-svc-0.streams.svc.cluster.local
-Address 13: 10.1.31.223 10-1-31-223.rolling-streams-ibm-es-kafka-broker-svc-0.streams.svc.cluster.local
-Address 14: 10.0.33.136 rolling-streams-ibm-es-ui-svc.streams.svc.cluster.local
-Address 15: 10.0.182.152 rolling-streams-ibm-es-zookeeper-fixed-ip-svc-1.streams.svc.cluster.local
-Address 16: 10.0.216.177 rolling-streams-ibm-es-proxy-svc.streams.svc.cluster.local
-Address 17: 10.1.12.87 10-1-12-87.rolling-streams-ibm-es-access-controller-svc.streams.svc.cluster.local
-Address 18: 10.1.31.251 10-1-31-251.rolling-streams-ibm-es-access-controller-svc.streams.svc.cluster.local
-</code></pre>
-
-<p>For other DNS troubleshooting see <a href="https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/">this product note.</a></p>
+Address <span class="m">1</span>: <span class="m">10</span>.1.12.101 indexmgr.rolling-streams-ibm-es-indexmgr-svc.streams.svc.cluster.local
+Address <span class="m">2</span>: <span class="m">10</span>.1.12.102 rolling-streams-ibm-es-elas-ad8d-0.rolling-streams-ibm-es-elastic-svc.streams.svc.cluster.local
+Address <span class="m">3</span>: <span class="m">10</span>.1.31.245 rolling-streams-ibm-es-elas-ad8d-1.rolling-streams-ibm-es-elastic-svc.streams.svc.cluster.local
+Address <span class="m">4</span>: <span class="m">10</span>.1.12.97 <span class="m">10</span>-1-12-97.rolling-streams-ibm-es-kafka-broker-svc-1.streams.svc.cluster.local
+Address <span class="m">5</span>: <span class="m">10</span>.1.12.88 <span class="m">10</span>-1-12-88.rolling-streams-ibm-es-zookeeper-fixed-ip-svc-1.streams.svc.cluster.local
+Address <span class="m">6</span>: <span class="m">10</span>.1.193.198 <span class="m">10</span>-1-193-198.rolling-streams-ibm-es-zookeeper-fixed-ip-svc-2.streams.svc.cluster.local
+Address <span class="m">7</span>: <span class="m">10</span>.1.31.249 <span class="m">10</span>-1-31-249.rolling-streams-ibm-es-zookeeper-fixed-ip-svc-0.streams.svc.cluster.local
+Address <span class="m">8</span>: <span class="m">10</span>.0.48.98 rolling-streams-ibm-es-rest-svc.streams.svc.cluster.local
+Address <span class="m">9</span>: <span class="m">10</span>.0.104.180 rolling-streams-ibm-es-rest-proxy-svc.streams.svc.cluster.local
+Address <span class="m">10</span>: <span class="m">10</span>.0.9.68 rolling-streams-ibm-es-zookeeper-fixed-ip-svc-2.streams.svc.cluster.local
+Address <span class="m">11</span>: <span class="m">10</span>.1.193.253 <span class="m">10</span>-1-193-253.rolling-streams-ibm-es-kafka-broker-svc-2.streams.svc.cluster.local
+Address <span class="m">12</span>: <span class="m">10</span>.0.187.135 rolling-streams-ibm-es-zookeeper-fixed-ip-svc-0.streams.svc.cluster.local
+Address <span class="m">13</span>: <span class="m">10</span>.1.31.223 <span class="m">10</span>-1-31-223.rolling-streams-ibm-es-kafka-broker-svc-0.streams.svc.cluster.local
+Address <span class="m">14</span>: <span class="m">10</span>.0.33.136 rolling-streams-ibm-es-ui-svc.streams.svc.cluster.local
+Address <span class="m">15</span>: <span class="m">10</span>.0.182.152 rolling-streams-ibm-es-zookeeper-fixed-ip-svc-1.streams.svc.cluster.local
+Address <span class="m">16</span>: <span class="m">10</span>.0.216.177 rolling-streams-ibm-es-proxy-svc.streams.svc.cluster.local
+Address <span class="m">17</span>: <span class="m">10</span>.1.12.87 <span class="m">10</span>-1-12-87.rolling-streams-ibm-es-access-controller-svc.streams.svc.cluster.local
+Address <span class="m">18</span>: <span class="m">10</span>.1.31.251 <span class="m">10</span>-1-31-251.rolling-streams-ibm-es-access-controller-svc.streams.svc.cluster.local
+</pre></div>
+For other DNS troubleshooting see <a href="https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/">this product note.</a></p>
 <h4 id="failed-to-verify-broker-certificate-self-signed-certificate">Failed to verify broker certificate: self signed certificate</h4>
 <p>When connecting a client to a deployed Kafka using the SSL protocol, there will be a SSL handcheck protocol done. The client needs to send security credentials using public keys and root certificates. The '.pem' file can be downloaded from Event stream console as <code>es-cert.pem</code>. </p>
 <p><img alt="" src="../es-connection.png" /></p>
 <p>The producer or consumer code needs to specify where to get the ssl certificates: Here is will be loaded from the local folder. But this file could be mounted into the docker image running the code to a folder referenced in this <code>ssl.ca.location</code>.</p>
-<pre><code class="json">    'bootstrap.servers':  KAFKA_BROKERS,
-    'security.protocol': 'SASL_SSL',
-    'ssl.ca.location': 'es-cert.pem',
-    'sasl.mechanisms': 'PLAIN',
-    'sasl.username': 'token',
-    'sasl.password': KAFKA_APIKEY,
-</code></pre>
+<div class="codehilite"><pre><span></span>    <span class="err">&#39;bootstrap.servers&#39;:</span>  <span class="err">KAFKA_BROKERS,</span>
+    <span class="err">&#39;security.protocol&#39;:</span> <span class="err">&#39;SASL_SSL&#39;,</span>
+    <span class="err">&#39;ssl.ca.location&#39;:</span> <span class="err">&#39;es-cert.pem&#39;,</span>
+    <span class="err">&#39;sasl.mechanisms&#39;:</span> <span class="err">&#39;PLAIN&#39;,</span>
+    <span class="err">&#39;sasl.username&#39;:</span> <span class="err">&#39;token&#39;,</span>
+    <span class="err">&#39;sasl.password&#39;:</span> <span class="err">KAFKA_APIKEY,</span>
+</pre></div>
 
 <h4 id="ltpa-configuration-error-unable-to-create-or-read-ltpa-key-file-optibmwlpusrserversdefaultserverresourcessecurityltpakeys">LTPA configuration error. Unable to create or read LTPA key file: /opt/ibm/wlp/usr/servers/defaultServer/resources/security/ltpa.keys</h4>
 <p><TBD></p>

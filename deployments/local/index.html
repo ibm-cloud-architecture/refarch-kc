@@ -670,23 +670,20 @@
 <ul>
 <li>Be sure to have the following hostnames: <code>kafka1 postgresql fleetms kcui simulator ordercmd orderquery springcontainerms postgres</code> mapped to <code>localhost</code> in your <code>/etc/hosts</code> file.  </li>
 </ul>
-<pre><code>  127.0.0.1 localhost kafka1 postgresql fleetms kcui simulator ordercmd orderquery kcsolution springcontainerms postgres
-</code></pre>
+<div class="codehilite"><pre><span></span>  127.0.0.1 localhost kafka1 postgresql fleetms kcui simulator ordercmd orderquery kcsolution springcontainerms postgres
+</pre></div>
 
 <ul>
 <li>If not already done, get a git client. See the following <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">installation instructions</a>. </li>
 <li>Be sure to have cloned this repository using git command: <code>git clone https://github.com/ibm-cloud-architecture/refarch-kc/</code>. Open a terminal window and go to the <code>refarch-kc</code> folder.</li>
-<li>Use the command <code>./script/clone.sh</code> to get all the solution repositories. You should have at least the following repositories:</li>
-</ul>
-<pre><code>refarch-kc-container-ms
+<li>Use the command <code>./script/clone.sh</code> to get all the solution repositories. You should have at least the following repositories:
+<div class="codehilite"><pre><span></span>refarch-kc-container-ms
 refarch-kc-order-ms
 refarch-kc-ui
 refarch-kc
 refarch-kc-ms
 refarch-kc-streams
-</code></pre>
-
-<ul>
+</pre></div></li>
 <li>
 <p>We propose you to have two choices to build the solution: installing node, python and maven or use our own docker images for running those tools. You can mix too, if for example you already develop on nodejs or Java you may want to leverage your own settings. If you do not want to impact your python environmenr, you can user our docker image. See the <a href="#build-the-solution">build section</a> below.</p>
 </li>
@@ -709,14 +706,13 @@ refarch-kc-streams
 <li>In one Terminal window, under the <code>refarch-kc</code> folder, use our compose file to start the backend components:   </li>
 </ul>
 <p><code>$ cd docker &amp;&amp;  docker-compose -f backbone-compose.yml up 2&gt;&amp;1 1&gt;backend.logs &amp;</code>.</p>
-<p>It will take some time as it download zookeeper and kafka docker images from dockerhub. When started you should see the following trace:</p>
-<pre><code>Creating docker_zookeeper1_1 ... done
+<p>It will take some time as it download zookeeper and kafka docker images from dockerhub. When started you should see the following trace:
+<div class="codehilite"><pre><span></span>Creating docker_zookeeper1_1 ... done
 Creating docker_kafka1_1     ... done
 Creating docker_postgresql_1 ... done
 Attaching to docker_zookeeper1_1, docker_kafka1_1
 ....
-</code></pre>
-
+</pre></div></p>
 <blockquote>
 <p>Note: Starting those components will create two folders in the docker folder: <code>kafka1</code> and <code>zookeeper1</code>. Those folders could be deleted to restart from a fresh environment.  </p>
 </blockquote>
@@ -727,14 +723,14 @@ Attaching to docker_zookeeper1_1, docker_kafka1_1
 <p>This project includes some scripts to help build the full solution once all the repositories are cloned. If you have any problem during this integrated build we recommend going into each project to assess the build process in detail. </p>
 <p>We are using polyglote implementations so if you do not want to overload your own laptop with the different library, we propose to use docker images to get development environments for nodes, python and java. (Three separate images). This will help you to do not pollute your computer. 
 If you want to use those images, run the three commands below: to build the three images (those images are also in docker hub). </p>
-<pre><code class="sh">cd docker
-# build the image for java:
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> docker
+<span class="c1"># build the image for java:</span>
 docker build -f docker-java-tools -t ibmcase/javatools .
-# build the image for nodejs, angular, npm
+<span class="c1"># build the image for nodejs, angular, npm</span>
 docker build -f docker-node-tools -t ibmcase/nodetools .
-# If already done, build the image for python
+<span class="c1"># If already done, build the image for python</span>
 docker build  -f docker-python-tools -t ibmcase/python .
-</code></pre>
+</pre></div>
 
 <p>To validate the current images run <code>docker images</code></p>
 <p><img alt="" src="../images-1.png" /></p>
@@ -754,13 +750,12 @@ docker build  -f docker-python-tools -t ibmcase/python .
 </li>
 </ol>
 <p>Use the <code>scripts/imageStatus</code> script to verify your docker images are built:</p>
-<pre><code> ibmcase/kc-ui                  latest    c89827424689        15 hours ago        596MB  
+<div class="codehilite"><pre><span></span> ibmcase/kc-ui                  latest    c89827424689        15 hours ago        596MB  
  ibmcase/kc-orderqueryms        latest    09406c8795e8        23 hours ago        548MB   
  ibmcase/kc-ordercmdms          latest    5190db45e4bf        23 hours ago        548MB   
  ibmcase/kc-voyagesms           latest    54b8d6a61f4e        23 hours ago       1.16GB   
  ibmcase/kc-fleetms             latest    a5e1d40a8b1f        23 hours ago        616MB   
-
-</code></pre>
+</pre></div>
 
 <ul>
 <li>If you want to delete the docker images after testing the solution, use the command:
@@ -770,15 +765,14 @@ docker build  -f docker-python-tools -t ibmcase/python .
 <ol>
 <li>In a second terminal window, use our second docker compose file to start the web server and the other microservices: </li>
 </ol>
-<pre><code># First set environment variables
+<p><div class="codehilite"><pre><span></span># First set environment variables
 $ pwd
 ../refarch-kc/docker
 $ source ../scripts/setenv.sh LOCAL
 # Then use docker compose to start all the services
 $ docker-compose -f kc-solution-compose.yml up
-</code></pre>
-
-<p>We have also defined a script to start back end and the solution services in one command: <code>./script/runSolutionLocally</code>.</p>
+</pre></div>
+We have also defined a script to start back end and the solution services in one command: <code>./script/runSolutionLocally</code>.</p>
 <ol>
 <li>Verify the different components work fine. You can use the different test scripts we have defined in each of the microservice projects or use the following URLs:</li>
 <li>For the <a href="http://localhost:3010">user interface URL http://localhost:3010</a></li>

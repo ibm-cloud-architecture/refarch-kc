@@ -570,22 +570,22 @@
 <p>This section addresses some challenges and best practices to support security for event-driven microservice integrating Kafka consumer or producer, or both, into the code, and CI/CD platform.</p>
 <p>Kafka <a href="https://ibm-cloud-architecture.github.io/refarch-eda/kafka/consumers/">consumers</a> and <a href="https://ibm-cloud-architecture.github.io/refarch-eda/kafka/producers/">producers</a> need at least the broker URLs, the security API key in the case of Event Stream deployed on IBM Cloud public or private, and the SSL certificate as the communication is encrypted. </p>
 <p>Applying the "store config in the environment" rule of <a href="https://12factor.net/">the 12 factors</a> manisfesto, we are using the following environment variables:</p>
-<pre><code>export KAFKA_BROKERS=&quot;localhost:9092&quot;
+<div class="codehilite"><pre><span></span>export KAFKA_BROKERS=&quot;localhost:9092&quot;
 export KAFKA_APIKEY=&quot;nokey&quot;
 export KAFKA_ENV=&quot;LOCAL&quot;
 export POSTGRESQL_URL=&quot;jdbc:postgresql://localhost:5432/postgres&quot;
 export POSTGRESQL_USER=&quot;postgres&quot;
 export POSTGRESQL_PWD=&quot;supersecret&quot;
 export POSTGRESQL_CA_PEM=&quot;&quot;
-</code></pre>
+</pre></div>
 
 <p>The settings above are for running locally on the developer's laptop. To support the different environment (LOCAL, ICP, IBMCLOUD), we have a <code>scripts/setenv.sh</code> bash script to help export those variables. We are providing a template for this file in the file: <a href="https://github.com/ibm-cloud-architecture/refarch-kc/blob/master/scripts/setenv.sh.tmpl">setenv.sh.tmpl</a> </p>
 <p>The settings are a little bit different for public cloud and private cloud. </p>
 <h2 id="ibm-cloud">IBM Cloud</h2>
 <p>For public cloud we need to get the credentials for Event Streams service (see the explanations and figures in <a href="../deployments/iks/#event-streams-service-on-ibm-cloud">this note</a>) and for the postgresql service in <a href="../deployments/iks/#the-postgresql-service">this note</a>. </p>
 <p>For the Postgresql certificate the following command helps to get it. You may need to install the cloud database CLI with the command <code>ibmcloud plugin install cloud-databases</code></p>
-<pre><code>ibmcloud cdb deployment-cacert &lt;name-of-postgres-service&gt; &gt; postgresql.crt
-</code></pre>
+<div class="codehilite"><pre><span></span>ibmcloud cdb deployment-cacert &lt;name-of-postgres-service&gt; &gt; postgresql.crt
+</pre></div>
 
 <p>This file will be used for adding certificate in the Java Truststore. </p>
 <h2 id="certificate-java-truststore-docker">Certificate - Java Truststore - Docker</h2>

@@ -658,11 +658,9 @@
 <p>To represent different manufacturers the first select box is used to support different scenarios in the future. 'GoodManuf' should be used. </p>
 <p><img alt="" src="../kc-manuf-select.png" /></p>
 <p>Once the manufacturer is selected a list of existing orders may be displayed. You can add order with the UI, but you can also use a script in the order command microservice project: https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/master/order-command-ms/scripts/createOrder.sh</p>
-<p>Below is an example of how to use the createOrder script to add a 'GoodManuf's' order to book a voyage from Oakland to Shanghai for a fresh product:</p>
-<pre><code>./createOrder.sh localhost:10080 ./orderOacklandToChinaCreate.json
-
-</code></pre>
-
+<p>Below is an example of how to use the createOrder script to add a 'GoodManuf's' order to book a voyage from Oakland to Shanghai for a fresh product:
+<div class="codehilite"><pre><span></span>./createOrder.sh localhost:10080 ./orderOacklandToChinaCreate.json
+</pre></div></p>
 <p><img alt="" src="../kc-orders.png" /></p>
 <blockquote>
 <p>There is a lot happening here. The Angular is getting orders using the <a href="https://github.com/ibm-cloud-architecture/refarch-kc-ui/blob/master/ui/src/app/features/orders/orders.service.ts">orders.service.ts</a> service within the BFF component at the address: <code>http://localhost:3010/api/orders</code>.<br />
@@ -674,18 +672,17 @@ The BFF is calling the <a href="https://github.com/ibm-cloud-architecture/refarc
 <p><img src="https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/cqrs-es-api.png" width="500px"></p>
 <p>the creation of the order goes to the <a href="https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/tree/master/order-command-ms">order command microservice</a> which publishes a <code>OrderCreated</code> event to the <code>orders</code> topic and then consumes it to persist the data to its database. See <a href="https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/6de424c443c05262ae013620f5f11b4a1b2e6f90/order-command-ms/src/main/java/ibm/labs/kc/order/command/service/OrderCRUDService.java#L51-L74">source code here</a></p>
 <p>If you plug a 'orders topic' consumer you can see the following trace with the status of the order being <code>pending</code> and the type of event being <code>OrderCreated</code>. </p>
-<pre><code class="json">{&quot;payload&quot;:{
-    &quot;orderID&quot;:&quot;1fcccdf2-e29d-4b30-8e52-8116dc2a01ff&quot;,
-    &quot;productID&quot;:&quot;Carrot&quot;,
-    &quot;customerID&quot;:&quot;GoodManuf&quot;,
-    &quot;quantity&quot;:10000,
-    &quot;pickupAddress&quot;: &quot;...&quot;,
-    &quot;expectedDeliveryDate&quot;:&quot;2019-03-31T13:30Z&quot;,
-    &quot;status&quot;:&quot;pending&quot;},
-&quot;type&quot;:&quot;OrderCreated&quot;,
-&quot;version&quot;:&quot;1&quot;}
-
-</code></pre>
+<div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;payload&quot;</span><span class="p">:{</span>
+    <span class="nt">&quot;orderID&quot;</span><span class="p">:</span><span class="s2">&quot;1fcccdf2-e29d-4b30-8e52-8116dc2a01ff&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;productID&quot;</span><span class="p">:</span><span class="s2">&quot;Carrot&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;customerID&quot;</span><span class="p">:</span><span class="s2">&quot;GoodManuf&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;quantity&quot;</span><span class="p">:</span><span class="mi">10000</span><span class="p">,</span>
+    <span class="nt">&quot;pickupAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;expectedDeliveryDate&quot;</span><span class="p">:</span><span class="s2">&quot;2019-03-31T13:30Z&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;pending&quot;</span><span class="p">},</span>
+<span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;OrderCreated&quot;</span><span class="p">,</span>
+<span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;1&quot;</span><span class="p">}</span>
+</pre></div>
 
 <h2 id="step-2-k-container-shipment-manager-looking-at-orders">Step 2: K Container Shipment Manager looking at Orders</h2>
 <p>From the home page goes to the Shipment Inc tile:</p>
@@ -694,16 +691,14 @@ The BFF is calling the <a href="https://github.com/ibm-cloud-architecture/refarc
 <p><img alt="" src="../kc-shipment-home.png" /></p>
 <p>The status of those events will be modified over time while the order is processed down stream by the voyage and container services. The following sequence diagram illustrates the flow:</p>
 <p><img alt="" src="../kc-order-seq-diag.png" />  </p>
-<p>Looking at the traces in the voyage service</p>
-<pre><code>voyages_1     |  emitting {&quot;timestamp&quot;:1548788544290,&quot;type&quot;:&quot;OrderAssigned&quot;,&quot;version&quot;:&quot;1&quot;,&quot;payload&quot;:{&quot;voyageID&quot;:100,&quot;orderID&quot;:&quot;1fcccdf2-e29d-4b30-8e52-8116dc2a01ff&quot;}}
-</code></pre>
-
+<p>Looking at the traces in the voyage service
+<div class="codehilite"><pre><span></span>voyages_1     |  emitting {&quot;timestamp&quot;:1548788544290,&quot;type&quot;:&quot;OrderAssigned&quot;,&quot;version&quot;:&quot;1&quot;,&quot;payload&quot;:{&quot;voyageID&quot;:100,&quot;orderID&quot;:&quot;1fcccdf2-e29d-4b30-8e52-8116dc2a01ff&quot;}}
+</pre></div></p>
 <p>or at the <code>orders</code> topic:</p>
-<pre><code class="json">{&quot;timestamp&quot;:1548792921679,
-&quot;type&quot;:&quot;OrderAssigned&quot;,&quot;version&quot;:&quot;1&quot;,
-&quot;payload&quot;:{&quot;voyageID&quot;:100,&quot;orderID&quot;:&quot;1fcccdf2-e29d-4b30-8e52-8116dc2a01ff&quot;}}
-
-</code></pre>
+<div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="mi">1548792921679</span><span class="p">,</span>
+<span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;OrderAssigned&quot;</span><span class="p">,</span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="nt">&quot;payload&quot;</span><span class="p">:{</span><span class="nt">&quot;voyageID&quot;</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span><span class="nt">&quot;orderID&quot;</span><span class="p">:</span><span class="s2">&quot;1fcccdf2-e29d-4b30-8e52-8116dc2a01ff&quot;</span><span class="p">}}</span>
+</pre></div>
 
 <h2 id="step3-simulate-the-ship-in-blue-water">Step3: Simulate the ship in blue water</h2>
 <p>From the home page goes to the <code>Simulate the bluewater</code> tile, then in the main page select one of the available fleet. Only the North Pacific has data as of now:</p>
