@@ -1,5 +1,29 @@
 # Minikube deployment
 
+## Pre-requisites
+
+You need to have minikube installed and helm - tiller deployed too (see [these](https://docs.bitnami.com/kubernetes/get-started-kubernetes/#step-4-install-and-configure-helm-and-tiller) instructions for the installation).
+
+Install `kubectl` CLI.
+
+Verify Tiller is running:
+
+```
+kubectl --namespace kube-system get pods | grep tiller
+```
+
+Add Confluent Helm Repository:
+
+```
+helm repo add confluentinc https://confluentinc.github.io/cp-helm-charts/
+```
+
+Be sure to have updated the helm repository with:
+
+```
+helm repo update
+```
+
 ## Setting up Kafka and Zookeeper
 
 1. Create a namespace.
@@ -14,25 +38,27 @@ kubectl create namespace greencompute
 helm install --name kafka --set persistence.enabled=false confluentinc/cp-helm-charts --namespace greencompute
 ```
 
+It will take minutes to get the 12 pods ready.
+
 3. Deploy kafka client pod.
 
 ```
 kubectl apply -f ./minikube/kafka_client.yaml -n greencompute
 ```
 
-4. Log into the Pod
+4. Log into the Kafka Client Pod to create the needed kafka topics
 
 ```
 kubectl exec -it kafka-client bash -n greencompute
 ```
 
-5. Go to `bin` folder.
+  * Go to `bin` folder.
 
-```
-$ cd bin
-```
+  ```
+  $ cd bin
+  ```
 
-6. Create the topics.
+  * Create the topics.
 
 ```
 kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic bluewaterContainer --create --partitions 1 --replication-factor 1 --if-not-exists
