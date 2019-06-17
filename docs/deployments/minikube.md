@@ -1,5 +1,8 @@
 # Minikube deployment
 
+!!! abstract
+    This note descriptes how to install and run the solution on minikube instead of docker-compose so developer has the same experience as running on any kubernetes platform.
+
 ## Pre-requisites
 
 You need to have minikube installed and helm - tiller deployed too (see [these](https://docs.bitnami.com/kubernetes/get-started-kubernetes/#step-4-install-and-configure-helm-and-tiller) instructions for the installation).
@@ -26,55 +29,42 @@ helm repo update
 
 ## Setting up Kafka and Zookeeper
 
-1. Create a namespace.
+* Create a namespace.
 
 ```
-kubectl create namespace greencompute
+  kubectl create namespace greencompute
 ```
 
-2. Deploy kafka and zookeeper using helm
-
-```
-helm install --name kafka --set persistence.enabled=false confluentinc/cp-helm-charts --namespace greencompute
-```
-
-It will take minutes to get the 12 pods ready.
-
-3. Deploy kafka client pod.
-
-```
-kubectl apply -f ./minikube/kafka_client.yaml -n greencompute
-```
-
-4. Log into the Kafka Client Pod to create the needed kafka topics
-
-```
-kubectl exec -it kafka-client bash -n greencompute
-```
-
-  * Go to `bin` folder.
+* Deploy kafka and zookeeper using bitmani/kafka helm
 
   ```
-  $ cd bin
+  helm install --name kafka --set persistence.enabled=false bitmani/kafka --namespace greencompute
   ```
 
-  * Create the topics.
+It will take minutes to get the 2 pods ready.
 
-```
-kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic bluewaterContainer --create --partitions 1 --replication-factor 1 --if-not-exists
-kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic bluewaterShip --create --partitions 1 --replication-factor 1 --if-not-exists
-kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic bluewaterProblem --create --partitions 1 --replication-factor 1 --if-not-exists
-kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic orders --create --partitions 1 --replication-factor 1 --if-not-exists
-kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic errors --create --partitions 1 --replication-factor 1 --if-not-exists
-kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic containers --create --partitions 1 --replication-factor 1 --if-not-exists
-kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic containerMetrics --create --partitions 1 --replication-factor 1 --if-not-exists
-kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic rejected-orders --create --partitions 1 --replication-factor 1 --if-not-exists
-kafka-topics --zookeeper kafka-cp-zookeeper-headless:2181 --topic allocated-orders --create --partitions 1 --replication-factor 1 --if-not-exists
-```
+* Create the needed kafka topics
 
-7. Enter `exit` to come out of it.
+  ```
+  ./scripts/createMinikubeLocalTopics.sh
+  ```
+  
+  Get the kafka pod name:
 
-8. Deploy postgresql using helm.
+  ```
+  export POD_NAME=$(kubectl get pods --namespace greencompute -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=kafkabitmani,app.kubernetes.io/component=kafka" -o jsonpath="{.items[0].metadata.name}")
+  ```
+  
+  Get the list of topics
+ 
+  ```
+  kubectl exec  -ti $POD_NAME  -n greencompute -- kafka-topics.sh --list --zookeeper kafkabitmani-zookeeper:2181
+  ```
+
+## Deploy postgresql using helm 
+
+!!! warning
+    Deploy postgresql only if you plan to use the container-ms service.
 
 ```
 helm install --name postgre-db \
@@ -83,128 +73,184 @@ helm install --name postgre-db \
     stable/postgresql --namespace greencompute
 ```
 
-TBD - Look at an alternative for kafka
-
-## Fleet ms
-
-1. Go to the repo
+Once the pod is running access to the password using
 
 ```
-$ cd refarch-kc-ms/fleet-ms
+export POSTGRES_PASSWORD=$(kubectl get secret --namespace greencompute postgre-db-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
 ```
 
-2. Build the image
+And then use the `psql` command line interface to interact with postgresql. For that we are using a docker image as client to the postgresql server running in Minikube:
 
 ```
-$ ./scripts/buildDocker.sh
+kubectl run postgre-db-postgresql-client --rm --tty -i --restart='Never' --namespace greencompute --image docker.io/bitnami/postgresql:11.3.0-debian-9-r38 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- psql --host postgre-db-postgresql -U postgres -p 5432
 ```
 
-3. Deploy on docker
+The two above commands are defined in the bash script named `scripts/startPsql.sh`.
+
+!!! note
+    `psql` will be use to verify tests execution
+
+Also to connect to your database from outside the cluster execute the following commands:
 
 ```
-$ docker run -it --name fleetms -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -d -p 9080:9080 -p 9444:9443 ibmcase/kc-fleetms
+    kubectl port-forward --namespace greencompute svc/postgre-db-postgresql 5432:5432 &
+    PGPASSWORD="$POSTGRES_PASSWORD" psql --host 127.0.0.1 -U postgres -p 5432
 ```
 
-4. Deploy on minikube
+## Deploy the Voyage microservice
 
-```
-helm install chart/fleetms/ --name fleetms --set image.repository=ibmcase/kc-fleetms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafka-cp-kafka:9092 --set eventstreams.env=local --namespace greencompute
-```
+The *Voyage microservice* is a simple nodejs app to mockup schedule of vessels between two harbors. It is here to illustrate Kafka integration with nodejs app.
 
-## Voyage ms
-
-1. Go to the repo
+* Go to the repo
 
 ```
 $ cd refarch-kc-ms/voyages-ms
 ```
 
-2. Build the image
+** Build the image
 
 ```
 $ ./scripts/buildDocker.sh
 ```
 
-3. Deploy on docker
+* Deploy on minikube
 
 ```
-$ docker run -it --name voyages -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -e KAFKA_APIKEY="<your_kafka_api_key>" -d -p 3100:3000 ibmcase/kc-voyagesms
+helm install chart/voyagesms/ --name voyages --set image.repository=ibmcase/kc-voyagesms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=local --namespace greencompute
 ```
 
-4. Deploy on minikube
+* Verify it is correctly running
 
 ```
-helm install chart/voyagesms/ --name voyages --set image.repository=ibmcase/kc-voyagesms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafka-cp-kafka:9092 --set eventstreams.env=local --namespace greencompute
+curl http://localhost:31000/voyage
 ```
 
-## Order command ms
+## Deploy Order command microservice
 
-1. Go to the repo
+!!! note
+    Order command microservice implements the Command part of the CQRS pattern. It is done in Java and use Kafka API.
+
+* Go to the repo
 
 ```
 $ cd refarch-kc-order-ms/order-command-ms
 ```
 
-2. Build the image
+* Build the image
 
 ```
 $ ./scripts/buildDocker.sh
 ```
 
-3. Deploy on docker
+* Deploy on minikube
 
 ```
-$ docker run -it --name ordercmd -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -e KAFKA_APIKEY="<your_kafka_api_key>" -d -p 10080:9080 ibmcase/kc-ordercommandms
+helm install chart/ordercommandms/ --name ordercmd --set image.repository=ibmcase/kc-ordercommandms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=local --namespace greencompute
 ```
 
-4. Deploy on minikube
+* Verify service runs
 
+At the beginning the call below should return an empty array: `[]`
 ```
-helm install chart/ordercommandms/ --name ordercmd --set image.repository=ibmcase/kc-ordercommandms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafka-cp-kafka:9092 --set eventstreams.env=local --namespace greencompute
+curl http://localhost:31200/orders
 ```
 
-## Order query ms
 
-1. Go to the repo
+## Order query microservice
+
+!!! note
+    Order command microservice implements the Query part of the CQRS pattern. It is done in Java and use Kafka API.
+
+* Go to the repo
 
 ```
 $ cd refarch-kc-order-ms/order-query-ms
 ```
 
-2. Build the image
+* Build the image
 
 ```
 $ ./scripts/buildDocker.sh
 ```
 
-3. Deploy on docker
+* Deploy on minikube
 
 ```
-$ docker run -it --name orderquery -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -e KAFKA_APIKEY="<your_kafka_api_key>" -d -p 11080:9080 ibmcase/kc-orderqueryms
+helm install chart/orderqueryms/ --name orderquery --set image.repository=ibmcase/kc-orderqueryms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=local --namespace greencompute
 ```
 
-4. Deploy on minikube
+* Verify service runs
+
+At the beginning the call below should return an empty array: `[]`
+```
+curl http://localhost:31100/orders
+```
+
+## Deploy the Fleet simulator
+
+!!! note
+    The fleet simulator is to move vessels from one harbors to another, and send container metrics while the containers are on a vessel. It has some predefined simulation to trigger some events.
+
+* Go to the repo
 
 ```
-helm install chart/orderqueryms/ --name orderquery --set image.repository=ibmcase/kc-orderqueryms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafka-cp-kafka:9092 --set eventstreams.env=local --namespace greencompute
+$ cd refarch-kc-ms/fleet-ms
 ```
 
-## Container ms
+* Build the image
 
-### Getting the certs for PostgreSQL
+```
+$ ./scripts/buildDocker.sh
+```
 
-PostgreSQL (Using the cloud instance)
 
-Spring Container MS
+* Deploy on minikube
 
-$ ibmcloud cdb deployment-cacert <your-DB-PostgreSQL>
+```
+helm install chart/fleetms/ --name fleetms --set image.repository=ibmcase/kc-fleetms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=local --namespace greencompute
+```
+
+* Verify service runs
+
+At the beginning the call below should return an empty array: `[]`
+```
+curl http://localhost:31300/fleetms/fleets
+```
+
+## Container microservice
+
+The container microservice manage the Reefer container inventory and listen to order created event to assign a container to an order. 
+
+!!! warning
+    There are multiple different implementations of this service. This note is for the Springboot / Postgresql / Kafka implementation.
+
+### Getting the certs for IBM CLoud PostgreSQL 
+
+If you run with postgresql running locally, you have nothing to do.
+
+If you run the container microservice connected to Postgresql running on IBM Cloud, you need to get the SSL certificate. To do so perform the following commands:
+
+* From the IBM Cloud Console get the name of your postgresql service
+  For example the name we have is: Green-DB-PostgreSQL
+* Then get the certificates
+
+```
+ibmcloud cdb deployment-cacert <your-PostgreSQL-service-name> > postgresql.crt
 # if you do not have the cloud database plugin does the following and rerun previous command:
-$ ibmcloud plugin install cloud-databases
+ibmcloud plugin install cloud-databases
+```
 
-# transform
-$ openssl x509 -in postgressql.crt -out postgressql.crt.der -outform der
-# save in keystore
-$ keytool -keystore clienttruststore -alias postgresql -import -file postgressql.crt.der -storepass changeit
+* Transform the certificate format
+
+```
+openssl x509 -in postgressql.crt -out postgressql.crt.der -outform der
+```
+
+* Save it in Java keystore
+
+```
+keytool -keystore clienttruststore -alias postgresql -import -file postgressql.crt.der -storepass changeit
+```
 
 1. Go to the repo
 
@@ -220,23 +266,8 @@ $ ./scripts/buildDocker.sh
 
 ENV can be LOCAL, IBMCLOUD or ICP based on where you need to deploy.
 
-3. Deploy on docker
 
-```
-docker run --name springcontainerms \
---network docker_default \
-  -e KAFKA_ENV=$KAFKA_ENV \
-  -e KAFKA_BROKERS=$KAFKA_BROKERS \
-  -e KAFKA_APIKEY=$KAFKA_APIKEY \
-  -e POSTGRESQL_URL=$POSTGRESQL_URL \
-  -e POSTGRESQL_CA_PEM="$POSTGRESQL_CA_PEM" \
-  -e POSTGRESQL_USER=$POSTGRESQL_USER \
-  -e POSTGRESQL_PWD=$POSTGRESQL_PWD \
-  -e TRUSTSTORE_PWD=${TRUSTSTORE_PWD} \
-  -p 8080:8080 -ti  ibmcase/kc-springcontainerms
-```
-
-4. Create required secrets.
+* Create required secrets.
 
 ```
 kubectl create secret generic postgresql-url --from-literal=binding='jdbc:postgresql://postgre-db-postgresql:5432/postgres' -n greencompute
@@ -246,34 +277,35 @@ kubectl create secret generic postgresql-user --from-literal=binding='postgres' 
 kubectl create secret generic postgresql-pwd --from-literal=binding='supersecret' -n greencompute
 ```
 
-4. Deploy on minikube
+* Deploy on minikube
 
 ```
-helm install chart/springcontainerms/ --name containerms --set image.repository=ibmcase/kc-springcontainerms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafka-cp-kafka:9092 --set eventstreams.env=local --namespace greencompute
+helm install chart/springcontainerms/ --name containerms --set image.repository=ibmcase/kc-springcontainerms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=local --namespace greencompute
 ```
 
-## Web
+## User interface for demonstration
 
-1. Go to the repo
+The last app is a web application to expose an user interface to run the demonstration end to end.
+
+* Go to the repo
 
 ```
 cd refarch-kc-ui/
 ```
 
-2. Build the image
+* Build the image
 
 ```
-$ ./scripts/buildDocker.sh
+./scripts/buildDocker.sh
 ```
 
-3. Deploy on docker
+* Deploy on minikube
 
 ```
-docker run -it --name kcsolution -e KAFKA_BROKERS="<your_kafka_brokers>" -e FLEET_MS_URL="<fleetms_url" ORDER_MS_URL="<orderms_url>" VOYAGE_MS_URL="<voyagems_url>" --link fleetms:fleetms --link voyages:voyages --link ordercmd:ordercmd --link orderquery:orderquery --link springcontainerms:springcontainerms -d -p 3110:3010 ibmcase/kc-ui
+helm install chart/kc-ui/ --name kcsolution --set image.repository=ibmcase/kc-ui --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=local --namespace greencompute
 ```
 
-4. Deploy on minikube
+* Verify the installed app
 
-```
-helm install chart/kc-ui/ --name kcsolution --set image.repository=ibmcase/kc-ui --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafka-cp-kafka:9092 --set eventstreams.env=local --namespace greencompute
-```
+Point your web browser to [http://localhost:31010](http://localhost:31010) and login with username: eddie@email.com and password Eddie.
+
