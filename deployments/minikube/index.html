@@ -522,6 +522,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#build-and-deploy-the-container-microservice" title="Build and deploy the container microservice" class="md-nav__link">
+    Build and deploy the container microservice
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -530,6 +537,13 @@
         <li class="md-nav__item">
   <a href="#user-interface-for-demonstration" title="User interface for demonstration" class="md-nav__link">
     User interface for demonstration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshouting" title="Troubleshouting" class="md-nav__link">
+    Troubleshouting
   </a>
   
 </li>
@@ -706,6 +720,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#build-and-deploy-the-container-microservice" title="Build and deploy the container microservice" class="md-nav__link">
+    Build and deploy the container microservice
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -714,6 +735,13 @@
         <li class="md-nav__item">
   <a href="#user-interface-for-demonstration" title="User interface for demonstration" class="md-nav__link">
     User interface for demonstration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshouting" title="Troubleshouting" class="md-nav__link">
+    Troubleshouting
   </a>
   
 </li>
@@ -823,7 +851,7 @@
 </pre></div>
 
 <p>** Build the image</p>
-<div class="codehilite"><pre><span></span>$ ./scripts/buildDocker.sh
+<div class="codehilite"><pre><span></span>$ ./scripts/buildDocker.sh MINIKUBE
 </pre></div>
 
 <ul>
@@ -852,13 +880,13 @@
 <ul>
 <li>Build the image</li>
 </ul>
-<div class="codehilite"><pre><span></span>$ ./scripts/buildDocker.sh
+<div class="codehilite"><pre><span></span>$ ./scripts/buildDocker.sh MINIKUBE
 </pre></div>
 
 <ul>
 <li>Deploy on minikube</li>
 </ul>
-<div class="codehilite"><pre><span></span>helm install chart/ordercommandms/ --name ordercmd --set image.repository=ibmcase/kc-ordercommandms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=local --namespace greencompute
+<div class="codehilite"><pre><span></span>helm install chart/ordercommandms/ --name ordercmd --set image.repository=ibmcase/kc-ordercommandms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
 </pre></div>
 
 <ul>
@@ -881,13 +909,13 @@
 <ul>
 <li>Build the image</li>
 </ul>
-<div class="codehilite"><pre><span></span>$ ./scripts/buildDocker.sh
+<div class="codehilite"><pre><span></span>$ ./scripts/buildDocker.sh MINIKUBE
 </pre></div>
 
 <ul>
 <li>Deploy on minikube</li>
 </ul>
-<div class="codehilite"><pre><span></span>helm install chart/orderqueryms/ --name orderquery --set image.repository=ibmcase/kc-orderqueryms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=local --namespace greencompute
+<div class="codehilite"><pre><span></span>helm install chart/orderqueryms/ --name orderquery --set image.repository=ibmcase/kc-orderqueryms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
 </pre></div>
 
 <ul>
@@ -910,13 +938,13 @@
 <ul>
 <li>Build the image</li>
 </ul>
-<div class="codehilite"><pre><span></span>$ ./scripts/buildDocker.sh
+<div class="codehilite"><pre><span></span>$ ./scripts/buildDocker.sh MINIKUBE
 </pre></div>
 
 <ul>
 <li>Deploy on minikube</li>
 </ul>
-<div class="codehilite"><pre><span></span>helm install chart/fleetms/ --name fleetms --set image.repository=ibmcase/kc-fleetms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=local --namespace greencompute
+<div class="codehilite"><pre><span></span>helm install chart/fleetms/ --name fleetms --set image.repository=ibmcase/kc-fleetms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
 </pre></div>
 
 <ul>
@@ -932,7 +960,10 @@
 <p>There are multiple different implementations of this service. This note is for the Springboot / Postgresql / Kafka implementation.</p>
 </div>
 <h3 id="getting-the-certs-for-ibm-cloud-postgresql">Getting the certs for IBM CLoud PostgreSQL</h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
 <p>If you run with postgresql running locally, you have nothing to do.</p>
+</div>
 <p>If you run the container microservice connected to Postgresql running on IBM Cloud, you need to get the SSL certificate. To do so perform the following commands:</p>
 <ul>
 <li>From the IBM Cloud Console get the name of your postgresql service
@@ -956,19 +987,6 @@ ibmcloud plugin install cloud-databases
 <div class="codehilite"><pre><span></span><span class="n">keytool</span> <span class="o">-</span><span class="n">keystore</span> <span class="n">clienttruststore</span> <span class="o">-</span><span class="n">alias</span> <span class="n">postgresql</span> <span class="o">-</span><span class="kn">import</span> <span class="o">-</span><span class="nb">file</span> <span class="n">postgressql</span><span class="o">.</span><span class="n">crt</span><span class="o">.</span><span class="n">der</span> <span class="o">-</span><span class="n">storepass</span> <span class="n">changeit</span>
 </pre></div>
 
-<ol>
-<li>Go to the repo</li>
-</ol>
-<div class="codehilite"><pre><span></span>cd refarch-kc-container-ms/SpringContainerMS
-</pre></div>
-
-<ol>
-<li>Build the image</li>
-</ol>
-<div class="codehilite"><pre><span></span>$ ./scripts/buildDocker.sh
-</pre></div>
-
-<p>ENV can be LOCAL, IBMCLOUD or ICP based on where you need to deploy.</p>
 <ul>
 <li>Create required secrets.</li>
 </ul>
@@ -979,10 +997,29 @@ kubectl create secret generic postgresql-user --from-literal=binding=&#39;postgr
 kubectl create secret generic postgresql-pwd --from-literal=binding=&#39;supersecret&#39; -n greencompute
 </pre></div>
 
+<h3 id="build-and-deploy-the-container-microservice">Build and deploy the container microservice</h3>
+<ul>
+<li>Go to the repo</li>
+</ul>
+<div class="codehilite"><pre><span></span>cd refarch-kc-container-ms/SpringContainerMS
+</pre></div>
+
+<ul>
+<li>Build the image</li>
+</ul>
+<div class="codehilite"><pre><span></span>$ ./scripts/buildDocker.sh MINIKUBE
+</pre></div>
+
 <ul>
 <li>Deploy on minikube</li>
 </ul>
-<div class="codehilite"><pre><span></span>helm install chart/springcontainerms/ --name containerms --set image.repository=ibmcase/kc-springcontainerms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=local --namespace greencompute
+<div class="codehilite"><pre><span></span>helm install chart/springcontainerms/ --name containerms --set image.repository=ibmcase/kc-springcontainerms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
+</pre></div>
+
+<ul>
+<li>Verify the deployed service:</li>
+</ul>
+<div class="codehilite"><pre><span></span>curl http://localhost:30626/containers
 </pre></div>
 
 <h2 id="user-interface-for-demonstration">User interface for demonstration</h2>
@@ -1009,6 +1046,13 @@ kubectl create secret generic postgresql-pwd --from-literal=binding=&#39;superse
 <li>Verify the installed app</li>
 </ul>
 <p>Point your web browser to <a href="http://localhost:31010">http://localhost:31010</a> and login with username: eddie@email.com and password Eddie.</p>
+<h2 id="troubleshouting">Troubleshouting</h2>
+<p>In case of issue try accessing the pod logs. </p>
+<p>Use busybox if you want to test that KubeDNS is working as expected and hosts are resolving and can connect:</p>
+<div class="codehilite"><pre><span></span>kubectl run -i --tty --rm debug -n greencompute --image=busybox --restart=Never -- sh
+</pre></div>
+
+<p>In the shell prompt you have access to ping command to test name resolution.</p>
                 
                   
                 
