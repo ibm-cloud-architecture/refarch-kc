@@ -110,7 +110,7 @@ $ cd refarch-kc-ms/voyages-ms
 ** Build the image
 
 ```
-$ ./scripts/buildDocker.sh
+$ ./scripts/buildDocker.sh MINIKUBE
 ```
 
 * Deploy on minikube
@@ -139,13 +139,13 @@ $ cd refarch-kc-order-ms/order-command-ms
 * Build the image
 
 ```
-$ ./scripts/buildDocker.sh
+$ ./scripts/buildDocker.sh MINIKUBE
 ```
 
 * Deploy on minikube
 
 ```
-helm install chart/ordercommandms/ --name ordercmd --set image.repository=ibmcase/kc-ordercommandms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=local --namespace greencompute
+helm install chart/ordercommandms/ --name ordercmd --set image.repository=ibmcase/kc-ordercommandms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
 ```
 
 * Verify service runs
@@ -170,13 +170,13 @@ $ cd refarch-kc-order-ms/order-query-ms
 * Build the image
 
 ```
-$ ./scripts/buildDocker.sh
+$ ./scripts/buildDocker.sh MINIKUBE
 ```
 
 * Deploy on minikube
 
 ```
-helm install chart/orderqueryms/ --name orderquery --set image.repository=ibmcase/kc-orderqueryms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=local --namespace greencompute
+helm install chart/orderqueryms/ --name orderquery --set image.repository=ibmcase/kc-orderqueryms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
 ```
 
 * Verify service runs
@@ -200,14 +200,14 @@ $ cd refarch-kc-ms/fleet-ms
 * Build the image
 
 ```
-$ ./scripts/buildDocker.sh
+$ ./scripts/buildDocker.sh MINIKUBE
 ```
 
 
 * Deploy on minikube
 
 ```
-helm install chart/fleetms/ --name fleetms --set image.repository=ibmcase/kc-fleetms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=local --namespace greencompute
+helm install chart/fleetms/ --name fleetms --set image.repository=ibmcase/kc-fleetms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
 ```
 
 * Verify service runs
@@ -226,7 +226,8 @@ The container microservice manage the Reefer container inventory and listen to o
 
 ### Getting the certs for IBM CLoud PostgreSQL 
 
-If you run with postgresql running locally, you have nothing to do.
+!!! warning
+    If you run with postgresql running locally, you have nothing to do.
 
 If you run the container microservice connected to Postgresql running on IBM Cloud, you need to get the SSL certificate. To do so perform the following commands:
 
@@ -252,21 +253,6 @@ openssl x509 -in postgressql.crt -out postgressql.crt.der -outform der
 keytool -keystore clienttruststore -alias postgresql -import -file postgressql.crt.der -storepass changeit
 ```
 
-1. Go to the repo
-
-```
-cd refarch-kc-container-ms/SpringContainerMS
-```
-
-2. Build the image
-
-```
-$ ./scripts/buildDocker.sh
-```
-
-ENV can be LOCAL, IBMCLOUD or ICP based on where you need to deploy.
-
-
 * Create required secrets.
 
 ```
@@ -277,10 +263,30 @@ kubectl create secret generic postgresql-user --from-literal=binding='postgres' 
 kubectl create secret generic postgresql-pwd --from-literal=binding='supersecret' -n greencompute
 ```
 
+### Build and deploy the container microservice
+
+* Go to the repo
+
+```
+cd refarch-kc-container-ms/SpringContainerMS
+```
+
+* Build the image
+
+```
+$ ./scripts/buildDocker.sh MINIKUBE
+```
+
 * Deploy on minikube
 
 ```
-helm install chart/springcontainerms/ --name containerms --set image.repository=ibmcase/kc-springcontainerms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=local --namespace greencompute
+helm install chart/springcontainerms/ --name containerms --set image.repository=ibmcase/kc-springcontainerms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
+```
+
+* Verify the deployed service:
+
+```
+curl http://localhost:30626/containers
 ```
 
 ## User interface for demonstration
@@ -309,3 +315,15 @@ helm install chart/kc-ui/ --name kcsolution --set image.repository=ibmcase/kc-ui
 
 Point your web browser to [http://localhost:31010](http://localhost:31010) and login with username: eddie@email.com and password Eddie.
 
+
+## Troubleshouting
+
+In case of issue try accessing the pod logs. 
+
+Use busybox if you want to test that KubeDNS is working as expected and hosts are resolving and can connect:
+
+```
+kubectl run -i --tty --rm debug -n greencompute --image=busybox --restart=Never -- sh
+```
+
+In the shell prompt you have access to ping command to test name resolution.
