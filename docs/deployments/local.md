@@ -1,8 +1,9 @@
-# Run the solution on your laptop
+# Run the solution locally with Docker Compose
 
-Updated 05/14/2019.
+!!! abstract
+  In this document we present how to set up, build and run the solution on your local laptop (Tested on mac) using docker-compose. You need docker and docker compose. 
 
-In this document we present how to set up and run the solution on your local laptop (Tested on mac). We propose to use docker-compose for local deployment. The environment we put in place looks as the diagram below:
+The environment we put in place looks as the diagram below:
 
 ![](local-deployment.png)
 
@@ -33,7 +34,7 @@ refarch-kc
 refarch-kc-ms
 refarch-kc-streams
 ```
-* We propose you to have two choices to build the solution: installing node, python and maven or use our own docker images for running those tools. You can mix too, if for example you already develop on nodejs or Java you may want to leverage your own settings. If you do not want to impact your python environmenr, you can user our docker image. See the [build section](#build-the-solution) below.
+* You to have two choices to build the solution: installing node, python and maven on your computer or use our own docker images for running those tools. You can mix too, if for example you already developed in the past with Nodejs or Java you may want to leverage your own configurations. If you do not want to impact your python environment, you can user our docker image. See the [build section](#build-the-solution) below.
 
 * To be able to build without our docker images, you need npm, node, maven and docker:  
      * Get [maven](https://maven.apache.org/install.html) and add it to your PATH.
