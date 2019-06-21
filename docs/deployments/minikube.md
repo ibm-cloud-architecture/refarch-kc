@@ -289,7 +289,7 @@ helm install chart/springcontainerms/ --name containerms --set image.repository=
 curl http://localhost:30626/containers
 ```
 
-## User interface for demonstration
+## User interface app used for demonstration
 
 The last app is a web application to expose an user interface to run the demonstration end to end.
 
@@ -302,13 +302,13 @@ cd refarch-kc-ui/
 * Build the image
 
 ```
-./scripts/buildDocker.sh
+./scripts/buildDocker.sh MINIKUBE
 ```
 
 * Deploy on minikube
 
 ```
-helm install chart/kc-ui/ --name kcsolution --set image.repository=ibmcase/kc-ui --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=local --namespace greencompute
+helm install chart/kc-ui/ --name kcsolution --set image.repository=ibmcase/kc-ui --set image.pullSecret= --set image.pullPolicy=Always --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
 ```
 
 * Verify the installed app

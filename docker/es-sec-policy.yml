@@ -1,0 +1,12 @@
+apiVersion: securityenforcement.admission.cloud.ibm.com/v1beta1
+kind: ImagePolicy
+namespace: eventstreams
+metadata:
+  name: image-policy
+  namespace: eventstreams
+spec:
+  repositories:
+    - name: docker.io/*
+      policy: null 
+    - name: mycluster.icp:8500
+      policy: null
