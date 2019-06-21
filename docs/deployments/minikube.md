@@ -1,4 +1,4 @@
-# Minikube deployment
+# Deploy on Minikube
 
 !!! abstract
     This note descriptes how to install and run the solution on minikube instead of docker-compose so developer has the same experience as running on any kubernetes platform.
@@ -63,13 +63,13 @@ It will take minutes to get the 2 pods ready.
 
 ---
 
-# Deploy each component of the solution
+## Deploy each component of the solution
 
 To summarize the MVP solution looks like:
 
 ![](../design/kc-mvp-components.png)
 
-## Deploy postgresql using Helm 
+### Deploy postgresql using Helm 
 
 !!! warning
     Deploy postgresql only if you plan to use the container-ms service.
@@ -105,7 +105,7 @@ Also to connect to your database from outside the cluster execute the following 
     PGPASSWORD="$POSTGRES_PASSWORD" psql --host 127.0.0.1 -U postgres -p 5432
 ```
 
-## Deploy the Voyage microservice using Helm
+### Deploy the Voyage microservice using Helm
 
 The *Voyage microservice* is a simple nodejs app to mockup schedule of vessels between two harbors. It is here to illustrate Kafka integration with nodejs app.
 
@@ -133,7 +133,7 @@ helm install chart/voyagesms/ --name voyages --set image.repository=ibmcase/kc-v
 curl http://localhost:31000/voyage
 ```
 
-## Deploy Order command microservice with Helm
+### Deploy Order command microservice with Helm
 
 !!! note
     Order command microservice implements the Command part of the CQRS pattern. It is done in Java and use Kafka API.
@@ -164,7 +164,7 @@ curl http://localhost:31200/orders
 ```
 
 
-## Order query microservice with Helm
+### Order query microservice with Helm
 
 !!! note
     Order command microservice implements the Query part of the CQRS pattern. It is done in Java and use Kafka API.
@@ -194,7 +194,7 @@ At the beginning the call below should return an empty array: `[]`
 curl http://localhost:31100/orders
 ```
 
-## Deploy the Fleet simulator with Helm
+### Deploy the Fleet simulator with Helm
 
 !!! note
     The fleet simulator is to move vessels from one harbors to another, and send container metrics while the containers are on a vessel. It has some predefined simulation to trigger some events.
@@ -225,14 +225,14 @@ At the beginning the call below should return an empty array: `[]`
 curl http://localhost:31300/fleetms/fleets
 ```
 
-## Deploy the Container management microservice with Helm
+### Deploy the Container management microservice with Helm
 
 The container microservice manage the Reefer container inventory and listen to order created event to assign a container to an order. 
 
 !!! warning
     There are multiple different implementations of this service. This note is for the Springboot / Postgresql / Kafka implementation.
 
-### Getting the certs for IBM CLoud PostgreSQL 
+#### Getting the certs for IBM CLoud PostgreSQL 
 
 !!! warning
     If you run with postgresql running locally, you have nothing to do.
@@ -297,7 +297,7 @@ helm install chart/springcontainerms/ --name containerms --set image.repository=
 curl http://localhost:30626/containers
 ```
 
-## Deploy the User Interface app used for demonstration
+### Deploy the User Interface app used for demonstration
 
 The last app is a web application to expose an user interface to run the demonstration end to end.
 

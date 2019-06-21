@@ -9,6 +9,6 @@ The command `./scripts/clone.sh` in this project clones all the dependant reposi
 * [Ship and fleet microservice](https://ibm-cloud-architecture.github.io/refarch-kc-ms) of this solution are grouped in one repository. We may change that later if we need it.
 * [Real time analytics with IBM Streaming Analytics](https://github.com/ibm-cloud-architecture/refarch-kc-streams) to identify problem on containers from real time events.
 * [Order management microservice using CQRS and event sourcing pattern](https://ibm-cloud-architecture.github.io/refarch-kc-order-ms).
-* [Voyage microservice](https://ibm-cloud-architecture.github.io/refarch-kc-ms/voyagesms) to support the order management and ship voyage assignment.
+* [Voyage microservice](https://ibm-cloud-architecture.github.io/refarch-kc-ms/voyagems) to support the order management and ship voyage assignment.
 * [Container microservice](https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/) to support the Reefer container management microservice in different programming language, and to define python tools to do machine learning on top of event store from Kafka.
 * [MQ to Kafka integration with a 'legacy' app](https://ibm-cloud-architecture.github.io/refarch-container-inventory/) to illustrate bi-directional connections between MQ and Kafka. The legacy JEE app is managing the inventory for metal and Reefer containers, but onyl Reefer information is sent to Kafka.
