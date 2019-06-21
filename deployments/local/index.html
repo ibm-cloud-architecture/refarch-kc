@@ -96,7 +96,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#run-the-solution-on-your-laptop" tabindex="1" class="md-skip">
+      <a href="#run-the-solution-locally-with-docker-compose" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -655,9 +655,12 @@
                   <a href="https://github.com/ibm-cloud-architecture/refarch-kc/edit/master/docs/deployments/local.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="run-the-solution-on-your-laptop">Run the solution on your laptop</h1>
-<p>Updated 05/14/2019.</p>
-<p>In this document we present how to set up and run the solution on your local laptop (Tested on mac). We propose to use docker-compose for local deployment. The environment we put in place looks as the diagram below:</p>
+                <h1 id="run-the-solution-locally-with-docker-compose">Run the solution locally with Docker Compose</h1>
+<div class="admonition abstract">
+<p class="admonition-title">Abstract</p>
+</div>
+<p>In this document we present how to set up, build and run the solution on your local laptop (Tested on mac) using docker-compose. You need docker and docker compose. </p>
+<p>The environment we put in place looks as the diagram below:</p>
 <p><img alt="" src="../local-deployment.png" /></p>
 <p>Every microservices run in container and two separate docker compose files define reusable backend services (kafka, zookeeper, postgresql) and the application specific services. The docker-compose files are under the <code>docker</code> folder of this project.</p>
 <h2 id="pre-requisites">Pre requisites</h2>
@@ -685,7 +688,7 @@ refarch-kc-ms
 refarch-kc-streams
 </pre></div></li>
 <li>
-<p>We propose you to have two choices to build the solution: installing node, python and maven or use our own docker images for running those tools. You can mix too, if for example you already develop on nodejs or Java you may want to leverage your own settings. If you do not want to impact your python environmenr, you can user our docker image. See the <a href="#build-the-solution">build section</a> below.</p>
+<p>You to have two choices to build the solution: installing node, python and maven on your computer or use our own docker images for running those tools. You can mix too, if for example you already developed in the past with Nodejs or Java you may want to leverage your own configurations. If you do not want to impact your python environment, you can user our docker image. See the <a href="#build-the-solution">build section</a> below.</p>
 </li>
 <li>
 <p>To be able to build without our docker images, you need npm, node, maven and docker:  </p>

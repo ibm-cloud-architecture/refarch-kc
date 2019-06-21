@@ -472,82 +472,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#deploy-postgresql-using-helm" title="Deploy postgresql using helm" class="md-nav__link">
-    Deploy postgresql using helm
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deploy-the-voyage-microservice" title="Deploy the Voyage microservice" class="md-nav__link">
-    Deploy the Voyage microservice
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deploy-order-command-microservice" title="Deploy Order command microservice" class="md-nav__link">
-    Deploy Order command microservice
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#order-query-microservice" title="Order query microservice" class="md-nav__link">
-    Order query microservice
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deploy-the-fleet-simulator" title="Deploy the Fleet simulator" class="md-nav__link">
-    Deploy the Fleet simulator
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#container-microservice" title="Container microservice" class="md-nav__link">
-    Container microservice
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#getting-the-certs-for-ibm-cloud-postgresql" title="Getting the certs for IBM CLoud PostgreSQL" class="md-nav__link">
-    Getting the certs for IBM CLoud PostgreSQL
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#build-and-deploy-the-container-microservice" title="Build and deploy the container microservice" class="md-nav__link">
-    Build and deploy the container microservice
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#user-interface-for-demonstration" title="User interface for demonstration" class="md-nav__link">
-    User interface for demonstration
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshouting" title="Troubleshouting" class="md-nav__link">
-    Troubleshouting
-  </a>
-  
-</li>
-      
       
       
       
@@ -670,82 +594,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#deploy-postgresql-using-helm" title="Deploy postgresql using helm" class="md-nav__link">
-    Deploy postgresql using helm
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deploy-the-voyage-microservice" title="Deploy the Voyage microservice" class="md-nav__link">
-    Deploy the Voyage microservice
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deploy-order-command-microservice" title="Deploy Order command microservice" class="md-nav__link">
-    Deploy Order command microservice
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#order-query-microservice" title="Order query microservice" class="md-nav__link">
-    Order query microservice
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deploy-the-fleet-simulator" title="Deploy the Fleet simulator" class="md-nav__link">
-    Deploy the Fleet simulator
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#container-microservice" title="Container microservice" class="md-nav__link">
-    Container microservice
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#getting-the-certs-for-ibm-cloud-postgresql" title="Getting the certs for IBM CLoud PostgreSQL" class="md-nav__link">
-    Getting the certs for IBM CLoud PostgreSQL
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#build-and-deploy-the-container-microservice" title="Build and deploy the container microservice" class="md-nav__link">
-    Build and deploy the container microservice
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#user-interface-for-demonstration" title="User interface for demonstration" class="md-nav__link">
-    User interface for demonstration
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshouting" title="Troubleshouting" class="md-nav__link">
-    Troubleshouting
-  </a>
-  
-</li>
-      
       
       
       
@@ -813,7 +661,11 @@
 <div class="codehilite"><pre><span></span>kubectl exec  -ti $POD_NAME  -n greencompute -- kafka-topics.sh --list --zookeeper kafkabitmani-zookeeper:2181
 </pre></div>
 
-<h2 id="deploy-postgresql-using-helm">Deploy postgresql using helm</h2>
+<hr />
+<h1 id="deploy-each-component-of-the-solution">Deploy each component of the solution</h1>
+<p>To summarize the MVP solution looks like:</p>
+<p><img alt="" src="../../design/kc-mvp-components.png" /></p>
+<h2 id="deploy-postgresql-using-helm">Deploy postgresql using Helm</h2>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Deploy postgresql only if you plan to use the container-ms service.</p>
@@ -842,7 +694,7 @@
     PGPASSWORD=&quot;$POSTGRES_PASSWORD&quot; psql --host 127.0.0.1 -U postgres -p 5432
 </pre></div>
 
-<h2 id="deploy-the-voyage-microservice">Deploy the Voyage microservice</h2>
+<h2 id="deploy-the-voyage-microservice-using-helm">Deploy the Voyage microservice using Helm</h2>
 <p>The <em>Voyage microservice</em> is a simple nodejs app to mockup schedule of vessels between two harbors. It is here to illustrate Kafka integration with nodejs app.</p>
 <ul>
 <li>Go to the repo</li>
@@ -866,7 +718,7 @@
 <div class="codehilite"><pre><span></span>curl http://localhost:31000/voyage
 </pre></div>
 
-<h2 id="deploy-order-command-microservice">Deploy Order command microservice</h2>
+<h2 id="deploy-order-command-microservice-with-helm">Deploy Order command microservice with Helm</h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Order command microservice implements the Command part of the CQRS pattern. It is done in Java and use Kafka API.</p>
@@ -895,7 +747,7 @@
 <p>At the beginning the call below should return an empty array: <code>[]</code>
 <div class="codehilite"><pre><span></span>curl http://localhost:31200/orders
 </pre></div></p>
-<h2 id="order-query-microservice">Order query microservice</h2>
+<h2 id="order-query-microservice-with-helm">Order query microservice with Helm</h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Order command microservice implements the Query part of the CQRS pattern. It is done in Java and use Kafka API.</p>
@@ -924,7 +776,7 @@
 <p>At the beginning the call below should return an empty array: <code>[]</code>
 <div class="codehilite"><pre><span></span>curl http://localhost:31100/orders
 </pre></div></p>
-<h2 id="deploy-the-fleet-simulator">Deploy the Fleet simulator</h2>
+<h2 id="deploy-the-fleet-simulator-with-helm">Deploy the Fleet simulator with Helm</h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The fleet simulator is to move vessels from one harbors to another, and send container metrics while the containers are on a vessel. It has some predefined simulation to trigger some events.</p>
@@ -953,7 +805,7 @@
 <p>At the beginning the call below should return an empty array: <code>[]</code>
 <div class="codehilite"><pre><span></span>curl http://localhost:31300/fleetms/fleets
 </pre></div></p>
-<h2 id="container-microservice">Container microservice</h2>
+<h2 id="deploy-the-container-management-microservice-with-helm">Deploy the Container management microservice with Helm</h2>
 <p>The container microservice manage the Reefer container inventory and listen to order created event to assign a container to an order. </p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -997,7 +849,7 @@ kubectl create secret generic postgresql-user --from-literal=binding=&#39;postgr
 kubectl create secret generic postgresql-pwd --from-literal=binding=&#39;supersecret&#39; -n greencompute
 </pre></div>
 
-<h3 id="build-and-deploy-the-container-microservice">Build and deploy the container microservice</h3>
+<h3 id="build-and-deploy-the-container-manager-microservice">Build and deploy the container manager microservice</h3>
 <ul>
 <li>Go to the repo</li>
 </ul>
@@ -1022,7 +874,7 @@ kubectl create secret generic postgresql-pwd --from-literal=binding=&#39;superse
 <div class="codehilite"><pre><span></span>curl http://localhost:30626/containers
 </pre></div>
 
-<h2 id="user-interface-for-demonstration">User interface for demonstration</h2>
+<h2 id="deploy-the-user-interface-app-used-for-demonstration">Deploy the User Interface app used for demonstration</h2>
 <p>The last app is a web application to expose an user interface to run the demonstration end to end.</p>
 <ul>
 <li>Go to the repo</li>
@@ -1033,13 +885,13 @@ kubectl create secret generic postgresql-pwd --from-literal=binding=&#39;superse
 <ul>
 <li>Build the image</li>
 </ul>
-<div class="codehilite"><pre><span></span>./scripts/buildDocker.sh
+<div class="codehilite"><pre><span></span>./scripts/buildDocker.sh MINIKUBE
 </pre></div>
 
 <ul>
 <li>Deploy on minikube</li>
 </ul>
-<div class="codehilite"><pre><span></span>helm install chart/kc-ui/ --name kcsolution --set image.repository=ibmcase/kc-ui --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=local --namespace greencompute
+<div class="codehilite"><pre><span></span>helm install chart/kc-ui/ --name kcsolution --set image.repository=ibmcase/kc-ui --set image.pullSecret= --set image.pullPolicy=Always --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
 </pre></div>
 
 <ul>
