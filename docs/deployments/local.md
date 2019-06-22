@@ -1,7 +1,7 @@
 # Run the solution locally with Docker Compose
 
 !!! abstract
-  In this document we present how to set up, build and run the solution on your local laptop (Tested on mac) using docker-compose. You need docker and docker compose. 
+    In this document we present how to set up, build and run the solution on your local laptop (Tested on mac) using docker-compose. You need docker and docker compose. 
 
 The environment we put in place looks as the diagram below:
 
