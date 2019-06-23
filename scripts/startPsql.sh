@@ -1,0 +1,3 @@
+#!/bin/bash
+export POSTGRES_PASSWORD=$(kubectl get secret --namespace greencompute postgre-db-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
+kubectl run postgre-db-postgresql-client --rm --tty -i --restart='Never' --namespace greencompute --image docker.io/bitnami/postgresql:11.3.0-debian-9-r38 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- psql --host postgre-db-postgresql -U postgres -p 5432
