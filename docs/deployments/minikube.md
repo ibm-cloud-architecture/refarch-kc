@@ -15,10 +15,10 @@ Verify Tiller is running:
 kubectl --namespace kube-system get pods | grep tiller
 ```
 
-Add Confluent Helm Repository:
+Add Bitnami Helm Repository:
 
 ```
-helm repo add confluentinc https://confluentinc.github.io/cp-helm-charts/
+helm repo add bitnami https://charts.bitnami.com/bitnami
 ```
 
 Be sure to have updated the helm repository with:
