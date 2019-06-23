@@ -15,10 +15,10 @@ Verify Tiller is running:
 kubectl --namespace kube-system get pods | grep tiller
 ```
 
-Add Confluent Helm Repository:
+Add Bitnami Helm Repository:
 
 ```
-helm repo add confluentinc https://confluentinc.github.io/cp-helm-charts/
+helm repo add bitnami https://charts.bitnami.com/bitnami
 ```
 
 Be sure to have updated the helm repository with:
@@ -48,15 +48,15 @@ It will take minutes to get the 2 pods ready.
   ```
   ./scripts/createMinikubeLocalTopics.sh
   ```
-  
+
   Get the kafka pod name:
 
   ```
   export POD_NAME=$(kubectl get pods --namespace greencompute -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=kafkabitmani,app.kubernetes.io/component=kafka" -o jsonpath="{.items[0].metadata.name}")
   ```
-  
+
   Get the list of topics
- 
+
   ```
   kubectl exec  -ti $POD_NAME  -n greencompute -- kafka-topics.sh --list --zookeeper kafkabitmani-zookeeper:2181
   ```
@@ -69,7 +69,7 @@ To summarize the MVP solution looks like:
 
 ![](../design/kc-mvp-components.png)
 
-### Deploy postgresql using Helm 
+### Deploy postgresql using Helm
 
 !!! warning
     Deploy postgresql only if you plan to use the container-ms service.
@@ -227,12 +227,12 @@ curl http://localhost:31300/fleetms/fleets
 
 ### Deploy the Container management microservice with Helm
 
-The container microservice manage the Reefer container inventory and listen to order created event to assign a container to an order. 
+The container microservice manage the Reefer container inventory and listen to order created event to assign a container to an order.
 
 !!! warning
     There are multiple different implementations of this service. This note is for the Springboot / Postgresql / Kafka implementation.
 
-#### Getting the certs for IBM CLoud PostgreSQL 
+#### Getting the certs for IBM CLoud PostgreSQL
 
 !!! warning
     If you run with postgresql running locally, you have nothing to do.
@@ -326,7 +326,7 @@ Point your web browser to [http://localhost:31010](http://localhost:31010) and l
 
 ## Troubleshouting
 
-In case of issue try accessing the pod logs. 
+In case of issue try accessing the pod logs.
 
 Use busybox if you want to test that KubeDNS is working as expected and hosts are resolving and can connect:
 
