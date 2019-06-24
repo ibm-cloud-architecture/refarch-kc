@@ -803,8 +803,8 @@
 <div class="codehilite"><pre><span></span>kubectl --namespace kube-system get pods | grep tiller
 </pre></div>
 
-<p>Add Confluent Helm Repository:</p>
-<div class="codehilite"><pre><span></span>helm repo add confluentinc https://confluentinc.github.io/cp-helm-charts/
+<p>Add Bitnami Helm Repository:</p>
+<div class="codehilite"><pre><span></span>helm repo add bitnami https://charts.bitnami.com/bitnami
 </pre></div>
 
 <p>Be sure to have updated the helm repository with:</p>
@@ -922,7 +922,7 @@
 <ul>
 <li>Verify service runs</li>
 </ul>
-<p>At the beginning the call below should return an empty array: <code>[]</code>
+<p>Without any previously tests done, the call below should return an empty array: <code>[]</code>
 <div class="codehilite"><pre><span></span>curl http://localhost:31200/orders
 </pre></div></p>
 <h3 id="order-query-microservice-with-helm">Order query microservice with Helm</h3>
@@ -984,7 +984,7 @@
 <div class="codehilite"><pre><span></span>curl http://localhost:31300/fleetms/fleets
 </pre></div></p>
 <h3 id="deploy-the-container-management-microservice-with-helm">Deploy the Container management microservice with Helm</h3>
-<p>The container microservice manage the Reefer container inventory and listen to order created event to assign a container to an order. </p>
+<p>The container microservice manage the Reefer container inventory and listen to order created event to assign a container to an order.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>There are multiple different implementations of this service. This note is for the Springboot / Postgresql / Kafka implementation.</p>
@@ -1077,7 +1077,7 @@ kubectl create secret generic postgresql-pwd --from-literal=binding=&#39;superse
 </ul>
 <p>Point your web browser to <a href="http://localhost:31010">http://localhost:31010</a> and login with username: eddie@email.com and password Eddie.</p>
 <h2 id="troubleshouting">Troubleshouting</h2>
-<p>In case of issue try accessing the pod logs. </p>
+<p>In case of issue try accessing the pod logs.</p>
 <p>Use busybox if you want to test that KubeDNS is working as expected and hosts are resolving and can connect:</p>
 <div class="codehilite"><pre><span></span>kubectl run -i --tty --rm debug -n greencompute --image=busybox --restart=Never -- sh
 </pre></div>
