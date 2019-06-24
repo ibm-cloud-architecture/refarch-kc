@@ -158,7 +158,7 @@ helm install chart/ordercommandms/ --name ordercmd --set image.repository=ibmcas
 
 * Verify service runs
 
-At the beginning the call below should return an empty array: `[]`
+Without any previously tests done, the call below should return an empty array: `[]`
 ```
 curl http://localhost:31200/orders
 ```
