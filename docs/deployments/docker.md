@@ -1,10 +1,4 @@
-# Reefer Container Shipment solution - EDA reference implementation
-
-As part of producing the IBM event driven point of view and reference architecture, we wanted to bring together a complete scenario which would cover all aspects of developing an event driven solutions including extended connections to devices/IOT and blockchain for trusted business trading networks. We felt that the shipping business could provide a good foundation for this and would enable us to show how to develop event driven solutions following the architecture patterns.
-
-## TL;TR
-
-If you want to just get the code, build and run we propose running locally with Minikube or Docker-compose.
+# Build and run using docker-compose 
 
 To build and run the solution locally using docker, please follow the below instructions.
 

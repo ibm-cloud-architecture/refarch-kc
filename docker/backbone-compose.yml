@@ -1,7 +1,8 @@
+# wurstmeister
 version: '3'
 services:
     zookeeper1:
-        image: wurstmeister/zookeeper
+        image: bitmani/zookeeper
         hostname: zookeeper1
         ports:
             - "2181:2181"
@@ -13,7 +14,7 @@ services:
             - ./zookeeper1/data:/data
             - ./zookeeper1/datalog:/datalog
     kafka1:
-        image: wurstmeister/kafka
+        image: bitmani/kafka
         hostname: kafka1
         ports:
             - "9092:9092"

@@ -19,7 +19,7 @@ nav:
     - Run on IBM Cloud Kubernetes Services: ./deployments/iks.md
     - Run on IBM Cloud Private: ./deployments/icp.md
     - Example of ci/cd: https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/cicd
-  - Security: security
+  - Security: ./security.md
   - Integration tests: ./itg-tests/README.md
   - Demonstration script: ./demo/readme.md
 

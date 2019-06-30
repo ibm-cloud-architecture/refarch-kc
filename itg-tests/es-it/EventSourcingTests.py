@@ -60,7 +60,7 @@ def pollNextOrder(orderID):
     return orderEvent
 
 def getAllOrderedOrderEvents(orderID):
-    print("Get all event mathing the given orderID")
+    print("Get all event matching the given orderID")
     orderReloader = Consumer({
     'bootstrap.servers': KAFKA_BROKERS,
     'group.id': 'python-orders-reload',

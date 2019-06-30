@@ -335,3 +335,19 @@ kubectl run -i --tty --rm debug -n greencompute --image=busybox --restart=Never 
 ```
 
 In the shell prompt you have access to ping command to test name resolution.
+
+### Zookeeper or kafka bitmani pod in ImagePullBackOff
+
+The issue may happen if you are not connected to the internet (yes we code in planes !). The statefulsets are using images with docker.io/bitnami/zookeeper or docker.io/bitnami/kafka, but when the images are local, they look like:
+
+```
+bitnami/zookeeper                    3.4.14-debian-9-r25  
+bitnami/kafka                        2.2.1-debian-9-r12 
+```
+
+So you need to edit the image tag in the stateful yaml. To do so perform the kubectl:
+
+```
+kubectl edit statefuleset kafkabitmani
+kubectl edit statefuleset kafkabitmani-zookeeper
+```

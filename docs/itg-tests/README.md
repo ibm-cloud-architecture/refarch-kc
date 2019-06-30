@@ -1,24 +1,37 @@
-# K Container integration tests
+# Reefer container shipment solution integration tests
 
-The `itg-tests` folder includes a set of tests to validate some of the event-driven microservice patterns like, event sourcing with fail over, CQRS and Saga patterns with recovery and fail over. (See our summary on those patterns [here](https://ibm-cloud-architecture.github.io/refarch-eda/evt-microservices/ED-patterns/))
+The `itg-tests` folder includes a set of tests to validate most of the event-driven microservice patterns like, event sourcing with fail over, CQRS and Saga patterns with recovery and fail over. (See our summary on those patterns [here](https://ibm-cloud-architecture.github.io/refarch-eda/evt-microservices/ED-patterns/))
 
-These code samples are using Python to illustrate how to use Kafka python module from [this github.](https://github.com/confluentinc/confluent-kafka-python)
+These integration tests are done in Python to illustrate how to use Kafka python module of [this github](https://github.com/confluentinc/confluent-kafka-python) and because Python is cool too.
 
-## Building the python environment as docker image
+## pre-requisites
 
-To avoid impacting your environment we use a dockerfile to get the basic of python 3.7.x and other needed modules like kafka, http requests, pytest... So build your image using the following command under the `docker` folder:
+### Building the python environment as docker image
+
+To avoid impacting your environment we use a dockerfile to get the basic of python 3.7.x and other needed modules like kafka, http requests, pytest... So build your python image with all the needed libraries, use the following commands:
 
 ```shell
-$ docker build -t ibmcase/python .
+cd docker
+docker build -t ibmcase/python .
 ```
 
-With this image we will be able to run the different tests. For example, the following commands will start a bash shell with the python environment, mounting the local filesystem into the docker /home folder, and connect to the same network as the Kafka broker and other KC solution components are running in:
+### Ensure all services are running
+
+The documentation assumes the solution is running within MINIKUBE.
+
+```
+kubectl get pods -n greencompute
+```
+
+## Run the python environment
+
+With the image `ibmcase/python`, you will be able to run the different integration tests. For example, the following commands will start a bash shell with the python environment, mounting the local filesystem into the docker /home folder, and connect to the same network as the Kafka broker and the other solution components are running into:
 
 ```shell
 $ pwd
 itg-tests
-$ source ../scripts/setenv.sh LOCAL
-$ docker run -e KAFKA_BROKERS=$KAFKA_BROKERS -v $(pwd):/home --network=docker_default -ti ibmcase/python bash
+$ source ../scripts/setenv.sh MINIKUBE
+$ ./startPythonEnv.sh MINIKUBE
 root@fe61560d0cc4:/# 
 ```
 From this shell we can execute our tests.
@@ -27,9 +40,11 @@ From this shell we can execute our tests.
 
 To validate event sourcing we want to use the order event topic (named `orders`) and add some events to cover the full order lifecycle. We want to validate the order events are sequential over time, and it is possible to replay the loading of events from time origin or from a last committed offset.
 
-The tests are under the `itg-tests/es-it` folder. The tests are done in python:
+The tests are under the `itg-tests/es-it` folder. 
 
-* [EventSourcingTests.py](https://github.com/ibm-cloud-architecture/refarch-kc/blob/master/itg-tests/es-it/EventSourcingTests.py) uses the event backbone, and the order microservices. The setenv.sh script sets the needed environment variables. 
+* [EventSourcingTests.py](https://github.com/ibm-cloud-architecture/refarch-kc/blob/master/itg-tests/es-it/EventSourcingTests.py) uses the event backbone, and the order microservices. 
+
+To run the tests set the KAFKA_BROKERS and KAFKA_APIKEY environment variables
 
 ### Happy path for the order life cycle
 
