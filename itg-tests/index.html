@@ -96,7 +96,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#k-container-integration-tests" tabindex="1" class="md-skip">
+      <a href="#reefer-container-shipment-solution-integration-tests" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -483,7 +483,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../security" title="Security" class="md-nav__link">
+    <a href="../security/" title="Security" class="md-nav__link">
       Security
     </a>
   </li>
@@ -522,8 +522,35 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#pre-requisites" title="pre-requisites" class="md-nav__link">
+    pre-requisites
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#building-the-python-environment-as-docker-image" title="Building the python environment as docker image" class="md-nav__link">
     Building the python environment as docker image
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ensure-all-services-are-running" title="Ensure all services are running" class="md-nav__link">
+    Ensure all services are running
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-the-python-environment" title="Run the python environment" class="md-nav__link">
+    Run the python environment
   </a>
   
 </li>
@@ -627,8 +654,35 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#pre-requisites" title="pre-requisites" class="md-nav__link">
+    pre-requisites
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#building-the-python-environment-as-docker-image" title="Building the python environment as docker image" class="md-nav__link">
     Building the python environment as docker image
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ensure-all-services-are-running" title="Ensure all services are running" class="md-nav__link">
+    Ensure all services are running
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-the-python-environment" title="Run the python environment" class="md-nav__link">
+    Run the python environment
   </a>
   
 </li>
@@ -707,28 +761,37 @@
                   <a href="https://github.com/ibm-cloud-architecture/refarch-kc/edit/master/docs/itg-tests/README.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="k-container-integration-tests">K Container integration tests</h1>
-<p>The <code>itg-tests</code> folder includes a set of tests to validate some of the event-driven microservice patterns like, event sourcing with fail over, CQRS and Saga patterns with recovery and fail over. (See our summary on those patterns <a href="https://ibm-cloud-architecture.github.io/refarch-eda/evt-microservices/ED-patterns/">here</a>)</p>
-<p>These code samples are using Python to illustrate how to use Kafka python module from <a href="https://github.com/confluentinc/confluent-kafka-python">this github.</a></p>
-<h2 id="building-the-python-environment-as-docker-image">Building the python environment as docker image</h2>
-<p>To avoid impacting your environment we use a dockerfile to get the basic of python 3.7.x and other needed modules like kafka, http requests, pytest... So build your image using the following command under the <code>docker</code> folder:</p>
-<div class="codehilite"><pre><span></span>$ docker build -t ibmcase/python .
+                <h1 id="reefer-container-shipment-solution-integration-tests">Reefer container shipment solution integration tests</h1>
+<p>The <code>itg-tests</code> folder includes a set of tests to validate most of the event-driven microservice patterns like, event sourcing with fail over, CQRS and Saga patterns with recovery and fail over. (See our summary on those patterns <a href="https://ibm-cloud-architecture.github.io/refarch-eda/evt-microservices/ED-patterns/">here</a>)</p>
+<p>These integration tests are done in Python to illustrate how to use Kafka python module of <a href="https://github.com/confluentinc/confluent-kafka-python">this github</a> and because Python is cool too.</p>
+<h2 id="pre-requisites">pre-requisites</h2>
+<h3 id="building-the-python-environment-as-docker-image">Building the python environment as docker image</h3>
+<p>To avoid impacting your environment we use a dockerfile to get the basic of python 3.7.x and other needed modules like kafka, http requests, pytest... So build your python image with all the needed libraries, use the following commands:</p>
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> docker
+docker build -t ibmcase/python .
 </pre></div>
 
-<p>With this image we will be able to run the different tests. For example, the following commands will start a bash shell with the python environment, mounting the local filesystem into the docker /home folder, and connect to the same network as the Kafka broker and other KC solution components are running in:</p>
+<h3 id="ensure-all-services-are-running">Ensure all services are running</h3>
+<p>The documentation assumes the solution is running within MINIKUBE.</p>
+<div class="codehilite"><pre><span></span>kubectl get pods -n greencompute
+</pre></div>
+
+<h2 id="run-the-python-environment">Run the python environment</h2>
+<p>With the image <code>ibmcase/python</code>, you will be able to run the different integration tests. For example, the following commands will start a bash shell with the python environment, mounting the local filesystem into the docker /home folder, and connect to the same network as the Kafka broker and the other solution components are running into:</p>
 <p><div class="codehilite"><pre><span></span>$ <span class="nb">pwd</span>
 itg-tests
-$ <span class="nb">source</span> ../scripts/setenv.sh LOCAL
-$ docker run -e <span class="nv">KAFKA_BROKERS</span><span class="o">=</span><span class="nv">$KAFKA_BROKERS</span> -v <span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/home --network<span class="o">=</span>docker_default -ti ibmcase/python bash
+$ <span class="nb">source</span> ../scripts/setenv.sh MINIKUBE
+$ ./startPythonEnv.sh MINIKUBE
 root@fe61560d0cc4:/# 
 </pre></div>
 From this shell we can execute our tests.</p>
 <h2 id="how-to-proof-the-event-sourcing">How to proof the event sourcing</h2>
 <p>To validate event sourcing we want to use the order event topic (named <code>orders</code>) and add some events to cover the full order lifecycle. We want to validate the order events are sequential over time, and it is possible to replay the loading of events from time origin or from a last committed offset.</p>
-<p>The tests are under the <code>itg-tests/es-it</code> folder. The tests are done in python:</p>
+<p>The tests are under the <code>itg-tests/es-it</code> folder. </p>
 <ul>
-<li><a href="https://github.com/ibm-cloud-architecture/refarch-kc/blob/master/itg-tests/es-it/EventSourcingTests.py">EventSourcingTests.py</a> uses the event backbone, and the order microservices. The setenv.sh script sets the needed environment variables. </li>
+<li><a href="https://github.com/ibm-cloud-architecture/refarch-kc/blob/master/itg-tests/es-it/EventSourcingTests.py">EventSourcingTests.py</a> uses the event backbone, and the order microservices. </li>
 </ul>
+<p>To run the tests set the KAFKA_BROKERS and KAFKA_APIKEY environment variables</p>
 <h3 id="happy-path-for-the-order-life-cycle">Happy path for the order life cycle</h3>
 <p>A classical happy path for a event-driven microservice is to receive a command to do something (could be an API operation (POST a new order)), validate the command, create a new event (OrderCreated) and append it to event log, then update its internal state, and may be run side effect like returning a response to the command initiator, or trigger a call to an external service to initiate a business process or a business task.  </p>
 <p>Once the python image is build you can use the following command to run the first test that create an order, use Kafka consumer to get the different events and query the Order microservices. The code is documented and should be self-explanatory. The order state diagram is <a href="https://ibm-cloud-architecture.github.io/refarch-kc/design/readme/#shipment-order-lifecycle-and-state-change-events">presented here.</a></p>
@@ -786,7 +849,7 @@ root@fe61560d0cc4:/# python EventSourcingTests.py
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../deployments/icp/" title="Run on IBM Cloud Private" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../security/" title="Security" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -795,7 +858,7 @@ root@fe61560d0cc4:/# python EventSourcingTests.py
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Run on IBM Cloud Private
+                Security
               </span>
             </div>
           </a>

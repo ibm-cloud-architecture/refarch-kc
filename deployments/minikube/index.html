@@ -559,6 +559,19 @@
     Troubleshouting
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#zookeeper-or-kafka-bitmani-pod-in-imagepullbackoff" title="Zookeeper or kafka bitmani pod in ImagePullBackOff" class="md-nav__link">
+    Zookeeper or kafka bitmani pod in ImagePullBackOff
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
       
@@ -619,7 +632,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../security" title="Security" class="md-nav__link">
+    <a href="../../security/" title="Security" class="md-nav__link">
       Security
     </a>
   </li>
@@ -769,6 +782,19 @@
   <a href="#troubleshouting" title="Troubleshouting" class="md-nav__link">
     Troubleshouting
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#zookeeper-or-kafka-bitmani-pod-in-imagepullbackoff" title="Zookeeper or kafka bitmani pod in ImagePullBackOff" class="md-nav__link">
+    Zookeeper or kafka bitmani pod in ImagePullBackOff
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1083,6 +1109,16 @@ kubectl create secret generic postgresql-pwd --from-literal=binding=&#39;superse
 </pre></div>
 
 <p>In the shell prompt you have access to ping command to test name resolution.</p>
+<h3 id="zookeeper-or-kafka-bitmani-pod-in-imagepullbackoff">Zookeeper or kafka bitmani pod in ImagePullBackOff</h3>
+<p>The issue may happen if you are not connected to the internet (yes we code in planes !). The statefulsets are using images with docker.io/bitnami/zookeeper or docker.io/bitnami/kafka, but when the images are local, they look like:</p>
+<div class="codehilite"><pre><span></span>bitnami/zookeeper                    3.4.14-debian-9-r25  
+bitnami/kafka                        2.2.1-debian-9-r12 
+</pre></div>
+
+<p>So you need to edit the image tag in the stateful yaml. To do so perform the kubectl:</p>
+<div class="codehilite"><pre><span></span>kubectl edit statefuleset kafkabitmani
+kubectl edit statefuleset kafkabitmani-zookeeper
+</pre></div>
                 
                   
                 
