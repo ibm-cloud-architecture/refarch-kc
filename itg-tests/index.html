@@ -810,6 +810,66 @@ root@fe61560d0cc4:/# python EventSourcingTests.py
 <p>If there is no voyage found that matches the source and destination then the order is cancelled. The voyages definition is just a collection of json objects in the <a href="https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/voyages-ms">voyage-ms project</a>.</p>
 <p>The test is <code>CancelledOrderTests.py</code>. It uses the OrderConsumer module.</p>
 <h3 id="replay-all-events-for-a-given-key">Replay all events for a given key</h3>
+<p>The goal of this test is to illustrate the happy path for event sourcing: all events for an order, are persisted in kafka, and a consumer with no commit, could run and help to answer to the question: <strong>What happened to the orderId 75?</strong></p>
+<p>The test is the code in <code>es-it/ProducerOrderEvents.py</code> combined with an order consumer. The diagram below illustrates the simple environment. </p>
+<p><img alt="" src="es-test.png" /></p>
+<p>We assume Kafka is running with the <code>orders</code> topic created. </p>
+<ol>
+<li>
+<p>First start the python docker container, so we can execute any python code. The script connect to the docker network where kafka runs. </p>
+<div class="codehilite"><pre><span></span>cd otg_tests
+./startPythonEnv.sh LOCAL
+</pre></div>
+
+<p>In the bash session, use the following command to ensure python knows how to get our new defined modules like the kafka consumer and producer:
+<div class="codehilite"><pre><span></span>export PYTHONPATH=/home
+cd /home
+</pre></div></p>
+</li>
+<li>
+<p>Start python interpreter with the producer events code with the orderID 75.</p>
+<div class="codehilite"><pre><span></span>    python ProducerOrderEvents.py 75
+    The arguments are:  [&#39;ProducerOrderEvents.py&#39;, &#39;75&#39;]
+    Generate events for 75
+    Create order for 75
+        1- CreateOrder:{&quot;orderID&quot;: &quot;75&quot;, &quot;timestamp&quot;: 1555149614, &quot;type&quot;: &quot;OrderCreated&quot;, &quot;payload&quot;: {&quot;orderID&quot;: &quot;75&quot;, &quot;productID&quot;: &quot;FreshFoodItg&quot;, &quot;customerID&quot;: &quot;Customer007&quot;, &quot;quantity&quot;: 180, &quot;pickupAddress&quot;: {&quot;street&quot;: &quot;astreet&quot;, &quot;city&quot;: &quot;Oakland&quot;, &quot;country&quot;: &quot;USA&quot;, &quot;state&quot;: &quot;CA&quot;, &quot;zipcode&quot;: &quot;95000&quot;}, &quot;destinationAddress&quot;: {&quot;street&quot;: &quot;bstreet&quot;, &quot;city&quot;: &quot;Beijing&quot;, &quot;country&quot;: &quot;China&quot;, &quot;state&quot;: &quot;NE&quot;, &quot;zipcode&quot;: &quot;09000&quot;}, &quot;pickupDate&quot;: &quot;2019-05-25&quot;, &quot;expectedDeliveryDate&quot;: &quot;2019-06-25&quot;}}
+    {&#39;bootstrap.servers&#39;: &#39;kafka1:9092&#39;, &#39;group.id&#39;: &#39;OrderProducerPython&#39;}
+    Message delivered to orders [0]
+        2- Producer accept the offer so now the order is booked:{&quot;orderID&quot;: &quot;75&quot;, &quot;timestamp&quot;: 1555317000, &quot;type&quot;: &quot;OrderBooked&quot;, &quot;payload&quot;: {&quot;orderID&quot;: &quot;75&quot;, &quot;productID&quot;: &quot;FreshFoodItg&quot;, &quot;customerID&quot;: &quot;Customer007&quot;, &quot;quantity&quot;: 180, &quot;pickupAddress&quot;: {&quot;street&quot;: &quot;astreet&quot;, &quot;city&quot;: &quot;Oakland&quot;, &quot;country&quot;: &quot;USA&quot;, &quot;state&quot;: &quot;CA&quot;, &quot;zipcode&quot;: &quot;95000&quot;}, &quot;destinationAddress&quot;: {&quot;street&quot;: &quot;bstreet&quot;, &quot;city&quot;: &quot;Beijing&quot;, &quot;country&quot;: &quot;China&quot;, &quot;state&quot;: &quot;NE&quot;, &quot;zipcode&quot;: &quot;09000&quot;}, &quot;pickupDate&quot;: &quot;2019-05-25&quot;, &quot;expectedDeliveryDate&quot;: &quot;2019-06-25&quot;}}
+    Message delivered to orders [0]
+        3- Voyage is assigned to order:{&quot;orderID&quot;: &quot;75&quot;, &quot;timestamp&quot;: 1555317300, &quot;type&quot;: &quot;OrderAssigned&quot;, &quot;payload&quot;: {&quot;orderID&quot;: &quot;75&quot;, &quot;voyageID&quot;: &quot;voyage21&quot;}}
+    Message delivered to orders [0]
+        4- Allocate Reefer to order:{&quot;orderID&quot;: &quot;75&quot;, &quot;timestamp&quot;: 1555405800, &quot;type&quot;: &quot;ContainerAllocated&quot;, &quot;payload&quot;: {&quot;orderID&quot;: &quot;75&quot;, &quot;containerID&quot;: &quot;c13&quot;}}
+    Message delivered to orders [0]
+        5- Reefer loaded with goods ready for Voyage:{&quot;orderID&quot;: &quot;75&quot;, &quot;timestamp&quot;: 1557930600, &quot;type&quot;: &quot;FullContainerVoyageReady&quot;, &quot;payload&quot;: {&quot;orderID&quot;: &quot;75&quot;, &quot;containerID&quot;: &quot;c13&quot;}}
+    Message delivered to orders [0]
+</pre></div>
+
+</li>
+<li>
+<p>Now we can start the consumer to see the event coming with different time stamps. In a separate <code>terminal</code> windows run the command:</p>
+<div class="codehilite"><pre><span></span>cd es-it
+./runOrderConsumer.sh LOCAL 75
+</pre></div>
+
+<p>You should get the following results</p>
+<div class="codehilite"><pre><span></span>@@@ pollNextOrder orders partition: [0] at offset 8 with key b&#39;75&#39;:
+    value: {&quot;orderID&quot;: &quot;75&quot;, &quot;timestamp&quot;: 1555149614, &quot;type&quot;: &quot;OrderCreated&quot;, &quot;payload&quot;: {&quot;orderID&quot;: &quot;75&quot;, &quot;productID&quot;: &quot;FreshFoodItg&quot;, &quot;customerID&quot;: &quot;Customer007&quot;, &quot;quantity&quot;: 180, &quot;pickupAddress&quot;: {&quot;street&quot;: &quot;astreet&quot;, &quot;city&quot;: &quot;Oakland&quot;, &quot;country&quot;: &quot;USA&quot;, &quot;state&quot;: &quot;CA&quot;, &quot;zipcode&quot;: &quot;95000&quot;}, &quot;destinationAddress&quot;: {&quot;street&quot;: &quot;bstreet&quot;, &quot;city&quot;: &quot;Beijing&quot;, &quot;country&quot;: &quot;China&quot;, &quot;state&quot;: &quot;NE&quot;, &quot;zipcode&quot;: &quot;09000&quot;}, &quot;pickupDate&quot;: &quot;2019-05-25&quot;, &quot;expectedDeliveryDate&quot;: &quot;2019-06-25&quot;}}
+@@@ pollNextOrder orders partition: [0] at offset 9 with key b&#39;75&#39;:
+    value: {&quot;orderID&quot;: &quot;75&quot;, &quot;timestamp&quot;: 1555317000, &quot;type&quot;: &quot;OrderBooked&quot;, &quot;payload&quot;: {&quot;orderID&quot;: &quot;75&quot;, &quot;productID&quot;: &quot;FreshFoodItg&quot;, &quot;customerID&quot;: &quot;Customer007&quot;, &quot;quantity&quot;: 180, &quot;pickupAddress&quot;: {&quot;street&quot;: &quot;astreet&quot;, &quot;city&quot;: &quot;Oakland&quot;, &quot;country&quot;: &quot;USA&quot;, &quot;state&quot;: &quot;CA&quot;, &quot;zipcode&quot;: &quot;95000&quot;}, &quot;destinationAddress&quot;: {&quot;street&quot;: &quot;bstreet&quot;, &quot;city&quot;: &quot;Beijing&quot;, &quot;country&quot;: &quot;China&quot;, &quot;state&quot;: &quot;NE&quot;, &quot;zipcode&quot;: &quot;09000&quot;}, &quot;pickupDate&quot;: &quot;2019-05-25&quot;, &quot;expectedDeliveryDate&quot;: &quot;2019-06-25&quot;}}
+@@@ pollNextOrder orders partition: [0] at offset 10 with key b&#39;75&#39;:
+    value: {&quot;orderID&quot;: &quot;75&quot;, &quot;timestamp&quot;: 1555317300, &quot;type&quot;: &quot;OrderAssigned&quot;, &quot;payload&quot;: {&quot;orderID&quot;: &quot;75&quot;, &quot;voyageID&quot;: &quot;voyage21&quot;}}
+@@@ pollNextOrder orders partition: [0] at offset 11 with key b&#39;75&#39;:
+    value: {&quot;orderID&quot;: &quot;75&quot;, &quot;timestamp&quot;: 1555405800, &quot;type&quot;: &quot;ContainerAllocated&quot;, &quot;payload&quot;: {&quot;orderID&quot;: &quot;75&quot;, &quot;containerID&quot;: &quot;c13&quot;}}
+@@@ pollNextOrder orders partition: [0] at offset 12 with key b&#39;75&#39;:
+    value: {&quot;orderID&quot;: &quot;75&quot;, &quot;timestamp&quot;: 1557930600, &quot;type&quot;: &quot;FullContainerVoyageReady&quot;, &quot;payload&quot;: {&quot;orderID&quot;: &quot;75&quot;, &quot;containerID&quot;: &quot;c13&quot;}}
+</pre></div>
+
+</li>
+<li>
+<p>Stopping with Ctrl-C (it can take time for python to get the keyboard interrupt) and then restarting the same consumer will bring you the same content. We can always answer the question at different time, but still get the same answer. </p>
+</li>
+</ol>
 <h3 id="use-transaction-to-support-read-process-write-in-one-atomic-operation">Use transaction to support read-process-write in one atomic operation</h3>
 <h2 id="how-to-proof-the-saga-pattern">How to proof the SAGA pattern</h2>
 <p>We want to validate the SAGA pattern to support the long-running, cross microservices, order transactions. The diagram is illustrating the use case we want to proof and tests:</p>
