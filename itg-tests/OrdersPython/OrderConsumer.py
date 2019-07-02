@@ -29,7 +29,7 @@ def parseArguments():
 
 if __name__ == '__main__':
     parseArguments()
-    orderConsumer = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_APIKEY,TOPIC_NAME)
+    orderConsumer = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_APIKEY,TOPIC_NAME,False)
     orderConsumer.prepareConsumer()
     orderConsumer.pollNextEvent(OID,'orderID')
     orderConsumer.close()

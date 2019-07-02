@@ -4,11 +4,12 @@ from confluent_kafka import Consumer, KafkaError
 
 class KafkaConsumer:
 
-    def __init__(self, kafka_env = 'LOCAL', kafka_brokers = "", kafka_apikey = "", topic_name = ""):
+    def __init__(self, kafka_env = 'LOCAL', kafka_brokers = "", kafka_apikey = "", topic_name = "",autocommit = True):
         self.kafka_env = kafka_env
         self.kafka_brokers = kafka_brokers
         self.kafka_apikey = kafka_apikey
         self.topic_name = topic_name
+        self.kafka_auto_commit = autocommit
 
     # See https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md
     def prepareConsumer(self, groupID = "pythonconsumers"):
@@ -16,9 +17,9 @@ class KafkaConsumer:
                 'bootstrap.servers':  self.kafka_brokers,
                 'group.id': groupID,
                  'auto.offset.reset': 'earliest',
-                'enable.auto.commit': True,
+                'enable.auto.commit': self.kafka_auto_commit,
         }
-        if (self.kafka_env != 'LOCAL'):
+        if (self.kafka_env != 'LOCAL' and self.kafka_env != 'MINIKUBE'):
             options['security.protocol'] = 'SASL_SSL'
             options['sasl.mechanisms'] = 'PLAIN'
             options['sasl.username'] = 'token'

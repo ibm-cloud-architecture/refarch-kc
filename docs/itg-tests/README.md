@@ -78,6 +78,70 @@ The test is `CancelledOrderTests.py`. It uses the OrderConsumer module.
 
 ### Replay all events for a given key
 
+The goal of this test is to illustrate the happy path for event sourcing: all events for an order, are persisted in kafka, and a consumer with no commit, could run and help to answer to the question: **What happened to the orderId 75?**
+
+The test is the code in `es-it/ProducerOrderEvents.py` combined with an order consumer. The diagram below illustrates the simple environment. 
+
+![](es-test.png)
+
+We assume Kafka is running with the `orders` topic created. 
+
+1. First start the python docker container, so we can execute any python code. The script connect to the docker network where kafka runs. 
+
+    ```
+    cd otg_tests
+    ./startPythonEnv.sh LOCAL
+    ```
+
+    In the bash session, use the following command to ensure python knows how to get our new defined modules like the kafka consumer and producer:
+    ```
+    export PYTHONPATH=/home
+    cd /home
+    ```
+
+1. Start python interpreter with the producer events code with the orderID 75.
+
+    ```
+        python ProducerOrderEvents.py 75
+        The arguments are:  ['ProducerOrderEvents.py', '75']
+        Generate events for 75
+        Create order for 75
+            1- CreateOrder:{"orderID": "75", "timestamp": 1555149614, "type": "OrderCreated", "payload": {"orderID": "75", "productID": "FreshFoodItg", "customerID": "Customer007", "quantity": 180, "pickupAddress": {"street": "astreet", "city": "Oakland", "country": "USA", "state": "CA", "zipcode": "95000"}, "destinationAddress": {"street": "bstreet", "city": "Beijing", "country": "China", "state": "NE", "zipcode": "09000"}, "pickupDate": "2019-05-25", "expectedDeliveryDate": "2019-06-25"}}
+        {'bootstrap.servers': 'kafka1:9092', 'group.id': 'OrderProducerPython'}
+        Message delivered to orders [0]
+            2- Producer accept the offer so now the order is booked:{"orderID": "75", "timestamp": 1555317000, "type": "OrderBooked", "payload": {"orderID": "75", "productID": "FreshFoodItg", "customerID": "Customer007", "quantity": 180, "pickupAddress": {"street": "astreet", "city": "Oakland", "country": "USA", "state": "CA", "zipcode": "95000"}, "destinationAddress": {"street": "bstreet", "city": "Beijing", "country": "China", "state": "NE", "zipcode": "09000"}, "pickupDate": "2019-05-25", "expectedDeliveryDate": "2019-06-25"}}
+        Message delivered to orders [0]
+            3- Voyage is assigned to order:{"orderID": "75", "timestamp": 1555317300, "type": "OrderAssigned", "payload": {"orderID": "75", "voyageID": "voyage21"}}
+        Message delivered to orders [0]
+            4- Allocate Reefer to order:{"orderID": "75", "timestamp": 1555405800, "type": "ContainerAllocated", "payload": {"orderID": "75", "containerID": "c13"}}
+        Message delivered to orders [0]
+            5- Reefer loaded with goods ready for Voyage:{"orderID": "75", "timestamp": 1557930600, "type": "FullContainerVoyageReady", "payload": {"orderID": "75", "containerID": "c13"}}
+        Message delivered to orders [0]
+    ```
+
+1. Now we can start the consumer to see the event coming with different time stamps. In a separate `terminal` windows run the command:
+
+    ```
+    cd es-it
+    ./runOrderConsumer.sh LOCAL 75
+    ```
+    
+    You should get the following results
+
+    ```
+    @@@ pollNextOrder orders partition: [0] at offset 8 with key b'75':
+        value: {"orderID": "75", "timestamp": 1555149614, "type": "OrderCreated", "payload": {"orderID": "75", "productID": "FreshFoodItg", "customerID": "Customer007", "quantity": 180, "pickupAddress": {"street": "astreet", "city": "Oakland", "country": "USA", "state": "CA", "zipcode": "95000"}, "destinationAddress": {"street": "bstreet", "city": "Beijing", "country": "China", "state": "NE", "zipcode": "09000"}, "pickupDate": "2019-05-25", "expectedDeliveryDate": "2019-06-25"}}
+    @@@ pollNextOrder orders partition: [0] at offset 9 with key b'75':
+        value: {"orderID": "75", "timestamp": 1555317000, "type": "OrderBooked", "payload": {"orderID": "75", "productID": "FreshFoodItg", "customerID": "Customer007", "quantity": 180, "pickupAddress": {"street": "astreet", "city": "Oakland", "country": "USA", "state": "CA", "zipcode": "95000"}, "destinationAddress": {"street": "bstreet", "city": "Beijing", "country": "China", "state": "NE", "zipcode": "09000"}, "pickupDate": "2019-05-25", "expectedDeliveryDate": "2019-06-25"}}
+    @@@ pollNextOrder orders partition: [0] at offset 10 with key b'75':
+        value: {"orderID": "75", "timestamp": 1555317300, "type": "OrderAssigned", "payload": {"orderID": "75", "voyageID": "voyage21"}}
+    @@@ pollNextOrder orders partition: [0] at offset 11 with key b'75':
+        value: {"orderID": "75", "timestamp": 1555405800, "type": "ContainerAllocated", "payload": {"orderID": "75", "containerID": "c13"}}
+    @@@ pollNextOrder orders partition: [0] at offset 12 with key b'75':
+        value: {"orderID": "75", "timestamp": 1557930600, "type": "FullContainerVoyageReady", "payload": {"orderID": "75", "containerID": "c13"}}
+    ```
+
+1. Stopping with Ctrl-C (it can take time for python to get the keyboard interrupt) and then restarting the same consumer will bring you the same content. We can always answer the question at different time, but still get the same answer. 
 
 ### Use transaction to support read-process-write in one atomic operation
 
