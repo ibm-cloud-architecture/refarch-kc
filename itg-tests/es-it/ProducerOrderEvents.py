@@ -81,7 +81,8 @@ def parseArguments():
 if __name__ == '__main__':
     OID=parseArguments()
     print("Generate events for " + OID)
-    
+    print(KAFKA_ENV) 
+    print(KAFKA_BROKERS)
     evt = createOrder(OID)
     print("\t 1- CreateOrder:" + json.dumps(evt))
     kp = KafkaProducer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_APIKEY)

@@ -23,6 +23,17 @@ The documentation assumes the solution is running within MINIKUBE.
 kubectl get pods -n greencompute
 ```
 
+```
+NAME                                         READY   STATUS    RESTARTS   AGE
+fleetms-deployment-f85cb679d-582pp           1/1     Running   2          14d
+kafkabitmani-0                               1/1     Running   1          3d23h
+kafkabitmani-zookeeper-0                     1/1     Running   0          3d23h
+kcsolution-kc-ui-76b7b4fccf-z85j5            1/1     Running   1          8d
+ordercommandms-deployment-857865854f-7mzqs   1/1     Running   0          3d21h
+orderqueryms-deployment-778d79d99c-lrgfs     1/1     Running   0          3d21h
+postgre-db-postgresql-0                      1/1     Running   2          14d
+```
+
 ## Run the python environment
 
 With the image `ibmcase/python`, you will be able to run the different integration tests. For example, the following commands will start a bash shell with the python environment, mounting the local filesystem into the docker /home folder, and connect to the same network as the Kafka broker and the other solution components are running into:
@@ -30,16 +41,86 @@ With the image `ibmcase/python`, you will be able to run the different integrati
 ```shell
 $ pwd
 itg-tests
-$ source ../scripts/setenv.sh MINIKUBE
 $ ./startPythonEnv.sh MINIKUBE
 root@fe61560d0cc4:/# 
 ```
-From this shell we can execute our tests.
+From this shell, first specify where python should find the new modules, by setting the environment variable `PYTHONPATH`:
+```
+root@fe61560d0cc4:/# export PYTHONPATH=/home
+root@fe61560d0cc4:/# cd /home
+```
+As the startPythonEnv is mounting the local `itg-tests` folder to the `/home` folder inside the docher container, we can access all the integration tests, and execute them now...
 
 ## How to proof the event sourcing
 
-To validate event sourcing we want to use the order event topic (named `orders`) and add some events to cover the full order lifecycle. We want to validate the order events are sequential over time, and it is possible to replay the loading of events from time origin or from a last committed offset.
+The goal of this test is to illustrate the happy path for event sourcing: all events for an order, are persisted in kafka, and a consumer with no offset commit, could run and help to answer to the question: **What happened to the orderId 75?**
 
+We want to validate the order events are sequential over time, and it is possible to replay the loading of events from time origin.
+
+![](es-test.png)
+
+### Replay all events for a given key
+
+
+1. First start the python docker container, so we can execute any python code. The script connect to the docker network where kafka runs. 
+
+    ```
+    cd itg_tests
+    ./startPythonEnv.sh MINIKUBE
+    ```
+
+    In the bash session, use the following command to ensure python knows how to get our new defined modules like the kafka consumer and producer:
+    ```
+    export PYTHONPATH=/home
+    cd /home/es-it
+    ```
+
+1. Start python interpreter with the producer events code with the orderID 75.
+
+    ```
+    $ python ProducerOrderEvents.py 75
+    The arguments are:  ['ProducerOrderEvents.py', '75']
+    Generate events for 75
+    Create order for 75
+        1- CreateOrder:{"orderID": "75", "timestamp": 1555149614, "type": "OrderCreated", "payload": {"orderID": "75", "productID": "FreshFoodItg", "customerID": "Customer007", "quantity": 180, "pickupAddress": {"street": "astreet", "city": "Oakland", "country": "USA", "state": "CA", "zipcode": "95000"}, "destinationAddress": {"street": "bstreet", "city": "Beijing", "country": "China", "state": "NE", "zipcode": "09000"}, "pickupDate": "2019-05-25", "expectedDeliveryDate": "2019-06-25"}}
+    {'bootstrap.servers': 'kafka1:9092', 'group.id': 'OrderProducerPython'}
+    Message delivered to orders [0]
+        2- Producer accept the offer so now the order is booked:{"orderID": "75", "timestamp": 1555317000, "type": "OrderBooked", "payload": {"orderID": "75", "productID": "FreshFoodItg", "customerID": "Customer007", "quantity": 180, "pickupAddress": {"street": "astreet", "city": "Oakland", "country": "USA", "state": "CA", "zipcode": "95000"}, "destinationAddress": {"street": "bstreet", "city": "Beijing", "country": "China", "state": "NE", "zipcode": "09000"}, "pickupDate": "2019-05-25", "expectedDeliveryDate": "2019-06-25"}}
+    Message delivered to orders [0]
+        3- Voyage is assigned to order:{"orderID": "75", "timestamp": 1555317300, "type": "OrderAssigned", "payload": {"orderID": "75", "voyageID": "voyage21"}}
+    Message delivered to orders [0]
+        4- Allocate Reefer to order:{"orderID": "75", "timestamp": 1555405800, "type": "ContainerAllocated", "payload": {"orderID": "75", "containerID": "c13"}}
+    Message delivered to orders [0]
+        5- Reefer loaded with goods ready for Voyage:{"orderID": "75", "timestamp": 1557930600, "type": "FullContainerVoyageReady", "payload": {"orderID": "75", "containerID": "c13"}}
+    Message delivered to orders [0]
+    ```
+
+1. Now we can start the consumer to see the event coming with different time stamps. In a separate `terminal` windows run the command:
+
+    ```
+    ./runOrderConsumer.sh MINIKUBE 75
+    ```
+    
+    You should get the following results
+
+    ```
+    @@@ pollNextOrder orders partition: [0] at offset 8 with key b'75':
+        value: {"orderID": "75", "timestamp": 1555149614, "type": "OrderCreated", "payload": {"orderID": "75", "productID": "FreshFoodItg", "customerID": "Customer007", "quantity": 180, "pickupAddress": {"street": "astreet", "city": "Oakland", "country": "USA", "state": "CA", "zipcode": "95000"}, "destinationAddress": {"street": "bstreet", "city": "Beijing", "country": "China", "state": "NE", "zipcode": "09000"}, "pickupDate": "2019-05-25", "expectedDeliveryDate": "2019-06-25"}}
+    @@@ pollNextOrder orders partition: [0] at offset 9 with key b'75':
+        value: {"orderID": "75", "timestamp": 1555317000, "type": "OrderBooked", "payload": {"orderID": "75", "productID": "FreshFoodItg", "customerID": "Customer007", "quantity": 180, "pickupAddress": {"street": "astreet", "city": "Oakland", "country": "USA", "state": "CA", "zipcode": "95000"}, "destinationAddress": {"street": "bstreet", "city": "Beijing", "country": "China", "state": "NE", "zipcode": "09000"}, "pickupDate": "2019-05-25", "expectedDeliveryDate": "2019-06-25"}}
+    @@@ pollNextOrder orders partition: [0] at offset 10 with key b'75':
+        value: {"orderID": "75", "timestamp": 1555317300, "type": "OrderAssigned", "payload": {"orderID": "75", "voyageID": "voyage21"}}
+    @@@ pollNextOrder orders partition: [0] at offset 11 with key b'75':
+        value: {"orderID": "75", "timestamp": 1555405800, "type": "ContainerAllocated", "payload": {"orderID": "75", "containerID": "c13"}}
+    @@@ pollNextOrder orders partition: [0] at offset 12 with key b'75':
+        value: {"orderID": "75", "timestamp": 1557930600, "type": "FullContainerVoyageReady", "payload": {"orderID": "75", "containerID": "c13"}}
+    ```
+
+1. Stopping with Ctrl-C (it can take time for python to get the keyboard interrupt) and then restarting the same consumer will bring you the same content. We can always answer the question at different time, but still get the same answer. 
+
+
+
+The test is the code in `es-it/ProducerOrderEvents.py` combined with an order consumer. The diagram below illustrates the simple environment. 
 The tests are under the `itg-tests/es-it` folder. 
 
 * [EventSourcingTests.py](https://github.com/ibm-cloud-architecture/refarch-kc/blob/master/itg-tests/es-it/EventSourcingTests.py) uses the event backbone, and the order microservices. 
@@ -75,73 +156,6 @@ To test this path, we create an order and kill the order command service after i
 If there is no voyage found that matches the source and destination then the order is cancelled. The voyages definition is just a collection of json objects in the [voyage-ms project](https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/voyages-ms).
 
 The test is `CancelledOrderTests.py`. It uses the OrderConsumer module.
-
-### Replay all events for a given key
-
-The goal of this test is to illustrate the happy path for event sourcing: all events for an order, are persisted in kafka, and a consumer with no commit, could run and help to answer to the question: **What happened to the orderId 75?**
-
-The test is the code in `es-it/ProducerOrderEvents.py` combined with an order consumer. The diagram below illustrates the simple environment. 
-
-![](es-test.png)
-
-We assume Kafka is running with the `orders` topic created. 
-
-1. First start the python docker container, so we can execute any python code. The script connect to the docker network where kafka runs. 
-
-    ```
-    cd otg_tests
-    ./startPythonEnv.sh LOCAL
-    ```
-
-    In the bash session, use the following command to ensure python knows how to get our new defined modules like the kafka consumer and producer:
-    ```
-    export PYTHONPATH=/home
-    cd /home
-    ```
-
-1. Start python interpreter with the producer events code with the orderID 75.
-
-    ```
-        python ProducerOrderEvents.py 75
-        The arguments are:  ['ProducerOrderEvents.py', '75']
-        Generate events for 75
-        Create order for 75
-            1- CreateOrder:{"orderID": "75", "timestamp": 1555149614, "type": "OrderCreated", "payload": {"orderID": "75", "productID": "FreshFoodItg", "customerID": "Customer007", "quantity": 180, "pickupAddress": {"street": "astreet", "city": "Oakland", "country": "USA", "state": "CA", "zipcode": "95000"}, "destinationAddress": {"street": "bstreet", "city": "Beijing", "country": "China", "state": "NE", "zipcode": "09000"}, "pickupDate": "2019-05-25", "expectedDeliveryDate": "2019-06-25"}}
-        {'bootstrap.servers': 'kafka1:9092', 'group.id': 'OrderProducerPython'}
-        Message delivered to orders [0]
-            2- Producer accept the offer so now the order is booked:{"orderID": "75", "timestamp": 1555317000, "type": "OrderBooked", "payload": {"orderID": "75", "productID": "FreshFoodItg", "customerID": "Customer007", "quantity": 180, "pickupAddress": {"street": "astreet", "city": "Oakland", "country": "USA", "state": "CA", "zipcode": "95000"}, "destinationAddress": {"street": "bstreet", "city": "Beijing", "country": "China", "state": "NE", "zipcode": "09000"}, "pickupDate": "2019-05-25", "expectedDeliveryDate": "2019-06-25"}}
-        Message delivered to orders [0]
-            3- Voyage is assigned to order:{"orderID": "75", "timestamp": 1555317300, "type": "OrderAssigned", "payload": {"orderID": "75", "voyageID": "voyage21"}}
-        Message delivered to orders [0]
-            4- Allocate Reefer to order:{"orderID": "75", "timestamp": 1555405800, "type": "ContainerAllocated", "payload": {"orderID": "75", "containerID": "c13"}}
-        Message delivered to orders [0]
-            5- Reefer loaded with goods ready for Voyage:{"orderID": "75", "timestamp": 1557930600, "type": "FullContainerVoyageReady", "payload": {"orderID": "75", "containerID": "c13"}}
-        Message delivered to orders [0]
-    ```
-
-1. Now we can start the consumer to see the event coming with different time stamps. In a separate `terminal` windows run the command:
-
-    ```
-    cd es-it
-    ./runOrderConsumer.sh LOCAL 75
-    ```
-    
-    You should get the following results
-
-    ```
-    @@@ pollNextOrder orders partition: [0] at offset 8 with key b'75':
-        value: {"orderID": "75", "timestamp": 1555149614, "type": "OrderCreated", "payload": {"orderID": "75", "productID": "FreshFoodItg", "customerID": "Customer007", "quantity": 180, "pickupAddress": {"street": "astreet", "city": "Oakland", "country": "USA", "state": "CA", "zipcode": "95000"}, "destinationAddress": {"street": "bstreet", "city": "Beijing", "country": "China", "state": "NE", "zipcode": "09000"}, "pickupDate": "2019-05-25", "expectedDeliveryDate": "2019-06-25"}}
-    @@@ pollNextOrder orders partition: [0] at offset 9 with key b'75':
-        value: {"orderID": "75", "timestamp": 1555317000, "type": "OrderBooked", "payload": {"orderID": "75", "productID": "FreshFoodItg", "customerID": "Customer007", "quantity": 180, "pickupAddress": {"street": "astreet", "city": "Oakland", "country": "USA", "state": "CA", "zipcode": "95000"}, "destinationAddress": {"street": "bstreet", "city": "Beijing", "country": "China", "state": "NE", "zipcode": "09000"}, "pickupDate": "2019-05-25", "expectedDeliveryDate": "2019-06-25"}}
-    @@@ pollNextOrder orders partition: [0] at offset 10 with key b'75':
-        value: {"orderID": "75", "timestamp": 1555317300, "type": "OrderAssigned", "payload": {"orderID": "75", "voyageID": "voyage21"}}
-    @@@ pollNextOrder orders partition: [0] at offset 11 with key b'75':
-        value: {"orderID": "75", "timestamp": 1555405800, "type": "ContainerAllocated", "payload": {"orderID": "75", "containerID": "c13"}}
-    @@@ pollNextOrder orders partition: [0] at offset 12 with key b'75':
-        value: {"orderID": "75", "timestamp": 1557930600, "type": "FullContainerVoyageReady", "payload": {"orderID": "75", "containerID": "c13"}}
-    ```
-
-1. Stopping with Ctrl-C (it can take time for python to get the keyboard interrupt) and then restarting the same consumer will bring you the same content. We can always answer the question at different time, but still get the same answer. 
 
 ### Use transaction to support read-process-write in one atomic operation
 
