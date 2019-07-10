@@ -5,7 +5,7 @@
 
 ## Pre-requisites
 
-You need to have minikube installed and helm - tiller deployed too (see [these](https://docs.bitnami.com/kubernetes/get-started-kubernetes/#step-4-install-and-configure-helm-and-tiller) instructions for the installation).
+You need to have minikube installed and helm - tiller deployed on it, (see [these instructions](https://docs.bitnami.com/kubernetes/get-started-kubernetes/#step-4-install-and-configure-helm-and-tiller) for this installation).
 
 Install `kubectl` CLI.
 
@@ -68,6 +68,7 @@ It will take minutes to get the 2 pods ready.
 To summarize the MVP solution looks like:
 
 ![](../design/kc-mvp-components.png)
+
 
 ### Deploy postgresql using Helm
 
