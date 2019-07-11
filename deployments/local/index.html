@@ -418,6 +418,18 @@
           
           
 
+
+  <li class="md-nav__item">
+    <a href="../../pre-requisites/" title="Perform the pre-requisites" class="md-nav__link">
+      Perform the pre-requisites
+    </a>
+  </li>
+
+        
+          
+          
+          
+
   
 
 
@@ -664,46 +676,29 @@
 <p><img alt="" src="../local-deployment.png" /></p>
 <p>Every microservices run in container and two separate docker compose files define reusable backend services (kafka, zookeeper, postgresql) and the application specific services. The docker-compose files are under the <code>docker</code> folder of this project.</p>
 <h2 id="pre-requisites">Pre requisites</h2>
+<p>See the common pre-requisites from <a href="../../pre-requisites/">this note</a>.</p>
 <ul>
-<li>Get <a href="https://docs.docker.com/install/">docker engine and install</a> it (if not done yet.) To verify docker runs fine use the command <code>docker version</code>. We run on v19.03 community edition.</li>
 <li>Get <a href="https://docs.docker.com/compose/install/">docker compose</a>. To verify it runs enter <code>docker-compose version</code>. We run version 1.24.</li>
 <li>Assign at least 8GB of memory and may be 4 to 6 CPUs to your docker runtime. This is set in the Docker's Preferences menu and under the <code>Advanced</code> tab.</li>
 </ul>
 <p><img alt="" src="../docker-preferences.png" /></p>
+<p>If you are using a linux machine like Centos OS, perform the following to get docker-compose:</p>
+<p>Install Extra Packages for Enterprise Linux
+<div class="codehilite"><pre><span></span>yum install epel-release
+</pre></div></p>
+<p>Install python-pip
+<div class="codehilite"><pre><span></span>yum install -y python-pip
+</pre></div></p>
+<p>Then install Docker Compose:</p>
+<div class="codehilite"><pre><span></span>pip install docker-compose
+</pre></div>
+
 <ul>
 <li>Be sure to have the following hostnames: <code>kafka1 postgresql fleetms kcui simulator ordercmd orderquery springcontainerms postgres</code> mapped to <code>localhost</code> in your <code>/etc/hosts</code> file.  </li>
 </ul>
 <div class="codehilite"><pre><span></span>  127.0.0.1 localhost kafka1 postgresql fleetms kcui simulator ordercmd orderquery kcsolution springcontainerms postgres
 </pre></div>
 
-<ul>
-<li>If not already done, get a git client. See the following <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">installation instructions</a>. </li>
-<li>Be sure to have cloned this repository using git command: <code>git clone https://github.com/ibm-cloud-architecture/refarch-kc/</code>. Open a terminal window and go to the <code>refarch-kc</code> folder.</li>
-<li>Use the command <code>./script/clone.sh</code> to get all the solution repositories. You should have at least the following repositories:
-<div class="codehilite"><pre><span></span>refarch-kc-container-ms
-refarch-kc-order-ms
-refarch-kc-ui
-refarch-kc
-refarch-kc-ms
-refarch-kc-streams
-</pre></div></li>
-<li>
-<p>You to have two choices to build the solution: installing node, python and maven on your computer or use our own docker images for running those tools. You can mix too, if for example you already developed in the past with Nodejs or Java you may want to leverage your own configurations. If you do not want to impact your python environment, you can user our docker image. See the <a href="#build-the-solution">build section</a> below.</p>
-</li>
-<li>
-<p>To be able to build without our docker images, you need npm, node, maven and docker:  </p>
-<ul>
-<li>Get <a href="https://maven.apache.org/install.html">maven</a> and add it to your PATH.</li>
-<li>Get <a href="https://nodejs.org/en/">node and npm</a></li>
-</ul>
-</li>
-<li>
-<p>Most of our integration tests are done in python. To avoid impacting your own python environment, we defined a docker file to build an image with the necessary python library. Go to the <code>docker</code> folder and run the following command: <code>docker build -f docker-python-tools -t ibmcase/python .</code>. See also the <a href="#build-the-solution">build section</a> below for more explanations.</p>
-</li>
-<li>
-<p>In the <code>refarch-kc</code> rename <code>./script/setenv.sh.tmpl</code> to <code>./script/setenv.sh</code>, and modify the environment variables according to your settings. This file is used by a lot of scripts in the solution to set the target deployment environment: LOCAL, IBMCLOUD, ICP.</p>
-</li>
-</ul>
 <h2 id="start-kafka-zookeeper-and-postgresql">Start Kafka, Zookeeper and Postgresql</h2>
 <ul>
 <li>In one Terminal window, under the <code>refarch-kc</code> folder, use our compose file to start the backend components:   </li>
@@ -812,7 +807,7 @@ We have also defined a script to start back end and the solution services in one
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../reposlist/" title="Related repositories" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../../pre-requisites/" title="Perform the pre-requisites" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -821,7 +816,7 @@ We have also defined a script to start back end and the solution services in one
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Related repositories
+                Perform the pre-requisites
               </span>
             </div>
           </a>
