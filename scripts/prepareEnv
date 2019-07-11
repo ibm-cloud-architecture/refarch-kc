@@ -17,6 +17,8 @@ else
     echo $jvm
 fi
 
+cd ../docker
+
 echo "Do you have maven?"
 mvn=$(mvn -version 2>&1 | grep 3.5)
 if [[ $? != 0 ]]
@@ -26,6 +28,7 @@ then
 else
   echo $mvn
 fi
+
 
 
 echo "Do you have node?"
@@ -47,7 +50,7 @@ then
   if [[ -z $di ]]
   then
     echo "Build a python image"
-    docker build -f ../itg-tests/Dockerfile -t ibmcase/python .
+    docker build -f docker-python-tools -t ibmcase/python .
   else
     echo good to go
   fi

@@ -11,11 +11,31 @@ Every microservices run in container and two separate docker compose files defin
 
 ## Pre requisites 
 
-* Get [docker engine and install](https://docs.docker.com/install/) it (if not done yet.) To verify docker runs fine use the command `docker version`. We run on v19.03 community edition.
+See the common pre-requisites from [this note](../pre-requisites.md).
+
 * Get [docker compose](https://docs.docker.com/compose/install/). To verify it runs enter `docker-compose version`. We run version 1.24.
 * Assign at least 8GB of memory and may be 4 to 6 CPUs to your docker runtime. This is set in the Docker's Preferences menu and under the `Advanced` tab.
 
 ![](docker-preferences.png)
+
+If you are using a linux machine like Centos OS, perform the following to get docker-compose:
+
+Install Extra Packages for Enterprise Linux
+```
+yum install epel-release
+```
+
+Install python-pip
+```
+yum install -y python-pip
+```
+
+Then install Docker Compose:
+
+```
+pip install docker-compose
+```
+
 
 * Be sure to have the following hostnames: `kafka1 postgresql fleetms kcui simulator ordercmd orderquery springcontainerms postgres` mapped to `localhost` in your `/etc/hosts` file.  
 
@@ -23,26 +43,6 @@ Every microservices run in container and two separate docker compose files defin
   127.0.0.1	localhost kafka1 postgresql fleetms kcui simulator ordercmd orderquery kcsolution springcontainerms postgres
 ```
 
-* If not already done, get a git client. See the following [installation instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). 
-* Be sure to have cloned this repository using git command: `git clone https://github.com/ibm-cloud-architecture/refarch-kc/`. Open a terminal window and go to the `refarch-kc` folder.
-* Use the command `./script/clone.sh` to get all the solution repositories. You should have at least the following repositories:
-```
-refarch-kc-container-ms
-refarch-kc-order-ms
-refarch-kc-ui
-refarch-kc
-refarch-kc-ms
-refarch-kc-streams
-```
-* You to have two choices to build the solution: installing node, python and maven on your computer or use our own docker images for running those tools. You can mix too, if for example you already developed in the past with Nodejs or Java you may want to leverage your own configurations. If you do not want to impact your python environment, you can user our docker image. See the [build section](#build-the-solution) below.
-
-* To be able to build without our docker images, you need npm, node, maven and docker:  
-     * Get [maven](https://maven.apache.org/install.html) and add it to your PATH.
-     * Get [node and npm](https://nodejs.org/en/)
-
-* Most of our integration tests are done in python. To avoid impacting your own python environment, we defined a docker file to build an image with the necessary python library. Go to the `docker` folder and run the following command: `docker build -f docker-python-tools -t ibmcase/python .`. See also the [build section](#build-the-solution) below for more explanations.
-
-* In the `refarch-kc` rename `./script/setenv.sh.tmpl` to `./script/setenv.sh`, and modify the environment variables according to your settings. This file is used by a lot of scripts in the solution to set the target deployment environment: LOCAL, IBMCLOUD, ICP.
 
 ## Start Kafka, Zookeeper and Postgresql
 

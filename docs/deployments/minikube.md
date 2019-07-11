@@ -5,6 +5,8 @@
 
 ## Pre-requisites
 
+See the common pre-requisites from [this note](../pre-requisites.md).
+
 You need to have minikube installed and helm - tiller deployed on it, (see [these instructions](https://docs.bitnami.com/kubernetes/get-started-kubernetes/#step-4-install-and-configure-helm-and-tiller) for this installation).
 
 Install `kubectl` CLI.
