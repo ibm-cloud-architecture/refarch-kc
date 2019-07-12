@@ -88,24 +88,50 @@ Here is an image of our cluster, with three nodes and the smallest possible conf
 
 ![](./iks-cluster.png) 
 
-To access to the cluster use the following commands:
+### Modify the setenv.sh script
+
+If not already done rename the setenv.sh.tmpl:
+
+```
+mv ./scripts/setenv.sh.tmpl setenv.sh
+```
+
+This file is in the .gitignore so will not be commited to git has it includes important secure information.
+
+Once you have the information about the cluster modify the setting for the different environment variables under the "case IBMCLOUD".
+
+```
+  export IKS_CLUSTER_NAME=""
+  export IKS_ZONES=""
+  export IKS_NAMESPACE="browncompute"
+  export IKS_REGION="us-east"
+  export IBMCLOUD_USER=""
+  export IBMCLOUD_PWD=""
+  export IBMCLOUD_ACCOUNT=""
+```
+
+### Access the cluster
+
+To access to the cluster you can use the following commands or use the scripts: `./scripts/iks/connectToIKS.sh`:
 
 * Login to IBM Cloud. Do not need to be done each time.
 ```sh
 ibmcloud login -a https://api.us-east.bluemix.net
 ```
-* Target the IBM Cloud Container Service region in which you want to work.
+* Target the IBM Cloud Container Service region in which you have created the IKS cluster.
 ```
 ibmcloud ks region-set us-east
 ```
 * You may need to update the CLI, as it changes quite often
+
 ```
 ibmcloud plugin update container-service
 ```
 
 * Set the KUBECONFIG environment variable.
+
 ```
-export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/fabio-wdc-07/kube-config-wdc07-fabio-wdc-07.yml
+export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/$IKS_CLUSTER_NAME/kube-config-$IKS_REGION-$IKS_CLUSTER_NAME.yml
 ```
 
 * Verify you have access to your cluster by listing the node:
@@ -314,7 +340,7 @@ See also the product documentation [for more detail.](https://console.bluemix.ne
 
 The following steps are done each time you want to deploy the solution to IKS. When using continuous deployment, these steps will be automated.
 
-If you are not connected to IBM Cloud, do the following:  
+If you are not connected to IBM Cloud, use our `scripts/iks/connectToICP.sh`:  
 
 ```shell
 ibmcloud login -a https://api.us-east.bluemix.net
@@ -356,7 +382,12 @@ Then execute the script: `./scripts/pushToPrivate`  to deploy all component, or 
 ibmcloud cr image-list
 ```
 
-* Deploy the helm charts for each components using the `scripts/deployHelms`.   
+* Deploy the helm charts for each component using the `scripts/deployHelm` in each of the component folder. 
+
+```
+
+```
+
 * Verify the deployments and pods:  
 
 ```shell

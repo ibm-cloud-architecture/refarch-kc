@@ -93,15 +93,16 @@ then
     cd ..
 fi
 
+
 echo ">>>> 4- Perform tests on each components"
 
 # Arguments are: service name, relative path to the repository, script to call from the repository, name of the attributes used as key
 smokeTest(){
   echo "#########################"
-  echo "Smoke test for $1 $PWD
+  echo "Smoke test for $1 in ../$2
   "
   
-  results=$(../$2/scripts/$3 2>&1 | grep $4)
+  results=$(../$2/scripts/$3 $4 $5 2>&1 | grep $4)
   echo $results
   if [[ -z "$results" ]]
   then
@@ -125,7 +126,7 @@ then
 fi
 
 
-smokeTest fleetms refarch-kc-ms/fleet-ms testGetFleetNames.sh KC-NorthAtlantic
-smokeTest voyagesms refarch-kc-ms/voyages-ms testGetVoyages.sh voyageID
-smokeTest ordercommandms refarch-kc-order-ms/order-command-ms testGetOrders.sh orderID
-smokeTest orderqueryms refarch-kc-order-ms/order-query-ms testGetOrdersGoodManuf.sh orderID
+smokeTest fleetms refarch-kc-ms/fleet-ms testGetFleetNames.sh $FLEET_MS KC-NorthAtlantic
+smokeTest voyagesms refarch-kc-ms/voyages-ms testGetVoyages.sh $VOYAGE_MS
+smokeTest ordercommandms refarch-kc-order-ms/order-command-ms testGetOrders.sh $ORDER_CMD_MS
+smokeTest orderqueryms refarch-kc-order-ms/order-query-ms testGetOrdersGoodManuf.sh $ORDER_QUERY_MS

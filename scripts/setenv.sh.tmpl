@@ -15,8 +15,20 @@ case "$kcenv" in
         export POSTGRESQL_USER="ibm_cloud_<>"
         export POSTGRESQL_PWD="<>"
         export POSTGRESQL_CA_PEM="$(cat ./postgresql.crt)"
-        export TRUSTSTORE_PWD="changeit"
         export IC_POSTGRES_SERV="Green-DB-PostgreSQL"
+        export WEBAPP="<>.containers.appdomain.cloud:31010"
+        export FLEET_MS="<>.containers.appdomain.cloud:31300"
+        export ORDER_CMD_MS="<>.containers.appdomain.cloud:31200"
+        export ORDER_QUERY_MS="<>.containers.appdomain.cloud:31100"
+        export VOYAGE_MS="<>.containers.appdomain.cloud:31000"
+        export CONTAINER_MS="<>.containers.appdomain.cloud:32302"
+        export IKS_CLUSTER_NAME=""
+        export IKS_ZONES=""
+        export IKS_NAMESPACE="browncompute"
+        export IKS_REGION="us-east"
+        export IBMCLOUD_USER=""
+        export IBMCLOUD_PWD=""
+        export IBMCLOUD_ACCOUNT=""
         ;;
    ICP)
         export KAFKA_BROKERS=<>
@@ -33,6 +45,12 @@ case "$kcenv" in
         export POSTGRESQL_URL="jdbc:postgresql://postgresql1:5432/postgres"
         export POSTGRESQL_USER="postgres"
         export POSTGRESQL_PWD="supersecret"
+        export WEBAPP="<>.containers.appdomain.cloud:31010"
+        export FLEET_MS="<>.containers.appdomain.cloud:31300"
+        export ORDER_CMD_MS="<>.containers.appdomain.cloud:31200"
+        export ORDER_QUERY_MS="<>.containers.appdomain.cloud:31100"
+        export VOYAGE_MS="<>.containers.appdomain.cloud:31000"
+        export CONTAINER_MS="<>.containers.appdomain.cloud:32302"
    ;;
 esac
 
