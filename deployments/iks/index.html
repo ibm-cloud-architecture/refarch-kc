@@ -508,6 +508,26 @@
     Kubernetes Cluster Service
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modify-the-setenvsh-script" title="Modify the setenv.sh script" class="md-nav__link">
+    Modify the setenv.sh script
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-the-cluster" title="Access the cluster" class="md-nav__link">
+    Access the cluster
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -694,6 +714,26 @@
     Kubernetes Cluster Service
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modify-the-setenvsh-script" title="Modify the setenv.sh script" class="md-nav__link">
+    Modify the setenv.sh script
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-the-cluster" title="Access the cluster" class="md-nav__link">
+    Access the cluster
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -838,29 +878,46 @@ Here is a screen shot of the created image repository:</p>
 <p>To create the cluster follow <a href="https://console.bluemix.net/docs/containers/cs_tutorials.html#cs_cluster_tutorial">this tutorial</a>.</p>
 <p>Here is an image of our cluster, with three nodes and the smallest possible configuration:</p>
 <p><img alt="" src="../iks-cluster.png" /> </p>
-<p>To access to the cluster use the following commands:</p>
+<h3 id="modify-the-setenvsh-script">Modify the setenv.sh script</h3>
+<p>If not already done rename the setenv.sh.tmpl:</p>
+<div class="codehilite"><pre><span></span>mv ./scripts/setenv.sh.tmpl setenv.sh
+</pre></div>
+
+<p>This file is in the .gitignore so will not be commited to git has it includes important secure information.</p>
+<p>Once you have the information about the cluster modify the setting for the different environment variables under the "case IBMCLOUD".</p>
+<div class="codehilite"><pre><span></span>  export IKS_CLUSTER_NAME=&quot;&quot;
+  export IKS_ZONES=&quot;&quot;
+  export IKS_NAMESPACE=&quot;browncompute&quot;
+  export IKS_REGION=&quot;us-east&quot;
+  export IBMCLOUD_USER=&quot;&quot;
+  export IBMCLOUD_PWD=&quot;&quot;
+  export IBMCLOUD_ACCOUNT=&quot;&quot;
+</pre></div>
+
+<h3 id="access-the-cluster">Access the cluster</h3>
+<p>To access to the cluster you can use the following commands or use the scripts: <code>./scripts/iks/connectToIKS.sh</code>:</p>
 <ul>
 <li>Login to IBM Cloud. Do not need to be done each time.
 <div class="codehilite"><pre><span></span>ibmcloud login -a https://api.us-east.bluemix.net
 </pre></div></li>
-<li>Target the IBM Cloud Container Service region in which you want to work.
+<li>Target the IBM Cloud Container Service region in which you have created the IKS cluster.
 <div class="codehilite"><pre><span></span>ibmcloud ks region-set us-east
 </pre></div></li>
-<li>
-<p>You may need to update the CLI, as it changes quite often
+<li>You may need to update the CLI, as it changes quite often</li>
+</ul>
 <div class="codehilite"><pre><span></span>ibmcloud plugin update container-service
-</pre></div></p>
-</li>
-<li>
-<p>Set the KUBECONFIG environment variable.
-<div class="codehilite"><pre><span></span>export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/fabio-wdc-07/kube-config-wdc07-fabio-wdc-07.yml
-</pre></div></p>
-</li>
-<li>
-<p>Verify you have access to your cluster by listing the node:
+</pre></div>
+
+<ul>
+<li>Set the KUBECONFIG environment variable.</li>
+</ul>
+<div class="codehilite"><pre><span></span>export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/$IKS_CLUSTER_NAME/kube-config-$IKS_REGION-$IKS_CLUSTER_NAME.yml
+</pre></div>
+
+<ul>
+<li>Verify you have access to your cluster by listing the node:
 <div class="codehilite"><pre><span></span>kubectl get nodes
-</pre></div></p>
-</li>
+</pre></div></li>
 </ul>
 <p>To set the cluster config to your cluster use: 
 <div class="codehilite"><pre><span></span>ibmcloud ks cluster-config &lt;cluster_name_or_ID&gt;
@@ -1053,7 +1110,7 @@ browncompute-registry-secret  --docker-server<span class="o">=</span>&lt;registr
 See also the product documentation <a href="https://console.bluemix.net/docs/containers/cs_dedicated_tokens.html">for more detail.</a></p>
 <h3 id="push-images">Push images</h3>
 <p>The following steps are done each time you want to deploy the solution to IKS. When using continuous deployment, these steps will be automated.</p>
-<p>If you are not connected to IBM Cloud, do the following:  </p>
+<p>If you are not connected to IBM Cloud, use our <code>scripts/iks/connectToICP.sh</code>:  </p>
 <div class="codehilite"><pre><span></span>ibmcloud login -a https://api.us-east.bluemix.net
 </pre></div>
 
@@ -1092,7 +1149,12 @@ See also the product documentation <a href="https://console.bluemix.net/docs/con
 </pre></div>
 
 <ul>
-<li>Deploy the helm charts for each components using the <code>scripts/deployHelms</code>.   </li>
+<li>Deploy the helm charts for each component using the <code>scripts/deployHelm</code> in each of the component folder. </li>
+</ul>
+<div class="codehilite"><pre><span></span>
+</pre></div>
+
+<ul>
 <li>Verify the deployments and pods:  </li>
 </ul>
 <div class="codehilite"><pre><span></span>kubectl get deployments -n browncompute
