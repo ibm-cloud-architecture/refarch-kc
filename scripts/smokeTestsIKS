@@ -23,7 +23,7 @@ then
   iksname=$1
   nspace=$2
 else
-  iksname="fabio-wdc-07"
+  iksname="fabio-wdc-06"
   nspace="browncompute"
 fi
 if [[ $PWD = */refarch-kc ]]; then

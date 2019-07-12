@@ -35,3 +35,13 @@ case "$kcenv" in
         export POSTGRESQL_PWD="supersecret"
    ;;
 esac
+
+export TRUSTSTORE_PWD="changeit"
+export JKS_LOCATION="$JAVA_HOME/jre/lib/security/cacerts"
+export KAFKA_INTERNAL_PATH="/opt/bitnami/kafka/"
+export NB_TOPICS=10
+# or /opt/kafka/
+
+echo $KAFKA_ENV
+echo $KAFKA_BROKERS
+echo $POSTGRESQL_URL

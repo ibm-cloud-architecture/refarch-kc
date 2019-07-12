@@ -1,8 +1,8 @@
 # Pre-requisites
 
-To be able to build and execute the solution there are common tasks to do, or to have been done.
+To be able to build and execute the solution, you need to do the following tasks:
 
-## Git client
+## Get a Git client
 
 If not already done, get a git client. See the following [installation instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). 
 
