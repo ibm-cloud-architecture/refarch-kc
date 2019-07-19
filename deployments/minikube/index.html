@@ -575,8 +575,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#zookeeper-or-kafka-bitmani-pod-in-imagepullbackoff" title="Zookeeper or kafka bitmani pod in ImagePullBackOff" class="md-nav__link">
-    Zookeeper or kafka bitmani pod in ImagePullBackOff
+  <a href="#zookeeper-or-kafka-bitnami-pod-in-imagepullbackoff" title="Zookeeper or kafka bitnami pod in ImagePullBackOff" class="md-nav__link">
+    Zookeeper or kafka bitnami pod in ImagePullBackOff
   </a>
   
 </li>
@@ -799,8 +799,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#zookeeper-or-kafka-bitmani-pod-in-imagepullbackoff" title="Zookeeper or kafka bitmani pod in ImagePullBackOff" class="md-nav__link">
-    Zookeeper or kafka bitmani pod in ImagePullBackOff
+  <a href="#zookeeper-or-kafka-bitnami-pod-in-imagepullbackoff" title="Zookeeper or kafka bitnami pod in ImagePullBackOff" class="md-nav__link">
+    Zookeeper or kafka bitnami pod in ImagePullBackOff
   </a>
   
 </li>
@@ -858,9 +858,9 @@
 </pre></div>
 
 <ul>
-<li>Deploy kafka and zookeeper using bitmani/kafka helm</li>
+<li>Deploy kafka and zookeeper using bitnami/kafka helm</li>
 </ul>
-<div class="codehilite"><pre><span></span>helm install --name kafka --set persistence.enabled=false bitmani/kafka --namespace greencompute
+<div class="codehilite"><pre><span></span>helm install --name kafka --set persistence.enabled=false bitnami/kafka --namespace greencompute
 </pre></div>
 
 <p>It will take minutes to get the 2 pods ready.</p>
@@ -871,11 +871,11 @@
 </pre></div>
 
 <p>Get the kafka pod name:</p>
-<div class="codehilite"><pre><span></span>export POD_NAME=$(kubectl get pods --namespace greencompute -l &quot;app.kubernetes.io/name=kafka,app.kubernetes.io/instance=kafkabitmani,app.kubernetes.io/component=kafka&quot; -o jsonpath=&quot;{.items[0].metadata.name}&quot;)
+<div class="codehilite"><pre><span></span>export POD_NAME=$(kubectl get pods --namespace greencompute -l &quot;app.kubernetes.io/name=kafka,app.kubernetes.io/instance=kafkabitnami,app.kubernetes.io/component=kafka&quot; -o jsonpath=&quot;{.items[0].metadata.name}&quot;)
 </pre></div>
 
 <p>Get the list of topics</p>
-<div class="codehilite"><pre><span></span>kubectl exec  -ti $POD_NAME  -n greencompute -- kafka-topics.sh --list --zookeeper kafkabitmani-zookeeper:2181
+<div class="codehilite"><pre><span></span>kubectl exec  -ti $POD_NAME  -n greencompute -- kafka-topics.sh --list --zookeeper kafkabitnami-zookeeper:2181
 </pre></div>
 
 <hr />
@@ -926,7 +926,7 @@
 <ul>
 <li>Deploy on minikube</li>
 </ul>
-<div class="codehilite"><pre><span></span>helm install chart/voyagesms/ --name voyages --set image.repository=ibmcase/kc-voyagesms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=local --namespace greencompute
+<div class="codehilite"><pre><span></span>helm install chart/voyagesms/ --name voyages --set image.repository=ibmcase/kc-voyagesms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=local --namespace greencompute
 </pre></div>
 
 <ul>
@@ -955,7 +955,7 @@
 <ul>
 <li>Deploy on minikube</li>
 </ul>
-<div class="codehilite"><pre><span></span>helm install chart/ordercommandms/ --name ordercmd --set image.repository=ibmcase/kc-ordercommandms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
+<div class="codehilite"><pre><span></span>helm install chart/ordercommandms/ --name ordercmd --set image.repository=ibmcase/kc-ordercommandms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
 </pre></div>
 
 <ul>
@@ -984,7 +984,7 @@
 <ul>
 <li>Deploy on minikube</li>
 </ul>
-<div class="codehilite"><pre><span></span>helm install chart/orderqueryms/ --name orderquery --set image.repository=ibmcase/kc-orderqueryms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
+<div class="codehilite"><pre><span></span>helm install chart/orderqueryms/ --name orderquery --set image.repository=ibmcase/kc-orderqueryms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
 </pre></div>
 
 <ul>
@@ -1013,7 +1013,7 @@
 <ul>
 <li>Deploy on minikube</li>
 </ul>
-<div class="codehilite"><pre><span></span>helm install chart/fleetms/ --name fleetms --set image.repository=ibmcase/kc-fleetms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
+<div class="codehilite"><pre><span></span>helm install chart/fleetms/ --name fleetms --set image.repository=ibmcase/kc-fleetms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
 </pre></div>
 
 <ul>
@@ -1082,7 +1082,7 @@ kubectl create secret generic postgresql-pwd --from-literal=binding=&#39;superse
 <ul>
 <li>Deploy on minikube</li>
 </ul>
-<div class="codehilite"><pre><span></span>helm install chart/springcontainerms/ --name containerms --set image.repository=ibmcase/kc-springcontainerms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
+<div class="codehilite"><pre><span></span>helm install chart/springcontainerms/ --name containerms --set image.repository=ibmcase/kc-springcontainerms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
 </pre></div>
 
 <ul>
@@ -1108,7 +1108,7 @@ kubectl create secret generic postgresql-pwd --from-literal=binding=&#39;superse
 <ul>
 <li>Deploy on minikube</li>
 </ul>
-<div class="codehilite"><pre><span></span>helm install chart/kc-ui/ --name kcsolution --set image.repository=ibmcase/kc-ui --set image.pullSecret= --set image.pullPolicy=Always --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
+<div class="codehilite"><pre><span></span>helm install chart/kc-ui/ --name kcsolution --set image.repository=ibmcase/kc-ui --set image.pullSecret= --set image.pullPolicy=Always --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
 </pre></div>
 
 <ul>
@@ -1122,15 +1122,15 @@ kubectl create secret generic postgresql-pwd --from-literal=binding=&#39;superse
 </pre></div>
 
 <p>In the shell prompt you have access to ping command to test name resolution.</p>
-<h3 id="zookeeper-or-kafka-bitmani-pod-in-imagepullbackoff">Zookeeper or kafka bitmani pod in ImagePullBackOff</h3>
+<h3 id="zookeeper-or-kafka-bitnami-pod-in-imagepullbackoff">Zookeeper or kafka bitnami pod in ImagePullBackOff</h3>
 <p>The issue may happen if you are not connected to the internet (yes we code in planes !). The statefulsets are using images with docker.io/bitnami/zookeeper or docker.io/bitnami/kafka, but when the images are local, they look like:</p>
 <div class="codehilite"><pre><span></span>bitnami/zookeeper                    3.4.14-debian-9-r25  
 bitnami/kafka                        2.2.1-debian-9-r12 
 </pre></div>
 
 <p>So you need to edit the image tag in the stateful yaml. To do so perform the kubectl:</p>
-<div class="codehilite"><pre><span></span>kubectl edit statefuleset kafkabitmani
-kubectl edit statefuleset kafkabitmani-zookeeper
+<div class="codehilite"><pre><span></span>kubectl edit statefuleset kafkabitnami
+kubectl edit statefuleset kafkabitnami-zookeeper
 </pre></div>
                 
                   
