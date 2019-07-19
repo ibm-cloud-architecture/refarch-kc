@@ -37,10 +37,10 @@ helm repo update
   kubectl create namespace greencompute
 ```
 
-* Deploy kafka and zookeeper using bitmani/kafka helm
+* Deploy kafka and zookeeper using bitnami/kafka helm
 
   ```
-  helm install --name kafka --set persistence.enabled=false bitmani/kafka --namespace greencompute
+  helm install --name kafka --set persistence.enabled=false bitnami/kafka --namespace greencompute
   ```
 
 It will take minutes to get the 2 pods ready.
@@ -54,13 +54,13 @@ It will take minutes to get the 2 pods ready.
   Get the kafka pod name:
 
   ```
-  export POD_NAME=$(kubectl get pods --namespace greencompute -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=kafkabitmani,app.kubernetes.io/component=kafka" -o jsonpath="{.items[0].metadata.name}")
+  export POD_NAME=$(kubectl get pods --namespace greencompute -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=kafkabitnami,app.kubernetes.io/component=kafka" -o jsonpath="{.items[0].metadata.name}")
   ```
 
   Get the list of topics
 
   ```
-  kubectl exec  -ti $POD_NAME  -n greencompute -- kafka-topics.sh --list --zookeeper kafkabitmani-zookeeper:2181
+  kubectl exec  -ti $POD_NAME  -n greencompute -- kafka-topics.sh --list --zookeeper kafkabitnami-zookeeper:2181
   ```
 
 ---
@@ -127,7 +127,7 @@ $ ./scripts/buildDocker.sh MINIKUBE
 * Deploy on minikube
 
 ```
-helm install chart/voyagesms/ --name voyages --set image.repository=ibmcase/kc-voyagesms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=local --namespace greencompute
+helm install chart/voyagesms/ --name voyages --set image.repository=ibmcase/kc-voyagesms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=local --namespace greencompute
 ```
 
 * Verify it is correctly running
@@ -156,7 +156,7 @@ $ ./scripts/buildDocker.sh MINIKUBE
 * Deploy on minikube
 
 ```
-helm install chart/ordercommandms/ --name ordercmd --set image.repository=ibmcase/kc-ordercommandms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
+helm install chart/ordercommandms/ --name ordercmd --set image.repository=ibmcase/kc-ordercommandms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
 ```
 
 * Verify service runs
@@ -187,7 +187,7 @@ $ ./scripts/buildDocker.sh MINIKUBE
 * Deploy on minikube
 
 ```
-helm install chart/orderqueryms/ --name orderquery --set image.repository=ibmcase/kc-orderqueryms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
+helm install chart/orderqueryms/ --name orderquery --set image.repository=ibmcase/kc-orderqueryms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
 ```
 
 * Verify service runs
@@ -218,7 +218,7 @@ $ ./scripts/buildDocker.sh MINIKUBE
 * Deploy on minikube
 
 ```
-helm install chart/fleetms/ --name fleetms --set image.repository=ibmcase/kc-fleetms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
+helm install chart/fleetms/ --name fleetms --set image.repository=ibmcase/kc-fleetms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
 ```
 
 * Verify service runs
@@ -291,7 +291,7 @@ $ ./scripts/buildDocker.sh MINIKUBE
 * Deploy on minikube
 
 ```
-helm install chart/springcontainerms/ --name containerms --set image.repository=ibmcase/kc-springcontainerms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
+helm install chart/springcontainerms/ --name containerms --set image.repository=ibmcase/kc-springcontainerms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
 ```
 
 * Verify the deployed service:
@@ -319,7 +319,7 @@ cd refarch-kc-ui/
 * Deploy on minikube
 
 ```
-helm install chart/kc-ui/ --name kcsolution --set image.repository=ibmcase/kc-ui --set image.pullSecret= --set image.pullPolicy=Always --set eventstreams.brokers=kafkabitmani:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
+helm install chart/kc-ui/ --name kcsolution --set image.repository=ibmcase/kc-ui --set image.pullSecret= --set image.pullPolicy=Always --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
 ```
 
 * Verify the installed app
@@ -339,7 +339,7 @@ kubectl run -i --tty --rm debug -n greencompute --image=busybox --restart=Never 
 
 In the shell prompt you have access to ping command to test name resolution.
 
-### Zookeeper or kafka bitmani pod in ImagePullBackOff
+### Zookeeper or kafka bitnami pod in ImagePullBackOff
 
 The issue may happen if you are not connected to the internet (yes we code in planes !). The statefulsets are using images with docker.io/bitnami/zookeeper or docker.io/bitnami/kafka, but when the images are local, they look like:
 
@@ -351,6 +351,6 @@ bitnami/kafka                        2.2.1-debian-9-r12
 So you need to edit the image tag in the stateful yaml. To do so perform the kubectl:
 
 ```
-kubectl edit statefuleset kafkabitmani
-kubectl edit statefuleset kafkabitmani-zookeeper
+kubectl edit statefuleset kafkabitnami
+kubectl edit statefuleset kafkabitnami-zookeeper
 ```
