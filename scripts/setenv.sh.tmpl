@@ -45,12 +45,27 @@ case "$kcenv" in
         export POSTGRESQL_URL="jdbc:postgresql://postgresql1:5432/postgres"
         export POSTGRESQL_USER="postgres"
         export POSTGRESQL_PWD="supersecret"
+        export FLEET_MS="localhost:9080"
+        export ORDER_CMD_MS="localhost:10080"
+        export ORDER_QUERY_MS="localhost:11080"
+        export CONTAINER_MS="localhost:12080"
+        export CONTAINER_SPRING_MS="localhost:12081"
+        export VOYAGE_MS="localhost:3100"
+   ;;
+   MINIKUBE)
+        export KAFKA_BROKERS="kafkabitmani:9092"
+        export KAFKA_APIKEY="nokey"
+        export KAFKA_ENV="MINIKUBE"
+        export POSTGRESQL_URL="jdbc:postgresql://postgresql-db:5432/postgres"
+        export POSTGRESQL_USER="postgres"
+        export POSTGRESQL_PWD="supersecret"
         export WEBAPP="<>.containers.appdomain.cloud:31010"
         export FLEET_MS="<>.containers.appdomain.cloud:31300"
         export ORDER_CMD_MS="<>.containers.appdomain.cloud:31200"
         export ORDER_QUERY_MS="<>.containers.appdomain.cloud:31100"
         export VOYAGE_MS="<>.containers.appdomain.cloud:31000"
         export CONTAINER_MS="<>.containers.appdomain.cloud:32302"
+        export POSTGRESQL_CA_PEM=""
    ;;
 esac
 

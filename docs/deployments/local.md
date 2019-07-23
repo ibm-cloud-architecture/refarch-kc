@@ -137,6 +137,6 @@ Read the [demo script](../demo/readme.md) to see how all those components are wo
 
 ## Some tricks
 
-* With docker-compose you can use the command: ` ` to stop the solution. You should see the following error message: `ERROR: error while removing network: network docker_default id e867... has active endpoints`. This is normal as the docker network is still running as the backend services are running. 
+* With docker-compose you can use the command: `docker-compose -f kc-solution-compose.yml down` to stop the solution. You should see the following error message: `ERROR: error while removing network: network docker_default id e867... has active endpoints`. This is normal as the docker network is still running as the backend services are still running. 
 * Clean all docker images: `docker rmi -f $(docker images | grep ibmcase | awk '{print $3}')`
-* Stop one of the service with docker compote, for example the order command service: `docker-compose -f kc-solution-compose.yml  stop ordercmd` 
+* Stop one of the service with docker compose, for example to stop the order command service do: `docker-compose -f kc-solution-compose.yml  stop ordercmd` 
