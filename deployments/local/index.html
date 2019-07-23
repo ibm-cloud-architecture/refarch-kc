@@ -783,9 +783,9 @@ We have also defined a script to start back end and the solution services in one
 <p>Read the <a href="../../demo/readme/">demo script</a> to see how all those components are working together to demonstrate the business process end to end.</p>
 <h2 id="some-tricks">Some tricks</h2>
 <ul>
-<li>With docker-compose you can use the command: <code></code> to stop the solution. You should see the following error message: <code>ERROR: error while removing network: network docker_default id e867... has active endpoints</code>. This is normal as the docker network is still running as the backend services are running. </li>
+<li>With docker-compose you can use the command: <code>docker-compose -f kc-solution-compose.yml down</code> to stop the solution. You should see the following error message: <code>ERROR: error while removing network: network docker_default id e867... has active endpoints</code>. This is normal as the docker network is still running as the backend services are still running. </li>
 <li>Clean all docker images: <code>docker rmi -f $(docker images | grep ibmcase | awk '{print $3}')</code></li>
-<li>Stop one of the service with docker compote, for example the order command service: <code>docker-compose -f kc-solution-compose.yml  stop ordercmd</code> </li>
+<li>Stop one of the service with docker compose, for example to stop the order command service do: <code>docker-compose -f kc-solution-compose.yml  stop ordercmd</code> </li>
 </ul>
                 
                   
