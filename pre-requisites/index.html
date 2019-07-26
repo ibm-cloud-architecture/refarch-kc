@@ -732,13 +732,14 @@
 </pre></div>
 
 <h2 id="clone-all-the-repositories">Clone all the repositories</h2>
+<p>Start by cloning the root repository using the command:</p>
 <div class="codehilite"><pre><span></span>git clone https://github.com/ibm-cloud-architecture/refarch-kc/
 </pre></div>
 
-<p>Open a terminal window and go to the <code>refarch-kc</code> folder.</p>
-<p>Use the command:
+<p>Then go to the <code>refarch-kc</code> folder and use the command:</p>
 <div class="codehilite"><pre><span></span>./script/clone.sh
-</pre></div></p>
+</pre></div>
+
 <p>to get all the solution repositories. You should have at least the following repositories:</p>
 <div class="codehilite"><pre><span></span>refarch-kc-container-ms
 refarch-kc-order-ms
@@ -749,8 +750,8 @@ refarch-kc-streams
 </pre></div>
 
 <h2 id="get-docker">Get docker</h2>
-<p>Get <a href="https://docs.docker.com/install/">docker engine and install</a> it (if not done yet.) To verify docker runs fine use the command <code>docker version</code>. We run on v19.03 community edition.</p>
-<p>or use one of the packaged solution like on Centos</p>
+<p>Get <a href="https://docs.docker.com/install/">docker engine and install</a> it (if not yet done). To verify docker runs fine use the command <code>docker version</code>. We run on v19.03 community edition.</p>
+<p>or use one of the packaged solution like on Centos:</p>
 <div class="codehilite"><pre><span></span>yum install docker
 </pre></div>
 
@@ -759,7 +760,7 @@ refarch-kc-streams
 <div class="codehilite"><pre><span></span>./scripts/prepareEnv
 </pre></div>
 
-<p>The script will create the docker images for maven, nodejs, and python if those tools are not found on your computer. </p>
+<p>The script will create the docker images for maven, nodejs, and python if those tools are not found on your computer. The images are built from our docker files you can find under the <code>refarch-kc/dockers</code> folder.</p>
 <div class="codehilite"><pre><span></span>docker images
 </pre></div>
 
@@ -772,9 +773,9 @@ ibmcase/javatools   latest              bdf79f64d721        23 minutes ago      
 <p>You to have two choices to build the solution: </p>
 <ol>
 <li>installing node, python and maven on your computer</li>
-<li>use our own docker images for running those tools. </li>
+<li>use our own docker images for running those tools</li>
 </ol>
-<p>You can mix too, if for example you already developed in the past with Nodejs or Java you may want to leverage your own configurations. If you do not want to impact your python environment, you can user our docker images. </p>
+<p>You can mix the two. If, for example, you already developed with Nodejs or Java you may want to leverage your own configurations. If you do not want to impact your python environment, you can user our docker images. </p>
 <p>To be able to build without our docker images do the following:</p>
 <h2 id="get-java">Get Java</h2>
 <p>Do something like this:</p>
@@ -794,7 +795,7 @@ ibmcase/javatools   latest              bdf79f64d721        23 minutes ago      
 </pre></div>
 
 <h2 id="get-python-37">Get Python 3.7</h2>
-<p>Most of our integration tests are done in python. To avoid impacting your own python environment, we defined a docker file to build an image with the necessary python library. The image may have been already built with the <code>preparenv</code> script.</p>
+<p>Our integration tests are done in python. To avoid impacting your own python environment, we defined a docker file to build an image with the necessary python library. The image may have been already built with the <code>preparenv</code> script run in previous step.</p>
 <p>If you want to rebuild it, go to the <code>docker</code> folder and run the following command: 
 <div class="codehilite"><pre><span></span>docker build -f docker-python-tools -t ibmcase/python .
 </pre></div></p>
@@ -803,7 +804,7 @@ ibmcase/javatools   latest              bdf79f64d721        23 minutes ago      
 <div class="codehilite"><pre><span></span>mv setenv.sh.tmpl setenv.sh
 </pre></div>
 
-<p>Then modify the environment variables according to your settings. This file is used by a lot of scripts in the solution to set the target deployment environment: LOCAL, IBMCLOUD, ICP, MINIKUBE.</p>
+<p>Then modify the environment variables according to your environment you are using. This file is used by a lot of scripts in the solution to set the target deployment environment: LOCAL, IBMCLOUD, ICP, MINIKUBE.</p>
                 
                   
                 
