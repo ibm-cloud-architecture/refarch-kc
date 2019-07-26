@@ -4,15 +4,9 @@ if [[ $PWD != */refarch-kc ]]; then
  exit 1
 fi
 
-if [[ $# -ne 1 ]];then
- echo "Usage stopLocalEnv [ LOCAL | MINIKUBE ]"
- exit 1
-fi
 
-if [[ $1 == "LOCAL" ]]
-then
-  cd docker
-  docker-compose -f kc-solution-compose.yml  down
-  sleep 15
-  docker-compose -f backbone-compose.yml  down
-fi
+source ../../scripts/setenv.sh LOCAL
+cd docker
+docker-compose -f kc-solution-compose.yml  down
+sleep 15
+docker-compose -f backbone-compose.yml  down

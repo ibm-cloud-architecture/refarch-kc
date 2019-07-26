@@ -7,9 +7,9 @@ fi
 case "$kcenv" in
    IBMCLOUD)
         export KAFKA_BROKERS=kafka03-prod02.messagehub.services.us-south.bluemix.net:9093,kafka01-prod02.messagehub.services.us-south.bluemix.net:9093,kafka02-prod02.messagehub.services.us-south.bluemix.net:9093,kafka04-prod02.messagehub.services.us-south.bluemix.net:9093,kafka05-prod02.messagehub.services.us-south.bluemix.net:9093
-        export KAFKA_APIKEY=<>
+        export KAFKA_APIKEY="<>"
         export KAFKA_ADMIN_URL= "https://kafka-admin-prod02.messagehub.services.us-south.bluemix.net:443"
-        export KAFKA_ENV=IBMCLOUD
+        export KAFKA_ENV="IBMCLOUD"
         export CA_LOCATION="./Certificates.pem"
         export POSTGRESQL_URL="jdbc:postgresql://<>.databases.appdomain.cloud:<>/ibmclouddb?sslmode=verify-full&sslfactory=org.postgresql.ssl.NonValidatingFactory"
         export POSTGRESQL_USER="ibm_cloud_<>"
@@ -24,16 +24,16 @@ case "$kcenv" in
         export CONTAINER_MS="<>.containers.appdomain.cloud:32302"
         export IKS_CLUSTER_NAME=""
         export IKS_ZONES=""
-        export IKS_NAMESPACE="browncompute"
+        export IKS_NAMESPACE="greencompute"
         export IKS_REGION="us-east"
         export IBMCLOUD_USER=""
         export IBMCLOUD_PWD=""
         export IBMCLOUD_ACCOUNT=""
         ;;
    ICP)
-        export KAFKA_BROKERS=<>
-        export KAFKA_ENV=ICP
-        export KAFKA_APIKEY=<>
+        export KAFKA_BROKERS="<>"
+        export KAFKA_ENV="ICP"
+        export KAFKA_APIKEY="<>"
         export CA_LOCATION="es-cert.pem"
     ;;
    LOCAL)
