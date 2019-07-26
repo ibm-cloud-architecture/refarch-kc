@@ -1,6 +1,6 @@
 #!/bin/bash
 if [[ $PWD != */refarch-kc ]]; then
- echo "Run stopLocalEnv from refarch-kc"
+ echo "Run stop.sh from refarch-kc"
  exit 1
 fi
 
@@ -12,7 +12,7 @@ fi
 if [[ $1 == "LOCAL" ]]
 then
   cd docker
-  docker-compose -f kc-solution-compose.yml --remove-orphans down
+  docker-compose -f kc-solution-compose.yml  down
   sleep 15
-  docker-compose -f backbone-compose.yml --remove-orphans down
+  docker-compose -f backbone-compose.yml  down
 fi
