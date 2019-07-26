@@ -14,14 +14,14 @@ yum install git
 
 ## Clone all the repositories
 
+Start by cloning the root repository using the command:
 
 ```
 git clone https://github.com/ibm-cloud-architecture/refarch-kc/
 ```
 
-Open a terminal window and go to the `refarch-kc` folder.
+Then go to the `refarch-kc` folder and use the command:
 
-Use the command:
 ```
 ./script/clone.sh
 ``` 
@@ -40,9 +40,9 @@ refarch-kc-streams
 
 ## Get docker
 
-Get [docker engine and install](https://docs.docker.com/install/) it (if not done yet.) To verify docker runs fine use the command `docker version`. We run on v19.03 community edition.
+Get [docker engine and install](https://docs.docker.com/install/) it (if not yet done). To verify docker runs fine use the command `docker version`. We run on v19.03 community edition.
 
-or use one of the packaged solution like on Centos
+or use one of the packaged solution like on Centos:
 
 ```
 yum install docker
@@ -56,7 +56,7 @@ To assess the tools installed on your computer, run the following command under 
 ./scripts/prepareEnv
 ```
 
-The script will create the docker images for maven, nodejs, and python if those tools are not found on your computer. 
+The script will create the docker images for maven, nodejs, and python if those tools are not found on your computer. The images are built from our docker files you can find under the `refarch-kc/dockers` folder.
 
 ```
 docker images
@@ -73,9 +73,9 @@ ibmcase/javatools   latest              bdf79f64d721        23 minutes ago      
 You to have two choices to build the solution: 
 
 1. installing node, python and maven on your computer
-1. use our own docker images for running those tools. 
+1. use our own docker images for running those tools
 
-You can mix too, if for example you already developed in the past with Nodejs or Java you may want to leverage your own configurations. If you do not want to impact your python environment, you can user our docker images. 
+You can mix the two. If, for example, you already developed with Nodejs or Java you may want to leverage your own configurations. If you do not want to impact your python environment, you can user our docker images. 
 
 To be able to build without our docker images do the following:
 
@@ -110,7 +110,7 @@ yum install node
 
 ## Get Python 3.7
 
-Most of our integration tests are done in python. To avoid impacting your own python environment, we defined a docker file to build an image with the necessary python library. The image may have been already built with the `preparenv` script.
+Our integration tests are done in python. To avoid impacting your own python environment, we defined a docker file to build an image with the necessary python library. The image may have been already built with the `preparenv` script run in previous step.
 
 If you want to rebuild it, go to the `docker` folder and run the following command: 
 ```
@@ -125,4 +125,4 @@ In the `refarch-kc` rename `./script/setenv.sh.tmpl` to `./script/setenv.sh`:
 mv setenv.sh.tmpl setenv.sh
 ```
 
-Then modify the environment variables according to your settings. This file is used by a lot of scripts in the solution to set the target deployment environment: LOCAL, IBMCLOUD, ICP, MINIKUBE.
+Then modify the environment variables according to your environment you are using. This file is used by a lot of scripts in the solution to set the target deployment environment: LOCAL, IBMCLOUD, ICP, MINIKUBE.

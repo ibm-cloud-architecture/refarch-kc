@@ -21,9 +21,9 @@ if [[ $KAFKA_ENV == "LOCAL"  ]]
 then
     docker exec  -ti $kafka /bin/bash -c "$KAFKA_INTERNAL_PATH/bin/kafka-topics.sh --list --zookeeper zookeeper1:2181" > topics
 else
-    export POD_NAME=$(kubectl get pods --namespace greencompute -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=kafkabitmani,app.kubernetes.io/component=kafka" -o jsonpath="{.items[0].metadata.name}")
+    export POD_NAME=$(kubectl get pods --namespace $KC_NAMESPACE -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=kafkabitmani,app.kubernetes.io/component=kafka" -o jsonpath="{.items[0].metadata.name}")
     # get current topics
-    kubectl exec  -ti $POD_NAME  -n greencompute -- kafka-topics.sh --list --zookeeper kafkabitmani-zookeeper:2181 > topics
+    kubectl exec  -ti $POD_NAME  -n $KC_NAMESPACE -- kafka-topics.sh --list --zookeeper kafkabitmani-zookeeper:2181 > topics
 fi
 
 createTopic(){
@@ -36,7 +36,7 @@ createTopic(){
         then
             docker exec -ti docker_kafka1_1  /bin/bash -c "$KAFKA_INTERNAL_PATH/bin/kafka-topics.sh --create  --zookeeper zookeeper1:2181 --replication-factor 1 --partitions 1 --topic $1"
         else
-            kubectl exec  -ti $POD_NAME  -n greencompute -- kafka-topics.sh --create  --zookeeper kafkabitmani-zookeeper:2181 --replication-factor 1 --partitions 1 --topic $1
+            kubectl exec  -ti $POD_NAME  -n $KC_NAMESPACE -- kafka-topics.sh --create  --zookeeper kafkabitmani-zookeeper:2181 --replication-factor 1 --partitions 1 --topic $1
         fi
     else
         echo $1 " topic already created"

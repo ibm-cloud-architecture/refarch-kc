@@ -37,20 +37,19 @@ case "$kcenv" in
         export CA_LOCATION="es-cert.pem"
     ;;
    LOCAL)
-        export KAFKA_BROKERS=kafka1:9092
+        export KAFKA_BROKERS="kafka1:9092"
+        export KAFKA_APIKEY="nokey"
         export KAFKA_ENV="LOCAL"
-        export ORDER_CMD_MS=ordercmd:10080
-        export ORDER_QUERY_MS=orderquery:11080
-        export CONTAINER_SPRING_MS="containerkstreams:12081"
-        export POSTGRESQL_URL="jdbc:postgresql://postgresql1:5432/postgres"
+        export WEBAPP="kcsolution:3010"
+        export FLEET_MS="fleetms:9080"
+        export ORDER_CMD_MS="ordercmd:9080"
+        export ORDER_QUERY_MS="orderquery:9080"
+        export CONTAINER_SPRING_MS="springcontainerms:12081"
+        export VOYAGE_MS="voyages:3100"
+        export POSTGRESQL_URL="jdbc:postgresql://postgres:5432/postgres"
         export POSTGRESQL_USER="postgres"
         export POSTGRESQL_PWD="supersecret"
-        export FLEET_MS="localhost:9080"
-        export ORDER_CMD_MS="localhost:10080"
-        export ORDER_QUERY_MS="localhost:11080"
-        export CONTAINER_MS="localhost:12080"
-        export CONTAINER_SPRING_MS="localhost:12081"
-        export VOYAGE_MS="localhost:3100"
+        export POSTGRESQL_CA_PEM=""
    ;;
    MINIKUBE)
         export KAFKA_BROKERS="kafkabitmani:9092"

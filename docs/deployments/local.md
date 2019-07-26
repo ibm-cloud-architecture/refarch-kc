@@ -11,7 +11,7 @@ Every microservices run in container and two separate docker compose files defin
 
 ## Pre requisites 
 
-See the common pre-requisites from [this note](../pre-requisites.md).
+Be sure to have done the common pre-requisites from [this note](../pre-requisites.md).
 
 * Get [docker compose](https://docs.docker.com/compose/install/). To verify it runs enter `docker-compose version`. We run version 1.24.
 * Assign at least 8GB of memory and may be 4 to 6 CPUs to your docker runtime. This is set in the Docker's Preferences menu and under the `Advanced` tab.
@@ -46,11 +46,22 @@ pip install docker-compose
 
 ## Start Kafka, Zookeeper and Postgresql
 
-* In one Terminal window, under the `refarch-kc` folder, use our compose file to start the backend components:   
+In one Terminal window, under the `refarch-kc` folder, you can start the back end services:
 
-  `$ cd docker &&  docker-compose -f backbone-compose.yml up 2>&1 1>backend.logs &`.
+```
+pwd
+> refarch-kc
+./scripts/local/launch.sh BACKEND
+```
+The local setting use the docker-compose file `backbone-compose.yml` for the backend, with on kafka broker, one zookeeper server and one postgresql. 
 
-It will take some time as it download zookeeper and kafka docker images from dockerhub. When started you should see the following trace:
+If you want to stop the environment use:
+
+```
+./scripts/local/stop.sh
+```
+
+It will take some time as the script may download zookeeper, kafka and postgresql docker images from dockerhub. When started you should see the following trace:
 ```
 Creating docker_zookeeper1_1 ... done
 Creating docker_kafka1_1     ... done
@@ -60,15 +71,19 @@ Attaching to docker_zookeeper1_1, docker_kafka1_1
 ```
  > Note: Starting those components will create two folders in the docker folder: `kafka1` and `zookeeper1`. Those folders could be deleted to restart from a fresh environment.  
 
-* The first time the kafka backbone is started, you need to configure the Kafka topics used in the solution. The local script: `scripts/createLocalTopics.sh` will create them.
+The first time the kafka backbone is started, the launch.sh script will create the topics for the solution. If for any reason you need to add new topic of assess existing Kafka topics run the script: `scripts/createTopics.sh LOCAL`.
 
+If you want to verify the list of topic you can exec on the kafka container. A command like:
 
+```
+docker exec -ti docker_kafka1_1 /bin/bash -c "/opt/bitnami/kafka/bin/kafka-topics.sh --list --zookeeper zookeeper1:2181"
+```
 
 ## Build the solution
 
 This project includes some scripts to help build the full solution once all the repositories are cloned. If you have any problem during this integrated build we recommend going into each project to assess the build process in detail. 
 
-We are using polyglote implementations so if you do not want to overload your own laptop with the different library, we propose to use docker images to get development environments for nodes, python and java. (Three separate images). This will help you to do not pollute your computer. 
+We are using polyglote implementations so if you do not want to overload your own laptop with the different libraries needed, we propose to use docker images to get development environments for nodes, python and java. (Three separate images). This will help you to do not pollute your computer. 
 If you want to use those images, run the three commands below: to build the three images (those images are also in docker hub). 
 
 ```sh
@@ -122,7 +137,7 @@ $ source ../scripts/setenv.sh LOCAL
 # Then use docker compose to start all the services
 $ docker-compose -f kc-solution-compose.yml up
 ```
-We have also defined a script to start back end and the solution services in one command: `./script/runSolutionLocally`.
+We have also defined a script to start back end and the solution services in one command: `./script/local/launch.sh`.
 
 1. Verify the different components work fine. You can use the different test scripts we have defined in each of the microservice projects or use the following URLs:
   * For the [user interface URL http://localhost:3010](http://localhost:3010)

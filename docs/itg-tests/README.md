@@ -2,7 +2,7 @@
 
 The `itg-tests` folder includes a set of tests to validate most of the event-driven microservice patterns like, event sourcing with fail over, CQRS and Saga patterns with recovery and fail over. (See our summary on those patterns [here](https://ibm-cloud-architecture.github.io/refarch-eda/evt-microservices/ED-patterns/))
 
-These integration tests are done in Python to illustrate how to use Kafka python module of [this github](https://github.com/confluentinc/confluent-kafka-python) and because Python is cool too.
+These integration tests are done in Python to illustrate how to use Kafka python module of [this github](https://github.com/confluentinc/confluent-kafka-python) and because Python is nice to use for writing integration tests.
 
 ## pre-requisites
 
@@ -17,7 +17,8 @@ docker build -t ibmcase/python .
 
 ### Ensure all services are running
 
-The documentation assumes the solution is running within MINIKUBE.
+!!! Note
+        This documentation assumes the solution is running within MINIKUBE, but tests will work the same with docker-compose, just replace MINIKUBE with LOCAL as argument of the scripts.
 
 ```
 kubectl get pods -n greencompute
@@ -44,7 +45,9 @@ itg-tests
 $ ./startPythonEnv.sh MINIKUBE
 root@fe61560d0cc4:/# 
 ```
+
 From this shell, first specify where python should find the new modules, by setting the environment variable `PYTHONPATH`:
+
 ```
 root@fe61560d0cc4:/# export PYTHONPATH=/home
 root@fe61560d0cc4:/# cd /home
@@ -53,7 +56,7 @@ As the startPythonEnv is mounting the local `itg-tests` folder to the `/home` fo
 
 ## How to proof the event sourcing
 
-The goal of this test is to illustrate the happy path for event sourcing: all events for an order, are persisted in kafka, and a consumer with no offset commit, could run and help to answer to the question: **What happened to the orderId 75?**
+The goal of this test is to illustrate the happy path for event sourcing: all events for an order, are persisted in kafka, in the order of arrival, and a consumer with no offset commit, could run and help to answer to the question: **What happened to the orderId 75?**
 
 We want to validate the order events are sequential over time, and it is possible to replay the loading of events from time origin.
 
@@ -62,7 +65,7 @@ We want to validate the order events are sequential over time, and it is possibl
 ### Replay all events for a given key
 
 
-1. First start the python docker container, so we can execute any python code. The script connect to the docker network where kafka runs. 
+1. First start the python docker container, so we can execute any python code. The script connects to the docker network where kafka runs. 
 
     ```
     cd itg_tests
@@ -75,7 +78,7 @@ We want to validate the order events are sequential over time, and it is possibl
     cd /home/es-it
     ```
 
-1. Start python interpreter with the producer events code with the orderID 75.
+1. Start python interpreter with the producer events code with orderID set to 75.
 
     ```
     $ python ProducerOrderEvents.py 75
@@ -118,10 +121,8 @@ We want to validate the order events are sequential over time, and it is possibl
 
 1. Stopping with Ctrl-C (it can take time for python to get the keyboard interrupt) and then restarting the same consumer will bring you the same content. We can always answer the question at different time, but still get the same answer. 
 
-
-
-The test is the code in `es-it/ProducerOrderEvents.py` combined with an order consumer. The diagram below illustrates the simple environment. 
-The tests are under the `itg-tests/es-it` folder. 
+The tests are under the `itg-tests/es-it` folder. The testin `es-it/ProducerOrderEvents.py` create the order events, and when combined with an order consumer give you the tracing of the process. The diagram below illustrates this simple environment. 
+ 
 
 * [EventSourcingTests.py](https://github.com/ibm-cloud-architecture/refarch-kc/blob/master/itg-tests/es-it/EventSourcingTests.py) uses the event backbone, and the order microservices. 
 

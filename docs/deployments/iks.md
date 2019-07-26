@@ -30,7 +30,8 @@ Here is a dependency graph:
     * [Docker CLI](https://docs.docker.com/install/)
     * [IBM Cloud CLI](https://cloud.ibm.com/docs/cli/reference/ibmcloud/download_cli.html#install_use)
     * [Kubernetes CLI](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
-    * IBM Cloud Kubernetes Service [plug-in](https://cloud.ibm.com/docs/cli/reference/ibmcloud/extend_cli.html#plug-ins) using the following command:
+
+* IBM Cloud Kubernetes Service [plug-in](https://cloud.ibm.com/docs/cli/reference/ibmcloud/extend_cli.html#plug-ins) using the following command:
       
 ```
 ibmcloud plugin install container-service -r Bluemix
@@ -152,11 +153,10 @@ kubectl create namespace browncompute
 
 ## Event Streams Service on IBM Cloud
 
-To provision your service, go to the IBM Cloud Catalog and search for `Event Streams`. It is in the *Integration* category. Create the service and specify a name, a region, and a space. 
+To provision your service, go to the IBM Cloud Catalog and search for `Event Streams`. It is in the *Integration* category. Create the service and specify a name, a region, and a resource group. Once the service is created you reach the Event Stream Standard Dashboard:
 
-* In the service credentials create new credentials to get the Kafka broker list, the admim URL and the api_key needed to authenticate the consumers or producers.
+![](IES-dashboard-std.png)
 
- ![](./IES-IC-credentials.png)
 
 We will use a kubernetes secret to define the api key (see detail [in this section](#using-api-keys))
 
@@ -164,7 +164,12 @@ We will use a kubernetes secret to define the api key (see detail [in this secti
 
  ![](./IES-IC-topics.png) 
 
+See also [this note](https://ibm-cloud-architecture.github.io/refarch-eda/deployments/eventstreams/es-ibm-cloud/) for the enterprise plan and advanced topic creation.
 
+* In the service credentials create new credentials to get the Kafka broker list, the admim URL and the api_key needed to authenticate the consumers or producers.
+
+ ![](./IES-IC-credentials.png)
+ 
 ## Streaming Analytics Service
 
 This service is only need when doing real time analytics with Streaming analytics service. 

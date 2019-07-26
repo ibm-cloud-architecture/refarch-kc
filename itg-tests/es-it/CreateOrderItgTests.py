@@ -114,7 +114,7 @@ https://ibm-cloud-architecture.github.io/refarch-kc/design/readme/#shipment-orde
 '''
 class TestEventSourcingHappyPath(unittest.TestCase):
     def test_createOrder(self):
-        # 1- load the order request from json
+        print("1- load the order request from json")
         f = open('../data/FreshProductOrder.json','r')
         order = json.load(f)
         f.close()

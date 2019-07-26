@@ -13,6 +13,7 @@ class KafkaProducer:
                 'bootstrap.servers':  self.kafka_brokers,
                 'group.id': groupID
         }
+        # We need this test as local kafka does not expect SSL protocol.
         if (self.kafka_env != 'LOCAL'):
             options['security.protocol'] = 'SASL_SSL'
             options['sasl.mechanisms'] = 'PLAIN'
