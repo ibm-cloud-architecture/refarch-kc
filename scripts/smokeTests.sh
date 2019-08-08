@@ -34,10 +34,10 @@ then
     echo $rep
     if [[ -z "$rep" ]] 
     then
-        echo "kafka and zookeeper are not running, let start them and wait 10 seconds"
+        echo "kafka and zookeeper are not running, let start them and wait 30 seconds"
         cd docker 
         docker-compose -f backbone-compose.yml up 2>backend.logs &
-        sleep 10
+        sleep 30
         cd ..
     else
         echo "Kafka and zookeeper run... [Good]"

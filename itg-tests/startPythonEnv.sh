@@ -18,4 +18,5 @@ echo "docker run -e KAFKA_BROKERS=$KAFKA_BROKERS -e KAFKA_APIKEY=$KAFKA_APIKEY \
 
 docker run -e KAFKA_BROKERS=$KAFKA_BROKERS -e KAFKA_APIKEY=$KAFKA_APIKEY \
 -e KAFKA_ENV=$KAFKA_ENV -e CA_LOCATION=$CA_LOCATION \
+ -e ORDER_CMD_MS=$ORDER_CMD_MS -e ORDER_QUERY_MS=$ORDER_QUERY_MS \
  --network=$network -v $(pwd):/home  -it ibmcase/python bash 

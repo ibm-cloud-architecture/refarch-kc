@@ -18,7 +18,9 @@ docker build -t ibmcase/python .
 ### Ensure all services are running
 
 !!! Note
-        This documentation assumes the solution is running within MINIKUBE, but tests will work the same with docker-compose, just replace MINIKUBE with LOCAL as argument of the scripts.
+        This documentation assumes the solution is running within MINIKUBE or docker compose, but tests will work the same with docker-compose, just replace MINIKUBE with LOCAL as argument of the scripts. Integration tests run also with Event Streams on Cloud and the microservices deployed on kubernetes or openshift.
+
+Be sure to be logged into the kubernetes cluster. We are using the `greencompute` namespace. 
 
 ```
 kubectl get pods -n greencompute
@@ -42,7 +44,7 @@ With the image `ibmcase/python`, you will be able to run the different integrati
 ```shell
 $ pwd
 itg-tests
-$ ./startPythonEnv.sh MINIKUBE
+$ ./startPythonEnv.sh MINIKUBE              (or use LOCAL)
 root@fe61560d0cc4:/# 
 ```
 
@@ -52,7 +54,7 @@ From this shell, first specify where python should find the new modules, by sett
 root@fe61560d0cc4:/# export PYTHONPATH=/home
 root@fe61560d0cc4:/# cd /home
 ```
-As the startPythonEnv is mounting the local `itg-tests` folder to the `/home` folder inside the docher container, we can access all the integration tests, and execute them now...
+As the startPythonEnv is mounting the local `itg-tests` folder to the `/home` folder inside the docker container, we can access all the integration tests, and execute them ...
 
 ## How to proof the event sourcing
 
@@ -128,38 +130,31 @@ The tests are under the `itg-tests/es-it` folder. The testin `es-it/ProducerOrde
 
 To run the tests set the KAFKA_BROKERS and KAFKA_APIKEY environment variables
 
-### Happy path for the order life cycle
+### Happy path for the order life cycle: Validating CQRS
 
 A classical happy path for a event-driven microservice is to receive a command to do something (could be an API operation (POST a new order)), validate the command, create a new event (OrderCreated) and append it to event log, then update its internal state, and may be run side effect like returning a response to the command initiator, or trigger a call to an external service to initiate a business process or a business task.  
 
-Once the python image is build you can use the following command to run the first test that create an order, use Kafka consumer to get the different events and query the Order microservices. The code is documented and should be self-explanatory. The order state diagram is [presented here.](https://ibm-cloud-architecture.github.io/refarch-kc/design/readme/#shipment-order-lifecycle-and-state-change-events)
+We assume the python image was built, so you can use the following command to run the first test that creates an order via HTTP POST on the Order Command microservice (the write model), uses Kafka consumer to get the different events and then use HTTP GET to query the Order query microservices (the read model). The `OrdersPython/ValidateOrderCreation.py` code is documented and should be self-explanatory. The order state diagram is [presented here.](https://ibm-cloud-architecture.github.io/refarch-kc/design/readme/#shipment-order-lifecycle-and-state-change-events)
 
 
 ```shell
-. ./setenv.sh
-$ docker run -e KAFKA_BROKERS=$KAFKA_BROKERS -v $(pwd):/home --network=docker_default -ti ibmcase/python bash
-root@fe61560d0cc4:/# cd home/es-it
-root@fe61560d0cc4:/# python EventSourcingTests.py
+$ pwd
+itg-tests
+
+$  ./startPythonEnv.sh LOCAL   (or MINIKUBE)
+
+root@fe61560d0cc4:/# cd home/OrdersPython
+root@fe61560d0cc4:/# python  ValidateOrderCreation.py
 ```
 
-The implementation uses a set of constructs to poll the `orders` topic for events and  timing out if not events are there. Also it needs to filter out previous events and events not related to the created order. 
+The implementation uses a set of constructs to poll the `orders` topic for events and  timing out if not events are there.
 
-*The code is deliberatly not optimized. The second test will use a OrderConsumer module to isolate the specific kafka code to consumer orders.*
+### Failure on query service
 
-### Wrong path
+One possible bad path, is when the order query microservice fails, and needs to recover from failure. In this case it should reload the events from last commited offset and update its internal states without running any code that could lead to side effect. 
 
-One possible bad path, is when the command microservice fail, and needs to recover from failure. In this case it should reload the events from last snapshot up to the time it fails and update its internal states but do not run the side effect. 
-
-To test this path, we create an order and kill the order command service after it generate the first event, while voyage service publishes voyage allocation event.
-
-### First exception no voyage found
-
-If there is no voyage found that matches the source and destination then the order is cancelled. The voyages definition is just a collection of json objects in the [voyage-ms project](https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/voyages-ms).
-
-The test is `CancelledOrderTests.py`. It uses the OrderConsumer module.
-
-### Use transaction to support read-process-write in one atomic operation
-
+To test this path, we first manual kill the docker container running the order query microservice, then use the same code as above to create an order. The last step of the call fails as the order created event was not processed by the query microservice, the data was not uploaded to its own projection. 
+Restarting the microservice, and going to the URL http://localhost:11080/orders/byManuf/FishFarm, you will see the order is now part of the data of this service.
 
 ## How to proof the SAGA pattern
 

@@ -50,7 +50,7 @@ class KafkaConsumer:
                 continue
             msgStr = self.traceResponse(msg)
             anEvent = json.loads(msgStr)
-            if (anEvent[keyname] == keyID):
+            if (anEvent["payload"][keyname] == keyID):
                 gotIt = True
         return anEvent
     
