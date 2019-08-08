@@ -583,29 +583,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#happy-path-for-the-order-life-cycle" title="Happy path for the order life cycle" class="md-nav__link">
-    Happy path for the order life cycle
+  <a href="#happy-path-for-the-order-life-cycle-validating-cqrs" title="Happy path for the order life cycle: Validating CQRS" class="md-nav__link">
+    Happy path for the order life cycle: Validating CQRS
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#wrong-path" title="Wrong path" class="md-nav__link">
-    Wrong path
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#first-exception-no-voyage-found" title="First exception no voyage found" class="md-nav__link">
-    First exception no voyage found
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#use-transaction-to-support-read-process-write-in-one-atomic-operation" title="Use transaction to support read-process-write in one atomic operation" class="md-nav__link">
-    Use transaction to support read-process-write in one atomic operation
+  <a href="#failure-on-query-service" title="Failure on query service" class="md-nav__link">
+    Failure on query service
   </a>
   
 </li>
@@ -715,29 +701,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#happy-path-for-the-order-life-cycle" title="Happy path for the order life cycle" class="md-nav__link">
-    Happy path for the order life cycle
+  <a href="#happy-path-for-the-order-life-cycle-validating-cqrs" title="Happy path for the order life cycle: Validating CQRS" class="md-nav__link">
+    Happy path for the order life cycle: Validating CQRS
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#wrong-path" title="Wrong path" class="md-nav__link">
-    Wrong path
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#first-exception-no-voyage-found" title="First exception no voyage found" class="md-nav__link">
-    First exception no voyage found
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#use-transaction-to-support-read-process-write-in-one-atomic-operation" title="Use transaction to support read-process-write in one atomic operation" class="md-nav__link">
-    Use transaction to support read-process-write in one atomic operation
+  <a href="#failure-on-query-service" title="Failure on query service" class="md-nav__link">
+    Failure on query service
   </a>
   
 </li>
@@ -785,9 +757,10 @@ docker build -t ibmcase/python .
 
 <h3 id="ensure-all-services-are-running">Ensure all services are running</h3>
 <div class="admonition note">
-<p class="admonition-title">Note<p>This documentation assumes the solution is running within MINIKUBE, but tests will work the same with docker-compose, just replace MINIKUBE with LOCAL as argument of the scripts.</p>
+<p class="admonition-title">Note<p>This documentation assumes the solution is running within MINIKUBE or docker compose, but tests will work the same with docker-compose, just replace MINIKUBE with LOCAL as argument of the scripts. Integration tests run also with Event Streams on Cloud and the microservices deployed on kubernetes or openshift.</p>
 </p>
 </div>
+<p>Be sure to be logged into the kubernetes cluster. We are using the <code>greencompute</code> namespace. </p>
 <div class="codehilite"><pre><span></span>kubectl get pods -n greencompute
 </pre></div>
 
@@ -805,7 +778,7 @@ postgre-db-postgresql-0                      1/1     Running   2          14d
 <p>With the image <code>ibmcase/python</code>, you will be able to run the different integration tests. For example, the following commands will start a bash shell with the python environment, mounting the local filesystem into the docker /home folder, and connect to the same network as the Kafka broker and the other solution components are running into:</p>
 <div class="codehilite"><pre><span></span>$ <span class="nb">pwd</span>
 itg-tests
-$ ./startPythonEnv.sh MINIKUBE
+$ ./startPythonEnv.sh MINIKUBE              <span class="o">(</span>or use LOCAL<span class="o">)</span>
 root@fe61560d0cc4:/# 
 </pre></div>
 
@@ -813,7 +786,7 @@ root@fe61560d0cc4:/#
 <p><div class="codehilite"><pre><span></span>root@fe61560d0cc4:/# export PYTHONPATH=/home
 root@fe61560d0cc4:/# cd /home
 </pre></div>
-As the startPythonEnv is mounting the local <code>itg-tests</code> folder to the <code>/home</code> folder inside the docher container, we can access all the integration tests, and execute them now...</p>
+As the startPythonEnv is mounting the local <code>itg-tests</code> folder to the <code>/home</code> folder inside the docker container, we can access all the integration tests, and execute them ...</p>
 <h2 id="how-to-proof-the-event-sourcing">How to proof the event sourcing</h2>
 <p>The goal of this test is to illustrate the happy path for event sourcing: all events for an order, are persisted in kafka, in the order of arrival, and a consumer with no offset commit, could run and help to answer to the question: <strong>What happened to the orderId 75?</strong></p>
 <p>We want to validate the order events are sequential over time, and it is possible to replay the loading of events from time origin.</p>
@@ -879,24 +852,23 @@ Message delivered to orders <span class="o">[</span><span class="m">0</span><spa
 <li><a href="https://github.com/ibm-cloud-architecture/refarch-kc/blob/master/itg-tests/es-it/EventSourcingTests.py">EventSourcingTests.py</a> uses the event backbone, and the order microservices. </li>
 </ul>
 <p>To run the tests set the KAFKA_BROKERS and KAFKA_APIKEY environment variables</p>
-<h3 id="happy-path-for-the-order-life-cycle">Happy path for the order life cycle</h3>
+<h3 id="happy-path-for-the-order-life-cycle-validating-cqrs">Happy path for the order life cycle: Validating CQRS</h3>
 <p>A classical happy path for a event-driven microservice is to receive a command to do something (could be an API operation (POST a new order)), validate the command, create a new event (OrderCreated) and append it to event log, then update its internal state, and may be run side effect like returning a response to the command initiator, or trigger a call to an external service to initiate a business process or a business task.  </p>
-<p>Once the python image is build you can use the following command to run the first test that create an order, use Kafka consumer to get the different events and query the Order microservices. The code is documented and should be self-explanatory. The order state diagram is <a href="https://ibm-cloud-architecture.github.io/refarch-kc/design/readme/#shipment-order-lifecycle-and-state-change-events">presented here.</a></p>
-<div class="codehilite"><pre><span></span>. ./setenv.sh
-$ docker run -e <span class="nv">KAFKA_BROKERS</span><span class="o">=</span><span class="nv">$KAFKA_BROKERS</span> -v <span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/home --network<span class="o">=</span>docker_default -ti ibmcase/python bash
-root@fe61560d0cc4:/# <span class="nb">cd</span> home/es-it
-root@fe61560d0cc4:/# python EventSourcingTests.py
+<p>We assume the python image was built, so you can use the following command to run the first test that creates an order via HTTP POST on the Order Command microservice (the write model), uses Kafka consumer to get the different events and then use HTTP GET to query the Order query microservices (the read model). The <code>OrdersPython/ValidateOrderCreation.py</code> code is documented and should be self-explanatory. The order state diagram is <a href="https://ibm-cloud-architecture.github.io/refarch-kc/design/readme/#shipment-order-lifecycle-and-state-change-events">presented here.</a></p>
+<div class="codehilite"><pre><span></span>$ <span class="nb">pwd</span>
+itg-tests
+
+$  ./startPythonEnv.sh LOCAL   <span class="o">(</span>or MINIKUBE<span class="o">)</span>
+
+root@fe61560d0cc4:/# <span class="nb">cd</span> home/OrdersPython
+root@fe61560d0cc4:/# python  ValidateOrderCreation.py
 </pre></div>
 
-<p>The implementation uses a set of constructs to poll the <code>orders</code> topic for events and  timing out if not events are there. Also it needs to filter out previous events and events not related to the created order. </p>
-<p><em>The code is deliberatly not optimized. The second test will use a OrderConsumer module to isolate the specific kafka code to consumer orders.</em></p>
-<h3 id="wrong-path">Wrong path</h3>
-<p>One possible bad path, is when the command microservice fail, and needs to recover from failure. In this case it should reload the events from last snapshot up to the time it fails and update its internal states but do not run the side effect. </p>
-<p>To test this path, we create an order and kill the order command service after it generate the first event, while voyage service publishes voyage allocation event.</p>
-<h3 id="first-exception-no-voyage-found">First exception no voyage found</h3>
-<p>If there is no voyage found that matches the source and destination then the order is cancelled. The voyages definition is just a collection of json objects in the <a href="https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/voyages-ms">voyage-ms project</a>.</p>
-<p>The test is <code>CancelledOrderTests.py</code>. It uses the OrderConsumer module.</p>
-<h3 id="use-transaction-to-support-read-process-write-in-one-atomic-operation">Use transaction to support read-process-write in one atomic operation</h3>
+<p>The implementation uses a set of constructs to poll the <code>orders</code> topic for events and  timing out if not events are there.</p>
+<h3 id="failure-on-query-service">Failure on query service</h3>
+<p>One possible bad path, is when the order query microservice fails, and needs to recover from failure. In this case it should reload the events from last commited offset and update its internal states without running any code that could lead to side effect. </p>
+<p>To test this path, we first manual kill the docker container running the order query microservice, then use the same code as above to create an order. The last step of the call fails as the order created event was not processed by the query microservice, the data was not uploaded to its own projection. 
+Restarting the microservice, and going to the URL http://localhost:11080/orders/byManuf/FishFarm, you will see the order is now part of the data of this service.</p>
 <h2 id="how-to-proof-the-saga-pattern">How to proof the SAGA pattern</h2>
 <p>We want to validate the SAGA pattern to support the long-running, cross microservices, order transactions. The diagram is illustrating the use case we want to proof and tests:</p>
 <p><img alt="" src="saga-ctx.png" /></p>
