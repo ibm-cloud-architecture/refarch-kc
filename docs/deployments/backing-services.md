@@ -1,312 +1,239 @@
 # Deployment of backing services for the Event-Driven Architecture Reference Application
 
+**Table of contents:**
+- [Kafka & Event Streams](#kafka-event-streams)
+	- [Using IBM Event Streams, hosted on IBM Cloud](#using-ibm-event-streams-hosted-on-ibm-cloud)
+		- [Service Deployment](#service-deployment-1)
+		- [Event Streams API Key](#event-streams-api-key-1)
+	- [Using IBM Event Streams, deployed on RedHat OpenShift Container Platform](#using-ibm-event-streams-deployed-on-redhat-openshift-container-platform)
+		- [Service Deployment](#service-deployment-2)
+		- [Event Streams API Key](#event-streams-api-key-2)
+	- [Using community-based Kafka Helm charts, deployed locally in-cluster](#using-community-based-kafka-helm-charts-deployed-locally-in-cluster)
+		- [Environment Considerations](#environment-considerations)
+		- [Service Deployment](#service-deployment-3)
+- [Postgresql](#postgresql)
+	- [Using Postgresql, hosted on IBM Cloud](#using-postgresql-hosted-on-ibm-cloud)
+		- [Service Deployment](#service-deployment-4)
+		- [Creating Postgresql credentials as Kubernetes Secrets](#creating-postgresql-credentials-as-kubernetes-secrets-1)
+	- [Using community-based Postgresql Helm charts, deployed locally in-cluster](#using-community-based-postgresql-helm-charts-deployed-locally-in-cluster)
+		- [Service Deployment](#service-deployment-5)
+		- [Creating Postgresql credentials as Kubernetes Secrets](#creating-postgresql-credentials-as-kubernetes-secrets-2)
+		- [Service Debugging & Troubleshooting](#service-debugging-troubleshooting)
+
 ## Kafka & Event Streams
 
 ### Using IBM Event Streams, hosted on IBM Cloud
 
-## Event Streams Service on IBM Cloud
+#### Service Deployment
 
-To provision your service, go to the IBM Cloud Catalog and search for `Event Streams`. It is in the *Integration* category. Create the service and specify a name, a region, and a resource group. Once the service is created you reach the Event Stream Standard Dashboard:
+* To provision your service, go to the IBM Cloud Catalog and search for `Event Streams`. It is in the *Integration* category. Create the service and specify a name, a region, and a resource group. Once the service is created, you are redirected to the Event Stream Standard Dashboard:
 
 ![](IES-dashboard-std.png)
-
-
-We will use a kubernetes secret to define the api key (see detail [in this section](#using-api-keys))
 
 * In the *Manage* panel add the topics needed for the solution. We need at least the following:
 
  ![](./IES-IC-topics.png)
 
-See also [this note](https://ibm-cloud-architecture.github.io/refarch-eda/deployments/eventstreams/es-ibm-cloud/) for the enterprise plan and advanced topic creation.
-
-* In the service credentials create new credentials to get the Kafka broker list, the admim URL and the api_key needed to authenticate the consumers or producers.
+* In the Service Credentials tab, create new credentials to get the Kafka broker list, the admim URL and the api_key needed to authenticate the consumers or producers.
 
  ![](./IES-IC-credentials.png)
 
+#### Event Streams API Key
 
- ### Event stream API key
-
- The Event streams broker API key is needed to connect any deployed consumers or producers within kubernetes cluster to access the service in IBM Cloud. To avoid sharing security keys, we propose to define a kubernetes secret and deploy it to the IKS cluster.
-
- * Define a Event Stream API key secret: to use Event Streams, we need to get the API key and configure a secret under the `browncompute` namespace.
+ The Event Streams Broker API Key is needed to connect any deployed consumers or producers to the service in IBM Cloud. To avoid sharing security keys, create a Kubernetes Secret in the target cluster you will deploy the application microservices to.  This is available from the Service Credentials information you just created above.
 
  ```shell
- kubectl create secret generic eventstreams-apikey --from-literal=binding='<replace with api key>' -n browncompute
+ kubectl create secret generic eventstreams-apikey --from-literal=binding='<replace with api key>' -n <target k8s namespace / ocp project>
+ kubectl describe secrets -n <target k8s namespace / ocp project>
  ```
+---
 
- * Verify the secrets:
+### Using IBM Event Streams, deployed on RedHat OpenShift Container Platform
 
- ```
- kubectl describe secrets -n browncompute
- ```
+#### Service Deployment
 
- This secret is used by all the solution microservices which are using Kafka / Event Streams. The detail of how we use it with environment variables, is described in one of the project [here.](https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/fleet-ms/README.md#run-on-ibm-cloud-with-kubernetes-service)
+The installation is documented in the [product documentation](https://ibm.github.io/event-streams/installing/installing-openshift/) and in our [own note here.](https://ibm-cloud-architecture.github.io/refarch-eda/deployments/eventstreams/)
 
+#### Event Streams API Key
 
-### Using IBM Event Streams, deployed on the IBM Cloud Pak for Integration
-
-#### Installation
-
-The installation is documented in the product documentation **LINK** and in our [own note here.](https://ibm-cloud-architecture.github.io/refarch-eda/deployments/eventstreams/)
-
-#### Configure topics and secrets
-
-To access the console, connect to the ICP console and select the deployment named something like: "*-es-ui-deploy" under the `streams` namespace.
-
-### Topics
-
-You can create the topics using the Event Streams console:
-
-![](es-icp-topics.png)
-
-or the use a set of commands like below, which are done for you in the script: `scripts/createLocalTopicsOnK8S.sh `.
+The Event Streams Broker API Key is needed to connect any deployed consumers or producers to the service running in your cluster. To avoid sharing security keys, create a Kubernetes Secret in the target cluster you will deploy the application microservices to.  You can specify keys at the topic and consumer group levels or use a unique key for all topics and all consumer groups.
 
 ```shell
-# get the name of the Kafka pod
-$ kubectl get pods  -n streams | grep kafka | awk '{print $1;}'
-> rolling-streams-ibm-es-kafka-sts-0
-rolling-streams-ibm-es-kafka-sts-1
-rolling-streams-ibm-es-kafka-sts-2
-# Then get the name of the zookeeper service:
-$ kubectl get svc -n streams | grep zoo | awk '{print $1;}' | head -1
-rolling-streams-ibm-es-zookeeper-fixed-ip-svc-0
-# Then remote exec a shell on one of this broker to configure the topic - for example the "orders" topic
-$ kubectl exec -n streams  -ti rolling-streams-ibm-es-kafka-sts-0   -- bash -c "/opt/kafka/bin/kafka-topics.sh --create  --zookeeper $zooksvc:2181 --replication-factor 1 --partitions 1 --topic orders"
+kubectl create secret generic eventstreams-apikey --from-literal=binding='<replace with api key>' -n <target k8s namespace / ocp project>
+kubectl describe secrets -n <target k8s namespace / ocp project>
 ```
 
-### API Key
-
-Define an API key using the Event Stream Console. You can specify keys at the topic and consumer group levels or use a unique key for all topics and all consumer groups. Once you have the API key, define a `secret` named "eventstreams-apikey" with the command:
-
-```shell
- $ kubectl create secret generic eventstreams-apikey --from-literal=binding='<api-key>' -n greencompute
- $ kubectl describe secrets -n greencompute
-```
-This `eventstreams-apikey` secret will be used in the Helm chart settings and kubernetes deployment descriptor (see [this section](#code-considerations) later in this article).
+---
 
 ### Using community-based Kafka Helm charts, deployed locally in-cluster
 
-Add Bitnami Helm Repository:
+#### Environment Considerations
 
-```
-helm repo add bitnami https://charts.bitnami.com/bitnami
-```
+**TODO** Requirements when deploying to OCP
 
-Be sure to have updated the helm repository with:
+#### Service Deployment
 
-```
-helm repo update
-```
+If you simply want to deploy Kafka using the open source, community-supported Helm Charts, you can do so with the following commands.
 
-## Setting up Kafka and Zookeeper
+1. Add Bitnami Helm Repository:
 
-* Create a namespace.
+ ```shell
+ helm repo add bitnami https://charts.bitnami.com/bitnami
+ ```
 
-```
-  kubectl create namespace greencompute
-```
+2. Update the Helm repository:
 
-* Deploy kafka and zookeeper using bitnami/kafka helm
+ ```shell
+ helm repo update
+ ```
 
-  ```
-  helm install --name kafka --set persistence.enabled=false bitnami/kafka --namespace greencompute
-  ```
+3. Create a Kubernetes Namespace or OpenShift Project.
 
-It will take minutes to get the 2 pods ready.
+ ```shell
+  kubectl create namespace <target namespace>
+ ```
 
-* Create the needed kafka topics
+4. Deploy Kafka and Zookeeper using the `bitnami/kafka` Helm Chart: TODO _Convert to `helm template` and `oc apply` pair_
 
-  ```
-  ./scripts/createMinikubeLocalTopics.sh
+  ```shell
+  helm install --name kafka --set persistence.enabled=false bitnami/kafka --namespace <target namespace>
   ```
 
-  Get the kafka pod name:
+  It will take a few minutes to get the pods ready.
 
-  ```
-  export POD_NAME=$(kubectl get pods --namespace greencompute -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=kafkabitnami,app.kubernetes.io/component=kafka" -o jsonpath="{.items[0].metadata.name}")
-  ```
+---
 
-  Get the list of topics
+## Postgresql
 
-  ```
-  kubectl exec  -ti $POD_NAME  -n greencompute -- kafka-topics.sh --list --zookeeper kafkabitnami-zookeeper:2181
-  ```
-
-## Postgres
+The [Container Manager microservice](https://github.com/ibm-cloud-architecture/refarch-kc-container-ms/) persists the Reefer Container inventory in a Postgresql database.  The deployment of Postgresql is only necessary to support the deployment of the Container Manager microservice.  If you are not deploying the Container Manager microservice, you do not need to deploy and configure a Postgresql service and database.
 
 ### Using Postgresql, hosted on IBM Cloud
 
-[postgresql](https://cloud.ibm.com/catalog/services/databases-for-postgresql)
+#### Service Deployment
 
-## The postgresql service
+ To install the service, follow the [product documentation here](https://cloud.ibm.com/catalog/services/databases-for-postgresql).
 
-The container manager microservice persists the Reefer container inventory in postgresql. To install the service follow the [product documentation here](https://cloud.ibm.com/catalog/services/databases-for-postgresql).
+ Once the service is deployed, you need to create some service credentials and retreive the following values for the different configurations:
 
-> If you do not plan to use this container manager service you do not need to create a Postgresql service.
+ * `postgres.username`
+ * `postgres.password`
+ * `postgres.composed`, which will need to be mapped to a JDBC URL in the format of `jdbc:postgresql://<hostname>:<port>/<database-name>?sslmode=verify-full&sslfactory=org.postgresql.ssl.NonValidatingFactory` _(this will remove the `username` and `password` values from the default `composed` string)_
 
-When the service is configured, you need to create some credentials and retreive the following values for the different configurations:
-
-* postgres.username
-* postgres.password
-* postgres.composed which will be map to a JDBC URL.
-
-![](postgres-credentials.png)
+ ![](postgres-credentials.png)
 
 
-#### Getting the certs for IBM CLoud PostgreSQL
+#### Creating Postgresql credentials as Kubernetes Secrets
 
-!!! warning
-    If you run with postgresql running locally, you have nothing to do.
+* Applying the same approach as above, copy the Postgresql URL as defined in the Postegresql service credential and execute the following command:
 
-If you run the container microservice connected to Postgresql running on IBM Cloud, you need to get the SSL certificate. To do so perform the following commands:
+ ```shell
+ kubectl create secret generic postgresql-url --from-literal=binding='<replace with postgresql-url>' -n <target k8s namespace / ocp project>
+ ```
 
-* From the IBM Cloud Console get the name of your postgresql service
-  For example the name we have is: Green-DB-PostgreSQL
-* Then get the certificates
+* For the user:
 
-```
-ibmcloud cdb deployment-cacert <your-PostgreSQL-service-name> > postgresql.crt
-# if you do not have the cloud database plugin does the following and rerun previous command:
-ibmcloud plugin install cloud-databases
-```
+ ```shell
+ kubectl create secret generic postgresql-user --from-literal=binding='ibm_cloud_c...' -n <target k8s namespace / ocp project>
+ ```
 
-* Transform the certificate format
+* For the user password:
 
-```
-openssl x509 -in postgressql.crt -out postgressql.crt.der -outform der
-```
+ ```shell
+ kubectl create secret generic postgresql-pwd --from-literal=binding='<password from the service credential>.' -n <target k8s namespace / ocp project>
+ ```
 
-* Save it in Java keystore
+* For the SSL certificate:
+  * _When running Postgresql through the IBM Cloud service, additional certificates are required to communicate securely._
+  * Install the IBM Cloud Database CLI Plugin:
+   ```shell
+   ibmcloud plugin install cloud-databases
+   ```
+  * Get the certificate using the name of the postgresql service:
+  ```shell
+  ibmcloud cdb deployment-cacert $IC_POSTGRES_SERV > postgresql.crt
+  ```
+  * Then add it into an environment variable
+  ```shell
+  export POSTGRESQL_CA_PEM="$(cat ./postgresql.crt)"
+  ```
+  * Then define a secret:
+  ```shell
+  kubectl create secret generic postgresql-ca-pem --from-literal=binding="$POSTGRESQL_CA_PEM" -n browncompute
+  ```
 
-```
-keytool -keystore clienttruststore -alias postgresql -import -file postgressql.crt.der -storepass changeit
-```
-
-* Create required secrets.
-
-```
-kubectl create secret generic postgresql-url --from-literal=binding='jdbc:postgresql://postgre-db-postgresql:5432/postgres' -n greencompute
-
-kubectl create secret generic postgresql-user --from-literal=binding='postgres' -n greencompute
-
-kubectl create secret generic postgresql-pwd --from-literal=binding='supersecret' -n greencompute
-```
-
-
-### Postgresql URL, User, PWD and CA certificate as secrets
-
-Applying the same approach as above, copy the Postgresql URL as defined in the Postegresql service credential and execute the following command:
-```
-kubectl create secret generic postgresql-url --from-literal=binding='<replace with postgresql-url>' -n browncompute
-```
-
-For the user:
-
-```
-kubectl create secret generic postgresql-user --from-literal=binding='ibm_cloud_c...' -n browncompute
-```
-
-For the user password:
-
-```
-kubectl create secret generic postgresql-pwd --from-literal=binding='<password from the service credential>.' -n browncompute
-```
-
-For the SSL certificate:
-
-* Get the certificate using the name of the postgresql service:
-
-```
-ibmcloud cdb deployment-cacert $IC_POSTGRES_SERV > postgresql.crt
-```
-
-* Then add it into an environment variable
-
-```
-export POSTGRESQL_CA_PEM="$(cat ./postgresql.crt)"
-```
-
-* Then define a secret:
-
-```
-kubectl
-create secret generic postgresql-ca-pem --from-literal=binding="$POSTGRESQL_CA_PEM" -n browncompute
-```
-
-Now those variables and secrets are used in the deployment.yml file of the service that needs them. Like the Springboot container microservice. Here is an example of such settings:
-
-```yaml
-- name: POSTGRESQL_CA_PEM
-  valueFrom:
-    secretKeyRef:
-      name: postgresql-ca-pem
-      key: binding
-- name: POSTGRESQL_USER
-  valueFrom:
-    secretKeyRef:
-      name: postgresql-user
-      key: binding
-- name: POSTGRESQL_PWD
-  valueFrom:
-    secretKeyRef:
-      name: postgresql-pwd
-      key: binding
-```
-
-
-
+---
 
 ### Using community-based Postgresql Helm charts, deployed locally in-cluster
 
-## Pre-requisites
+If you simply want to deploy Postgresql using the open source, community-supported Helm Charts, you can do so with the following commands.
 
-See the common pre-requisites from [this note](../pre-requisites.md).
+#### Service Deployment
 
+1. Add Bitnami Helm Repository:
 
-Add Bitnami Helm Repository:
+ ```shell
+ helm repo add bitnami https://charts.bitnami.com/bitnami
+ ```
+
+2. Update the Helm repository:
+
+ ```shell
+ helm repo update
+ ```
+
+3. Create a Kubernetes Namespace or OpenShift Project (if not already created).
+
+ ```shell
+ kubectl create namespace <target namespace>
+ ```
+4. Deploy Postgresql using the `bitnami/kafka` Helm Chart: **TODO** _Convert to `helm template` and `oc apply` pair_
+
+ ```shell
+ helm install --name postgre-db --set postgresqlPassword=supersecret \
+ --set persistence.enabled=false stable/postgresql --namespace <target namespace>
+ ```
+
+  It will take a few minutes to get the pods ready.
+
+#### Creating Postgresql credentials as Kubernetes Secrets
+
+**TODO** _Validate credentials for Helm-based Postgresql deployment_
+
+* Applying the same approach as above, copy the Postgresql URL as defined in the Postegresql service credential and execute the following command:
+
+ ```shell
+ kubectl create secret generic postgresql-url --from-literal=binding='<replace with postgresql-url>' -n <target k8s namespace / ocp project>
+ ```
+
+* For the user:
+
+ ```shell
+ kubectl create secret generic postgresql-user --from-literal=binding='ibm_cloud_c...' -n <target k8s namespace / ocp project>
+ ```
+
+* For the user password:
+
+ ```shell
+ kubectl create secret generic postgresql-pwd --from-literal=binding='<password from the service credential>.' -n <target k8s namespace / ocp project>
+ ```
+
+#### Service Debugging & Troubleshooting
+
+Access to the in-container password can be made using the following command.  This should be the same value you passed in when you deployed the service.
 
 ```
-helm repo add bitnami https://charts.bitnami.com/bitnami
+export POSTGRES_PASSWORD=$(kubectl get secret --namespace  <target namespace> postgre-db-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
 ```
 
-Be sure to have updated the helm repository with:
+And then use the `psql` command line interface to interact with postgresql. For that, we use a Docker image as a client to the Postgresql server:
 
 ```
-helm repo update
+kubectl run postgre-db-postgresql-client --rm --tty -i --restart='Never' --namespace <target namespace> --image bitnami/postgresql:11.3.0-debian-9-r38 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- psql --host postgre-db-postgresql -U postgres -p 5432
 ```
 
-### Deploy postgresql using Helm
-
-!!! warning
-    Deploy postgresql only if you plan to use the container-ms service.
+To connect to your database from outside the cluster execute the following commands:
 
 ```
-helm install --name postgre-db \
-  --set postgresqlPassword=supersecret \
-  --set persistence.enabled=false \
-    stable/postgresql --namespace greencompute
-```
-
-Once the pod is running access to the password using
-
-```
-export POSTGRES_PASSWORD=$(kubectl get secret --namespace greencompute postgre-db-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
-```
-
-And then use the `psql` command line interface to interact with postgresql. For that we are using a docker image as client to the postgresql server running in Minikube:
-
-```
-kubectl run postgre-db-postgresql-client --rm --tty -i --restart='Never' --namespace greencompute --image docker.io/bitnami/postgresql:11.3.0-debian-9-r38 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- psql --host postgre-db-postgresql -U postgres -p 5432
-```
-
-The two above commands are defined in the bash script named `scripts/startPsql.sh`.
-
-!!! note
-    `psql` will be use to verify tests execution
-
-Also to connect to your database from outside the cluster execute the following commands:
-
-```
-    kubectl port-forward --namespace greencompute svc/postgre-db-postgresql 5432:5432 &
+    kubectl port-forward --namespace <target namespace> svc/postgre-db-postgresql 5432:5432 &&\
     PGPASSWORD="$POSTGRES_PASSWORD" psql --host 127.0.0.1 -U postgres -p 5432
 ```
