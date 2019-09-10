@@ -18,7 +18,6 @@ nav:
     - Application Components: ./deployments/application-components.md
     - Perform the pre-requisites: pre-requisites.md
     - Run locally with Docker Compose: ./deployments/local.md
-    - Run the complete solution in Minikube: ./deployments/minikube.md
     - Run on IBM Cloud Kubernetes Services: ./deployments/iks.md
     - Run on IBM Cloud Private: ./deployments/icp.md
     - Example of ci/cd: https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/cicd

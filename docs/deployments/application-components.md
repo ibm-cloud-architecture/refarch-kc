@@ -1,9 +1,10 @@
-# Deployment of application components for the Event-Driven Architecture Reference Application
+Deployment of application microservices for the Event-Driven Architecture Reference Application
 
+# Environment prerequisites
 
-## Environment prerequisites
+## Kafka Topic Creation
 
-### Kafka Topic Creation TODO
+**TODO** Kafka Topic Creation
 
 You can create the topics using the Event Streams console:
 
@@ -25,10 +26,9 @@ rolling-streams-ibm-es-zookeeper-fixed-ip-svc-0
 $ kubectl exec -n ${NAMESPACE} -ti rolling-streams-ibm-es-kafka-sts-0 -- bash -c "/opt/kafka/bin/kafka-topics.sh --create  --zookeeper $zooksvc:2181 --replication-factor 1 --partitions 1 --topic orders"
 ```
 
+## Docker registries
 
-### Docker registries
-
-#### IBM Cloud Container Registry
+**IBM Cloud Container Registry**
 
 * Install IBM Cloud Container Registry CLI plug-in, using the command:
 ```
@@ -41,7 +41,7 @@ The following diagram illustrates the command lines interface and how they inter
 
 Each helm chart to deploy each component of the solution uses the private repository like: `us.icr.io/ibmcaseeda/`. As it is recommended to use your own private image repository, we are presenting a quick summary of what to do to define your own private registry in the next section.
 
-## Define an image private repository
+**Define an image private repository**
 
 Use the [docker container image private registry](https://cloud.ibm.com/containers-kubernetes/catalog/registry) to push your images and then deploy them to IBM Kubernetes Service. When deploying enterprise application it is strongly recommended to use private registry to protect your images from being used and changed by unauthorized users. Private registries must be set up by the cluster administrator to ensure that the credentials to access the private registry are available to the cluster users.
 
@@ -70,8 +70,7 @@ To see the images in your private registry you can use the user interface at [ht
 ibmcloud cr image-list
 ```
 
-
-### Private Registry Token
+**Private Registry Token**
 
 Each helm chart specifies the name of the docker image to load to create the containers / pods. The image name is from a private repository. To let kubernetes scheduler being able to access the registry, we need to define a secret to hold the security token. Here is an extract of a deployment yaml file referencing the `browncompute-registry-secret` secret.
 
@@ -141,9 +140,9 @@ Now for each microservice as part of the solution, we have defined helm chart an
 This step is done one time only.
 See also the product documentation [for more detail.](https://console.bluemix.net/docs/containers/cs_dedicated_tokens.html)
 
-### Basic Kubernetes
+## Basic Kubernetes
 
-### IBM Cloud Kubernetes Service
+## IBM Cloud Kubernetes Service
 
 To create the cluster follow [this tutorial](https://console.bluemix.net/docs/containers/cs_tutorials.html#cs_cluster_tutorial).
 
@@ -153,9 +152,11 @@ To create the cluster follow [this tutorial](https://console.bluemix.net/docs/co
 ibmcloud plugin install container-service -r Bluemix
 ```
 
-### OpenShift Container Platform 3.11
+## OpenShift Container Platform 3.11
 
-### OpenShift Container Platform 4+
+## OpenShift Container Platform 4.X
+
+# Deploy application microservices
 
 ## Deploy Order Command microservice
 
@@ -219,15 +220,13 @@ curl http://localhost:31100/orders
 
 ## Deploy Container microservice
 
-### Deploy the Container management microservice with Helm
-
 The container microservice manage the Reefer container inventory and listen to order created event to assign a container to an order.
 
 !!! warning
     There are multiple different implementations of this service. This note is for the Springboot / Postgresql / Kafka implementation.
 
 
-### Build and deploy the container manager microservice
+**Build and deploy the container manager microservice**
 
 * Go to the repo
 
@@ -308,7 +307,7 @@ helm install chart/voyagesms/ --name voyages --set image.repository=ibmcase/kc-v
 curl http://localhost:31000/voyage
 ```
 
-### Deploy the Fleet simulator with Helm
+## Deploy the Fleet Simulator microservice
 
 !!! note
     The fleet simulator is to move vessels from one harbors to another, and send container metrics while the containers are on a vessel. It has some predefined simulation to trigger some events.
@@ -343,10 +342,6 @@ curl http://localhost:31300/fleetms/fleets
 
 TBD
 
-## Universal deployment considerations
-
-## Common deployment configuration
-
-The repository name will be different if we deploy on IKS and ICP, also on IKs there is a password and api to access the registry that are persisted in a k8s secret.
+# Universal deployment considerations
 
 When deploying kafka consumer it is important to assess the horizontal pod autoscaler settings and needs, as adding consumers will not address scalability if the number of partitions in the topic(s) to consume does not match the increase of consumers. So disable HPA by default. If you want to use HPA you also need to ensure that a metrics-server is running, then set the number of partition, and the `hpa.maxReplicas` to the number of partitions.
