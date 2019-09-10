@@ -3,6 +3,29 @@
 
 ## Environment prerequisites
 
+### Kafka Topic Creation TODO
+
+You can create the topics using the Event Streams console:
+
+![](es-icp-topics.png)
+
+or the use a set of commands like below, which are done for you in the script: `scripts/createLocalTopicsOnK8S.sh `.
+
+```shell
+# get the name of the Kafka pod
+$ export NAMESPACE=<target k8s namespace / ocp project>
+$ kubectl get pods  -n ${NAMESPACE} | grep kafka | awk '{print $1;}'
+> rolling-streams-ibm-es-kafka-sts-0
+rolling-streams-ibm-es-kafka-sts-1
+rolling-streams-ibm-es-kafka-sts-2
+# Then get the name of the zookeeper service:
+$ kubectl get svc -n ${NAMESPACE} | grep zoo | awk '{print $1;}' | head -1
+rolling-streams-ibm-es-zookeeper-fixed-ip-svc-0
+# Then remote exec a shell on one of this broker to configure the topic - for example the "orders" topic
+$ kubectl exec -n ${NAMESPACE} -ti rolling-streams-ibm-es-kafka-sts-0 -- bash -c "/opt/kafka/bin/kafka-topics.sh --create  --zookeeper $zooksvc:2181 --replication-factor 1 --partitions 1 --topic orders"
+```
+
+
 ### Docker registries
 
 #### IBM Cloud Container Registry
