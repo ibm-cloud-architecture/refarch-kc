@@ -20,7 +20,12 @@ Deployment of backing services for the Event-Driven Architecture Reference Appli
 
 **Event Streams Kafka Brokers**
 
-TODO TBD ConfigMap
+Regardless of specific deployment targets (OCP, IKS, k8s), the following prerequisite Kubernetes ConfigMap needs to be created to support the deployments of the application's microservices.  These artifacts need to be created once per unique deployment of the entire application and can be shared between application components in the same overall application deployment.  These values can be acquired from the `kafka_brokers_sasl` section of the service instance's Service Credentials.
+
+```shell
+kubectl create configmap kafka-brokers --from-literal=brokers='<replace with comma-separated list of brokers>' -n <target k8s namespace / ocp project>
+kubectl describe configmap kafka-brokers -n <target k8s namespace / ocp project>
+```
 
 **Event Streams API Key**
 
@@ -28,7 +33,7 @@ The Event Streams Broker API Key is needed to connect any deployed consumers or 
 
 ```shell
 kubectl create secret generic eventstreams-apikey --from-literal=binding='<replace with api key>' -n <target k8s namespace / ocp project>
-kubectl describe secrets -n <target k8s namespace / ocp project>
+kubectl describe secret eventstreams-apikey -n <target k8s namespace / ocp project>
 ```
 
 ---
@@ -41,7 +46,12 @@ The installation is documented in the [product documentation](https://ibm.github
 
 **Event Streams Kafka Brokers**
 
-TODO TBD ConfigMap
+Regardless of specific deployment targets (OCP, IKS, k8s), the following prerequisite Kubernetes ConfigMap needs to be created to support the deployments of the application's microservices.  These artifacts need to be created once per unique deployment of the entire application and can be shared between application components in the same overall application deployment.
+
+```shell
+kubectl create configmap kafka-brokers --from-literal=brokers='<replace with comma-separated list of brokers>' -n <target k8s namespace / ocp project>
+kubectl describe configmap kafka-brokers -n <target k8s namespace / ocp project>
+```
 
 **Event Streams API Key**
 
@@ -77,15 +87,22 @@ helm repo update
 kubectl create namespace <target namespace>
 ```
 4. Deploy Kafka and Zookeeper using the `bitnami/kafka` Helm Chart:
-    1. **TODO** _Convert to `helm template` and `oc apply` pair_
 ```shell
-helm install --name kafka --set persistence.enabled=false bitnami/kafka --namespace <target namespace>
+mkdir bitnami
+helm fetch --untar --untardir bitnami 'bitnami/kafka'
+helm template --name kafka --set persistence.enabled=false bitnami/kafka --namespace <target namespace> --output-dir bitnami
+(kubectl/oc) apply -f bitnami/kafka/templates
 ```
 It will take a few minutes to get the pods ready.
 
 **Kafka Brokers**
 
-  TODO TBD ConfigMap
+Regardless of specific deployment targets (OCP, IKS, k8s), the following prerequisite Kubernetes ConfigMap needs to be created to support the deployments of the application's microservices.  These artifacts need to be created once per unique deployment of the entire application and can be shared between application components in the same overall application deployment.
+
+```shell
+kubectl create configmap kafka-brokers --from-literal=brokers='<replace with comma-separated list of brokers>' -n <target k8s namespace / ocp project>
+kubectl describe configmap kafka-brokers -n <target k8s namespace / ocp project>
+```
 
 ---
 
@@ -106,7 +123,6 @@ The [Container Manager microservice](https://github.com/ibm-cloud-architecture/r
  * `postgres.composed`, which will need to be mapped to a JDBC URL in the format of `jdbc:postgresql://<hostname>:<port>/<database-name>?sslmode=verify-full&sslfactory=org.postgresql.ssl.NonValidatingFactory` _(this will remove the `username` and `password` values from the default `composed` string)_
 
  ![](postgres-credentials.png)
-
 
 **Creating Postgresql credentials as Kubernetes Secrets**
 
@@ -169,11 +185,13 @@ helm repo update
 ```shell
 kubectl create namespace <target namespace>
 ```
-4. Deploy Postgresql using the `bitnami/kafka` Helm Chart:
-    1. **TODO** _Convert to `helm template` and `oc apply` pair_
+4. Deploy Postgresql using the `bitnami/postgresql` Helm Chart:
 ```shell
-helm install --name postgre-db --set postgresqlPassword=supersecret \
---set persistence.enabled=false stable/postgresql --namespace <target namespace>
+mkdir bitnami
+helm fetch --untar --untardir bitnami bitnami/postgresql
+helm template --name postgre-db --set postgresqlPassword=supersecret \
+--set persistence.enabled=false bitnami/postgresql --namespace <target namespace> --output-dir bitnami
+(kubectl/oc) apply -f bitnami/postgresql/templates
 ```
   It will take a few minutes to get the pods ready.
 

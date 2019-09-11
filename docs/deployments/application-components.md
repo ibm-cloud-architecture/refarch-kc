@@ -28,35 +28,23 @@ $ kubectl exec -n ${NAMESPACE} -ti rolling-streams-ibm-es-kafka-sts-0 -- bash -c
 
 ## Docker registries
 
-**IBM Cloud Container Registry**
+You will need a Docker image registry to push and pull your images to and from.  There are multiple options depending on client use cases and we are only documenting a subset of potential solutions, including but not limited to IBM Cloud Container Registry, Docker Hub, Quay, etc.
 
-* Install IBM Cloud Container Registry CLI plug-in, using the command:
+### IBM Cloud Container Registry
+
+* Install IBM Cloud Container Registry CLI plug-in if needed:
 ```
 ibmcloud plugin install container-registry -r Bluemix
 ```
 
-The following diagram illustrates the command lines interface and how they interact with IBM Cloud components:
+**Define a private image repository**
 
-![](ic-cli-comp.png)
+Use the [IBM Cloud Container Registry](https://cloud.ibm.com/containers-kubernetes/catalog/registry) to push your images and then deploy them to any Kubernetes cluster with access to the public internet.  When deploying enterprise applications, it is strongly recommended to use private registry to protect your images from being used and changed by unauthorized users. Private registries must be set up by the cluster administrator to ensure that the credentials to access the private registry are available to the cluster users.
 
-Each helm chart to deploy each component of the solution uses the private repository like: `us.icr.io/ibmcaseeda/`. As it is recommended to use your own private image repository, we are presenting a quick summary of what to do to define your own private registry in the next section.
-
-**Define an image private repository**
-
-Use the [docker container image private registry](https://cloud.ibm.com/containers-kubernetes/catalog/registry) to push your images and then deploy them to IBM Kubernetes Service. When deploying enterprise application it is strongly recommended to use private registry to protect your images from being used and changed by unauthorized users. Private registries must be set up by the cluster administrator to ensure that the credentials to access the private registry are available to the cluster users.
-
-In the IBM Cloud Catalog, use the `Containers` category and `Container Registry` tile. Create the repository with the `create` button. You can share a repository between multi IKS clusters within the same region.
-
-Once you access your registry, create a namespace for your solution. We used `ibmcaseeda` name.
-
-*The namespace can also be created with the command:
-
-```
+* Create a namespace inside your Container Registry for use here:
+```shell
 ibmcloud cr namespace-add ibmcaseeda
 ```
-Here is a screen shot of the created image repository:
-
-![](iks-registry-ns.png)
 
 We will use this namespace when tagging the docker images for our microservices. Here is an example of tagging:
 
@@ -72,33 +60,23 @@ ibmcloud cr image-list
 
 **Private Registry Token**
 
-Each helm chart specifies the name of the docker image to load to create the containers / pods. The image name is from a private repository. To let kubernetes scheduler being able to access the registry, we need to define a secret to hold the security token. Here is an extract of a deployment yaml file referencing the `browncompute-registry-secret` secret.
-
-```yaml
-spec:
-      imagePullSecrets:
-        - name: browncompute-registry-secret
-      containers:
-      - name: "kc-ui"
-        image: "us.icr.io/ibmcaseeda/kc-ui:latest"
-        imagePullPolicy: Always
-```
+Each Helm Chart specifies the name of the Docker image to load the containers & pods. To enable access from Kubernetes Nodes to your private registry, an image pull secret is required and will be stored in a Kubernetes secret.  If you are using public Docker Hub image repositories, an image pull secret is not required.
 
 *Using secret is also mandatory when registry and clusters are not in the same region.*
 
-* Verify current secrets for a give namespace
+* Verify current secrets for a given namespace:
 
 ```shell
-kubectl describe secrets -n browncompute
+kubectl describe secrets -n <target namespace>
 ```
 
-* Get a security token: you can use permanent or renewable one:
+* Get a security token: _(these can be `permanent` or `renewable`)_
 
 ```shell
-ibmcloud cr token-add --description "private registry secret for browncompute" --non-expiring -q
+ibmcloud cr token-add --description "private registry secret for <target namespace>" --non-expiring -q
 ```
 
-* To list the token use the command
+* To list the available tokens:
 
 ```shell
 ibmcloud cr tokens
@@ -108,7 +86,7 @@ The result:
  2b5ff00e-a..  true       0       token for somebody
  3dbf72eb-6..  true       0       private registry secret for browncompute
 
-* To get the token for a given token identifier
+* Get the token for a given token identifier:
 
 ```shell
 ibmcloud cr token-get cce5a800-...
@@ -117,14 +95,14 @@ ibmcloud cr token-get cce5a800-...
 * Define the secret to store the Event stream API key token information:
 
 ```shell
-kubectl --namespace browncompute create secret docker-registry
-browncompute-registry-secret  --docker-server=<registry_url> --docker-username=token --docker-password=<token_value> --docker-email=<docker_email>
+kubectl --namespace <target namespace> create secret docker-registry
+<target namespace>-registry-secret  --docker-server=<registry_url> --docker-username=token --docker-password=<token_value> --docker-email=<docker_email>
 ```
 
 * Verify the secret
 
 ```shell
-kubectl get secrets -n browncompute
+kubectl get secrets -n <target namespace>
 ```
 
 You will see something like below.
@@ -135,10 +113,6 @@ You will see something like below.
 | default-token-ggwl2  |  kubernetes.io/service-account-token  | 3  |   41m  |
 | eventstreams-apikey  |  Opaque   |      1   | 24m  |
 
-Now for each microservice as part of the solution, we have defined helm chart and a script (deployHelm) to deploy to IKS.
-
-This step is done one time only.
-See also the product documentation [for more detail.](https://console.bluemix.net/docs/containers/cs_dedicated_tokens.html)
 
 ## Basic Kubernetes
 
@@ -146,77 +120,141 @@ See also the product documentation [for more detail.](https://console.bluemix.ne
 
 To create the cluster follow [this tutorial](https://console.bluemix.net/docs/containers/cs_tutorials.html#cs_cluster_tutorial).
 
-* IBM Cloud Kubernetes Service [plug-in](https://cloud.ibm.com/docs/cli/reference/ibmcloud/extend_cli.html#plug-ins) using the following command:
-
-```
-ibmcloud plugin install container-service -r Bluemix
-```
-
 ## OpenShift Container Platform 3.11
+
+This needs to be done once per unique deployment of the entire application.
+
+1. If desired, create a non-default Service Account for usage of deploying and running the K Container reference implementation.  This will become more important in future iterations, so it's best to start small:
+  - Command: `oc create serviceaccount -n <target-namespace> kcontainer-runtime`
+  - Example: `oc create serviceaccount -n eda-refarch kcontainer-runtime`
+2. The target Service Account needs to be allowed to run containers as `anyuid` for the time being:
+  - Command: `oc adm policy add-scc-to-user anyuid -z <service-account-name> -n <target-namespace>`
+  - Example: `oc adm policy add-scc-to-user anyuid -z kcontainer-runtime -n eda-refarch`
+  - NOTE: This requires `cluster-admin` level privileges.
 
 ## OpenShift Container Platform 4.X
 
 # Deploy application microservices
 
-## Deploy Order Command microservice
+## Using the master repository
+You can download the necessary application microservice repsoitories using scripts provided in the master repository:
 
-!!! note
-    Order command microservice implements the Command part of the CQRS pattern. It is done in Java and use Kafka API.
+```shell
+git clone https://github.com/ibm-cloud-architecture/refarch-kc.git
+cd refarch-kc
+./scripts/clone.sh
+```
+
+## Deploy Order Command microservice
 
 * Go to the repo
 
-```
-$ cd refarch-kc-order-ms/order-command-ms
+```shell
+cd refarch-kc-order-ms/order-command-ms
 ```
 
 * Build the image
 
-```
-$ ./scripts/buildDocker.sh MINIKUBE
-```
-
-* Deploy on minikube
-
-```
-helm install chart/ordercommandms/ --name ordercmd --set image.repository=ibmcase/kc-ordercommandms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
+```shell
+docker build -t order-command-ms:latest -f Dockerfile.NoKubernetesPlugin
 ```
 
-* Verify service runs
+* Tag the image
+
+```shell
+docker tag order-command-ms <private-registry>/<image-namespace>/order-command-ms:latest
+```
+
+* Push the image
+
+```shell
+docker login <private-registry>
+docker push <private-registry>/<image-namespace>/order-command-ms:latest
+```
+
+* Generate application YAMLs via `helm template` with the following parameters:
+  - `--set image.repository=<private-registry>/<image-namespace>/<image-repository>`
+  - `--set image.tag=latest`
+  - `--set image.pullSecret=<private-registry-pullsecret>` (optional or set to blank)
+  - `--set image.pullPolicy=Always`
+  - `--set eventstreams.env=ICP`
+  - `--set eventstreams.brokersConfigMap=<kafka brokers ConfigMap name>`
+  - `--set serviceAccountName=<service-account-name>`
+  - `--namespace <target-namespace>`
+  - `--output-dir <local-template-directory>`
+
+```shell
+# Example paramters
+helm template --set image.repository=rhos-quay.internal-network.local/browncompute/order-command-ms --set image.tag=latest --set image.pullSecret= --set image.pullPolicy=Always --set eventstreams.env=ICP --set eventstreams.brokersConfigMap=kafka-brokers --set serviceAccountName=kcontainer-runtime --output-dir templ --namespace eda-refarch chart/ordercommandms/
+```
+
+* Deploy application using `kubectl/oc apply`:
+```shell
+(kubectl/oc) apply -f templates/ordercommandms/templates`
+```
+
+* Verify default service is running correctly:
 
 Without any previously tests done, the call below should return an empty array: `[]`
-```
-curl http://localhost:31200/orders
+```shell
+curl http://<cluster endpoints>:31200/orders
 ```
 
 ## Deploy Order Query microservice
 
-!!! note
-    Order command microservice implements the Query part of the CQRS pattern. It is done in Java and use Kafka API.
-
 * Go to the repo
 
-```
-$ cd refarch-kc-order-ms/order-query-ms
+```shell
+cd refarch-kc-order-ms/order-query-ms
 ```
 
 * Build the image
 
-```
-$ ./scripts/buildDocker.sh MINIKUBE
-```
-
-* Deploy on minikube
-
-```
-helm install chart/orderqueryms/ --name orderquery --set image.repository=ibmcase/kc-orderqueryms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
+```shell
+docker build -t order-query-ms:latest -f Dockerfile.NoKubernetesPlugin
 ```
 
-* Verify service runs
+* Tag the image
 
-At the beginning the call below should return an empty array: `[]`
+```shell
+docker tag order-query-ms <private-registry>/<image-namespace>/order-query-ms:latest
 ```
-curl http://localhost:31100/orders
+
+* Push the image
+
+```shell
+docker login <private-registry>
+docker push <private-registry>/<image-namespace>/order-query-ms:latest
 ```
+
+* Generate application YAMLs via `helm template` with the following parameters:
+  - `--set image.repository=<private-registry>/<image-namespace>/<image-repository>`
+  - `--set image.tag=latest`
+  - `--set image.pullSecret=<private-registry-pullsecret>` (optional or set to blank)
+  - `--set image.pullPolicy=Always`
+  - `--set eventstreams.env=ICP`
+  - `--set eventstreams.brokersConfigMap=<kafka brokers ConfigMap name>`
+  - `--set serviceAccountName=<service-account-name>`
+  - `--namespace <target-namespace>`
+  - `--output-dir <local-template-directory>`
+
+```shell
+# Example paramters
+helm template --set image.repository=rhos-quay.internal-network.local/browncompute/order-query-ms --set image.tag=latest --set image.pullSecret= --set image.pullPolicy=Always --set eventstreams.env=ICP --set eventstreams.brokersConfigMap=kafka-brokers --set serviceAccountName=kcontainer-runtime --output-dir templ --namespace eda-refarch chart/orderqueryms/
+```
+
+* Deploy application using `kubectl/oc apply`:
+```shell
+(kubectl/oc) apply -f templates/orderqueryms/templates`
+```
+
+* Verify default service is running correctly:
+
+Without any previously tests done, the call below should return an empty array: `[]`
+```shell
+curl http://<cluster endpoints>:31100/orders
+```
+
 
 ## Deploy Container microservice
 
