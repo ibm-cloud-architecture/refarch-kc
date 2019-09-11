@@ -184,7 +184,7 @@ docker push <private-registry>/<image-namespace>/order-command-ms:latest
   - `--output-dir <local-template-directory>`
 
 ```shell
-# Example paramters
+# Example parameters
 helm template --set image.repository=rhos-quay.internal-network.local/browncompute/order-command-ms --set image.tag=latest --set image.pullSecret= --set image.pullPolicy=Always --set eventstreams.env=ICP --set eventstreams.brokersConfigMap=kafka-brokers --set serviceAccountName=kcontainer-runtime --output-dir templ --namespace eda-refarch chart/ordercommandms/
 ```
 
@@ -239,7 +239,7 @@ docker push <private-registry>/<image-namespace>/order-query-ms:latest
   - `--output-dir <local-template-directory>`
 
 ```shell
-# Example paramters
+# Example parameters
 helm template --set image.repository=rhos-quay.internal-network.local/browncompute/order-query-ms --set image.tag=latest --set image.pullSecret= --set image.pullPolicy=Always --set eventstreams.env=ICP --set eventstreams.brokersConfigMap=kafka-brokers --set serviceAccountName=kcontainer-runtime --output-dir templ --namespace eda-refarch chart/orderqueryms/
 ```
 
@@ -255,45 +255,119 @@ Without any previously tests done, the call below should return an empty array: 
 curl http://<cluster endpoints>:31100/orders
 ```
 
-
 ## Deploy Container microservice
 
-The container microservice manage the Reefer container inventory and listen to order created event to assign a container to an order.
-
-!!! warning
-    There are multiple different implementations of this service. This note is for the Springboot / Postgresql / Kafka implementation.
-
-
-**Build and deploy the container manager microservice**
+**TODO Container Microservice requires POSTGRES parameters**
 
 * Go to the repo
 
-```
+```shell
 cd refarch-kc-container-ms/SpringContainerMS
 ```
 
 * Build the image
 
-```
-$ ./scripts/buildDocker.sh MINIKUBE
-```
-
-* Deploy on minikube
-
-```
-helm install chart/springcontainerms/ --name containerms --set image.repository=ibmcase/kc-springcontainerms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
+```shell
+docker build -t kc-spring-container-ms:latest -f Dockerfile.NoKubernetesPlugin
 ```
 
-* Verify the deployed service:
+* Tag the image
 
-```
-curl http://localhost:30626/containers
+```shell
+docker tag kc-spring-container-ms <private-registry>/<image-namespace>/kc-spring-container-ms:latest
 ```
 
+* Push the image
+
+```shell
+docker login <private-registry>
+docker push <private-registry>/<image-namespace>/kc-spring-container-ms:latest
+```
+
+* Generate application YAMLs via `helm template` with the following parameters:
+  - `--set image.repository=<private-registry>/<image-namespace>/<image-repository>`
+  - `--set image.tag=latest`
+  - `--set image.pullSecret=<private-registry-pullsecret>` (optional or set to blank)
+  - `--set image.pullPolicy=Always`
+  - `--set eventstreams.env=ICP`
+  - `--set eventstreams.brokersConfigMap=<kafka brokers ConfigMap name>`
+  - `--set serviceAccountName=<service-account-name>`
+  - `--namespace <target-namespace>`
+  - `--output-dir <local-template-directory>`
+
+```shell
+# Example parameters
+helm template --set image.repository=rhos-quay.internal-network.local/browncompute/kc-spring-container-ms --set image.tag=latest --set image.pullSecret= --set image.pullPolicy=Always --set eventstreams.env=ICP --set eventstreams.brokersConfigMap=kafka-brokers --set serviceAccountName=kcontainer-runtime --output-dir templ --namespace eda-refarch chart/springcontainerms
+```
+
+* Deploy application using `kubectl/oc apply`:
+```shell
+(kubectl/oc) apply -f templates/springcontainerms/templates`
+```
+
+* Verify default service is running correctly:
+
+```shell
+curl http://cluster-endpoints:31900/containers
+```
+
+## Deploy Voyages microservice
+
+The *Voyage microservice* is a simple nodejs app to mockup schedule of vessels between two harbors. It is here to illustrate Kafka integration with nodejs app.
+
+* Go to the repo
+
+```shell
+cd cd refarch-kc-ms/voyages-ms
+```
+
+* Build the image
+
+```shell
+docker build -t kc-voyages-ms:latest -f Dockerfile
+```
+
+* Tag the image
+
+```shell
+docker tag kc-voyages-ms <private-registry>/<image-namespace>/kc-voyages-ms:latest
+```
+
+* Push the image
+
+```shell
+docker login <private-registry>
+docker push <private-registry>/<image-namespace>/kc-voyages-ms:latest
+```
+
+* Generate application YAMLs via `helm template` with the following parameters:
+  - `--set image.repository=<private-registry>/<image-namespace>/<image-repository>`
+  - `--set image.tag=latest`
+  - `--set image.pullSecret=<private-registry-pullsecret>` (optional or set to blank)
+  - `--set image.pullPolicy=Always`
+  - `--set eventstreams.env=ICP`
+  - `--set eventstreams.brokersConfigMap=<kafka brokers ConfigMap name>`
+  - `--set serviceAccountName=<service-account-name>`
+  - `--namespace <target-namespace>`
+  - `--output-dir <local-template-directory>`
+
+```shell
+# Example parameters
+helm template --set image.repository=rhos-quay.internal-network.local/browncompute/kc-voyages-ms --set image.tag=latest --set image.pullSecret= --set image.pullPolicy=Always --set eventstreams.env=ICP --set eventstreams.brokersConfigMap=kafka-brokers --set serviceAccountName=kcontainer-runtime --output-dir templ --namespace eda-refarch chart/voyagesms
+```
+
+* Deploy application using `kubectl/oc apply`:
+```shell
+(kubectl/oc) apply -f templates/voyagesms/templates`
+```
+
+* Verify default service is running correctly:
+
+```shell
+curl http://cluster-endpoint:31000/voyage
+```
 
 ## Deploy User Interface microservice
-
-The last app is a web application to expose an user interface to run the demonstration end to end.
 
 * Go to the repo
 
@@ -303,49 +377,51 @@ cd refarch-kc-ui/
 
 * Build the image
 
-```
-./scripts/buildDocker.sh MINIKUBE
+```shell
+docker build -t kc-ui:latest -f Dockerfile.NoKubernetesPlugin
 ```
 
-* Deploy on minikube
+* Tag the image
 
+```shell
+docker tag kc-ui <private-registry>/<image-namespace>/kc-ui:latest
 ```
-helm install chart/kc-ui/ --name kcsolution --set image.repository=ibmcase/kc-ui --set image.pullSecret= --set image.pullPolicy=Always --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
+
+* Push the image
+
+```shell
+docker login <private-registry>
+docker push <private-registry>/<image-namespace>/kc-ui:latest
+```
+
+* Generate application YAMLs via `helm template` with the following parameters:
+  - `--set image.repository=<private-registry>/<image-namespace>/<image-repository>`
+  - `--set image.tag=latest`
+  - `--set image.pullSecret=<private-registry-pullsecret>` (optional or set to blank)
+  - `--set image.pullPolicy=Always`
+  - `--set eventstreams.env=ICP`
+  - `--set eventstreams.brokersConfigMap=<kafka brokers ConfigMap name>`
+  - `--set serviceAccountName=<service-account-name>`
+  - `--namespace <target-namespace>`
+  - `--output-dir <local-template-directory>`
+
+```shell
+# Example parameters
+helm template --set image.repository=rhos-quay.internal-network.local/browncompute/kc-ui --set image.tag=latest --set image.pullSecret= --set image.pullPolicy=Always --set eventstreams.env=ICP --set eventstreams.brokersConfigMap=kafka-brokers --set serviceAccountName=kcontainer-runtime --output-dir templates --namespace eda-refarch chart/kc-ui
+```
+
+* Deploy application using `kubectl/oc apply`:
+```shell
+(kubectl/oc) apply -f templates/kc-ui/templates`
 ```
 
 * Verify the installed app
 
-Point your web browser to [http://localhost:31010](http://localhost:31010) and login with username: eddie@email.com and password Eddie.
+Point your web browser to [http://cluster-endpoints:31010](#) and login with username: eddie@email.com and password Eddie.
 
-## Deploy Voyages microservice
+## TBD Deploy the Fleet Simulator microservice
 
-The *Voyage microservice* is a simple nodejs app to mockup schedule of vessels between two harbors. It is here to illustrate Kafka integration with nodejs app.
-
-* Go to the repo
-
-```
-$ cd refarch-kc-ms/voyages-ms
-```
-
-** Build the image
-
-```
-$ ./scripts/buildDocker.sh MINIKUBE
-```
-
-* Deploy on minikube
-
-```
-helm install chart/voyagesms/ --name voyages --set image.repository=ibmcase/kc-voyagesms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=local --namespace greencompute
-```
-
-* Verify it is correctly running
-
-```
-curl http://localhost:31000/voyage
-```
-
-## Deploy the Fleet Simulator microservice
+**TODO** Fleet Simulator
 
 !!! note
     The fleet simulator is to move vessels from one harbors to another, and send container metrics while the containers are on a vessel. It has some predefined simulation to trigger some events.
@@ -362,7 +438,6 @@ $ cd refarch-kc-ms/fleet-ms
 $ ./scripts/buildDocker.sh MINIKUBE
 ```
 
-
 * Deploy on minikube
 
 ```
@@ -376,9 +451,9 @@ At the beginning the call below should return an empty array: `[]`
 curl http://localhost:31300/fleetms/fleets
 ```
 
-## Integration Tests
+## TBD Integration Tests
 
-TBD
+**TODO** Integration tests
 
 # Universal deployment considerations
 
