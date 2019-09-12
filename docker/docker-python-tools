@@ -3,6 +3,8 @@ ENV PATH=/root/.local/bin:$PATH
 ENV PYTHONPATH=/home
 RUN pip install --upgrade pip \
   && pip install --user pipenv requests black pytest numpy pandas confluent_kafka asyncio flask
-CMD bash
-
-
+COPY ./itg-tests /home
+COPY ./docker/simple-flask.py /app/app.py
+WORKDIR /app
+ENTRYPOINT ["python3"]
+CMD ["app.py"]
