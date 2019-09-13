@@ -197,7 +197,7 @@ helm template --name postgre-db --set postgresqlPassword=supersecret \
 
 **Creating Postgresql credentials as Kubernetes Secrets**
 
-**TODO** _Validate credentials for Helm-based Postgresql deployment_
+**TODO** Validate credentials for Helm-based Postgresql deployment
 
 * Applying the same approach as above, copy the Postgresql URL as defined in the Postegresql service credential and execute the following command:
 

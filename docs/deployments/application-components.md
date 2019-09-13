@@ -257,7 +257,7 @@ curl http://<cluster endpoints>:31100/orders
 
 ## Deploy Container microservice
 
-**TODO Container Microservice requires POSTGRES parameters**
+**TODO** Container Microservice requires POSTGRES parameters
 
 * Go to the repo
 
@@ -419,7 +419,7 @@ helm template --set image.repository=rhos-quay.internal-network.local/browncompu
 
 Point your web browser to [http://cluster-endpoints:31010](#) and login with username: eddie@email.com and password Eddie.
 
-## TBD Deploy the Fleet Simulator microservice
+## Deploy the Fleet Simulator microservice
 
 **TODO** Fleet Simulator
 
@@ -451,7 +451,7 @@ At the beginning the call below should return an empty array: `[]`
 curl http://localhost:31300/fleetms/fleets
 ```
 
-## TBD Integration Tests
+## Integration Tests
 
 Integration tests are provided in the [itg-tests](itg-tests/) directory and are designed to be run in cluster with the rest of the application components.  However, they are regular Python scripts that can be adapted to be runnable anywhere, given the correct Kafka endpoints and configuration information.  For simplicity, this quick walkthrough will document how you can build and deploy Docker images that will run the integration tests inside the cluster, with the results visible via `kubectl logs` and the rest of the application's APIs.
 
@@ -464,9 +464,10 @@ docker push osowski/python-tools
 
 The above image is a base Python image with our integration tests, defined in the `itg-tests` directory.  It is a long-running Flask process that provides a simple web server, so once deployed, it will remain available to "exec" into for additional in-cluster CLI interaction.  However, for simplicity, we have defined a few integration scenarios, using a Kubernetes Deployment and multiple Kubernetes Jobs, that will automate some of the integration test scenarios.
 
+**TODO** Update integration-test YAML to allow for kustomize to replace image repository
+
 * Deploy this integration test automation
 ```shell
-# TODO update to allow for kustomize to replace image repository
 # From the root of the 'refarch-kc' repository
 (kubectl/oc) apply -f itg-tests/deployment.yaml
 ```

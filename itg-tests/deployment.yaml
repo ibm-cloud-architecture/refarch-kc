@@ -22,7 +22,7 @@ spec:
       - name: "integration-tests"
         image: "osowski/python-tools:latest"
         imagePullPolicy: Always
-        command: ["python3", "/home/OrdersPython/OrderConsumer.py", "MMMMMMMMM"]
+        command: ["python3", "/home/OrdersPython/OrderConsumer.py", "9999"]
         ports:
         - containerPort: 5000
         resources:
@@ -58,7 +58,7 @@ spec:
       - name: "producer"
         image: "osowski/python-tools:latest"
         imagePullPolicy: Always
-        command: ["python3", "/home/es-it/ProducerOrderEvents.py", "MMMMMMMMM"]
+        command: ["python3", "/home/es-it/ProducerOrderEvents.py", "9999"]
         ports:
         - containerPort: 5000
         resources:
@@ -78,46 +78,3 @@ spec:
               secretKeyRef:
                 name: eventstreams-apikey
                 key: binding
-      #initContainers:
-      #- name: "init-producer"
-      #  image: "osowski/python-tools:latest"
-      #  imagePullPolicy: Always
-      #  command: ["python3", "/home/es-it/ProducerOrderEvents.py", "7890"]
-      #  resources:
-      #    requests:
-      #      cpu: "200m"
-      #      memory: "300Mi"
-      #  env:
-      #    - name: KAFKA_ENV
-      #      value: "IBMCLOUD"
-      #    - name: KAFKA_BROKERS
-      #      valueFrom:
-      #        configMapKeyRef:
-      #          name: "reo-kafka-brokers"
-      #          key: brokers
-      #    - name: KAFKA_APIKEY
-      #      valueFrom:
-      #        secretKeyRef:
-      #          name: eventstreams-apikey
-      #          key: binding
-      #- name: "init-consumer"
-      #  image: "osowski/python-tools:latest"
-      #  imagePullPolicy: Always
-      #  command: ["python3", "/home/OrdersPython/OrderConsumer.py", "7890"]
-      #  resources:
-      #    requests:
-      #      cpu: "200m"
-      #      memory: "300Mi"
-      #  env:
-      #    - name: KAFKA_ENV
-      #      value: "IBMCLOUD"
-      #    - name: KAFKA_BROKERS
-      #      valueFrom:
-      #        configMapKeyRef:
-      #          name: "reo-kafka-brokers"
-      #          key: brokers
-      #    - name: KAFKA_APIKEY
-      #      valueFrom:
-      #        secretKeyRef:
-      #          name: eventstreams-apikey
-      #          key: binding
