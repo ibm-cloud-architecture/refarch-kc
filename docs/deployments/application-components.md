@@ -466,11 +466,14 @@ The above image is a base Python image with our integration tests, defined in th
 
 **TODO** Update integration-test YAML to allow for kustomize to replace image repository
 
-* Deploy this integration test automation
+* Update the `itg-tests/kustomization.yaml` file with the specifics for your `python-tools` Docker image, changing the `newName` and `newTag` fields, as appropriate, along with the `namespace` field.
+
+* Then run the following the command to apply the customization and deploy to the platform:
 ```shell
 # From the root of the 'refarch-kc' repository
-(kubectl/oc) apply -f itg-tests/deployment.yaml
+kubectl apply -k itg-tests/
 ```
+**NOTE:** `kubectl` must be at level `1.14` or higher for the `-k` flag to be available.
 
 This Kubernetes YAML will create one Deployment and one Job.  The long-running Deployment will run the [OrdersPython/OrderConsumer.py](#) script to watch for order events in the Kafka backend, while the short-lived Job create all the necessary order events via the [es-it/ProducerOrderEvents.py](#) script and publish them to Kafka.
 
