@@ -1,6 +1,6 @@
 # Reefer Container Shipment solution - EDA reference implementation
 
-The IBM Event Driven architecture reference implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an [event driven architecture](https://ibm-cloud-architecture.github.io/refarch-eda/) with event backbone, functions as service and microservices. It aims to illustrate the different event driven patterns like event sourcing, CQRS and Saga and give a lot of best practices around implementing event driven microservices. 
+The IBM Event Driven architecture reference implementation illustrates the deployment of real time analytics on event streams in the context of container shipment in an [event driven architecture](https://ibm-cloud-architecture.github.io/refarch-eda/) with event backbone, functions as service and microservices. It aims to illustrate the different event driven patterns like event sourcing, CQRS and Saga and give a lot of best practices around implementing event driven microservices.
 
 ## What you will learn
 
@@ -12,7 +12,7 @@ The IBM Event Driven architecture reference implementation illustrates the deplo
 * How to implement a Test Driven Development for the Order microservice uisng mockito to avoid Kafka dependency.
 * How to implement the same container management microservices in python, nodejs, java microprofile 2 with Kafka streams API, and springboot, kafka template and PostgreSQL.
 
-This is a lot, not all is done yet. But consider this content as a living book, with the left side representing major subjects and each subject with its own table of contents. 
+This is a lot, not all is done yet. But consider this content as a living book, with the left side representing major subjects and each subject with its own table of contents.
 
 ## Target Audiences
 
@@ -24,7 +24,7 @@ You will be greatly interested by the subjects addressed in this solution if you
 
 ## Business process statement
 
-In [this first chapter](introduction.md) we are presenting the business process for shipping fresh good over sees and we are detailing the analysis we have done in San Francisco in November 2108 using the event storming analysis workshop. You could read more on how to organize and execute such workshop [here](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/readme/). The workshop execution transcript is detailed in [a second chapter](analysis/readme.md). 
+In [this first chapter](introduction.md) we are presenting the business process for shipping fresh good over sees and we are detailing the analysis we have done in San Francisco in November 2108 using the event storming analysis workshop. You could read more on how to organize and execute such workshop [here](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/readme/). The workshop execution transcript is detailed in [a second chapter](analysis/readme.md).
 
 ## Design considerations
 
@@ -32,27 +32,25 @@ In the [third chapter](design/readme.md) we are detailing how to transform the a
 
 ## Architecture
 
-This quick [architecture chapter](design/architecture.md) presents the solution components working together with the event backbone. 
+This quick [architecture chapter](design/architecture.md) presents the solution components working together with the event backbone.
 
 ## Build and Run
 
 The end to end solution can be demonstrated from a unique user interface and it involves multiple microservices deployed independently. As some of those components are using IBM products or IBM Cloud services, you need to provision such services. We propose to develop with an hybrid environment, using IBM Cloud services, local environment running on your laptop and IBM private cloud cluster (optional). As of now only Mac and Linux development workstation are supported. For the Java development we used Eclipse 2019 edition. So basically we need the following:
 
-* [Event Streams instance on IBM Cloud public](https://ibm-cloud-architecture.github.io/refarch-eda/deployments/eventstreams) or Event streams on IBM Cloud private or a Kafka docker image to [run locally](deployments/local.md).
+* [Event Streams instance on IBM Cloud Public](https://ibm-cloud-architecture.github.io/refarch-eda/deployments/eventstreams) or Event streams on IBM Cloud private or a Kafka Docker image.
 * Streaming Analytics on IBM Cloud public or on ICP for Data.
 * Kubernetes Cluster (IBM Cloud Private or IBM Kubernetes Service on cloud) or Docker compose to run locally.
 * Postgresql service in IBM Cloud. This database is used by one service, built with Spring boot, that can be plug and play. It is optional. We want to illustrate with this implementation a reversibility practice where we start development on the cloud and migrate to private cloud.
 
-The scripts to build, deploy and test all the solution components, are defined in this source repository: [https://github.com/ibm-cloud-architecture/refarch-kc](https://github.com/ibm-cloud-architecture/refarch-kc) under the `scripts` folder. See [how to run locally](deployments/local.md) note. Also, each project, part of the solution, has its own installation explanations and scripts to build, package, test and deploy to the different Kubernetes deployment (private and public). We recommend studying those scripts.
+The instructions to build, deploy and test all the solution components, are defined in this source repository: [https://github.com/ibm-cloud-architecture/refarch-kc/tree/master/docs](https://github.com/ibm-cloud-architecture/refarch-kc/tree/master/docs). Also, each project, part of the solution, has its own installation explanations and scripts to build, package, test and deploy to the different Kubernetes deployment (private and public). We recommend studying those scripts.
 
 ## Deployments
 
-We can deploy the components of the solution into three different environments:
+We can deploy the components of the solution into any Kubernetes-based environment - including OpenShift, IBM Cloud Kubernetes Service, and vanilla Kubernetes:
 
-* **[Local](deployments/local.md)** to your laptop, using docker images and docker compose you can run the full solution. 
-* **Public cloud (IBM Cloud)**, [see this article](deployments/iks.md) for details on how to prepare the needed services and to deploy the solution to IKS.
-* **Private cloud** (we are using IBM Cloud Private), [see this article](deployments/icp.md) for details.
-
+* **[Backing Services](deployments/backing-services.md)** documents the required environment configuration, as well as Kafka and Postgresql options to satisfy application dependencies.
+* **[Application Components](deployments/application-components.md)** documents the deployment steps required for the K Container Reference Implementation, as well as integration tests to validate deployment.
 
 ## Still project under development
 
