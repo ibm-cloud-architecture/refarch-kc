@@ -207,7 +207,7 @@ helm template --name postgre-db --set postgresqlPassword=supersecret \
 
  ```shell
  kubectl get services | grep postgresql | grep -v headless
- kubectl create secret generic postgresql-url --from-literal=binding='<helm-release-name>-postgresql' -n <target k8s namespace / ocp project>
+ kubectl create secret generic postgresql-url --from-literal=binding='jdbc:postgresql://<helm-release-name>-postgresql' -n <target k8s namespace / ocp project>
  ```
 
 * For the user:
