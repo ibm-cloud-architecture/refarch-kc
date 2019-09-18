@@ -21,6 +21,7 @@ class KafkaProducer:
             options['sasl.password'] = self.kafka_apikey
         if (self.kafka_env == 'ICP'):
             options['ssl.ca.location'] = 'es-cert.pem'
+        print("This is the configuration for the producer:")
         print(options)
         self.producer = Producer(options)
 
@@ -28,7 +29,7 @@ class KafkaProducer:
         """ Called once for each message produced to indicate delivery result.
             Triggered by poll() or flush(). """
         if err is not None:
-            print('Message delivery failed: {}'.format(err))
+            print('[ERROR] - Message delivery failed: {}'.format(err))
         else:
             print('Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
 

@@ -26,6 +26,7 @@ class KafkaConsumer:
             options['sasl.password'] = self.kafka_apikey
         if (self.kafka_env == 'ICP'):
             options['ssl.ca.location'] = 'es-cert.pem'
+        print("This is the configuration for the consumer:")
         print(options)
         self.consumer = Consumer(options)
         self.consumer.subscribe([self.topic_name])
