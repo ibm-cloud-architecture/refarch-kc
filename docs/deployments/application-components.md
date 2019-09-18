@@ -1,14 +1,15 @@
 Deployment of application microservices for the Event-Driven Architecture Reference Application
 
-# Environment prerequisites
+## Environment prerequisites
 
-## Kafka Topic Creation
+### Kafka Topic Creation
+
 
 **TODO** Kafka Topic Creation
 
-You can create the topics using the Event Streams console:
+Once your event streams back end is up and running, you should create the topics using the Event Streams console as:
 
-![](es-icp-topics.png)
+![](images/es-icp-topics.png)
 
 or the use a set of commands like below, which are done for you in the script: `scripts/createLocalTopicsOnK8S.sh `.
 
@@ -26,18 +27,18 @@ rolling-streams-ibm-es-zookeeper-fixed-ip-svc-0
 $ kubectl exec -n ${NAMESPACE} -ti rolling-streams-ibm-es-kafka-sts-0 -- bash -c "/opt/kafka/bin/kafka-topics.sh --create  --zookeeper $zooksvc:2181 --replication-factor 1 --partitions 1 --topic orders"
 ```
 
-## Docker registries
+### Docker registries
 
 You will need a Docker image registry to push and pull your images to and from.  There are multiple options depending on client use cases and we are only documenting a subset of potential solutions, including but not limited to IBM Cloud Container Registry, Docker Hub, Quay, etc.
 
-### IBM Cloud Container Registry
+#### IBM Cloud Container Registry
 
 * Install IBM Cloud Container Registry CLI plug-in if needed:
 ```
 ibmcloud plugin install container-registry -r Bluemix
 ```
 
-**Define a private image repository**
+#### Define a private image repository
 
 Use the [IBM Cloud Container Registry](https://cloud.ibm.com/containers-kubernetes/catalog/registry) to push your images and then deploy them to any Kubernetes cluster with access to the public internet.  When deploying enterprise applications, it is strongly recommended to use private registry to protect your images from being used and changed by unauthorized users. Private registries must be set up by the cluster administrator to ensure that the credentials to access the private registry are available to the cluster users.
 
@@ -58,7 +59,7 @@ To see the images in your private registry you can use the user interface at [ht
 ibmcloud cr image-list
 ```
 
-**Private Registry Token**
+#### Private Registry Token
 
 Each Helm Chart specifies the name of the Docker image to load the containers & pods. To enable access from Kubernetes Nodes to your private registry, an image pull secret is required and will be stored in a Kubernetes secret.  If you are using public Docker Hub image repositories, an image pull secret is not required.
 
@@ -116,11 +117,11 @@ You will see something like below.
 
 ## Basic Kubernetes
 
-## IBM Cloud Kubernetes Service
+### IBM Cloud Kubernetes Service
 
 To create the cluster follow [this tutorial](https://console.bluemix.net/docs/containers/cs_tutorials.html#cs_cluster_tutorial).
 
-## OpenShift Container Platform 3.11
+### OpenShift Container Platform 3.11
 
 This needs to be done once per unique deployment of the entire application.
 
@@ -132,11 +133,13 @@ This needs to be done once per unique deployment of the entire application.
   - Example: `oc adm policy add-scc-to-user anyuid -z kcontainer-runtime -n eda-refarch`
   - NOTE: This requires `cluster-admin` level privileges.
 
-## OpenShift Container Platform 4.X
+### OpenShift Container Platform 4.X
 
-# Deploy application microservices
+**TODO** 
 
-## Using the master repository
+## Deploy application microservices
+
+### Using the master repository
 You can download the necessary application microservice repsoitories using scripts provided in the master repository:
 
 ```shell
@@ -145,7 +148,7 @@ cd refarch-kc
 ./scripts/clone.sh
 ```
 
-## Deploy Order Command microservice
+### Deploy Order Command microservice
 
 * Go to the repo
 
@@ -200,7 +203,7 @@ Without any previously tests done, the call below should return an empty array: 
 curl http://<cluster endpoints>:31200/orders
 ```
 
-## Deploy Order Query microservice
+### Deploy Order Query microservice
 
 * Go to the repo
 
@@ -255,7 +258,7 @@ Without any previously tests done, the call below should return an empty array: 
 curl http://<cluster endpoints>:31100/orders
 ```
 
-## Deploy Container microservice
+### Deploy Container microservice
 
 **TODO** Container Microservice requires POSTGRES parameters
 
@@ -311,7 +314,7 @@ helm template --set image.repository=rhos-quay.internal-network.local/browncompu
 curl http://cluster-endpoints:31900/containers
 ```
 
-## Deploy Voyages microservice
+### Deploy Voyages microservice
 
 The *Voyage microservice* is a simple nodejs app to mockup schedule of vessels between two harbors. It is here to illustrate Kafka integration with nodejs app.
 
@@ -367,7 +370,7 @@ helm template --set image.repository=rhos-quay.internal-network.local/browncompu
 curl http://cluster-endpoint:31000/voyage
 ```
 
-## Deploy User Interface microservice
+### Deploy User Interface microservice
 
 * Go to the repo
 
@@ -419,7 +422,7 @@ helm template --set image.repository=rhos-quay.internal-network.local/browncompu
 
 Point your web browser to [http://cluster-endpoints:31010](#) and login with username: eddie@email.com and password Eddie.
 
-## Deploy the Fleet Simulator microservice
+### Deploy the Fleet Simulator microservice
 
 **TODO** Fleet Simulator
 
@@ -491,6 +494,6 @@ This Kubernetes YAML will create one Deployment and one Job.  The long-running D
 
 You should see the same Order ID created by the Job in the output of the Deployment's container.
 
-# Universal deployment considerations
+## Universal deployment considerations
 
 When deploying kafka consumer it is important to assess the horizontal pod autoscaler settings and needs, as adding consumers will not address scalability if the number of partitions in the topic(s) to consume does not match the increase of consumers. So disable HPA by default. If you want to use HPA you also need to ensure that a metrics-server is running, then set the number of partition, and the `hpa.maxReplicas` to the number of partitions.

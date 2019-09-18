@@ -1,24 +1,24 @@
-Deployment of backing services for the Event-Driven Architecture Reference Application
+Deployment of backing services for the Event-Driven Architecture Reference Application, which includes Event Streams and Postgresql
 
-# Kafka & Event Streams
+## Kafka & Event Streams
 
-## Using IBM Event Streams, hosted on IBM Cloud
+### Using IBM Event Streams, hosted on IBM Cloud
 
-**Service Deployment**
+#### Service Deployment
 
 * To provision your service, go to the IBM Cloud Catalog and search for `Event Streams`. It is in the *Integration* category. Create the service and specify a name, a region, and a resource group. Once the service is created, you are redirected to the Event Stream Standard Dashboard:
 
-![](IES-dashboard-std.png)
+![](images/IES-dashboard-std.png)
 
 * In the *Manage* panel add the topics needed for the solution. We need at least the following:
 
- ![](./IES-IC-topics.png)
+ ![](images/IES-IC-topics.png)
 
 * In the Service Credentials tab, create new credentials to get the Kafka broker list, the admim URL and the api_key needed to authenticate the consumers or producers.
 
- ![](./IES-IC-credentials.png)
+ ![](images/IES-IC-credentials.png)
 
-**Event Streams Kafka Brokers**
+#### Event Streams Kafka Brokers
 
 Regardless of specific deployment targets (OCP, IKS, k8s), the following prerequisite Kubernetes ConfigMap needs to be created to support the deployments of the application's microservices.  These artifacts need to be created once per unique deployment of the entire application and can be shared between application components in the same overall application deployment.  These values can be acquired from the `kafka_brokers_sasl` section of the service instance's Service Credentials.
 
@@ -27,7 +27,7 @@ kubectl create configmap kafka-brokers --from-literal=brokers='<replace with com
 kubectl describe configmap kafka-brokers -n <target k8s namespace / ocp project>
 ```
 
-**Event Streams API Key**
+#### Event Streams API Key
 
 The Event Streams Broker API Key is needed to connect any deployed consumers or producers to the service in IBM Cloud. To avoid sharing security keys, create a Kubernetes Secret in the target cluster you will deploy the application microservices to.  This is available from the Service Credentials information you just created above.
 
@@ -38,13 +38,13 @@ kubectl describe secret eventstreams-apikey -n <target k8s namespace / ocp proje
 
 ---
 
-## Using IBM Event Streams, deployed on RedHat OpenShift Container Platform
+### Using IBM Event Streams, deployed on RedHat OpenShift Container Platform
 
-**Service Deployment**
+#### Service Deployment
 
 The installation is documented in the [product documentation](https://ibm.github.io/event-streams/installing/installing-openshift/) and in our [own note here.](https://ibm-cloud-architecture.github.io/refarch-eda/deployments/eventstreams/)
 
-**Event Streams Kafka Brokers**
+#### Event Streams Kafka Brokers
 
 Regardless of specific deployment targets (OCP, IKS, k8s), the following prerequisite Kubernetes ConfigMap needs to be created to support the deployments of the application's microservices.  These artifacts need to be created once per unique deployment of the entire application and can be shared between application components in the same overall application deployment.
 
@@ -53,7 +53,7 @@ kubectl create configmap kafka-brokers --from-literal=brokers='<replace with com
 kubectl describe configmap kafka-brokers -n <target k8s namespace / ocp project>
 ```
 
-**Event Streams API Key**
+#### Event Streams API Key
 
 The Event Streams Broker API Key is needed to connect any deployed consumers or producers to the service running in your cluster. To avoid sharing security keys, create a Kubernetes Secret in the target cluster you will deploy the application microservices to.  You can specify keys at the topic and consumer group levels or use a unique key for all topics and all consumer groups.
 
@@ -64,15 +64,15 @@ kubectl describe secrets -n <target k8s namespace / ocp project>
 
 ---
 
-## Using community-based Kafka Helm charts, deployed locally in-cluster
+### Using community-based Kafka Helm charts, deployed locally in-cluster
 
 If you simply want to deploy Kafka using the open source, community-supported Helm Charts, you can do so with the following commands.
 
-**Environment Considerations**
+#### Environment Considerations
 
 **TODO** Requirements when deploying to OCP (ServiceAccount, Security, etc)
 
-**Service Deployment**
+#### Service Deployment
 
 1. Add Bitnami Helm Repository:
 ```shell
@@ -95,7 +95,7 @@ helm template --name kafka --set persistence.enabled=false bitnami/kafka --names
 ```
 It will take a few minutes to get the pods ready.
 
-**Kafka Brokers**
+### Kafka Brokers
 
 Regardless of specific deployment targets (OCP, IKS, k8s), the following prerequisite Kubernetes ConfigMap needs to be created to support the deployments of the application's microservices.  These artifacts need to be created once per unique deployment of the entire application and can be shared between application components in the same overall application deployment.
 
@@ -106,13 +106,13 @@ kubectl describe configmap kafka-brokers -n <target k8s namespace / ocp project>
 
 ---
 
-# Postgresql
+## Postgresql
 
 The [Container Manager microservice](https://github.com/ibm-cloud-architecture/refarch-kc-container-ms/) persists the Reefer Container inventory in a Postgresql database.  The deployment of Postgresql is only necessary to support the deployment of the Container Manager microservice.  If you are not deploying the Container Manager microservice, you do not need to deploy and configure a Postgresql service and database.
 
-## Using Postgresql, hosted on IBM Cloud
+### Using Postgresql, hosted on IBM Cloud
 
-**Service Deployment**
+#### Service Deployment
 
  To install the service, follow the [product documentation here](https://cloud.ibm.com/catalog/services/databases-for-postgresql).
 
@@ -122,9 +122,9 @@ The [Container Manager microservice](https://github.com/ibm-cloud-architecture/r
  * `postgres.password`
  * `postgres.composed`, which will need to be mapped to a JDBC URL in the format of `jdbc:postgresql://<hostname>:<port>/<database-name>?sslmode=verify-full&sslfactory=org.postgresql.ssl.NonValidatingFactory` _(this will remove the `username` and `password` values from the default `composed` string)_
 
- ![](postgres-credentials.png)
+ ![](images/postgres-credentials.png)
 
-**Creating Postgresql credentials as Kubernetes Secrets**
+#### Creating Postgresql credentials as Kubernetes Secrets
 
 1. Applying the same approach as above, copy the Postgresql URL as defined in the Postegresql service credential and execute the following command:
 ```shell
@@ -161,15 +161,15 @@ kubectl create secret generic postgresql-pwd --from-literal=binding='<password f
 
 ---
 
-## Using community-based Postgresql Helm charts, deployed locally in-cluster
+### Using community-based Postgresql Helm charts, deployed locally in-cluster
 
 If you simply want to deploy Postgresql using the open source, community-supported Helm Charts, you can do so with the following commands.
 
-**Environment Considerations**
+#### Environment Considerations
 
 **TODO** Requirements when deploying to OCP (ServiceAccount, Security, etc)
 
-**Service Deployment**
+#### Service Deployment
 
 1. Add Bitnami Helm Repository:
 ```shell
@@ -195,7 +195,7 @@ helm template --name postgre-db --set postgresqlPassword=supersecret \
 ```
   It will take a few minutes to get the pods ready.
 
-**Creating Postgresql credentials as Kubernetes Secrets**
+#### Creating Postgresql credentials as Kubernetes Secrets
 
 **TODO** Validate credentials for Helm-based Postgresql deployment
 
@@ -217,7 +217,7 @@ helm template --name postgre-db --set postgresqlPassword=supersecret \
  kubectl create secret generic postgresql-pwd --from-literal=binding='<password from the service credential>.' -n <target k8s namespace / ocp project>
  ```
 
-**Service Debugging & Troubleshooting**
+#### Service Debugging & Troubleshooting
 
 Access to the in-container password can be made using the following command.  This should be the same value you passed in when you deployed the service.
 

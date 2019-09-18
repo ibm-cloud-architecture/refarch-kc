@@ -6,5 +6,7 @@ scripts/localToICP
 scripts/setenv.sh
 site/
 itg-tests/es-it/*.pem
+itg-tests/**/*.pem
+itg-tests/kafka/__pycache__
 postgres-data/
 docker/*.logs
