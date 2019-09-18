@@ -70,7 +70,7 @@ If you simply want to deploy Kafka using the open source, community-supported He
 
 **Environment Considerations**
 
-**TODO** Requirements when deploying to OCP (ServiceAccount, Security, etc)
+**TODO** Needs update to account for ServiceAccount integration after `helm template` generation
 
 **Service Deployment**
 
@@ -89,9 +89,12 @@ kubectl create namespace <target namespace>
 4. Deploy Kafka and Zookeeper using the `bitnami/kafka` Helm Chart:
 ```shell
 mkdir bitnami
+mkdir templates
 helm fetch --untar --untardir bitnami 'bitnami/kafka'
-helm template --name kafka --set persistence.enabled=false bitnami/kafka --namespace <target namespace> --output-dir bitnami
-(kubectl/oc) apply -f bitnami/kafka/templates
+helm template --name kafka --set persistence.enabled=false --set securityContext.enabled=false \ 
+  bitnami/kafka --namespace <target namespace> --output-dir templates
+(kubectl/oc) apply -f templates/kafka/charts/zookeeper/templates/
+(kubectl/oc) apply -f templates/kafka/templates
 ```
 It will take a few minutes to get the pods ready.
 
