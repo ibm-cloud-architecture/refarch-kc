@@ -167,7 +167,7 @@ If you simply want to deploy Postgresql using the open source, community-support
 
 **Environment Considerations**
 
-**TODO** Requirements when deploying to OCP (ServiceAccount, Security, etc)
+Reference [Application Components Pre-reqs](application-components.md#openshift-container-platform-3-11) for details on creating the necessary ServiceAccount with required permissions, prior to deployment.
 
 **Service Deployment**
 
@@ -188,33 +188,35 @@ kubectl create namespace <target namespace>
 4. Deploy Postgresql using the `bitnami/postgresql` Helm Chart:
 ```shell
 mkdir bitnami
+mkdir templates
 helm fetch --untar --untardir bitnami bitnami/postgresql
 helm template --name postgre-db --set postgresqlPassword=supersecret \
---set persistence.enabled=false bitnami/postgresql --namespace <target namespace> --output-dir bitnami
-(kubectl/oc) apply -f bitnami/postgresql/templates
+  --set persistence.enabled=false --set serviceAccount.enabled=true \ 
+  --set serviceAccount.name=<existing service account> bitnami/postgresql \ 
+  --namespace <target namespace> --output-dir templates
+(kubectl/oc) apply -f templates/postgresql/templates
 ```
   It will take a few minutes to get the pods ready.
 
 **Creating Postgresql credentials as Kubernetes Secrets**
 
-**TODO** Validate credentials for Helm-based Postgresql deployment
-
-* Applying the same approach as above, copy the Postgresql URL as defined in the Postegresql service credential and execute the following command:
+* The `postgresql-url` needs to point to the in-cluster (non-headless) Kubernetes Service created as part of the deployment and should take the form of the deployment name with the suffix of `-postgresql`:
 
  ```shell
- kubectl create secret generic postgresql-url --from-literal=binding='<replace with postgresql-url>' -n <target k8s namespace / ocp project>
+ kubectl get services | grep postgresql | grep -v headless
+ kubectl create secret generic postgresql-url --from-literal=binding='<helm-release-name>-postgresql' -n <target k8s namespace / ocp project>
  ```
 
 * For the user:
 
  ```shell
- kubectl create secret generic postgresql-user --from-literal=binding='ibm_cloud_c...' -n <target k8s namespace / ocp project>
+ kubectl create secret generic postgresql-user --from-literal=binding='postgres' -n <target k8s namespace / ocp project>
  ```
 
 * For the user password:
 
  ```shell
- kubectl create secret generic postgresql-pwd --from-literal=binding='<password from the service credential>.' -n <target k8s namespace / ocp project>
+ kubectl create secret generic postgresql-pwd --from-literal=binding='<password used in the helm template command>.' -n <target k8s namespace / ocp project>
  ```
 
 **Service Debugging & Troubleshooting**
