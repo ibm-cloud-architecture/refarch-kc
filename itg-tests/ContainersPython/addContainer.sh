@@ -37,6 +37,7 @@ docker run  -e KAFKA_BROKERS=$KAFKA_BROKERS \
             -e KAFKA_APIKEY=$KAFKA_APIKEY \
             -e KAFKA_ENV=$KAFKA_ENV \
             -v ${MAIN_DIR}/itg-tests:/home \
+            --network=docker_default \
             --rm \
             -ti ibmcase/python bash \
             -c "cd /home/ContainersPython && export PYTHONPATH=/home && python ContainerProducer.py $cid"
