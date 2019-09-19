@@ -12,6 +12,7 @@ class KafkaConsumer:
         self.kafka_auto_commit = autocommit
 
     # See https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md
+    # Prepares de Consumer with specific options based on the case
     def prepareConsumer(self, groupID = "pythonconsumers"):
         options ={
                 'bootstrap.servers':  self.kafka_brokers,
@@ -31,15 +32,39 @@ class KafkaConsumer:
         self.consumer = Consumer(options)
         self.consumer.subscribe([self.topic_name])
     
+    # Prints out and returns the decoded events received by the consumer
     def traceResponse(self, msg):
         msgStr = msg.value().decode('utf-8')
         print('@@@ pollNextOrder {} partition: [{}] at offset {} with key {}:\n\tvalue: {}'
                     .format(msg.topic(), msg.partition(), msg.offset(), str(msg.key()), msgStr ))
         return msgStr
 
+    # Polls for events until it finds an event where keyId=keyname
     def pollNextEvent(self, keyID, keyname):
         gotIt = False
         anEvent = {}
+        while not gotIt:
+            msg = self.consumer.poll(timeout=10.0)
+            # Continue if we have not received a message yet
+            if msg is None:
+                continue
+            if msg.error():
+                print("Consumer error: {}".format(msg.error()))
+                # Stop reading if we find end of partition in the error message
+                if ("PARTITION_EOF" in msg.error()):
+                    gotIt= True
+                continue
+            msgStr = self.traceResponse(msg)
+            # Create the json event based on message string formed by traceResponse
+            anEvent = json.loads(msgStr)
+            # If we've found our event based on keyname and keyID, stop reading messages
+            if (anEvent["payload"][keyname] == keyID):
+                gotIt = True
+        return anEvent
+
+    # Polls for events endlessly
+    def pollEvents(self):
+        gotIt = False
         while not gotIt:
             msg = self.consumer.poll(timeout=10.0)
             if msg is None:
@@ -49,11 +74,7 @@ class KafkaConsumer:
                 if ("PARTITION_EOF" in msg.error()):
                     gotIt= True
                 continue
-            msgStr = self.traceResponse(msg)
-            anEvent = json.loads(msgStr)
-            if (anEvent["payload"][keyname] == keyID):
-                gotIt = True
-        return anEvent
+            self.traceResponse(msg)
     
     def close(self):
         self.consumer.close()
