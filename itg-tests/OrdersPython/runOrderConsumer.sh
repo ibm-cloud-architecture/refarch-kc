@@ -28,10 +28,6 @@ fi
 # Set environment variables
 source ${MAIN_DIR}/scripts/setenv.sh $kcenv
 
-# Random name for the Docker container
-UPPER_LIMIT=9999
-NAME=$(($RANDOM%UPPER_LIMIT))
-
 # Run the container consumer
 # We are running the OrderConsumer.py python script into a python enabled container
 # Attached to the same docker_default docker network as the other components
@@ -40,9 +36,6 @@ docker run  -e KAFKA_BROKERS=$KAFKA_BROKERS \
             -e KAFKA_APIKEY=$KAFKA_APIKEY \
             -e KAFKA_ENV=$KAFKA_ENV  \
             -v ${MAIN_DIR}/itg-tests:/home \
-            --name $NAME \
+            --rm \
             -ti ibmcase/python bash \
             -c "cd /home/OrdersPython && export PYTHONPATH=/home && python OrderConsumer.py $oid"
-
-# Remove the container
-docker rm $NAME > /dev/null
