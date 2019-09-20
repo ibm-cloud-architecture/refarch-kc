@@ -33,6 +33,7 @@ bluewaterProblem
 bluewaterShip
 containerMetrics
 containers
+orderCommands
 errors
 orders
 rejected-orders"

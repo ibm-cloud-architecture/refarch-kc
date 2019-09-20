@@ -46,5 +46,6 @@ createTopic "allocated-orders"
 createTopic "errors" 
 createTopic "containers" 
 createTopic "containerMetrics" 
+createTopic "orderCommands"
 
 rm topics
