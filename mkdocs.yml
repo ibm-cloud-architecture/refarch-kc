@@ -5,7 +5,7 @@ nav:
   - Business problem statement:
     - Introduction: introduction.md
     - Event storming analysis: ./analysis/readme.md
-  - Design considerations and microservice identifications: ./design/readme.md
+  - From Analysis to Microservice Specifications: ./design/readme.md
   - Architecture: ./design/architecture.md
   - Development practices:
     - Order microservice with CQRS and Event Sourcing: https://ibm-cloud-architecture.github.io/refarch-kc-order-ms
