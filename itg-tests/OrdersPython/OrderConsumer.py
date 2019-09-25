@@ -41,5 +41,6 @@ if __name__ == '__main__':
     OID = parseArguments()
     orderConsumer = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_APIKEY,TOPIC_NAME,False)
     orderConsumer.prepareConsumer()
-    orderConsumer.pollNextEvent(OID,'orderID')
+    #orderConsumer.pollNextEvent(OID,'orderID')
+    orderConsumer.pollEvents()
     orderConsumer.close()

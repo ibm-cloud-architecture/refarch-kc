@@ -29,10 +29,6 @@ fi
 # Set environment variables
 source ${MAIN_DIR}/scripts/setenv.sh $kcenv
 
-# Random name for the Docker container
-UPPER_LIMIT=9999
-NAME=$(($RANDOM%UPPER_LIMIT))
-
 # Run the container producer
 # We are running the ContainerProducer.py python script into a python enabled container
 # Attached to the same docker_default docker network as the other components
@@ -41,9 +37,7 @@ docker run  -e KAFKA_BROKERS=$KAFKA_BROKERS \
             -e KAFKA_APIKEY=$KAFKA_APIKEY \
             -e KAFKA_ENV=$KAFKA_ENV \
             -v ${MAIN_DIR}/itg-tests:/home \
-            --name $NAME \
+            --network=docker_default \
+            --rm \
             -ti ibmcase/python bash \
             -c "cd /home/ContainersPython && export PYTHONPATH=/home && python ContainerProducer.py $cid"
-
-# Remove the container
-docker rm $NAME > /dev/null
