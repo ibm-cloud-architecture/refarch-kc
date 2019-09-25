@@ -1,0 +1,20 @@
+{
+    "namespace": "ibm.eda.kc.container.event",
+    "name": "type",
+    "type": "enum",
+    "symbols" : [
+        "ContainerAdded",
+        "ContainerRemoved",
+        "ContainerAtLocation",
+        "ContainerOnMaintenance",
+        "ContainerOffMaintenance",
+        "ContainerAssignedToOrder",
+        "ContainerReleasedFromOrder",
+        "ContainerGoodLoaded",
+        "ContainerGoodUnLoaded",
+        "ContainerOnShip",
+        "ContainerOffShip",
+        "ContainerOnTruck",
+        "ContainerOffTruck"
+    ]
+ }
