@@ -474,8 +474,6 @@ docker push osowski/python-tools
 
 The above image is a base Python image with our integration tests, defined in the `itg-tests` directory.  It is a long-running Flask process that provides a simple web server, so once deployed, it will remain available to "exec" into for additional in-cluster CLI interaction.  However, for simplicity, we have defined a few integration scenarios, using a Kubernetes Deployment and multiple Kubernetes Jobs, that will automate some of the integration test scenarios.
 
-**TODO** Update integration-test YAML to allow for kustomize to replace image repository
-
 * Update the `itg-tests/kustomization.yaml` file with the specifics for your `python-tools` Docker image, changing the `newName` and `newTag` fields, as appropriate, along with the `namespace` field.
 
 * Then run the following the command to apply the customization and deploy to the platform:
