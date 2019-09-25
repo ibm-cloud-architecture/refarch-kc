@@ -1,0 +1,19 @@
+# In order to build the docker image out of this file:
+# 1. Copy this file to the main refarch-kc folder
+# 2. Rename the file to Dockerfile
+# 3. Build the Dockerfile using the tag avro: docker build -t "ibmcase/python:avro" <path_to_main_refarch_kc_directory>
+
+FROM python:3.7-stretch
+ENV PATH=/root/.local/bin:$PATH
+ENV PYTHONPATH=/home
+RUN pip install --upgrade pip \
+  && pip install --user pipenv requests black pytest numpy pandas confluent_kafka asyncio flask
+# Install the following avro version due to the following bug: https://github.com/confluentinc/confluent-kafka-python/issues/610
+RUN python -mpip install --user avro-python3==1.8.2
+COPY ./itg-tests /home
+
+# The following has been removed in order to be able run the specified python script at runtime
+#COPY ./docker/simple-flask.py /app/app.py
+#WORKDIR /app
+#ENTRYPOINT ["python3"]
+#CMD ["app.py"]
