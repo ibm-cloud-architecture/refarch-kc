@@ -45,7 +45,7 @@ createTopic "rejected-orders"
 createTopic "allocated-orders"
 createTopic "errors" 
 createTopic "containers" 
-createTopic "containerMetrics" 
+createTopic "reeferTelemetries" 
 createTopic "orderCommands"
 
 rm topics

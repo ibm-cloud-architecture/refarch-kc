@@ -31,11 +31,11 @@ ALL="allocated-orders
 bluewaterContainer
 bluewaterProblem
 bluewaterShip
-containerMetrics
 containers
 orderCommands
 errors
 orders
+reeferTelemetries
 rejected-orders"
 
 ### Script
