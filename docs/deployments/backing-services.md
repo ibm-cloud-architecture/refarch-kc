@@ -62,6 +62,18 @@ kubectl create secret generic eventstreams-apikey --from-literal=binding='<repla
 kubectl describe secrets -n <target k8s namespace / ocp project>
 ```
 
+#### Event Streams Certificates
+
+If you are using Event Streams as your Kafka broker provider and it is deployed via the IBM Cloud Pak for Integration (ICP4I), you will need to create an additional Secret to store the generated Certificates & Truststores to connect securely between your application components and the Kafka brokers.  These artifacts need to be created once per unique deployment of the entire application and can be shared between application components in the same overall application deployment.
+
+- From the **Connect to this cluster** tab on the landing page of your Event Streams installation, download both the **Java truststore** and the **PEM certificate**.
+- Create the Java truststore Secret:
+  - Command: `oc create secret generic <secret-name> --from-file=/path/to/downloaded/file.jks`
+  - Example: `oc create secret generic es-truststore-jks --from-file=/Users/osowski/Downloads/es-cert.jks`
+- Create the PEM certificate Secret:
+  - Command: `oc create secret generic <secret-name> --from-file=/path/to/downloaded/file.pem`
+  - Example: `oc create secret generic es-ca-pemfile --from-file=/Users/osowski/Downloads/es-cert.pem`
+
 ---
 
 ### Using community-based Kafka Helm charts, deployed locally in-cluster
