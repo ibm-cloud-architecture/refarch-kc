@@ -1,7 +1,7 @@
 #!/bin/bash
 # --network=docker_default
 if [[ $# -eq 0 ]];then
-  echo "Usage IBMCLOUD | ICP | MINIKUBE | LOCAL"
+  echo "Usage IBMCLOUD | ICP  | LOCAL"
   exit 1
 fi
 source ../scripts/setenv.sh $1
