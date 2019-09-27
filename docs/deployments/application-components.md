@@ -5,29 +5,39 @@ Deployment of application microservices for the Event-Driven Architecture Refere
 ### Kafka Topic Creation
 
 
-**TODO** Kafka Topic Creation
-
-Once your event streams back end is up and running, you should create the topics using the Event Streams console as:
+You can create the topics using the Event Streams console:
 
 ![](images/es-icp-topics.png)
 
-or the use a set of commands like below, which are done for you in the script: `scripts/createLocalTopicsOnK8S.sh `.
+or if you have manually deployed Event Streams or Kafka, you can use commands similar to the snippet below:
 
 ```shell
 # get the name of the Kafka pod
 $ export NAMESPACE=<target k8s namespace / ocp project>
-$ kubectl get pods  -n ${NAMESPACE} | grep kafka | awk '{print $1;}'
-> rolling-streams-ibm-es-kafka-sts-0
+$ export KPOF=$(kubectl get pods  -n ${NAMESPACE} | grep kafka | awk '{print $1;}')
+$ cat ${KPOF}
+rolling-streams-ibm-es-kafka-sts-0
 rolling-streams-ibm-es-kafka-sts-1
 rolling-streams-ibm-es-kafka-sts-2
 # Then get the name of the zookeeper service:
-$ kubectl get svc -n ${NAMESPACE} | grep zoo | awk '{print $1;}' | head -1
+$ export ZOOKSVC=$(kubectl get svc -n ${NAMESPACE} | grep zoo | awk '{print $1;}' | head -1)
 rolling-streams-ibm-es-zookeeper-fixed-ip-svc-0
 # Then remote exec a shell on one of this broker to configure the topic - for example the "orders" topic
-$ kubectl exec -n ${NAMESPACE} -ti rolling-streams-ibm-es-kafka-sts-0 -- bash -c "/opt/kafka/bin/kafka-topics.sh --create  --zookeeper $zooksvc:2181 --replication-factor 1 --partitions 1 --topic orders"
+$ kubectl exec -n ${NAMESPACE} -ti ${KPOF} -- bash -c "/opt/kafka/bin/kafka-topics.sh --create  --zookeeper ${ZOOKSVC}:2181 --replication-factor 1 --partitions 1 --topic orders"
 ```
 
-### Docker registries
+The topics that need to be created are:
+- `bluewaterContainer`
+- `bluewaterShip`
+- `bluewaterProblem`
+- `orders`
+- `rejected-orders`
+- `allocated-orders`
+- `errors`
+- `containers`
+- `containerMetrics`
+
+## Docker registries
 
 You will need a Docker image registry to push and pull your images to and from.  There are multiple options depending on client use cases and we are only documenting a subset of potential solutions, including but not limited to IBM Cloud Container Registry, Docker Hub, Quay, etc.
 
@@ -512,8 +522,6 @@ docker push osowski/python-tools
 ```
 
 The above image is a base Python image with our integration tests, defined in the `itg-tests` directory.  It is a long-running Flask process that provides a simple web server, so once deployed, it will remain available to "exec" into for additional in-cluster CLI interaction.  However, for simplicity, we have defined a few integration scenarios, using a Kubernetes Deployment and multiple Kubernetes Jobs, that will automate some of the integration test scenarios.
-
-**TODO** Update integration-test YAML to allow for kustomize to replace image repository
 
 * Update the `itg-tests/kustomization.yaml` file with the specifics for your `python-tools` Docker image, changing the `newName` and `newTag` fields, as appropriate, along with the `namespace` field.
 
