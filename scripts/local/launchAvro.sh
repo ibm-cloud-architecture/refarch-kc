@@ -39,7 +39,7 @@ then
         # To see the logs execute either:
         # 1. docker-compose -f ${MAIN_DIR}/docker/backbone-compose.yml logs 
         # 2. docker logs <docker_container_id>
-        docker-compose -f ${MAIN_DIR}/docker/backbone-compose.yml up -d
+        docker-compose -f ${MAIN_DIR}/docker/backbone-compose-avro.yml up -d
         sleep 15
         ${MAIN_DIR}/scripts/createTopics.sh LOCAL
     else

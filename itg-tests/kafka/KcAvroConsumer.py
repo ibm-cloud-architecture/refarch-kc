@@ -1,23 +1,26 @@
 import json
-from confluent_kafka import Consumer, KafkaError
+from confluent_kafka import KafkaError
+from confluent_kafka.avro import AvroConsumer
+from confluent_kafka.avro.serializer import SerializerError
 
 
 class KafkaConsumer:
 
-    def __init__(self, kafka_env = 'LOCAL', kafka_brokers = "", kafka_apikey = "", topic_name = "",autocommit = True):
+    def __init__(self, kafka_env = 'LOCAL', kafka_brokers = "", kafka_apikey = "", topic_name = "", schema_registry_url = "", autocommit = True):
         self.kafka_env = kafka_env
         self.kafka_brokers = kafka_brokers
         self.kafka_apikey = kafka_apikey
         self.topic_name = topic_name
+        self.schema_registry_url = schema_registry_url 
         self.kafka_auto_commit = autocommit
 
     # See https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md
-    # Prepares de Consumer with specific options based on the case
     def prepareConsumer(self, groupID = "pythonconsumers"):
         options ={
                 'bootstrap.servers':  self.kafka_brokers,
                 'group.id': groupID,
-                 'auto.offset.reset': 'earliest',
+                'auto.offset.reset': 'earliest',
+                'schema.registry.url': self.schema_registry_url,
                 'enable.auto.commit': self.kafka_auto_commit,
         }
         if (self.kafka_env != 'LOCAL' and self.kafka_env != 'MINIKUBE'):
@@ -29,44 +32,21 @@ class KafkaConsumer:
             options['ssl.ca.location'] = 'es-cert.pem'
         print("This is the configuration for the consumer:")
         print(options)
-        self.consumer = Consumer(options)
+        self.consumer = AvroConsumer(options)
         self.consumer.subscribe([self.topic_name])
     
-    # Prints out and returns the decoded events received by the consumer
     def traceResponse(self, msg):
-        msgStr = msg.value().decode('utf-8')
         print('@@@ pollNextOrder {} partition: [{}] at offset {} with key {}:\n\tvalue: {}'
-                    .format(msg.topic(), msg.partition(), msg.offset(), str(msg.key()), msgStr ))
-        return msgStr
+                    .format(msg.topic(), msg.partition(), msg.offset(), msg.key(), msg.value() ))
 
-    # Polls for events until it finds an event where keyId=keyname
     def pollNextEvent(self, keyID, keyname):
         gotIt = False
-        anEvent = {}
         while not gotIt:
-            msg = self.consumer.poll(timeout=10.0)
-            # Continue if we have not received a message yet
-            if msg is None:
-                continue
-            if msg.error():
-                print("Consumer error: {}".format(msg.error()))
-                # Stop reading if we find end of partition in the error message
-                if ("PARTITION_EOF" in msg.error()):
-                    gotIt= True
-                continue
-            msgStr = self.traceResponse(msg)
-            # Create the json event based on message string formed by traceResponse
-            anEvent = json.loads(msgStr)
-            # If we've found our event based on keyname and keyID, stop reading messages
-            if (anEvent["payload"][keyname] == keyID):
-                gotIt = True
-        return anEvent
-
-    # Polls for events endlessly
-    def pollEvents(self):
-        gotIt = False
-        while not gotIt:
-            msg = self.consumer.poll(timeout=10.0)
+            try:
+                msg = self.consumer.poll(timeout=10.0)
+            except SerializerError as e:
+                print("Message deserialization failed for {}: {}".format(msg, e))
+                break
             if msg is None:
                 continue
             if msg.error():
@@ -75,6 +55,8 @@ class KafkaConsumer:
                     gotIt= True
                 continue
             self.traceResponse(msg)
+            if (msg.key() == keyID):
+                gotIt = True
     
     def close(self):
         self.consumer.close()

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Script we are executing
-echo -e " \e[32m@@@ Excuting script: \e[1;33mrunContainerConsumer.sh \e[0m"
+echo -e " \e[32m@@@ Excuting script: \e[1;33mrunContainerAvroConsumer.sh \e[0m"
 
 ## Variables
 
@@ -43,8 +43,9 @@ source ${MAIN_DIR}/scripts/setenv.sh $kcenv
 docker run  -e KAFKA_BROKERS=$KAFKA_BROKERS \
             -e KAFKA_APIKEY=$KAFKA_APIKEY \
             -e KAFKA_ENV=$KAFKA_ENV \
+            -e SCHEMA_REGISTRY_URL=$SCHEMA_REGISTRY_URL \
             -v ${MAIN_DIR}/itg-tests:/home \
             --network=docker_default \
             --rm \
-            -ti ibmcase/python bash \
-            -c "cd /home/ContainersPython && export PYTHONPATH=/home && python ConsumeContainers.py $cid"
+            -ti ibmcase/python:avro bash \
+            -c "cd /home/ContainersPython && export PYTHONPATH=/home && python ConsumeAvroContainers.py $cid"

@@ -1,12 +1,13 @@
 Deployment of application microservices for the Event-Driven Architecture Reference Application
 
-# Environment prerequisites
+## Environment prerequisites
 
-## Kafka Topic Creation
+### Kafka Topic Creation
+
 
 You can create the topics using the Event Streams console:
 
-![](es-icp-topics.png)
+![](images/es-icp-topics.png)
 
 or if you have manually deployed Event Streams or Kafka, you can use commands similar to the snippet below:
 
@@ -40,14 +41,14 @@ The topics that need to be created are:
 
 You will need a Docker image registry to push and pull your images to and from.  There are multiple options depending on client use cases and we are only documenting a subset of potential solutions, including but not limited to IBM Cloud Container Registry, Docker Hub, Quay, etc.
 
-### IBM Cloud Container Registry
+#### IBM Cloud Container Registry
 
 * Install IBM Cloud Container Registry CLI plug-in if needed:
 ```
 ibmcloud plugin install container-registry -r Bluemix
 ```
 
-**Define a private image repository**
+#### Define a private image repository
 
 Use the [IBM Cloud Container Registry](https://cloud.ibm.com/containers-kubernetes/catalog/registry) to push your images and then deploy them to any Kubernetes cluster with access to the public internet.  When deploying enterprise applications, it is strongly recommended to use private registry to protect your images from being used and changed by unauthorized users. Private registries must be set up by the cluster administrator to ensure that the credentials to access the private registry are available to the cluster users.
 
@@ -68,7 +69,7 @@ To see the images in your private registry you can use the user interface at [ht
 ibmcloud cr image-list
 ```
 
-**Private Registry Token**
+#### Private Registry Token
 
 Each Helm Chart specifies the name of the Docker image to load the containers & pods. To enable access from Kubernetes Nodes to your private registry, an image pull secret is required and will be stored in a Kubernetes secret.  If you are using public Docker Hub image repositories, an image pull secret is not required.
 
@@ -126,11 +127,11 @@ You will see something like below.
 
 ## Basic Kubernetes
 
-## IBM Cloud Kubernetes Service
+### IBM Cloud Kubernetes Service
 
 To create the cluster follow [this tutorial](https://console.bluemix.net/docs/containers/cs_tutorials.html#cs_cluster_tutorial).
 
-## OpenShift Container Platform 3.11
+### OpenShift Container Platform 3.11
 
 This needs to be done once per unique deployment of the entire application.
 
@@ -142,11 +143,13 @@ This needs to be done once per unique deployment of the entire application.
   - Example: `oc adm policy add-scc-to-user anyuid -z kcontainer-runtime -n eda-refarch`
   - NOTE: This requires `cluster-admin` level privileges.
 
-## OpenShift Container Platform 4.X
+### OpenShift Container Platform 4.X
 
-# Deploy application microservices
+**TODO**
 
-## Using the master repository
+## Deploy application microservices
+
+### Using the master repository
 You can download the necessary application microservice repsoitories using scripts provided in the master repository:
 
 ```shell
@@ -155,7 +158,9 @@ cd refarch-kc
 ./scripts/clone.sh
 ```
 
-## Deploy Order Command microservice
+### Deploy Order Command microservice
+
+**TODO** Order Command updates for ES ICP
 
 * Go to the repo
 
@@ -200,7 +205,7 @@ helm template --set image.repository=rhos-quay.internal-network.local/browncompu
 
 * Deploy application using `kubectl/oc apply`:
 ```shell
-(kubectl/oc) apply -f templates/ordercommandms/templates`
+(kubectl/oc) apply -f templates/ordercommandms/templates
 ```
 
 * Verify default service is running correctly:
@@ -210,7 +215,9 @@ Without any previously tests done, the call below should return an empty array: 
 curl http://<cluster endpoints>:31200/orders
 ```
 
-## Deploy Order Query microservice
+### Deploy Order Query microservice
+
+**TODO** Order Query updates for ES ICP
 
 * Go to the repo
 
@@ -255,7 +262,7 @@ helm template --set image.repository=rhos-quay.internal-network.local/browncompu
 
 * Deploy application using `kubectl/oc apply`:
 ```shell
-(kubectl/oc) apply -f templates/orderqueryms/templates`
+(kubectl/oc) apply -f templates/orderqueryms/templates
 ```
 
 * Verify default service is running correctly:
@@ -265,9 +272,10 @@ Without any previously tests done, the call below should return an empty array: 
 curl http://<cluster endpoints>:31100/orders
 ```
 
-## Deploy Container microservice
+### Deploy Container microservice
 
 **TODO** Container Microservice requires POSTGRES parameters
+**TODO** Container Microservice updates for ES ICP
 
 * Go to the repo
 
@@ -312,7 +320,7 @@ helm template --set image.repository=rhos-quay.internal-network.local/browncompu
 
 * Deploy application using `kubectl/oc apply`:
 ```shell
-(kubectl/oc) apply -f templates/springcontainerms/templates`
+(kubectl/oc) apply -f templates/springcontainerms/templates
 ```
 
 * Verify default service is running correctly:
@@ -321,14 +329,14 @@ helm template --set image.repository=rhos-quay.internal-network.local/browncompu
 curl http://cluster-endpoints:31900/containers
 ```
 
-## Deploy Voyages microservice
+### Deploy Voyages microservice
 
 The *Voyage microservice* is a simple nodejs app to mockup schedule of vessels between two harbors. It is here to illustrate Kafka integration with nodejs app.
 
 * Go to the repo
 
 ```shell
-cd cd refarch-kc-ms/voyages-ms
+cd refarch-kc-ms/voyages-ms
 ```
 
 * Build the image
@@ -350,34 +358,107 @@ docker login <private-registry>
 docker push <private-registry>/<image-namespace>/kc-voyages-ms:latest
 ```
 
-* Generate application YAMLs via `helm template` with the following parameters:
-  - `--set image.repository=<private-registry>/<image-namespace>/<image-repository>`
-  - `--set image.tag=latest`
-  - `--set image.pullSecret=<private-registry-pullsecret>` (optional or set to blank)
-  - `--set image.pullPolicy=Always`
-  - `--set eventstreams.env=ICP`
-  - `--set eventstreams.brokersConfigMap=<kafka brokers ConfigMap name>`
-  - `--set serviceAccountName=<service-account-name>`
-  - `--namespace <target-namespace>`
-  - `--output-dir <local-template-directory>`
-
-```shell
-# Example parameters
-helm template --set image.repository=rhos-quay.internal-network.local/browncompute/kc-voyages-ms --set image.tag=latest --set image.pullSecret= --set image.pullPolicy=Always --set eventstreams.env=ICP --set eventstreams.brokersConfigMap=kafka-brokers --set serviceAccountName=kcontainer-runtime --output-dir templ --namespace eda-refarch chart/voyagesms
-```
+* Generate application YAMLs via `helm template`:
+  - Parameters:
+    - `--set image.repository=<private-registry>/<image-namespace>/<image-repository>`
+    - `--set image.tag=latest`
+    - `--set image.pullSecret=<private-registry-pullsecret>` (optional or set to blank)
+    - `--set image.pullPolicy=Always`
+    - `--set kafka.brokersConfigMap=<kafka brokers ConfigMap name>`
+    - `--set eventstreams.enabled=(true/false)` (`true` when connecting to Event Streams of any kind, `false` when connecting to Kafka directly)
+    - `--set eventstreams.apikeyConfigMap=<kafka api key Secret name>`
+    - `--set eventstreams.caPemFileRequired=(true/false)` (`true` when connecting to Event Streams via ICP4I)
+    - `--set eventstreams.caPemSecretName=<eventstreams ca pem file secret name>` (only used when connecting to Event Streams via ICP4I)
+    - `--set serviceAccountName=<service-account-name>`
+    - `--namespace <target-namespace>`
+    - `--output-dir <local-template-directory>`
+  - Example using Event Streams via ICP4I:
+   ```shell
+   helm template --set image.repository=rhos-quay.internal-network.local/browncompute/kc-voyages-ms --set image.tag=latest --set image.pullSecret= --set image.pullPolicy=Always --set kafka.brokersConfigMap=es-kafka-brokers --set eventstreams.enabled=true --set eventstreams.apikeyConfigMap=es-eventstreams-apikey --set serviceAccountName=kcontainer-runtime --set eventstreams.caPemFileRequired=true --set eventstreams.caPemSecretName=es-ca-pemfile --output-dir templates --namespace eda-pipelines-sandbox chart/voyagesms
+   ```
+  - Example using Event Streams hosted on IBM Cloud:
+    ```shell
+    helm template --set image.repository=rhos-quay.internal-network.local/browncompute/kc-voyages-ms --set image.tag=latest --set image.pullSecret= --set image.pullPolicy=Always --set kafka.brokersConfigMap=kafka-brokers --set eventstreams.enabled=true --set eventstreams.apikeyConfigMap=eventstreams-apikey --set serviceAccountName=kcontainer-runtime --output-dir templates --namespace eda-pipelines-sandbox chart/voyagesms
+    ```
 
 * Deploy application using `kubectl/oc apply`:
 ```shell
-(kubectl/oc) apply -f templates/voyagesms/templates`
+(kubectl/oc) apply -f templates/voyagesms/templates
 ```
 
 * Verify default service is running correctly:
-
 ```shell
 curl http://cluster-endpoint:31000/voyage
 ```
 
-## Deploy User Interface microservice
+### Deploy the Fleet Simulator microservice
+
+The *Fleet simulator* is to move vessels from one harbors to another, and send container metrics while the containers are on a vessel. It has some predefined simulation to trigger some events.
+
+* Go to the repo
+
+```shell
+cd cd refarch-kc-ms/fleet-ms
+```
+
+* Build the image
+
+```shell
+docker build -t kc-fleet-ms:latest -f Dockerfile.multistage
+```
+
+* Tag the image
+
+```shell
+docker tag kc-fleet-ms <private-registry>/<image-namespace>/kc-fleet-ms:latest
+```
+
+* Push the image
+
+```shell
+docker login <private-registry>
+docker push <private-registry>/<image-namespace>/kc-fleet-ms:latest
+```
+
+* Generate application YAMLs via `helm template`:
+  - Parameters:
+    - `--set image.repository=<private-registry>/<image-namespace>/<image-repository>`
+    - `--set image.tag=latest`
+    - `--set image.pullSecret=<private-registry-pullsecret>` (optional or set to blank)
+    - `--set image.pullPolicy=Always`
+    - `--set kafka.brokersConfigMap=<kafka brokers ConfigMap name>`
+    - `--set eventstreams.enabled=(true/false)` (`true` when connecting to Event Streams of any kind, `false` when connecting to Kafka directly)
+    - `--set eventstreams.apikeyConfigMap=<kafka api key Secret name>`
+    - `--set eventstreams.truststoreRequired=(true/false)` (`true` when connecting to Event Streams via ICP4I)
+    - `--set eventstreams.truststoreSecret=<eventstreams jks file secret name>` (only used when connecting to Event Streams via ICP4I)
+    - `--set eventstreams.truststorePassword=<eventstreams jks password>` (only used when connecting to Event Streams via ICP4I)
+    - `--set serviceAccountName=<service-account-name>`
+    - `--namespace <target-namespace>`
+    - `--output-dir <local-template-directory>`
+  - Example using Event Streams via ICP4I:
+   ```shell
+   helm template --set image.repository=rhos-quay.internal-network.local/browncompute/kc-fleet-ms --set image.tag=latest --set image.pullSecret= --set image.pullPolicy=Always --set kafka.brokersConfigMap=es-kafka-brokers --set eventstreams.enabled=true --set eventstreams.apikeyConfigMap=es-eventstreams-apikey --set serviceAccountName=kcontainer-runtime --set eventstreams.truststoreRequired=true --set eventstreams.truststoreSecret=es-ca-pemfile --set eventstreams.truststorePassword=password --output-dir templates --namespace eda-pipelines-sandbox chart/fleetms
+   ```
+  - Example using Event Streams hosted on IBM Cloud:
+   ```shell
+   helm template --set image.repository=rhos-quay.internal-network.local/browncompute/kc-fleet-ms --set image.tag=latest --set image.pullSecret= --set image.pullPolicy=Always --set kafka.brokersConfigMap=kafka-brokers --set eventstreams.enabled=true --set eventstreams.apikeyConfigMap=eventstreams-apikey --set serviceAccountName=kcontainer-runtime --output-dir templates --namespace eda-pipelines-sandbox chart/fleetms
+   ```
+
+* Deploy application using `kubectl/oc apply`:
+```shell
+(kubectl/oc) apply -f templates/fleetms/templates
+```
+
+* Verify default service is running correctly:
+
+  At the beginning the call below should return an empty array: `[]`
+```shell
+curl http://cluster-endpoint:31300/fleetms/fleets
+```
+
+### Deploy User Interface microservice
+
+**TODO** User Interface updates for ES ICP
 
 * Go to the repo
 
@@ -422,44 +503,12 @@ helm template --set image.repository=rhos-quay.internal-network.local/browncompu
 
 * Deploy application using `kubectl/oc apply`:
 ```shell
-(kubectl/oc) apply -f templates/kc-ui/templates`
+(kubectl/oc) apply -f templates/kc-ui/templates
 ```
 
 * Verify the installed app
 
 Point your web browser to [http://cluster-endpoints:31010](#) and login with username: eddie@email.com and password Eddie.
-
-## Deploy the Fleet Simulator microservice
-
-**TODO** Fleet Simulator
-
-!!! note
-    The fleet simulator is to move vessels from one harbors to another, and send container metrics while the containers are on a vessel. It has some predefined simulation to trigger some events.
-
-* Go to the repo
-
-```
-$ cd refarch-kc-ms/fleet-ms
-```
-
-* Build the image
-
-```
-$ ./scripts/buildDocker.sh MINIKUBE
-```
-
-* Deploy on minikube
-
-```
-helm install chart/fleetms/ --name fleetms --set image.repository=ibmcase/kc-fleetms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
-```
-
-* Verify service runs
-
-At the beginning the call below should return an empty array: `[]`
-```
-curl http://localhost:31300/fleetms/fleets
-```
 
 ## Integration Tests
 
@@ -499,6 +548,6 @@ This Kubernetes YAML will create one Deployment and one Job.  The long-running D
 
 You should see the same Order ID created by the Job in the output of the Deployment's container.
 
-# Universal deployment considerations
+## Universal deployment considerations
 
 When deploying kafka consumer it is important to assess the horizontal pod autoscaler settings and needs, as adding consumers will not address scalability if the number of partitions in the topic(s) to consume does not match the increase of consumers. So disable HPA by default. If you want to use HPA you also need to ensure that a metrics-server is running, then set the number of partition, and the `hpa.maxReplicas` to the number of partitions.

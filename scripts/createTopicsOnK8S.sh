@@ -1,6 +1,6 @@
-echo "Create topics for the KC solutions on your local kafka"
-ns="streams"
-zooksvc="rolling-streams-ibm-es-zookeeper-fixed-ip-svc-0"
+echo "Create topics for the Reefer container solutions on event streams on premise"
+ns="event-streams"
+zooksvc="event-streams-ibm-es-zookeeper-fixed-ip-svc-0"
 
 echo "Kafka pod name is..."
 kpof=$(kubectl get pods -n $ns| grep kafka | awk '{print $1;}'| head -1)
@@ -13,7 +13,7 @@ else
 fi
 
 echo "Zookeeper svc name is..."
-zooksvc=$(kubectl get svc -n streams | grep zoo | awk '{print $1;}' | head -1)
+zooksvc=$(kubectl get svc -n $ns | grep zoo | awk '{print $1;}' | head -1)
 if [[ -z $zooksvc ]]
 then
   echo "Zookeeper not installed on your kubernetes cluster"
@@ -45,6 +45,7 @@ createTopic "rejected-orders"
 createTopic "allocated-orders"
 createTopic "errors" 
 createTopic "containers" 
-createTopic "containerMetrics" 
+createTopic "reeferTelemetries" 
+createTopic "orderCommands"
 
 rm topics
