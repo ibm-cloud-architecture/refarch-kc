@@ -469,7 +469,12 @@
   
 </li>
         
-          <li class="md-nav__item">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#docker-registries" title="Docker registries" class="md-nav__link">
     Docker registries
   </a>
@@ -495,11 +500,6 @@
   <a href="#private-registry-token" title="Private Registry Token" class="md-nav__link">
     Private Registry Token
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -586,15 +586,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#deploy-user-interface-microservice" title="Deploy User Interface microservice" class="md-nav__link">
-    Deploy User Interface microservice
+  <a href="#deploy-the-fleet-simulator-microservice" title="Deploy the Fleet Simulator microservice" class="md-nav__link">
+    Deploy the Fleet Simulator microservice
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#deploy-the-fleet-simulator-microservice" title="Deploy the Fleet Simulator microservice" class="md-nav__link">
-    Deploy the Fleet Simulator microservice
+  <a href="#deploy-user-interface-microservice" title="Deploy User Interface microservice" class="md-nav__link">
+    Deploy User Interface microservice
   </a>
   
 </li>
@@ -703,7 +703,12 @@
   
 </li>
         
-          <li class="md-nav__item">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#docker-registries" title="Docker registries" class="md-nav__link">
     Docker registries
   </a>
@@ -729,11 +734,6 @@
   <a href="#private-registry-token" title="Private Registry Token" class="md-nav__link">
     Private Registry Token
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -820,15 +820,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#deploy-user-interface-microservice" title="Deploy User Interface microservice" class="md-nav__link">
-    Deploy User Interface microservice
+  <a href="#deploy-the-fleet-simulator-microservice" title="Deploy the Fleet Simulator microservice" class="md-nav__link">
+    Deploy the Fleet Simulator microservice
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#deploy-the-fleet-simulator-microservice" title="Deploy the Fleet Simulator microservice" class="md-nav__link">
-    Deploy the Fleet Simulator microservice
+  <a href="#deploy-user-interface-microservice" title="Deploy User Interface microservice" class="md-nav__link">
+    Deploy User Interface microservice
   </a>
   
 </li>
@@ -876,24 +876,34 @@
                 <p>Deployment of application microservices for the Event-Driven Architecture Reference Application</p>
 <h2 id="environment-prerequisites">Environment prerequisites</h2>
 <h3 id="kafka-topic-creation">Kafka Topic Creation</h3>
-<p><strong>TODO</strong> Kafka Topic Creation</p>
-<p>Once your event streams back end is up and running, you should create the topics using the Event Streams console as:</p>
+<p>You can create the topics using the Event Streams console:</p>
 <p><img alt="" src="../images/es-icp-topics.png" /></p>
-<p>or the use a set of commands like below, which are done for you in the script: <code>scripts/createLocalTopicsOnK8S.sh</code>.</p>
+<p>or if you have manually deployed Event Streams or Kafka, you can use commands similar to the snippet below:</p>
 <div class="codehilite"><pre><span></span><span class="c1"># get the name of the Kafka pod</span>
 $ <span class="nb">export</span> <span class="nv">NAMESPACE</span><span class="o">=</span>&lt;target k8s namespace / ocp project&gt;
-$ kubectl get pods  -n <span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span> <span class="p">|</span> grep kafka <span class="p">|</span> awk <span class="s1">&#39;{print $1;}&#39;</span>
-&gt; rolling-streams-ibm-es-kafka-sts-0
+$ <span class="nb">export</span> <span class="nv">KPOF</span><span class="o">=</span><span class="k">$(</span>kubectl get pods  -n <span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span> <span class="p">|</span> grep kafka <span class="p">|</span> awk <span class="s1">&#39;{print $1;}&#39;</span><span class="k">)</span>
+$ cat <span class="si">${</span><span class="nv">KPOF</span><span class="si">}</span>
+rolling-streams-ibm-es-kafka-sts-0
 rolling-streams-ibm-es-kafka-sts-1
 rolling-streams-ibm-es-kafka-sts-2
 <span class="c1"># Then get the name of the zookeeper service:</span>
-$ kubectl get svc -n <span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span> <span class="p">|</span> grep zoo <span class="p">|</span> awk <span class="s1">&#39;{print $1;}&#39;</span> <span class="p">|</span> head -1
+$ <span class="nb">export</span> <span class="nv">ZOOKSVC</span><span class="o">=</span><span class="k">$(</span>kubectl get svc -n <span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span> <span class="p">|</span> grep zoo <span class="p">|</span> awk <span class="s1">&#39;{print $1;}&#39;</span> <span class="p">|</span> head -1<span class="k">)</span>
 rolling-streams-ibm-es-zookeeper-fixed-ip-svc-0
 <span class="c1"># Then remote exec a shell on one of this broker to configure the topic - for example the &quot;orders&quot; topic</span>
-$ kubectl <span class="nb">exec</span> -n <span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span> -ti rolling-streams-ibm-es-kafka-sts-0 -- bash -c <span class="s2">&quot;/opt/kafka/bin/kafka-topics.sh --create  --zookeeper </span><span class="nv">$zooksvc</span><span class="s2">:2181 --replication-factor 1 --partitions 1 --topic orders&quot;</span>
+$ kubectl <span class="nb">exec</span> -n <span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span> -ti <span class="si">${</span><span class="nv">KPOF</span><span class="si">}</span> -- bash -c <span class="s2">&quot;/opt/kafka/bin/kafka-topics.sh --create  --zookeeper </span><span class="si">${</span><span class="nv">ZOOKSVC</span><span class="si">}</span><span class="s2">:2181 --replication-factor 1 --partitions 1 --topic orders&quot;</span>
 </pre></div>
 
-<h3 id="docker-registries">Docker registries</h3>
+<p>The topics that need to be created are:
+- <code>bluewaterContainer</code>
+- <code>bluewaterShip</code>
+- <code>bluewaterProblem</code>
+- <code>orders</code>
+- <code>rejected-orders</code>
+- <code>allocated-orders</code>
+- <code>errors</code>
+- <code>containers</code>
+- <code>containerMetrics</code></p>
+<h2 id="docker-registries">Docker registries</h2>
 <p>You will need a Docker image registry to push and pull your images to and from.  There are multiple options depending on client use cases and we are only documenting a subset of potential solutions, including but not limited to IBM Cloud Container Registry, Docker Hub, Quay, etc.</p>
 <h4 id="ibm-cloud-container-registry">IBM Cloud Container Registry</h4>
 <ul>
@@ -1009,7 +1019,7 @@ The result:</p>
 <li>NOTE: This requires <code>cluster-admin</code> level privileges.</li>
 </ol>
 <h3 id="openshift-container-platform-4x">OpenShift Container Platform 4.X</h3>
-<p><strong>TODO</strong> </p>
+<p><strong>TODO</strong></p>
 <h2 id="deploy-application-microservices">Deploy application microservices</h2>
 <h3 id="using-the-master-repository">Using the master repository</h3>
 <p>You can download the necessary application microservice repsoitories using scripts provided in the master repository:</p>
@@ -1019,6 +1029,7 @@ The result:</p>
 </pre></div>
 
 <h3 id="deploy-order-command-microservice">Deploy Order Command microservice</h3>
+<p><strong>TODO</strong> Order Command updates for ES ICP</p>
 <ul>
 <li>Go to the repo</li>
 </ul>
@@ -1063,7 +1074,7 @@ helm template --set image.repository<span class="o">=</span>rhos-quay.internal-n
 <ul>
 <li>
 <p>Deploy application using <code>kubectl/oc apply</code>:
-<div class="codehilite"><pre><span></span><span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f templates/ordercommandms/templates<span class="sb">`</span>
+<div class="codehilite"><pre><span></span><span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f templates/ordercommandms/templates
 </pre></div></p>
 </li>
 <li>
@@ -1074,6 +1085,7 @@ helm template --set image.repository<span class="o">=</span>rhos-quay.internal-n
 <div class="codehilite"><pre><span></span>curl http://&lt;cluster endpoints&gt;:31200/orders
 </pre></div></p>
 <h3 id="deploy-order-query-microservice">Deploy Order Query microservice</h3>
+<p><strong>TODO</strong> Order Query updates for ES ICP</p>
 <ul>
 <li>Go to the repo</li>
 </ul>
@@ -1118,7 +1130,7 @@ helm template --set image.repository<span class="o">=</span>rhos-quay.internal-n
 <ul>
 <li>
 <p>Deploy application using <code>kubectl/oc apply</code>:
-<div class="codehilite"><pre><span></span><span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f templates/orderqueryms/templates<span class="sb">`</span>
+<div class="codehilite"><pre><span></span><span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f templates/orderqueryms/templates
 </pre></div></p>
 </li>
 <li>
@@ -1129,7 +1141,8 @@ helm template --set image.repository<span class="o">=</span>rhos-quay.internal-n
 <div class="codehilite"><pre><span></span>curl http://&lt;cluster endpoints&gt;:31100/orders
 </pre></div></p>
 <h3 id="deploy-container-microservice">Deploy Container microservice</h3>
-<p><strong>TODO</strong> Container Microservice requires POSTGRES parameters</p>
+<p><strong>TODO</strong> Container Microservice requires POSTGRES parameters
+<strong>TODO</strong> Container Microservice updates for ES ICP</p>
 <ul>
 <li>Go to the repo</li>
 </ul>
@@ -1174,7 +1187,7 @@ helm template --set image.repository<span class="o">=</span>rhos-quay.internal-n
 <ul>
 <li>
 <p>Deploy application using <code>kubectl/oc apply</code>:
-<div class="codehilite"><pre><span></span><span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f templates/springcontainerms/templates<span class="sb">`</span>
+<div class="codehilite"><pre><span></span><span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f templates/springcontainerms/templates
 </pre></div></p>
 </li>
 <li>
@@ -1189,7 +1202,7 @@ helm template --set image.repository<span class="o">=</span>rhos-quay.internal-n
 <ul>
 <li>Go to the repo</li>
 </ul>
-<div class="codehilite"><pre><span></span><span class="nb">cd</span> <span class="nb">cd</span> refarch-kc-ms/voyages-ms
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> refarch-kc-ms/voyages-ms
 </pre></div>
 
 <ul>
@@ -1212,35 +1225,108 @@ docker push &lt;private-registry&gt;/&lt;image-namespace&gt;/kc-voyages-ms:lates
 </pre></div>
 
 <ul>
-<li>Generate application YAMLs via <code>helm template</code> with the following parameters:</li>
+<li>Generate application YAMLs via <code>helm template</code>:</li>
+<li>Parameters:<ul>
 <li><code>--set image.repository=&lt;private-registry&gt;/&lt;image-namespace&gt;/&lt;image-repository&gt;</code></li>
 <li><code>--set image.tag=latest</code></li>
 <li><code>--set image.pullSecret=&lt;private-registry-pullsecret&gt;</code> (optional or set to blank)</li>
 <li><code>--set image.pullPolicy=Always</code></li>
-<li><code>--set eventstreams.env=ICP</code></li>
-<li><code>--set eventstreams.brokersConfigMap=&lt;kafka brokers ConfigMap name&gt;</code></li>
+<li><code>--set kafka.brokersConfigMap=&lt;kafka brokers ConfigMap name&gt;</code></li>
+<li><code>--set eventstreams.enabled=(true/false)</code> (<code>true</code> when connecting to Event Streams of any kind, <code>false</code> when connecting to Kafka directly)</li>
+<li><code>--set eventstreams.apikeyConfigMap=&lt;kafka api key Secret name&gt;</code></li>
+<li><code>--set eventstreams.caPemFileRequired=(true/false)</code> (<code>true</code> when connecting to Event Streams via ICP4I)</li>
+<li><code>--set eventstreams.caPemSecretName=&lt;eventstreams ca pem file secret name&gt;</code> (only used when connecting to Event Streams via ICP4I)</li>
 <li><code>--set serviceAccountName=&lt;service-account-name&gt;</code></li>
 <li><code>--namespace &lt;target-namespace&gt;</code></li>
 <li><code>--output-dir &lt;local-template-directory&gt;</code></li>
 </ul>
-<div class="codehilite"><pre><span></span><span class="c1"># Example parameters</span>
-helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/kc-voyages-ms --set image.tag<span class="o">=</span>latest --set image.pullSecret<span class="o">=</span> --set image.pullPolicy<span class="o">=</span>Always --set eventstreams.env<span class="o">=</span>ICP --set eventstreams.brokersConfigMap<span class="o">=</span>kafka-brokers --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --output-dir templ --namespace eda-refarch chart/voyagesms
+</li>
+<li>Example using Event Streams via ICP4I:
+   <div class="codehilite"><pre><span></span>helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/kc-voyages-ms --set image.tag<span class="o">=</span>latest --set image.pullSecret<span class="o">=</span> --set image.pullPolicy<span class="o">=</span>Always --set kafka.brokersConfigMap<span class="o">=</span>es-kafka-brokers --set eventstreams.enabled<span class="o">=</span><span class="nb">true</span> --set eventstreams.apikeyConfigMap<span class="o">=</span>es-eventstreams-apikey --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --set eventstreams.caPemFileRequired<span class="o">=</span><span class="nb">true</span> --set eventstreams.caPemSecretName<span class="o">=</span>es-ca-pemfile --output-dir templates --namespace eda-pipelines-sandbox chart/voyagesms
+</pre></div></li>
+<li>
+<p>Example using Event Streams hosted on IBM Cloud:
+    <div class="codehilite"><pre><span></span>helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/kc-voyages-ms --set image.tag<span class="o">=</span>latest --set image.pullSecret<span class="o">=</span> --set image.pullPolicy<span class="o">=</span>Always --set kafka.brokersConfigMap<span class="o">=</span>kafka-brokers --set eventstreams.enabled<span class="o">=</span><span class="nb">true</span> --set eventstreams.apikeyConfigMap<span class="o">=</span>eventstreams-apikey --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --output-dir templates --namespace eda-pipelines-sandbox chart/voyagesms
+</pre></div></p>
+</li>
+<li>
+<p>Deploy application using <code>kubectl/oc apply</code>:
+<div class="codehilite"><pre><span></span><span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f templates/voyagesms/templates
+</pre></div></p>
+</li>
+<li>
+<p>Verify default service is running correctly:
+<div class="codehilite"><pre><span></span>curl http://cluster-endpoint:31000/voyage
+</pre></div></p>
+</li>
+</ul>
+<h3 id="deploy-the-fleet-simulator-microservice">Deploy the Fleet Simulator microservice</h3>
+<p>The <em>Fleet simulator</em> is to move vessels from one harbors to another, and send container metrics while the containers are on a vessel. It has some predefined simulation to trigger some events.</p>
+<ul>
+<li>Go to the repo</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> <span class="nb">cd</span> refarch-kc-ms/fleet-ms
 </pre></div>
 
 <ul>
+<li>Build the image</li>
+</ul>
+<div class="codehilite"><pre><span></span>docker build -t kc-fleet-ms:latest -f Dockerfile.multistage
+</pre></div>
+
+<ul>
+<li>Tag the image</li>
+</ul>
+<div class="codehilite"><pre><span></span>docker tag kc-fleet-ms &lt;private-registry&gt;/&lt;image-namespace&gt;/kc-fleet-ms:latest
+</pre></div>
+
+<ul>
+<li>Push the image</li>
+</ul>
+<div class="codehilite"><pre><span></span>docker login &lt;private-registry&gt;
+docker push &lt;private-registry&gt;/&lt;image-namespace&gt;/kc-fleet-ms:latest
+</pre></div>
+
+<ul>
+<li>Generate application YAMLs via <code>helm template</code>:</li>
+<li>Parameters:<ul>
+<li><code>--set image.repository=&lt;private-registry&gt;/&lt;image-namespace&gt;/&lt;image-repository&gt;</code></li>
+<li><code>--set image.tag=latest</code></li>
+<li><code>--set image.pullSecret=&lt;private-registry-pullsecret&gt;</code> (optional or set to blank)</li>
+<li><code>--set image.pullPolicy=Always</code></li>
+<li><code>--set kafka.brokersConfigMap=&lt;kafka brokers ConfigMap name&gt;</code></li>
+<li><code>--set eventstreams.enabled=(true/false)</code> (<code>true</code> when connecting to Event Streams of any kind, <code>false</code> when connecting to Kafka directly)</li>
+<li><code>--set eventstreams.apikeyConfigMap=&lt;kafka api key Secret name&gt;</code></li>
+<li><code>--set eventstreams.truststoreRequired=(true/false)</code> (<code>true</code> when connecting to Event Streams via ICP4I)</li>
+<li><code>--set eventstreams.truststoreSecret=&lt;eventstreams jks file secret name&gt;</code> (only used when connecting to Event Streams via ICP4I)</li>
+<li><code>--set eventstreams.truststorePassword=&lt;eventstreams jks password&gt;</code> (only used when connecting to Event Streams via ICP4I)</li>
+<li><code>--set serviceAccountName=&lt;service-account-name&gt;</code></li>
+<li><code>--namespace &lt;target-namespace&gt;</code></li>
+<li><code>--output-dir &lt;local-template-directory&gt;</code></li>
+</ul>
+</li>
+<li>Example using Event Streams via ICP4I:
+   <div class="codehilite"><pre><span></span>helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/kc-fleet-ms --set image.tag<span class="o">=</span>latest --set image.pullSecret<span class="o">=</span> --set image.pullPolicy<span class="o">=</span>Always --set kafka.brokersConfigMap<span class="o">=</span>es-kafka-brokers --set eventstreams.enabled<span class="o">=</span><span class="nb">true</span> --set eventstreams.apikeyConfigMap<span class="o">=</span>es-eventstreams-apikey --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --set eventstreams.truststoreRequired<span class="o">=</span><span class="nb">true</span> --set eventstreams.truststoreSecret<span class="o">=</span>es-ca-pemfile --set eventstreams.truststorePassword<span class="o">=</span>password --output-dir templates --namespace eda-pipelines-sandbox chart/fleetms
+</pre></div></li>
+<li>
+<p>Example using Event Streams hosted on IBM Cloud:
+   <div class="codehilite"><pre><span></span>helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/kc-fleet-ms --set image.tag<span class="o">=</span>latest --set image.pullSecret<span class="o">=</span> --set image.pullPolicy<span class="o">=</span>Always --set kafka.brokersConfigMap<span class="o">=</span>kafka-brokers --set eventstreams.enabled<span class="o">=</span><span class="nb">true</span> --set eventstreams.apikeyConfigMap<span class="o">=</span>eventstreams-apikey --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --output-dir templates --namespace eda-pipelines-sandbox chart/fleetms
+</pre></div></p>
+</li>
 <li>
 <p>Deploy application using <code>kubectl/oc apply</code>:
-<div class="codehilite"><pre><span></span><span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f templates/voyagesms/templates<span class="sb">`</span>
+<div class="codehilite"><pre><span></span><span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f templates/fleetms/templates
 </pre></div></p>
 </li>
 <li>
 <p>Verify default service is running correctly:</p>
 </li>
 </ul>
-<div class="codehilite"><pre><span></span>curl http://cluster-endpoint:31000/voyage
-</pre></div>
-
+<p>At the beginning the call below should return an empty array: <code>[]</code>
+<div class="codehilite"><pre><span></span>curl http://cluster-endpoint:31300/fleetms/fleets
+</pre></div></p>
 <h3 id="deploy-user-interface-microservice">Deploy User Interface microservice</h3>
+<p><strong>TODO</strong> User Interface updates for ES ICP</p>
 <ul>
 <li>Go to the repo</li>
 </ul>
@@ -1285,7 +1371,7 @@ helm template --set image.repository<span class="o">=</span>rhos-quay.internal-n
 <ul>
 <li>
 <p>Deploy application using <code>kubectl/oc apply</code>:
-<div class="codehilite"><pre><span></span><span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f templates/kc-ui/templates<span class="sb">`</span>
+<div class="codehilite"><pre><span></span><span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f templates/kc-ui/templates
 </pre></div></p>
 </li>
 <li>
@@ -1293,36 +1379,6 @@ helm template --set image.repository<span class="o">=</span>rhos-quay.internal-n
 </li>
 </ul>
 <p>Point your web browser to <a href="#">http://cluster-endpoints:31010</a> and login with username: eddie@email.com and password Eddie.</p>
-<h3 id="deploy-the-fleet-simulator-microservice">Deploy the Fleet Simulator microservice</h3>
-<p><strong>TODO</strong> Fleet Simulator</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The fleet simulator is to move vessels from one harbors to another, and send container metrics while the containers are on a vessel. It has some predefined simulation to trigger some events.</p>
-</div>
-<ul>
-<li>Go to the repo</li>
-</ul>
-<div class="codehilite"><pre><span></span>$ <span class="nb">cd</span> refarch-kc-ms/fleet-ms
-</pre></div>
-
-<ul>
-<li>Build the image</li>
-</ul>
-<div class="codehilite"><pre><span></span>$ ./scripts/buildDocker.sh MINIKUBE
-</pre></div>
-
-<ul>
-<li>Deploy on minikube</li>
-</ul>
-<div class="codehilite"><pre><span></span>helm install chart/fleetms/ --name fleetms --set image.repository=ibmcase/kc-fleetms --set image.pullSecret= --set image.pullPolicy=IfNotPresent --set eventstreams.brokers=kafkabitnami:9092 --set eventstreams.env=MINIKUBE --namespace greencompute
-</pre></div>
-
-<ul>
-<li>Verify service runs</li>
-</ul>
-<p>At the beginning the call below should return an empty array: <code>[]</code>
-<div class="codehilite"><pre><span></span>curl http://localhost:31300/fleetms/fleets
-</pre></div></p>
 <h2 id="integration-tests">Integration Tests</h2>
 <p>Integration tests are provided in the <a href="itg-tests/">itg-tests</a> directory and are designed to be run in cluster with the rest of the application components.  However, they are regular Python scripts that can be adapted to be runnable anywhere, given the correct Kafka endpoints and configuration information.  For simplicity, this quick walkthrough will document how you can build and deploy Docker images that will run the integration tests inside the cluster, with the results visible via <code>kubectl logs</code> and the rest of the application's APIs.</p>
 <ul>
@@ -1333,7 +1389,6 @@ docker push osowski/python-tools
 </pre></div></li>
 </ul>
 <p>The above image is a base Python image with our integration tests, defined in the <code>itg-tests</code> directory.  It is a long-running Flask process that provides a simple web server, so once deployed, it will remain available to "exec" into for additional in-cluster CLI interaction.  However, for simplicity, we have defined a few integration scenarios, using a Kubernetes Deployment and multiple Kubernetes Jobs, that will automate some of the integration test scenarios.</p>
-<p><strong>TODO</strong> Update integration-test YAML to allow for kustomize to replace image repository</p>
 <ul>
 <li>
 <p>Update the <code>itg-tests/kustomization.yaml</code> file with the specifics for your <code>python-tools</code> Docker image, changing the <code>newName</code> and <code>newTag</code> fields, as appropriate, along with the <code>namespace</code> field.</p>

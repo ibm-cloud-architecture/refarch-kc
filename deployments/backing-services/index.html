@@ -513,6 +513,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#event-streams-certificates" title="Event Streams Certificates" class="md-nav__link">
+    Event Streams Certificates
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -791,6 +798,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#event-streams-certificates" title="Event Streams Certificates" class="md-nav__link">
+    Event Streams Certificates
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -981,11 +995,22 @@ kubectl describe configmap kafka-brokers -n &lt;target k8s namespace / ocp proje
 kubectl describe secrets -n &lt;target k8s namespace / ocp project&gt;
 </pre></div>
 
+<h4 id="event-streams-certificates">Event Streams Certificates</h4>
+<p>If you are using Event Streams as your Kafka broker provider and it is deployed via the IBM Cloud Pak for Integration (ICP4I), you will need to create an additional Secret to store the generated Certificates &amp; Truststores to connect securely between your application components and the Kafka brokers.  These artifacts need to be created once per unique deployment of the entire application and can be shared between application components in the same overall application deployment.</p>
+<ul>
+<li>From the <strong>Connect to this cluster</strong> tab on the landing page of your Event Streams installation, download both the <strong>Java truststore</strong> and the <strong>PEM certificate</strong>.</li>
+<li>Create the Java truststore Secret:</li>
+<li>Command: <code>oc create secret generic &lt;secret-name&gt; --from-file=/path/to/downloaded/file.jks</code></li>
+<li>Example: <code>oc create secret generic es-truststore-jks --from-file=/Users/osowski/Downloads/es-cert.jks</code></li>
+<li>Create the PEM certificate Secret:</li>
+<li>Command: <code>oc create secret generic &lt;secret-name&gt; --from-file=/path/to/downloaded/file.pem</code></li>
+<li>Example: <code>oc create secret generic es-ca-pemfile --from-file=/Users/osowski/Downloads/es-cert.pem</code></li>
+</ul>
 <hr />
 <h3 id="using-community-based-kafka-helm-charts-deployed-locally-in-cluster">Using community-based Kafka Helm charts, deployed locally in-cluster</h3>
 <p>If you simply want to deploy Kafka using the open source, community-supported Helm Charts, you can do so with the following commands.</p>
 <h4 id="environment-considerations">Environment Considerations</h4>
-<p><strong>TODO</strong> Requirements when deploying to OCP (ServiceAccount, Security, etc)</p>
+<p><strong>TODO</strong> Needs update to account for ServiceAccount integration after <code>helm template</code> generation</p>
 <h4 id="service-deployment_2">Service Deployment</h4>
 <ol>
 <li>Add Bitnami Helm Repository:
@@ -999,9 +1024,12 @@ kubectl describe secrets -n &lt;target k8s namespace / ocp project&gt;
 </pre></div></li>
 <li>Deploy Kafka and Zookeeper using the <code>bitnami/kafka</code> Helm Chart:
 <div class="codehilite"><pre><span></span>mkdir bitnami
+mkdir templates
 helm fetch --untar --untardir bitnami <span class="s1">&#39;bitnami/kafka&#39;</span>
-helm template --name kafka --set persistence.enabled<span class="o">=</span><span class="nb">false</span> bitnami/kafka --namespace &lt;target namespace&gt; --output-dir bitnami
-<span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f bitnami/kafka/templates
+helm template --name kafka --set persistence.enabled<span class="o">=</span><span class="nb">false</span> --set securityContext.enabled<span class="o">=</span><span class="nb">false</span> <span class="se">\ </span>
+  bitnami/kafka --namespace &lt;target namespace&gt; --output-dir templates
+<span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f templates/kafka/charts/zookeeper/templates/
+<span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f templates/kafka/templates
 </pre></div>
 It will take a few minutes to get the pods ready.</li>
 </ol>
@@ -1063,7 +1091,7 @@ kubectl describe configmap kafka-brokers -n &lt;target k8s namespace / ocp proje
 <h3 id="using-community-based-postgresql-helm-charts-deployed-locally-in-cluster">Using community-based Postgresql Helm charts, deployed locally in-cluster</h3>
 <p>If you simply want to deploy Postgresql using the open source, community-supported Helm Charts, you can do so with the following commands.</p>
 <h4 id="environment-considerations_1">Environment Considerations</h4>
-<p><strong>TODO</strong> Requirements when deploying to OCP (ServiceAccount, Security, etc)</p>
+<p>Reference <a href="../application-components/#openshift-container-platform-3-11">Application Components Pre-reqs</a> for details on creating the necessary ServiceAccount with required permissions, prior to deployment.</p>
 <h4 id="service-deployment_4">Service Deployment</h4>
 <ol>
 <li>
@@ -1083,31 +1111,34 @@ kubectl describe configmap kafka-brokers -n &lt;target k8s namespace / ocp proje
 </li>
 <li>Deploy Postgresql using the <code>bitnami/postgresql</code> Helm Chart:
 <div class="codehilite"><pre><span></span>mkdir bitnami
+mkdir templates
 helm fetch --untar --untardir bitnami bitnami/postgresql
 helm template --name postgre-db --set <span class="nv">postgresqlPassword</span><span class="o">=</span>supersecret <span class="se">\</span>
---set persistence.enabled<span class="o">=</span><span class="nb">false</span> bitnami/postgresql --namespace &lt;target namespace&gt; --output-dir bitnami
-<span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f bitnami/postgresql/templates
+  --set persistence.enabled<span class="o">=</span><span class="nb">false</span> --set serviceAccount.enabled<span class="o">=</span><span class="nb">true</span> <span class="se">\ </span>
+  --set serviceAccount.name<span class="o">=</span>&lt;existing service account&gt; bitnami/postgresql <span class="se">\ </span>
+  --namespace &lt;target namespace&gt; --output-dir templates
+<span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f templates/postgresql/templates
 </pre></div>
   It will take a few minutes to get the pods ready.</li>
 </ol>
 <h4 id="creating-postgresql-credentials-as-kubernetes-secrets_1">Creating Postgresql credentials as Kubernetes Secrets</h4>
-<p><strong>TODO</strong> Validate credentials for Helm-based Postgresql deployment</p>
 <ul>
-<li>Applying the same approach as above, copy the Postgresql URL as defined in the Postegresql service credential and execute the following command:</li>
+<li>The <code>postgresql-url</code> needs to point to the in-cluster (non-headless) Kubernetes Service created as part of the deployment and should take the form of the deployment name with the suffix of <code>-postgresql</code>:</li>
 </ul>
-<div class="codehilite"><pre><span></span>kubectl create secret generic postgresql-url --from-literal<span class="o">=</span><span class="nv">binding</span><span class="o">=</span><span class="s1">&#39;&lt;replace with postgresql-url&gt;&#39;</span> -n &lt;target k8s namespace / ocp project&gt;
+<div class="codehilite"><pre><span></span>kubectl get services <span class="p">|</span> grep postgresql <span class="p">|</span> grep -v headless
+kubectl create secret generic postgresql-url --from-literal<span class="o">=</span><span class="nv">binding</span><span class="o">=</span><span class="s1">&#39;jdbc:postgresql://&lt;helm-release-name&gt;-postgresql&#39;</span> -n &lt;target k8s namespace / ocp project&gt;
 </pre></div>
 
 <ul>
 <li>For the user:</li>
 </ul>
-<div class="codehilite"><pre><span></span>kubectl create secret generic postgresql-user --from-literal<span class="o">=</span><span class="nv">binding</span><span class="o">=</span><span class="s1">&#39;ibm_cloud_c...&#39;</span> -n &lt;target k8s namespace / ocp project&gt;
+<div class="codehilite"><pre><span></span>kubectl create secret generic postgresql-user --from-literal<span class="o">=</span><span class="nv">binding</span><span class="o">=</span><span class="s1">&#39;postgres&#39;</span> -n &lt;target k8s namespace / ocp project&gt;
 </pre></div>
 
 <ul>
 <li>For the user password:</li>
 </ul>
-<div class="codehilite"><pre><span></span>kubectl create secret generic postgresql-pwd --from-literal<span class="o">=</span><span class="nv">binding</span><span class="o">=</span><span class="s1">&#39;&lt;password from the service credential&gt;.&#39;</span> -n &lt;target k8s namespace / ocp project&gt;
+<div class="codehilite"><pre><span></span>kubectl create secret generic postgresql-pwd --from-literal<span class="o">=</span><span class="nv">binding</span><span class="o">=</span><span class="s1">&#39;&lt;password used in the helm template command&gt;.&#39;</span> -n &lt;target k8s namespace / ocp project&gt;
 </pre></div>
 
 <h4 id="service-debugging-troubleshooting">Service Debugging &amp; Troubleshooting</h4>
