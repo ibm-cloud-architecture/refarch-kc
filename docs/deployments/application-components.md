@@ -27,32 +27,39 @@ $ kubectl exec -n ${NAMESPACE} -ti ${KPOF} -- bash -c "/opt/kafka/bin/kafka-topi
 ```
 
 The topics that need to be created are:
+
 - `bluewaterContainer`
 - `bluewaterShip`
 - `bluewaterProblem`
 - `orders`
+- `orderCommands`
 - `rejected-orders`
 - `allocated-orders`
 - `errors`
 - `containers`
 - `containerMetrics`
+- `reeferTelemetries`
+
+The command `scripts/createTopicsOnK8S.sh` creates those topics automatically.
 
 ## Docker registries
 
-You will need a Docker image registry to push and pull your images to and from.  There are multiple options depending on client use cases and we are only documenting a subset of potential solutions, including but not limited to IBM Cloud Container Registry, Docker Hub, Quay, etc.
+You will need a Docker image registry to push and pull your images to and from.  There are multiple options depending on your use cases and we are only documenting a subset of potential solutions, including but not limited to IBM Cloud Container Registry, Docker Hub, Quay, etc.
 
-#### IBM Cloud Container Registry
+### IBM Cloud Container Registry
 
-* Install IBM Cloud Container Registry CLI plug-in if needed:
+Install IBM Cloud Container Registry CLI plug-in if needed:
+
 ```
 ibmcloud plugin install container-registry -r Bluemix
 ```
 
-#### Define a private image repository
+### Define a private image repository
 
 Use the [IBM Cloud Container Registry](https://cloud.ibm.com/containers-kubernetes/catalog/registry) to push your images and then deploy them to any Kubernetes cluster with access to the public internet.  When deploying enterprise applications, it is strongly recommended to use private registry to protect your images from being used and changed by unauthorized users. Private registries must be set up by the cluster administrator to ensure that the credentials to access the private registry are available to the cluster users.
 
-* Create a namespace inside your Container Registry for use here:
+Create a namespace inside your Container Registry for use here:
+
 ```shell
 ibmcloud cr namespace-add ibmcaseeda
 ```
@@ -65,7 +72,7 @@ docker tag ibmcase/kc-ui us.icr.io/ibmcaseeda/kc-ui:latest
 
 To see the images in your private registry you can use the user interface at [https://cloud.ibm.com/containers-kubernetes/registry/main/private](https://cloud.ibm.com/containers-kubernetes/registry/main/private) or the command:
 
-```
+```shell
 ibmcloud cr image-list
 ```
 
@@ -92,6 +99,7 @@ ibmcloud cr token-add --description "private registry secret for <target namespa
 ```shell
 ibmcloud cr tokens
 ```
+
 The result:
 > TOKEN ID     READONLY   EXPIRY   DESCRIPTION
  2b5ff00e-a..  true       0       token for somebody
@@ -136,12 +144,12 @@ To create the cluster follow [this tutorial](https://console.bluemix.net/docs/co
 This needs to be done once per unique deployment of the entire application.
 
 1. If desired, create a non-default Service Account for usage of deploying and running the K Container reference implementation.  This will become more important in future iterations, so it's best to start small:
-  - Command: `oc create serviceaccount -n <target-namespace> kcontainer-runtime`
-  - Example: `oc create serviceaccount -n eda-refarch kcontainer-runtime`
-2. The target Service Account needs to be allowed to run containers as `anyuid` for the time being:
-  - Command: `oc adm policy add-scc-to-user anyuid -z <service-account-name> -n <target-namespace>`
-  - Example: `oc adm policy add-scc-to-user anyuid -z kcontainer-runtime -n eda-refarch`
-  - NOTE: This requires `cluster-admin` level privileges.
+    * Command: `oc create serviceaccount -n <target-namespace> kcontainer-runtime`
+    * Example: `oc create serviceaccount -n eda-refarch kcontainer-runtime`
+1. The target Service Account needs to be allowed to run containers as `anyuid` for the time being:
+    * Command: `oc adm policy add-scc-to-user anyuid -z <service-account-name> -n <target-namespace>`
+    * Example: `oc adm policy add-scc-to-user anyuid -z kcontainer-runtime -n eda-refarch`
+    * NOTE: This requires `cluster-admin` level privileges.
 
 ### OpenShift Container Platform 4.X
 
@@ -188,15 +196,15 @@ docker push <private-registry>/<image-namespace>/order-command-ms:latest
 ```
 
 * Generate application YAMLs via `helm template` with the following parameters:
-  - `--set image.repository=<private-registry>/<image-namespace>/<image-repository>`
-  - `--set image.tag=latest`
-  - `--set image.pullSecret=<private-registry-pullsecret>` (optional or set to blank)
-  - `--set image.pullPolicy=Always`
-  - `--set eventstreams.env=ICP`
-  - `--set eventstreams.brokersConfigMap=<kafka brokers ConfigMap name>`
-  - `--set serviceAccountName=<service-account-name>`
-  - `--namespace <target-namespace>`
-  - `--output-dir <local-template-directory>`
+    * `--set image.repository=<private-registry>/<image-namespace>/<image-repository>`
+    * `--set image.tag=latest`
+    * `--set image.pullSecret=<private-registry-pullsecret>` (optional or set to blank)
+    * `--set image.pullPolicy=Always`
+    * `--set eventstreams.env=ICP`
+    * `--set eventstreams.brokersConfigMap=<kafka brokers ConfigMap name>`
+    * `--set serviceAccountName=<service-account-name>`
+    * `--namespace <target-namespace>`
+    * `--output-dir <local-template-directory>`
 
 ```shell
 # Example parameters
@@ -204,6 +212,7 @@ helm template --set image.repository=rhos-quay.internal-network.local/browncompu
 ```
 
 * Deploy application using `kubectl/oc apply`:
+
 ```shell
 (kubectl/oc) apply -f templates/ordercommandms/templates
 ```
@@ -211,6 +220,7 @@ helm template --set image.repository=rhos-quay.internal-network.local/browncompu
 * Verify default service is running correctly:
 
 Without any previously tests done, the call below should return an empty array: `[]`
+
 ```shell
 curl http://<cluster endpoints>:31200/orders
 ```
@@ -245,15 +255,15 @@ docker push <private-registry>/<image-namespace>/order-query-ms:latest
 ```
 
 * Generate application YAMLs via `helm template` with the following parameters:
-  - `--set image.repository=<private-registry>/<image-namespace>/<image-repository>`
-  - `--set image.tag=latest`
-  - `--set image.pullSecret=<private-registry-pullsecret>` (optional or set to blank)
-  - `--set image.pullPolicy=Always`
-  - `--set eventstreams.env=ICP`
-  - `--set eventstreams.brokersConfigMap=<kafka brokers ConfigMap name>`
-  - `--set serviceAccountName=<service-account-name>`
-  - `--namespace <target-namespace>`
-  - `--output-dir <local-template-directory>`
+    - `--set image.repository=<private-registry>/<image-namespace>/<image-repository>`
+    - `--set image.tag=latest`
+    - `--set image.pullSecret=<private-registry-pullsecret>` (optional or set to blank)
+    - `--set image.pullPolicy=Always`
+    - `--set eventstreams.env=ICP`
+    - `--set eventstreams.brokersConfigMap=<kafka brokers ConfigMap name>`
+    - `--set serviceAccountName=<service-account-name>`
+    - `--namespace <target-namespace>`
+    - `--output-dir <local-template-directory>`
 
 ```shell
 # Example parameters
@@ -261,6 +271,7 @@ helm template --set image.repository=rhos-quay.internal-network.local/browncompu
 ```
 
 * Deploy application using `kubectl/oc apply`:
+
 ```shell
 (kubectl/oc) apply -f templates/orderqueryms/templates
 ```
@@ -303,15 +314,15 @@ docker push <private-registry>/<image-namespace>/kc-spring-container-ms:latest
 ```
 
 * Generate application YAMLs via `helm template` with the following parameters:
-  - `--set image.repository=<private-registry>/<image-namespace>/<image-repository>`
-  - `--set image.tag=latest`
-  - `--set image.pullSecret=<private-registry-pullsecret>` (optional or set to blank)
-  - `--set image.pullPolicy=Always`
-  - `--set eventstreams.env=ICP`
-  - `--set eventstreams.brokersConfigMap=<kafka brokers ConfigMap name>`
-  - `--set serviceAccountName=<service-account-name>`
-  - `--namespace <target-namespace>`
-  - `--output-dir <local-template-directory>`
+    - `--set image.repository=<private-registry>/<image-namespace>/<image-repository>`
+    - `--set image.tag=latest`
+    - `--set image.pullSecret=<private-registry-pullsecret>` (optional or set to blank)
+    - `--set image.pullPolicy=Always`
+    - `--set eventstreams.env=ICP`
+    - `--set eventstreams.brokersConfigMap=<kafka brokers ConfigMap name>`
+    - `--set serviceAccountName=<service-account-name>`
+    - `--namespace <target-namespace>`
+    - `--output-dir <local-template-directory>`
 
 ```shell
 # Example parameters
@@ -319,6 +330,7 @@ helm template --set image.repository=rhos-quay.internal-network.local/browncompu
 ```
 
 * Deploy application using `kubectl/oc apply`:
+
 ```shell
 (kubectl/oc) apply -f templates/springcontainerms/templates
 ```
