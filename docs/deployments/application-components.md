@@ -283,7 +283,6 @@ curl http://<cluster endpoints>:31100/orders
 ### Deploy Container microservice
 
 **TODO** Container Microservice requires POSTGRES parameters
-**TODO** Container Microservice updates for ES ICP
 
 * Go to the repo
 
@@ -311,20 +310,30 @@ docker push <private-registry>/<image-namespace>/kc-spring-container-ms:latest
 ```
 
 * Generate application YAMLs via `helm template` with the following parameters:
-  - `--set image.repository=<private-registry>/<image-namespace>/<image-repository>`
-  - `--set image.tag=latest`
-  - `--set image.pullSecret=<private-registry-pullsecret>` (optional or set to blank)
-  - `--set image.pullPolicy=Always`
-  - `--set eventstreams.env=ICP`
-  - `--set eventstreams.brokersConfigMap=<kafka brokers ConfigMap name>`
-  - `--set serviceAccountName=<service-account-name>`
-  - `--namespace <target-namespace>`
-  - `--output-dir <local-template-directory>`
-
-```shell
-# Example parameters
-helm template --set image.repository=rhos-quay.internal-network.local/browncompute/kc-spring-container-ms --set image.tag=latest --set image.pullSecret= --set image.pullPolicy=Always --set eventstreams.env=ICP --set eventstreams.brokersConfigMap=kafka-brokers --set serviceAccountName=kcontainer-runtime --output-dir templ --namespace eda-refarch chart/springcontainerms
-```
+  - Parameters:
+    - `--set image.repository=<private-registry>/<image-namespace>/<image-repository>`
+    - `--set image.pullSecret=<private-registry-pullsecret>` (optional or set to blank)
+    - `--set kafka.brokersConfigMap=<kafka brokers ConfigMap name>`
+    - `--set eventstreams.enabled=(true/false)` (`true` when connecting to Event Streams of any kind, `false` when connecting to Kafka directly)
+    - `--set eventstreams.apikeyConfigMap=<kafka api key Secret name>`
+    - `--set eventstreams.caPemFileRequired=(true/false)` (`true` when connecting to Event Streams via ICP4I)
+    - `--set eventstreams.caPemSecretName=<eventstreams ca pem file secret name>` (only used when connecting to Event Streams via ICP4I)
+    - `--set postgresql.capemRequired=(true/false)` (`true` when connecting to Postgresql Services requiring SSL and CA PEM-secured communication)
+    - `--set postgresql.capemSecret=<postgresql CA pem certificate Secret name>`
+    - `--set postgresql.urlSecret=<postgresql url Secret name>`
+    - `--set postgresql.userSecret=<postgresql user Secret name>`
+    - `--set postgresql.passwordSecret=<postgresql password Secret name>`
+    - `--set serviceAccountName=<service-account-name>`
+    - `--namespace <target-namespace>`
+    - `--output-dir <local-template-directory>`
+  - Example using Event Streams via ICP4I:
+   ```shell
+   helm template --set image.repository=rhos-quay.internal-network.local/browncompute/kc-spring-container-ms --set image.pullSecret= --set kafka.brokersConfigMap=es-kafka-brokers --set eventstreams.enabled=true --set eventstreams.apikeyConfigMap=es-eventstreams-apikey --set eventstreams.truststoreRequired=true --set eventstreams.truststoreSecret=es-truststore-jks --set eventstreams.truststorePassword=password --set postgresql.capemRequired=true --set postgresql.capemSecret=postgresql-ca-pem --set postgresql.urlSecret=postgresql-url --set postgresql.userSecret=postgresql-user --set postgresql.passwordSecret=postgresql-pwd --set serviceAccountName=kcontainer-runtime --output-dir templates --namespace eda-refarch chart/springcontainerms
+   ```
+  - Example using Event Streams hosted on IBM Cloud:
+  ```shell
+  helm template --set image.repository=rhos-quay.internal-network.local/browncompute/kc-spring-container-ms --set image.pullSecret= --set kafka.brokersConfigMap=es-kafka-brokers --set eventstreams.enabled=true --set eventstreams.apikeyConfigMap=es-eventstreams-apikey --set postgresql.capemRequired=true --set postgresql.capemSecret=postgresql-ca-pem --set postgresql.urlSecret=postgresql-url --set postgresql.userSecret=postgresql-user --set postgresql.passwordSecret=postgresql-pwd --set serviceAccountName=kcontainer-runtime --output-dir templates --namespace eda-refarch chart/springcontainerms
+  ```
 
 * Deploy application using `kubectl/oc apply`:
 ```shell
