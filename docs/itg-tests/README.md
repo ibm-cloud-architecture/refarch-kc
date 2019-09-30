@@ -1,6 +1,6 @@
 # Reefer container shipment solution integration tests
 
-The `itg-tests` folder includes a set of tests to validate most of the event-driven microservice patterns like, event sourcing with fail over, CQRS and Saga patterns with recovery and fail over. (See our summary on those patterns [here](https://ibm-cloud-architecture.github.io/refarch-eda/evt-microservices/ED-patterns/))
+The `itg-tests` folder includes a set of tests to validate most of the event-driven microservice patterns like, event sourcing with fail over, CQRS and Saga patterns with recovery and fail over. (See our summary on those patterns [here](https://ibm-cloud-architecture.github.io/refarch-eda/design-patterns/ED-patterns/))
 
 These integration tests are done in Python to illustrate how to use Kafka python module of [this github](https://github.com/confluentinc/confluent-kafka-python) and because Python is nice to use for writing integration tests.
 
