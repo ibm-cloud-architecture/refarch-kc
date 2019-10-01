@@ -207,7 +207,7 @@ docker push <private-registry>/<image-namespace>/order-command-ms:latest
     * `--output-dir <local-template-directory>`
   Example using Event Streams via ICP4I:
    ```shell
-   helm template --set image.repository=rhos-quay.internal-network.local/browncompute/order-command-ms --set image.pullSecret= --set kafka.brokersConfigMap=es-kafka-brokers --set eventstreams.enabled=true --set eventstreams.apikeyConfigMap=es-eventstreams-apikey --set serviceAccountName=kcontainer-runtime --set eventstreams.truststoreRequired=true --set eventstreams.truststoreSecret=es-ca-pemfile --set eventstreams.truststorePassword=password --output-dir templates --namespace eda-refarch chart/ordercommandms
+   helm template --set image.repository=rhos-quay.internal-network.local/browncompute/order-command-ms --set image.pullSecret= --set kafka.brokersConfigMap=es-kafka-brokers --set eventstreams.enabled=true --set eventstreams.apikeyConfigMap=es-eventstreams-apikey --set serviceAccountName=kcontainer-runtime --set eventstreams.truststoreRequired=true --set eventstreams.truststoreSecret=es-truststore-jks --set eventstreams.truststorePassword=password --output-dir templates --namespace eda-refarch chart/ordercommandms
    ```
   Example using Event Streams hosted on IBM Cloud:
    ```shell
@@ -269,7 +269,7 @@ docker push <private-registry>/<image-namespace>/order-query-ms:latest
     * `--output-dir <local-template-directory>`
   Example using Event Streams via ICP4I:
    ```shell
-   helm template --set image.repository=rhos-quay.internal-network.local/browncompute/order-query-ms --set image.pullSecret= --set kafka.brokersConfigMap=es-kafka-brokers --set eventstreams.enabled=true --set eventstreams.apikeyConfigMap=es-eventstreams-apikey --set serviceAccountName=kcontainer-runtime --set eventstreams.truststoreRequired=true --set eventstreams.truststoreSecret=es-ca-pemfile --set eventstreams.truststorePassword=password --output-dir templates --namespace eda-refarch chart/orderqueryms
+   helm template --set image.repository=rhos-quay.internal-network.local/browncompute/order-query-ms --set image.pullSecret= --set kafka.brokersConfigMap=es-kafka-brokers --set eventstreams.enabled=true --set eventstreams.apikeyConfigMap=es-eventstreams-apikey --set serviceAccountName=kcontainer-runtime --set eventstreams.truststoreRequired=true --set eventstreams.truststoreSecret=es-truststore-jks --set eventstreams.truststorePassword=password --output-dir templates --namespace eda-refarch chart/orderqueryms
    ```
   Example using Event Streams hosted on IBM Cloud:
    ```shell
@@ -457,7 +457,7 @@ docker push <private-registry>/<image-namespace>/kc-fleet-ms:latest
     - `--output-dir <local-template-directory>`
   Example using Event Streams via ICP4I:
    ```shell
-   helm template --set image.repository=rhos-quay.internal-network.local/browncompute/kc-fleet-ms --set image.pullSecret= --set kafka.brokersConfigMap=es-kafka-brokers --set eventstreams.enabled=true --set eventstreams.apikeyConfigMap=es-eventstreams-apikey --set serviceAccountName=kcontainer-runtime --set eventstreams.truststoreRequired=true --set eventstreams.truststoreSecret=es-ca-pemfile --set eventstreams.truststorePassword=password --output-dir templates --namespace eda-refarch chart/fleetms
+   helm template --set image.repository=rhos-quay.internal-network.local/browncompute/kc-fleet-ms --set image.pullSecret= --set kafka.brokersConfigMap=es-kafka-brokers --set eventstreams.enabled=true --set eventstreams.apikeyConfigMap=es-eventstreams-apikey --set serviceAccountName=kcontainer-runtime --set eventstreams.truststoreRequired=true --set eventstreams.truststoreSecret=es-truststore-jks --set eventstreams.truststorePassword=password --output-dir templates --namespace eda-refarch chart/fleetms
    ```
   Example using Event Streams hosted on IBM Cloud:
    ```shell
