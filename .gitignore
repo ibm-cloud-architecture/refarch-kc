@@ -11,3 +11,4 @@ itg-tests/kafka/__pycache__
 postgres-data/
 docker/*.logs
 *.pyc
+.DS_Store
