@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Here we explain the [Apache Avro](https://avro.apache.org/) messaging integration we have done in one of our integration tests for the **refarch-kc-container-ms** component, which is part of the [Reefer Containers reference implementation](https://ibm-cloud-architecture.github.io/refarch-kc/) of the [IBM Event Driven Architectures reference architecture](https://ibm-cloud-architecture.github.io/refarch-eda/). The Refeer Containers reference implementation is a simulation of what a container shipment process could look like in reality. From a manufacturer creating some goods to the delivery of those to a reatailer, going through requesting a container, loading the goods into the container, finding a voyage for that container on a ship, monitoring the container's temperature and GPS location, delivering the container, unloading the goods, etc. As you can imagine, this scenario is ideal for an Event Driven architecture where we not only have a microservices based application but also the integration of these using Event Driven Architecture components (such as Kafka) and patterns (such as Saga, CQRS, Event Sourcing, etc).
+Here we explain the [Apache Avro](https://avro.apache.org/) messaging integration we have done in one of our integration tests for the **refarch-kc-container-ms** component, which is part of the [Reefer Containers reference implementation](https://ibm-cloud-architecture.github.io/refarch-kc/) of the [IBM Event Driven Architectures reference architecture](https://ibm-cloud-architecture.github.io/refarch-eda/). The Reefer Containers reference implementation is a simulation of what a container shipment process could look like in reality. From a manufacturer creating some goods to the delivery of those to a retailer, going through requesting a container, loading the goods into the container, finding a voyage for that container on a ship, monitoring the container's temperature and GPS location, delivering the container, unloading the goods, etc. As you can imagine, this scenario is ideal for an Event Driven architecture where we not only have a microservices based application but also the integration of these using Event Driven Architecture components (such as Kafka) and patterns (such as Saga, CQRS, Event Sourcing, etc).
 
 ### What is Apache Avro
 
@@ -41,9 +41,9 @@ As mentioned in the introduction, the integration of the Apache Avro data serial
 
 The **refarch-kc-container-ms** component will take care of the containers status. From adding new containers to the available containers list to assigning a container to a particular order and managing the status of that container throughout the shipment process aforementioned. 
 
-The integration tests for our Refeer Containers reference implementation can be found [here](https://github.com/ibm-cloud-architecture/refarch-kc/tree/master/itg-tests) (still under development). The integration tests are being developed in python and their main goal is to validate the successful deployment of the Refeer Containers reference implementation end-to-end.
+The integration tests for our Reefer Containers reference implementation can be found [here](https://github.com/ibm-cloud-architecture/refarch-kc/tree/master/itg-tests) (still under development). The integration tests are being developed in python and their main goal is to validate the successful deployment of the Reefer Containers reference implementation end-to-end.
 
-The particular integration test (still under development) where we have integrated the Apache Avro serialization system can be found under the `ContainersPython` forlder. More precisely, these are the files and folders involved in our implementation:
+The particular integration test (still under development) where we have integrated the Apache Avro serialization system can be found under the `ContainersPython` folder. More precisely, these are the files and folders involved in our implementation:
 
 ```shell
 ├── data_schemas
@@ -132,7 +132,7 @@ An Avro schema could be a nested schema which allows us to have a smaller reusab
 }
 ```
 
-As you can see, the status attribute of the paylod is yet another data schema itsef which, in this case, is of type enum:
+As you can see, the status attribute of the payload is yet another data schema itself which, in this case, is of type enum:
 
 ```json
 {
@@ -148,7 +148,7 @@ As you can see, the status attribute of the paylod is yet another data schema it
 }
 ```
 
-All the different data schemas for a Container Event can be found under the `data_schemas` forlder.
+All the different data schemas for a Container Event can be found under the `data_schemas` folder.
 
 In that folder we have also developed a util script (`avroEDAUtils.py`) to be able to construct the final Container Event data schema that is needed by our producer:
 
@@ -191,7 +191,7 @@ Here, we are going to see how data schemas help with data correctness. Using the
 Message delivered to containers [0]
 ```
 
-However, if we try to send a payload where, for instace the container ID is an integer rather than a string, we will get an `avro.io.AvroTypeException`:
+However, if we try to send a payload where, for instance the container ID is an integer rather than a string, we will get an `avro.io.AvroTypeException`:
 
 ```
 avro.io.AvroTypeException: The datum {'containerID': 12345, 'type': 'Reefer', 'status': 'Empty', 'latitude': 37.8, 'longitude': -122.25, 'capacity': 110, 'brand': 'itg-brand'} is not an example of the schema
@@ -267,7 +267,7 @@ from confluent_kafka.avro import AvroProducer, AvroConsumer
 
 We create our `KafkaProducer` object where we define some of the **AvroProducer** options such as the schema registry url for data schema registration and management. But it is not until we call the `prepareProducer` method that we actually create the **AvroProducer** with that **schema registry** to be used as well as the **data schemas for the key and value** of our Container Event to be sent.
 
-Finally, in the `publisEvent` method we send a value plus a key to a kafka topic.
+Finally, in the `publishEvent` method we send a value plus a key to a kafka topic.
 
 producer when we call `prepareProducer`
 
@@ -334,7 +334,7 @@ class KafkaConsumer:
 
 For now, we have used the [confluent schema registry](https://hub.docker.com/r/confluentinc/cp-schema-registry/) for our work although our goal is to use **IBM Event Streams**.
 
-The integration of the schema registry with your kafka broker is quite easy. In fact, all you need is to provide the schema registtry with your zookepeer cluster url and give your schema registry a hostname: https://docs.confluent.io/current/installation/docker/config-reference.html#schema-registry-configuration
+The integration of the schema registry with your kafka broker is quite easy. In fact, all you need is to provide the schema registry with your zookeeper cluster url and give your schema registry a hostname: https://docs.confluent.io/current/installation/docker/config-reference.html#schema-registry-configuration
 
 Once you have your schema registry up and running, this provides a rich API endpoint to operate with: https://docs.confluent.io/current/schema-registry/using.html#common-sr-usage-examples
 
@@ -393,7 +393,7 @@ Let's assume we have created a new kafka topic called `avrotest` for testing our
   }
   ```
 
-- Get the schema of a specific subjet version:
+- Get the schema of a specific subject version:
 
   ```http
   curl -X GET http://localhost:8081/subjects/avrotest-value/versions/1/schema
@@ -419,7 +419,7 @@ Let's assume we have created a new kafka topic called `avrotest` for testing our
   }
   ```
 
-- Get the schema of a specific subjet latest version:
+- Get the schema of a specific subject latest version:
 
   ```http
   curl -X GET http://localhost:8081/subjects/avrotest-value/versions/latest/schema
@@ -445,7 +445,7 @@ Let's assume we have created a new kafka topic called `avrotest` for testing our
   }
   ```
 
-The above looks very good but let's dive into more insteresting real-case scenarios.
+The above looks very good but let's dive into more interesting real-case scenarios.
 
 1. Sending a correct message:
 
@@ -456,7 +456,7 @@ The above looks very good but let's dive into more insteresting real-case scenar
    Message delivered to avrotest [0]
    ```
 
-2. What happens if I send incorrect data types in my message/event, for instace sending the age as a string rather than as an integer (already seen in the data schema section but take it as a refresher)?:
+2. What happens if I send incorrect data types in my message/event, for instance sending the age as a string rather than as an integer (already seen in the data schema section but take it as a refresher)?:
 
     ```
     avro.io.AvroTypeException: The datum {'name': 'david', 'age': '25', 'gender': 'male'} is not an example of the schema {
@@ -658,7 +658,7 @@ The above looks very good but let's dive into more insteresting real-case scenar
    Message delivered to avrotest [0]
    ```
 
-As you can imagine, there are few other cases to play with given the changes you could make to a data schema in conjunction with the compatibility tyes you can configure your schema registry to be like but we have already covered the basics for a good understanding.
+As you can imagine, there are few other cases to play with given the changes you could make to a data schema in conjunction with the compatibility types you can configure your schema registry to be like but we have already covered the basics for a good understanding.
 
 ## Links
 
