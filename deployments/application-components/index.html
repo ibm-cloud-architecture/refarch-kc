@@ -1039,7 +1039,7 @@ $ kubectl <span class="nb">exec</span> -n <span class="si">${</span><span class=
 </li>
 </ol>
 <h3 id="openshift-container-platform-4x">OpenShift Container Platform 4.X</h3>
-<p><strong>TODO</strong></p>
+<p><strong>TODO OpenShift Container Platform 4.X Prereqs</strong></p>
 <h2 id="deploy-application-microservices">Deploy application microservices</h2>
 <h3 id="using-the-master-repository">Using the master repository</h3>
 <p>You can download the necessary application microservice repsoitories using scripts provided in the master repository:</p>
@@ -1049,7 +1049,6 @@ $ kubectl <span class="nb">exec</span> -n <span class="si">${</span><span class=
 </pre></div>
 
 <h3 id="deploy-order-command-microservice">Deploy Order Command microservice</h3>
-<p><strong>TODO</strong> Order Command updates for ES ICP</p>
 <ul>
 <li>Go to the repo</li>
 </ul>
@@ -1076,25 +1075,31 @@ docker push &lt;private-registry&gt;/&lt;image-namespace&gt;/order-command-ms:la
 </pre></div>
 
 <ul>
-<li>Generate application YAMLs via <code>helm template</code> with the following parameters:<ul>
+<li>
+<p>Generate application YAMLs via <code>helm template</code> with the following parameters:</p>
+<ul>
 <li><code>--set image.repository=&lt;private-registry&gt;/&lt;image-namespace&gt;/&lt;image-repository&gt;</code></li>
-<li><code>--set image.tag=latest</code></li>
 <li><code>--set image.pullSecret=&lt;private-registry-pullsecret&gt;</code> (optional or set to blank)</li>
-<li><code>--set image.pullPolicy=Always</code></li>
-<li><code>--set eventstreams.env=ICP</code></li>
-<li><code>--set eventstreams.brokersConfigMap=&lt;kafka brokers ConfigMap name&gt;</code></li>
+<li><code>--set kafka.brokersConfigMap=&lt;kafka brokers ConfigMap name&gt;</code></li>
+<li><code>--set eventstreams.enabled=(true/false)</code> (<code>true</code> when connecting to Event Streams of any kind, <code>false</code> when connecting to Kafka directly)</li>
+<li><code>--set eventstreams.apikeyConfigMap=&lt;kafka api key Secret name&gt;</code></li>
+<li><code>--set eventstreams.truststoreRequired=(true/false)</code> (<code>true</code> when connecting to Event Streams via ICP4I)</li>
+<li><code>--set eventstreams.truststoreSecret=&lt;eventstreams jks file secret name&gt;</code> (only used when connecting to Event Streams via ICP4I)</li>
+<li><code>--set eventstreams.truststorePassword=&lt;eventstreams jks password&gt;</code> (only used when connecting to Event Streams via ICP4I)</li>
 <li><code>--set serviceAccountName=&lt;service-account-name&gt;</code></li>
 <li><code>--namespace &lt;target-namespace&gt;</code></li>
-<li><code>--output-dir &lt;local-template-directory&gt;</code></li>
+<li><code>--output-dir &lt;local-template-directory&gt;</code>
+  Example using Event Streams via ICP4I:
+   <div class="codehilite"><pre><span></span>helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/order-command-ms --set image.pullSecret<span class="o">=</span> --set kafka.brokersConfigMap<span class="o">=</span>es-kafka-brokers --set eventstreams.enabled<span class="o">=</span><span class="nb">true</span> --set eventstreams.apikeyConfigMap<span class="o">=</span>es-eventstreams-apikey --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --set eventstreams.truststoreRequired<span class="o">=</span><span class="nb">true</span> --set eventstreams.truststoreSecret<span class="o">=</span>es-ca-pemfile --set eventstreams.truststorePassword<span class="o">=</span>password --output-dir templates --namespace eda-refarch chart/ordercommandms
+</pre></div>
+  Example using Event Streams hosted on IBM Cloud:
+   <div class="codehilite"><pre><span></span>helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/order-command-ms --set image.pullSecret<span class="o">=</span> --set kafka.brokersConfigMap<span class="o">=</span>kafka-brokers --set eventstreams.enabled<span class="o">=</span><span class="nb">true</span> --set eventstreams.apikeyConfigMap<span class="o">=</span>eventstreams-apikey --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --output-dir templates --namespace eda-refarch chart/ordercommandms
+</pre></div></li>
 </ul>
 </li>
-</ul>
-<div class="codehilite"><pre><span></span><span class="c1"># Example parameters</span>
-helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/order-command-ms --set image.tag<span class="o">=</span>latest --set image.pullSecret<span class="o">=</span> --set image.pullPolicy<span class="o">=</span>Always --set eventstreams.env<span class="o">=</span>ICP --set eventstreams.brokersConfigMap<span class="o">=</span>kafka-brokers --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --output-dir templ --namespace eda-refarch chart/ordercommandms/
-</pre></div>
-
-<ul>
-<li>Deploy application using <code>kubectl/oc apply</code>:</li>
+<li>
+<p>Deploy application using <code>kubectl/oc apply</code>:</p>
+</li>
 </ul>
 <div class="codehilite"><pre><span></span><span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f templates/ordercommandms/templates
 </pre></div>
@@ -1107,7 +1112,6 @@ helm template --set image.repository<span class="o">=</span>rhos-quay.internal-n
 </pre></div>
 
 <h3 id="deploy-order-query-microservice">Deploy Order Query microservice</h3>
-<p><strong>TODO</strong> Order Query updates for ES ICP</p>
 <ul>
 <li>Go to the repo</li>
 </ul>
@@ -1134,25 +1138,31 @@ docker push &lt;private-registry&gt;/&lt;image-namespace&gt;/order-query-ms:late
 </pre></div>
 
 <ul>
-<li>Generate application YAMLs via <code>helm template</code> with the following parameters:<ul>
+<li>
+<p>Generate application YAMLs via <code>helm template</code> with the following parameters:</p>
+<ul>
 <li><code>--set image.repository=&lt;private-registry&gt;/&lt;image-namespace&gt;/&lt;image-repository&gt;</code></li>
-<li><code>--set image.tag=latest</code></li>
 <li><code>--set image.pullSecret=&lt;private-registry-pullsecret&gt;</code> (optional or set to blank)</li>
-<li><code>--set image.pullPolicy=Always</code></li>
-<li><code>--set eventstreams.env=ICP</code></li>
-<li><code>--set eventstreams.brokersConfigMap=&lt;kafka brokers ConfigMap name&gt;</code></li>
+<li><code>--set kafka.brokersConfigMap=&lt;kafka brokers ConfigMap name&gt;</code></li>
+<li><code>--set eventstreams.enabled=(true/false)</code> (<code>true</code> when connecting to Event Streams of any kind, <code>false</code> when connecting to Kafka directly)</li>
+<li><code>--set eventstreams.apikeyConfigMap=&lt;kafka api key Secret name&gt;</code></li>
+<li><code>--set eventstreams.truststoreRequired=(true/false)</code> (<code>true</code> when connecting to Event Streams via ICP4I)</li>
+<li><code>--set eventstreams.truststoreSecret=&lt;eventstreams jks file secret name&gt;</code> (only used when connecting to Event Streams via ICP4I)</li>
+<li><code>--set eventstreams.truststorePassword=&lt;eventstreams jks password&gt;</code> (only used when connecting to Event Streams via ICP4I)</li>
 <li><code>--set serviceAccountName=&lt;service-account-name&gt;</code></li>
 <li><code>--namespace &lt;target-namespace&gt;</code></li>
-<li><code>--output-dir &lt;local-template-directory&gt;</code></li>
+<li><code>--output-dir &lt;local-template-directory&gt;</code>
+  Example using Event Streams via ICP4I:
+   <div class="codehilite"><pre><span></span>helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/order-query-ms --set image.pullSecret<span class="o">=</span> --set kafka.brokersConfigMap<span class="o">=</span>es-kafka-brokers --set eventstreams.enabled<span class="o">=</span><span class="nb">true</span> --set eventstreams.apikeyConfigMap<span class="o">=</span>es-eventstreams-apikey --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --set eventstreams.truststoreRequired<span class="o">=</span><span class="nb">true</span> --set eventstreams.truststoreSecret<span class="o">=</span>es-ca-pemfile --set eventstreams.truststorePassword<span class="o">=</span>password --output-dir templates --namespace eda-refarch chart/orderqueryms
+</pre></div>
+  Example using Event Streams hosted on IBM Cloud:
+   <div class="codehilite"><pre><span></span>helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/order-query-ms --set image.pullSecret<span class="o">=</span> --set kafka.brokersConfigMap<span class="o">=</span>kafka-brokers --set eventstreams.enabled<span class="o">=</span><span class="nb">true</span> --set eventstreams.apikeyConfigMap<span class="o">=</span>eventstreams-apikey --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --output-dir templates --namespace eda-refarch chart/orderqueryms
+</pre></div></li>
 </ul>
 </li>
-</ul>
-<div class="codehilite"><pre><span></span><span class="c1"># Example parameters</span>
-helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/order-query-ms --set image.tag<span class="o">=</span>latest --set image.pullSecret<span class="o">=</span> --set image.pullPolicy<span class="o">=</span>Always --set eventstreams.env<span class="o">=</span>ICP --set eventstreams.brokersConfigMap<span class="o">=</span>kafka-brokers --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --output-dir templ --namespace eda-refarch chart/orderqueryms/
-</pre></div>
-
-<ul>
-<li>Deploy application using <code>kubectl/oc apply</code>:</li>
+<li>
+<p>Deploy application using <code>kubectl/oc apply</code>:</p>
+</li>
 </ul>
 <div class="codehilite"><pre><span></span><span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f templates/orderqueryms/templates
 </pre></div>
@@ -1164,8 +1174,7 @@ helm template --set image.repository<span class="o">=</span>rhos-quay.internal-n
 <div class="codehilite"><pre><span></span>curl http://&lt;cluster endpoints&gt;:31100/orders
 </pre></div></p>
 <h3 id="deploy-container-microservice">Deploy Container microservice</h3>
-<p><strong>TODO</strong> Container Microservice requires POSTGRES parameters
-<strong>TODO</strong> Container Microservice updates for ES ICP</p>
+<p><strong>TODO</strong> Container Microservice requires POSTGRES parameters</p>
 <ul>
 <li>Go to the repo</li>
 </ul>
@@ -1192,25 +1201,35 @@ docker push &lt;private-registry&gt;/&lt;image-namespace&gt;/kc-spring-container
 </pre></div>
 
 <ul>
-<li>Generate application YAMLs via <code>helm template</code> with the following parameters:<ul>
+<li>
+<p>Generate application YAMLs via <code>helm template</code> with the following parameters:</p>
+<ul>
 <li><code>--set image.repository=&lt;private-registry&gt;/&lt;image-namespace&gt;/&lt;image-repository&gt;</code></li>
-<li><code>--set image.tag=latest</code></li>
 <li><code>--set image.pullSecret=&lt;private-registry-pullsecret&gt;</code> (optional or set to blank)</li>
-<li><code>--set image.pullPolicy=Always</code></li>
-<li><code>--set eventstreams.env=ICP</code></li>
-<li><code>--set eventstreams.brokersConfigMap=&lt;kafka brokers ConfigMap name&gt;</code></li>
+<li><code>--set kafka.brokersConfigMap=&lt;kafka brokers ConfigMap name&gt;</code></li>
+<li><code>--set eventstreams.enabled=(true/false)</code> (<code>true</code> when connecting to Event Streams of any kind, <code>false</code> when connecting to Kafka directly)</li>
+<li><code>--set eventstreams.apikeyConfigMap=&lt;kafka api key Secret name&gt;</code></li>
+<li><code>--set eventstreams.caPemFileRequired=(true/false)</code> (<code>true</code> when connecting to Event Streams via ICP4I)</li>
+<li><code>--set eventstreams.caPemSecretName=&lt;eventstreams ca pem file secret name&gt;</code> (only used when connecting to Event Streams via ICP4I)</li>
+<li><code>--set postgresql.capemRequired=(true/false)</code> (<code>true</code> when connecting to Postgresql Services requiring SSL and CA PEM-secured communication)</li>
+<li><code>--set postgresql.capemSecret=&lt;postgresql CA pem certificate Secret name&gt;</code></li>
+<li><code>--set postgresql.urlSecret=&lt;postgresql url Secret name&gt;</code></li>
+<li><code>--set postgresql.userSecret=&lt;postgresql user Secret name&gt;</code></li>
+<li><code>--set postgresql.passwordSecret=&lt;postgresql password Secret name&gt;</code></li>
 <li><code>--set serviceAccountName=&lt;service-account-name&gt;</code></li>
 <li><code>--namespace &lt;target-namespace&gt;</code></li>
-<li><code>--output-dir &lt;local-template-directory&gt;</code></li>
+<li><code>--output-dir &lt;local-template-directory&gt;</code>
+  Example using Event Streams via ICP4I:
+   <div class="codehilite"><pre><span></span>helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/kc-spring-container-ms --set image.pullSecret<span class="o">=</span> --set kafka.brokersConfigMap<span class="o">=</span>es-kafka-brokers --set eventstreams.enabled<span class="o">=</span><span class="nb">true</span> --set eventstreams.apikeyConfigMap<span class="o">=</span>es-eventstreams-apikey --set eventstreams.truststoreRequired<span class="o">=</span><span class="nb">true</span> --set eventstreams.truststoreSecret<span class="o">=</span>es-truststore-jks --set eventstreams.truststorePassword<span class="o">=</span>password --set postgresql.capemRequired<span class="o">=</span><span class="nb">true</span> --set postgresql.capemSecret<span class="o">=</span>postgresql-ca-pem --set postgresql.urlSecret<span class="o">=</span>postgresql-url --set postgresql.userSecret<span class="o">=</span>postgresql-user --set postgresql.passwordSecret<span class="o">=</span>postgresql-pwd --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --output-dir templates --namespace eda-refarch chart/springcontainerms
+</pre></div>
+  Example using Event Streams hosted on IBM Cloud:
+  <div class="codehilite"><pre><span></span>helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/kc-spring-container-ms --set image.pullSecret<span class="o">=</span> --set kafka.brokersConfigMap<span class="o">=</span>es-kafka-brokers --set eventstreams.enabled<span class="o">=</span><span class="nb">true</span> --set eventstreams.apikeyConfigMap<span class="o">=</span>es-eventstreams-apikey --set postgresql.capemRequired<span class="o">=</span><span class="nb">true</span> --set postgresql.capemSecret<span class="o">=</span>postgresql-ca-pem --set postgresql.urlSecret<span class="o">=</span>postgresql-url --set postgresql.userSecret<span class="o">=</span>postgresql-user --set postgresql.passwordSecret<span class="o">=</span>postgresql-pwd --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --output-dir templates --namespace eda-refarch chart/springcontainerms
+</pre></div></li>
 </ul>
 </li>
-</ul>
-<div class="codehilite"><pre><span></span><span class="c1"># Example parameters</span>
-helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/kc-spring-container-ms --set image.tag<span class="o">=</span>latest --set image.pullSecret<span class="o">=</span> --set image.pullPolicy<span class="o">=</span>Always --set eventstreams.env<span class="o">=</span>ICP --set eventstreams.brokersConfigMap<span class="o">=</span>kafka-brokers --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --output-dir templ --namespace eda-refarch chart/springcontainerms
-</pre></div>
-
-<ul>
-<li>Deploy application using <code>kubectl/oc apply</code>:</li>
+<li>
+<p>Deploy application using <code>kubectl/oc apply</code>:</p>
+</li>
 </ul>
 <div class="codehilite"><pre><span></span><span class="o">(</span>kubectl/oc<span class="o">)</span> apply -f templates/springcontainerms/templates
 </pre></div>
@@ -1249,12 +1268,11 @@ docker push &lt;private-registry&gt;/&lt;image-namespace&gt;/kc-voyages-ms:lates
 </pre></div>
 
 <ul>
-<li>Generate application YAMLs via <code>helm template</code>:</li>
-<li>Parameters:<ul>
+<li>
+<p>Generate application YAMLs via <code>helm template</code>:</p>
+<ul>
 <li><code>--set image.repository=&lt;private-registry&gt;/&lt;image-namespace&gt;/&lt;image-repository&gt;</code></li>
-<li><code>--set image.tag=latest</code></li>
 <li><code>--set image.pullSecret=&lt;private-registry-pullsecret&gt;</code> (optional or set to blank)</li>
-<li><code>--set image.pullPolicy=Always</code></li>
 <li><code>--set kafka.brokersConfigMap=&lt;kafka brokers ConfigMap name&gt;</code></li>
 <li><code>--set eventstreams.enabled=(true/false)</code> (<code>true</code> when connecting to Event Streams of any kind, <code>false</code> when connecting to Kafka directly)</li>
 <li><code>--set eventstreams.apikeyConfigMap=&lt;kafka api key Secret name&gt;</code></li>
@@ -1262,16 +1280,14 @@ docker push &lt;private-registry&gt;/&lt;image-namespace&gt;/kc-voyages-ms:lates
 <li><code>--set eventstreams.caPemSecretName=&lt;eventstreams ca pem file secret name&gt;</code> (only used when connecting to Event Streams via ICP4I)</li>
 <li><code>--set serviceAccountName=&lt;service-account-name&gt;</code></li>
 <li><code>--namespace &lt;target-namespace&gt;</code></li>
-<li><code>--output-dir &lt;local-template-directory&gt;</code></li>
-</ul>
-</li>
-<li>Example using Event Streams via ICP4I:
-   <div class="codehilite"><pre><span></span>helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/kc-voyages-ms --set image.tag<span class="o">=</span>latest --set image.pullSecret<span class="o">=</span> --set image.pullPolicy<span class="o">=</span>Always --set kafka.brokersConfigMap<span class="o">=</span>es-kafka-brokers --set eventstreams.enabled<span class="o">=</span><span class="nb">true</span> --set eventstreams.apikeyConfigMap<span class="o">=</span>es-eventstreams-apikey --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --set eventstreams.caPemFileRequired<span class="o">=</span><span class="nb">true</span> --set eventstreams.caPemSecretName<span class="o">=</span>es-ca-pemfile --output-dir templates --namespace eda-pipelines-sandbox chart/voyagesms
+<li><code>--output-dir &lt;local-template-directory&gt;</code>
+  Example using Event Streams via ICP4I:
+   <div class="codehilite"><pre><span></span>helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/kc-voyages-ms --set image.pullSecret<span class="o">=</span> --set kafka.brokersConfigMap<span class="o">=</span>es-kafka-brokers --set eventstreams.enabled<span class="o">=</span><span class="nb">true</span> --set eventstreams.apikeyConfigMap<span class="o">=</span>es-eventstreams-apikey --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --set eventstreams.caPemFileRequired<span class="o">=</span><span class="nb">true</span> --set eventstreams.caPemSecretName<span class="o">=</span>es-ca-pemfile --output-dir templates --namespace eda-refarch chart/voyagesms
+</pre></div>
+  Example using Event Streams hosted on IBM Cloud:
+   <div class="codehilite"><pre><span></span>helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/kc-voyages-ms --set image.pullSecret<span class="o">=</span> --set kafka.brokersConfigMap<span class="o">=</span>kafka-brokers --set eventstreams.enabled<span class="o">=</span><span class="nb">true</span> --set eventstreams.apikeyConfigMap<span class="o">=</span>eventstreams-apikey --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --output-dir templates --namespace eda-refarch chart/voyagesms
 </pre></div></li>
-<li>
-<p>Example using Event Streams hosted on IBM Cloud:
-    <div class="codehilite"><pre><span></span>helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/kc-voyages-ms --set image.tag<span class="o">=</span>latest --set image.pullSecret<span class="o">=</span> --set image.pullPolicy<span class="o">=</span>Always --set kafka.brokersConfigMap<span class="o">=</span>kafka-brokers --set eventstreams.enabled<span class="o">=</span><span class="nb">true</span> --set eventstreams.apikeyConfigMap<span class="o">=</span>eventstreams-apikey --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --output-dir templates --namespace eda-pipelines-sandbox chart/voyagesms
-</pre></div></p>
+</ul>
 </li>
 <li>
 <p>Deploy application using <code>kubectl/oc apply</code>:
@@ -1312,12 +1328,11 @@ docker push &lt;private-registry&gt;/&lt;image-namespace&gt;/kc-fleet-ms:latest
 </pre></div>
 
 <ul>
-<li>Generate application YAMLs via <code>helm template</code>:</li>
-<li>Parameters:<ul>
+<li>
+<p>Generate application YAMLs via <code>helm template</code>:</p>
+<ul>
 <li><code>--set image.repository=&lt;private-registry&gt;/&lt;image-namespace&gt;/&lt;image-repository&gt;</code></li>
-<li><code>--set image.tag=latest</code></li>
 <li><code>--set image.pullSecret=&lt;private-registry-pullsecret&gt;</code> (optional or set to blank)</li>
-<li><code>--set image.pullPolicy=Always</code></li>
 <li><code>--set kafka.brokersConfigMap=&lt;kafka brokers ConfigMap name&gt;</code></li>
 <li><code>--set eventstreams.enabled=(true/false)</code> (<code>true</code> when connecting to Event Streams of any kind, <code>false</code> when connecting to Kafka directly)</li>
 <li><code>--set eventstreams.apikeyConfigMap=&lt;kafka api key Secret name&gt;</code></li>
@@ -1326,16 +1341,14 @@ docker push &lt;private-registry&gt;/&lt;image-namespace&gt;/kc-fleet-ms:latest
 <li><code>--set eventstreams.truststorePassword=&lt;eventstreams jks password&gt;</code> (only used when connecting to Event Streams via ICP4I)</li>
 <li><code>--set serviceAccountName=&lt;service-account-name&gt;</code></li>
 <li><code>--namespace &lt;target-namespace&gt;</code></li>
-<li><code>--output-dir &lt;local-template-directory&gt;</code></li>
-</ul>
-</li>
-<li>Example using Event Streams via ICP4I:
-   <div class="codehilite"><pre><span></span>helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/kc-fleet-ms --set image.tag<span class="o">=</span>latest --set image.pullSecret<span class="o">=</span> --set image.pullPolicy<span class="o">=</span>Always --set kafka.brokersConfigMap<span class="o">=</span>es-kafka-brokers --set eventstreams.enabled<span class="o">=</span><span class="nb">true</span> --set eventstreams.apikeyConfigMap<span class="o">=</span>es-eventstreams-apikey --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --set eventstreams.truststoreRequired<span class="o">=</span><span class="nb">true</span> --set eventstreams.truststoreSecret<span class="o">=</span>es-ca-pemfile --set eventstreams.truststorePassword<span class="o">=</span>password --output-dir templates --namespace eda-pipelines-sandbox chart/fleetms
+<li><code>--output-dir &lt;local-template-directory&gt;</code>
+  Example using Event Streams via ICP4I:
+   <div class="codehilite"><pre><span></span>helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/kc-fleet-ms --set image.pullSecret<span class="o">=</span> --set kafka.brokersConfigMap<span class="o">=</span>es-kafka-brokers --set eventstreams.enabled<span class="o">=</span><span class="nb">true</span> --set eventstreams.apikeyConfigMap<span class="o">=</span>es-eventstreams-apikey --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --set eventstreams.truststoreRequired<span class="o">=</span><span class="nb">true</span> --set eventstreams.truststoreSecret<span class="o">=</span>es-ca-pemfile --set eventstreams.truststorePassword<span class="o">=</span>password --output-dir templates --namespace eda-refarch chart/fleetms
+</pre></div>
+  Example using Event Streams hosted on IBM Cloud:
+   <div class="codehilite"><pre><span></span>helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/kc-fleet-ms --set image.pullSecret<span class="o">=</span> --set kafka.brokersConfigMap<span class="o">=</span>kafka-brokers --set eventstreams.enabled<span class="o">=</span><span class="nb">true</span> --set eventstreams.apikeyConfigMap<span class="o">=</span>eventstreams-apikey --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --output-dir templates --namespace eda-refarch chart/fleetms
 </pre></div></li>
-<li>
-<p>Example using Event Streams hosted on IBM Cloud:
-   <div class="codehilite"><pre><span></span>helm template --set image.repository<span class="o">=</span>rhos-quay.internal-network.local/browncompute/kc-fleet-ms --set image.tag<span class="o">=</span>latest --set image.pullSecret<span class="o">=</span> --set image.pullPolicy<span class="o">=</span>Always --set kafka.brokersConfigMap<span class="o">=</span>kafka-brokers --set eventstreams.enabled<span class="o">=</span><span class="nb">true</span> --set eventstreams.apikeyConfigMap<span class="o">=</span>eventstreams-apikey --set <span class="nv">serviceAccountName</span><span class="o">=</span>kcontainer-runtime --output-dir templates --namespace eda-pipelines-sandbox chart/fleetms
-</pre></div></p>
+</ul>
 </li>
 <li>
 <p>Deploy application using <code>kubectl/oc apply</code>:

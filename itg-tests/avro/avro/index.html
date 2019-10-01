@@ -1,0 +1,1263 @@
+
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.0.1">
+    
+    
+      
+        <title>Apache Avro - Container Shipment EDA reference implementation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/application.982221ab.css">
+      
+      
+    
+    
+      <script src="../../../assets/javascripts/modernizr.1f0bcf2b.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../../assets/fonts/material-icons.css">
+    
+    
+      <link rel="stylesheet" href="../../../extra.css">
+    
+    
+      
+    
+    
+  </head>
+  
+    <body dir="ltr">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#apache-avro" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../.." title="Container Shipment EDA reference implementation" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
+              Container Shipment EDA reference implementation
+            </span>
+            <span class="md-header-nav__topic">
+              Apache Avro
+            </span>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+<a href="https://github.com/ibm-cloud-architecture/refarch-kc/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../../.." title="Container Shipment EDA reference implementation" class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </a>
+    Container Shipment EDA reference implementation
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+<a href="https://github.com/ibm-cloud-architecture/refarch-kc/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../.." title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      Business problem statement
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        Business problem statement
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../introduction/" title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../analysis/readme/" title="Event storming analysis" class="md-nav__link">
+      Event storming analysis
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../design/readme/" title="From Analysis to Microservice Specifications" class="md-nav__link">
+      From Analysis to Microservice Specifications
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../design/architecture/" title="Architecture" class="md-nav__link">
+      Architecture
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
+      Development practices
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        Development practices
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="https://ibm-cloud-architecture.github.io/refarch-kc-order-ms" title="Order microservice with CQRS and Event Sourcing" class="md-nav__link">
+      Order microservice with CQRS and Event Sourcing
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/kstreams/" title="Container microservice with event sourcing and Kafka streams" class="md-nav__link">
+      Container microservice with event sourcing and Kafka streams
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/flask" title="Container microservice with Python" class="md-nav__link">
+      Container microservice with Python
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/springboot" title="Container microservice with Springboot - Spring Kafka and PostgreSQL" class="md-nav__link">
+      Container microservice with Springboot - Spring Kafka and PostgreSQL
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../deployments/reposlist/" title="Related repositories" class="md-nav__link">
+      Related repositories
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      Deployments
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        Deployments
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../deployments/backing-services/" title="Backing Services" class="md-nav__link">
+      Backing Services
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../deployments/application-components/" title="Application Components" class="md-nav__link">
+      Application Components
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../security/" title="Security" class="md-nav__link">
+      Security
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../" title="Integration tests" class="md-nav__link">
+      Integration tests
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../../demo/readme/" title="Demonstration script" class="md-nav__link">
+      Demonstration script
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" title="Introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-apache-avro" title="What is Apache Avro" class="md-nav__link">
+    What is Apache Avro
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-apache-avro" title="Why Apache Avro" class="md-nav__link">
+    Why Apache Avro
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avro-kafka-and-schema-registry" title="Avro, Kafka and Schema Registry" class="md-nav__link">
+    Avro, Kafka and Schema Registry
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-does-it-all-work" title="How does it all work" class="md-nav__link">
+    How does it all work
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#our-implementation" title="Our implementation" class="md-nav__link">
+    Our implementation
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-schemas" title="Data Schemas" class="md-nav__link">
+    Data Schemas
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#see-it-in-action" title="See it in action" class="md-nav__link">
+    See it in action
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#producer-and-consumer" title="Producer and Consumer" class="md-nav__link">
+    Producer and Consumer
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#producer" title="Producer" class="md-nav__link">
+    Producer
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consumer" title="Consumer" class="md-nav__link">
+    Consumer
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schema-registry" title="Schema registry" class="md-nav__link">
+    Schema registry
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#links" title="Links" class="md-nav__link">
+    Links
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/ibm-cloud-architecture/refarch-kc/edit/master/docs/itg-tests/avro/avro.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <h1 id="apache-avro">Apache Avro</h1>
+<h2 id="introduction">Introduction</h2>
+<p>Here we explain the <a href="https://avro.apache.org/">Apache Avro</a> messaging integration we have done in one of our integration tests for the <strong>refarch-kc-container-ms</strong> component, which is part of the <a href="https://ibm-cloud-architecture.github.io/refarch-kc/">Reefer Containers reference implementation</a> of the <a href="https://ibm-cloud-architecture.github.io/refarch-eda/">IBM Event Driven Architectures reference architecture</a>. The Refeer Containers reference implementation is a simulation of what a container shipment process could look like in reality. From a manufacturer creating some goods to the delivery of those to a reatailer, going through requesting a container, loading the goods into the container, finding a voyage for that container on a ship, monitoring the container's temperature and GPS location, delivering the container, unloading the goods, etc. As you can imagine, this scenario is ideal for an Event Driven architecture where we not only have a microservices based application but also the integration of these using Event Driven Architecture components (such as Kafka) and patterns (such as Saga, CQRS, Event Sourcing, etc).</p>
+<h3 id="what-is-apache-avro">What is Apache Avro</h3>
+<p>Avro is an open source data serialization system that helps with data exchange between systems, programming languages, and processing frameworks. Avro helps define a binary format for your data, as well as map it to the programming language of your choice.</p>
+<h3 id="why-apache-avro">Why Apache Avro</h3>
+<p>There are several websites that discuss the Apache Avro data serialization system benefits over other messaging data protocols. A simple google search will list dozens of them. Here, we will highlight just a few from a <a href="https://www.confluent.io/blog/avro-kafka-data/">confluent blog post</a>:</p>
+<ul>
+<li>It has a direct mapping to and from JSON</li>
+<li>It has a very compact format. The bulk of JSON, repeating every field name with every single record, is what makes JSON inefficient for high-volume usage.</li>
+<li>It is very fast.</li>
+<li>It has great bindings for a wide variety of programming languages so you can generate Java objects that make working with event data easier, but it does not require code generation so tools can be written generically for any data stream.</li>
+<li>It has a rich, extensible schema language defined in pure JSON</li>
+<li>It has the best notion of compatibility for evolving your data over time.</li>
+</ul>
+<h2 id="avro-kafka-and-schema-registry">Avro, Kafka and Schema Registry</h2>
+<p>Avro relies on schemas. When Avro data is produced or read, the Avro schema for such piece of data is always present. This permits each datum to be written with no per-value overheads, making serialization both fast and small. An Avro schema defines the structure of the Avro data format. Schema Registry defines a scope in which schemas can evolve, and that scope is the subject. The name of the subject depends on the configured subject name strategy, which by default is set to derive subject name from topic name.</p>
+<p>In our case, this Avro data are messages (also called events) sent to a kafka topic. Each message is a key-value pair. Either the message key or the message value, or both, can be serialized as Avro. Integration with Schema Registry means that Kafka messages do not need to be written with the entire Avro schema. Instead, Kafka messages are written with the <strong>schema id</strong>. The producers writing the messages and the consumers reading the messages must be using the same Schema Registry to get the same mapping between a schema and schema id.</p>
+<p>Kafka is used as Schema Registry storage backend. The special Kafka topic <code>&lt;kafkastore.topic&gt;</code> (default <code>_schemas</code>), with a single partition, is used as a highly available write ahead log. All schemas, subject/version and ID metadata, and compatibility settings are appended as messages to this log. A Schema Registry instance therefore both produces and consumes messages under the <code>_schemas</code> topic. It produces messages to the log when, for example, new schemas are registered under a subject, or when updates to compatibility settings are registered. Schema Registry consumes from the <code>_schemas</code> log in a background thread, and updates its local caches on consumption of each new <code>_schemas</code> message to reflect the newly added schema or compatibility setting. Updating local state from the Kafka log in this manner ensures durability, ordering, and easy recoverability.</p>
+<h3 id="how-does-it-all-work">How does it all work</h3>
+<p><img alt="schema registry management" src="../images/schema-registry-and-kafka.png" /></p>
+<p>When the producer sends a message/event to a Kafka topic for the first time, it sends the schema for that message/event to the Schema Registry. The Schema Registry registers this schema to the subject for the Kafka topic we want to send the message/event to, and returns the <strong>schema id</strong> to the producer. The producer <strong>caches this mapping between the schema and schema id</strong> for subsequent message writes, so <strong>it only contacts Schema Registry on the first message/event write</strong> (unless the schema has changed, that is evolved, when the schema registry will be contacted again for validation and storage of this new version of the schema). Kafka messages are written along with the <strong>schema id</strong> rather than with the entire data schema.</p>
+<p>When a consumer reads this data, it sees the <strong>Avro schema id and sends a schema request to Schema Registry</strong>. Schema Registry retrieves the schema associated to that schema id, and <strong>returns the schema to the consumer</strong>. The consumer <strong>caches</strong> this mapping between the schema and schema id for subsequent message reads, so it only contacts Schema Registry on the first schema id read.</p>
+<h2 id="our-implementation">Our implementation</h2>
+<p>As mentioned in the introduction, the integration of the Apache Avro data serialization system has been done in one of the integration test for the <code>refarch-kc-container-ms</code> component of the <a href="https://ibm-cloud-architecture.github.io/refarch-kc/">Reefer Containers reference implementation</a> of the <a href="https://ibm-cloud-architecture.github.io/refarch-eda/">IBM Event Driven Architectures reference architecture</a>.</p>
+<p>The <strong>refarch-kc-container-ms</strong> component will take care of the containers status. From adding new containers to the available containers list to assigning a container to a particular order and managing the status of that container throughout the shipment process aforementioned. </p>
+<p>The integration tests for our Refeer Containers reference implementation can be found <a href="https://github.com/ibm-cloud-architecture/refarch-kc/tree/master/itg-tests">here</a> (still under development). The integration tests are being developed in python and their main goal is to validate the successful deployment of the Refeer Containers reference implementation end-to-end.</p>
+<p>The particular integration test (still under development) where we have integrated the Apache Avro serialization system can be found under the <code>ContainersPython</code> forlder. More precisely, these are the files and folders involved in our implementation:</p>
+<div class="codehilite"><pre><span></span>├── data_schemas
+│   ├── container_event.avsc
+│   ├── container_event_key.avsc
+│   ├── container_event_payload.avsc
+│   ├── container_event_type.avsc
+│   ├── container_status.avsc
+│   └── utils
+│       └── avroEDAUtils.py
+└── itg-tests
+    ├── ContainersPython
+    │   ├── ConsumeAvroContainers.py
+    │   └── ContainerAvroProducer.py
+    └── kafka
+        ├── KcAvroConsumer.py
+        └── KcAvroProducer.py
+</pre></div>
+
+<p>that will allow us to send <strong>container events</strong> into the <strong>containers</strong> Kafka topic and read from such topic.</p>
+<p>By using these python scripts, we will be able to validate:</p>
+<ul>
+<li>Sending/Receiving <strong>Apache Avro encoded messages</strong>.</li>
+<li><strong>Apache Avro data schema definitions</strong> for data correctness.</li>
+<li><strong>Schema Registry</strong> for Apache Avro data schema management.</li>
+</ul>
+<h3 id="data-schemas">Data Schemas</h3>
+<p>Avro schemas are defined with JSON. An example of a Container Event for creating a new container to the available list of containers for our reference application looks like:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;containerID&quot;</span><span class="p">:</span> <span class="s2">&quot;container01&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;timestamp&quot;</span><span class="p">:</span> <span class="mi">1569410690</span><span class="p">,</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ContainerAdded&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;payload&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;containerID&quot;</span><span class="p">:</span> <span class="s2">&quot;container01&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Reefer&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Empty&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;latitude&quot;</span><span class="p">:</span> <span class="mf">37.8</span><span class="p">,</span>
+    <span class="nt">&quot;longitude&quot;</span><span class="p">:</span> <span class="mf">-122.25</span><span class="p">,</span>
+    <span class="nt">&quot;capacity&quot;</span><span class="p">:</span> <span class="mi">110</span><span class="p">,</span>
+    <span class="nt">&quot;brand&quot;</span><span class="p">:</span> <span class="s2">&quot;itg-brand&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>An Avro schema could be a nested schema which allows us to have a smaller reusable data schemas to define bigger and more complex ones. This is the case for our Container Event data schema. For instance, the payload is defined on its own data schema (<code>container_event_payload.avsc</code>) which the Container Event data schema refers to:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;namespace&quot;</span><span class="p">:</span> <span class="s2">&quot;ibm.eda.kc.container.event&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;payload&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;record&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;containerID&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;type&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;status&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ibm.eda.kc.container.status&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;latitude&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;longitude&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;capacity&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;brand&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>As you can see, the status attribute of the paylod is yet another data schema itsef which, in this case, is of type enum:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;namespace&quot;</span><span class="p">:</span> <span class="s2">&quot;ibm.eda.kc.container&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;status&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;enum&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;symbols&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;Loaded&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Empty&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Unassignable&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PartiallyLoaded&quot;</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>All the different data schemas for a Container Event can be found under the <code>data_schemas</code> forlder.</p>
+<p>In that folder we have also developed a util script (<code>avroEDAUtils.py</code>) to be able to construct the final Container Event data schema that is needed by our producer:</p>
+<div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">getContainerEventSchema</span><span class="p">(</span><span class="n">schema_files_location</span><span class="p">):</span>
+  <span class="c1"># Read all the schemas needed in order to produce the final Container Event Schema</span>
+  <span class="n">known_schemas</span> <span class="o">=</span> <span class="n">avro</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">Names</span><span class="p">()</span>
+  <span class="n">container_status_schema</span> <span class="o">=</span> <span class="n">LoadAvsc</span><span class="p">(</span><span class="n">schema_files_location</span> <span class="o">+</span> <span class="s2">&quot;container_status.avsc&quot;</span><span class="p">,</span> <span class="n">known_schemas</span><span class="p">)</span>
+  <span class="n">container_event_payload_schema</span> <span class="o">=</span> <span class="n">LoadAvsc</span><span class="p">(</span><span class="n">schema_files_location</span> <span class="o">+</span> <span class="s2">&quot;container_event_payload.avsc&quot;</span><span class="p">,</span> <span class="n">known_schemas</span><span class="p">)</span>
+  <span class="n">container_event_type_schema</span> <span class="o">=</span> <span class="n">LoadAvsc</span><span class="p">(</span><span class="n">schema_files_location</span> <span class="o">+</span> <span class="s2">&quot;container_event_type.avsc&quot;</span><span class="p">,</span> <span class="n">known_schemas</span><span class="p">)</span>
+  <span class="n">container_event_schema</span> <span class="o">=</span> <span class="n">LoadAvsc</span><span class="p">(</span><span class="n">schema_files_location</span> <span class="o">+</span> <span class="s2">&quot;container_event.avsc&quot;</span><span class="p">,</span> <span class="n">known_schemas</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">container_event_schema</span>
+
+<span class="k">def</span> <span class="nf">LoadAvsc</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+  <span class="c1"># Load avsc file</span>
+  <span class="c1"># file_path: path to schema file</span>
+  <span class="c1"># names(optional): avro.schema.Names object</span>
+  <span class="n">file_text</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+  <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">file_text</span><span class="p">)</span>
+  <span class="n">schema</span> <span class="o">=</span> <span class="n">avro</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">SchemaFromJSONData</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">names</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">schema</span>
+</pre></div>
+
+<h4 id="see-it-in-action">See it in action</h4>
+<p>Here, we are going to see how data schemas help with data correctness. Using the payload for our container messages/events as the example, this is the output of a correct message being sent:</p>
+<div class="codehilite"><pre><span></span><span class="gd">--- Container event to be published: ---</span>
+{
+  &quot;containerID&quot;: &quot;container01&quot;,
+  &quot;type&quot;: &quot;Reefer&quot;,
+  &quot;status&quot;: &quot;Empty&quot;,
+  &quot;latitude&quot;: 37.8,
+  &quot;longitude&quot;: -122.25,
+  &quot;capacity&quot;: 110,
+  &quot;brand&quot;: &quot;itg-brand&quot;
+}
+
+Message delivered to containers [0]
+</pre></div>
+
+<p>However, if we try to send a payload where, for instace the container ID is an integer rather than a string, we will get an <code>avro.io.AvroTypeException</code>:</p>
+<div class="codehilite"><pre><span></span>avro.io.AvroTypeException: The datum {&#39;containerID&#39;: 12345, &#39;type&#39;: &#39;Reefer&#39;, &#39;status&#39;: &#39;Empty&#39;, &#39;latitude&#39;: 37.8, &#39;longitude&#39;: -122.25, &#39;capacity&#39;: 110, &#39;brand&#39;: &#39;itg-brand&#39;} is not an example of the schema
+{
+    &quot;type&quot;: {
+        &quot;type&quot;: &quot;record&quot;,
+        &quot;name&quot;: &quot;payload&quot;,
+        &quot;namespace&quot;: &quot;ibm.eda.kc.container.event&quot;,
+        &quot;fields&quot;: [
+          {
+            &quot;type&quot;: &quot;string&quot;,
+            &quot;name&quot;: &quot;containerID&quot;
+          },
+          {
+            &quot;type&quot;: &quot;string&quot;,
+            &quot;name&quot;: &quot;type&quot;
+          },
+          {
+            &quot;type&quot;: {
+              &quot;type&quot;: &quot;enum&quot;,
+              &quot;name&quot;: &quot;status&quot;,
+              &quot;namespace&quot;: &quot;ibm.eda.kc.container&quot;,
+              &quot;symbols&quot;: [
+                &quot;Loaded&quot;,
+                &quot;Empty&quot;,
+                &quot;Unassignable&quot;,
+                &quot;PartiallyLoaded&quot;
+              ]
+            },
+            &quot;name&quot;: &quot;status&quot;
+          },
+          {
+            &quot;type&quot;: &quot;float&quot;,
+            &quot;name&quot;: &quot;latitude&quot;
+          },
+          {
+            &quot;type&quot;: &quot;float&quot;,
+            &quot;name&quot;: &quot;longitude&quot;
+          },
+          {
+            &quot;type&quot;: &quot;int&quot;,
+            &quot;name&quot;: &quot;capacity&quot;
+          },
+          {
+            &quot;type&quot;: &quot;string&quot;,
+            &quot;name&quot;: &quot;brand&quot;
+          }
+        ]
+      }
+</pre></div>
+
+<h3 id="producer-and-consumer">Producer and Consumer</h3>
+<p>The python scripts developed to implement a producer and consumer to a kafka topic that sends Avro messages whose data schemas are managed by a schema registry are:</p>
+<div class="codehilite"><pre><span></span>└── itg-tests
+    ├── ContainersPython
+    │   ├── ConsumeAvroContainers.py
+    │   └── ContainerAvroProducer.py
+    └── kafka
+        ├── KcAvroConsumer.py
+        └── KcAvroProducer.py
+</pre></div>
+
+<p>We have used the <strong>confluent_kafka avro libraries</strong> to implement our producer and consumer.</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">confluent_kafka.avro</span> <span class="kn">import</span> <span class="n">AvroProducer</span><span class="p">,</span> <span class="n">AvroConsumer</span>
+</pre></div>
+
+<h4 id="producer">Producer</h4>
+<p>We create our <code>KafkaProducer</code> object where we define some of the <strong>AvroProducer</strong> options such as the schema registry url for data schema registration and management. But it is not until we call the <code>prepareProducer</code> method that we actually create the <strong>AvroProducer</strong> with that <strong>schema registry</strong> to be used as well as the <strong>data schemas for the key and value</strong> of our Container Event to be sent.</p>
+<p>Finally, in the <code>publisEvent</code> method we send a value plus a key to a kafka topic.</p>
+<p>producer when we call <code>prepareProducer</code></p>
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">confluent_kafka</span> <span class="kn">import</span> <span class="n">KafkaError</span>
+<span class="kn">from</span> <span class="nn">confluent_kafka.avro</span> <span class="kn">import</span> <span class="n">AvroProducer</span>
+
+<span class="k">class</span> <span class="nc">KafkaProducer</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">kafka_brokers</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span><span class="n">kafka_apikey</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span><span class="n">schema_registry_url</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kafka_brokers</span> <span class="o">=</span> <span class="n">kafka_brokers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kafka_apikey</span> <span class="o">=</span> <span class="n">kafka_apikey</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">schema_registry_url</span> <span class="o">=</span> <span class="n">schema_registry_url</span>
+
+    <span class="k">def</span> <span class="nf">prepareProducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">groupID</span> <span class="o">=</span> <span class="s2">&quot;pythonproducers&quot;</span><span class="p">,</span><span class="n">key_schema</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">value_schema</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="n">options</span> <span class="o">=</span><span class="p">{</span>
+                <span class="s1">&#39;bootstrap.servers&#39;</span><span class="p">:</span>  <span class="bp">self</span><span class="o">.</span><span class="n">kafka_brokers</span><span class="p">,</span>
+                <span class="s1">&#39;schema.registry.url&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema_registry_url</span><span class="p">,</span>
+                <span class="s1">&#39;group.id&#39;</span><span class="p">:</span> <span class="n">groupID</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">producer</span> <span class="o">=</span> <span class="n">AvroProducer</span><span class="p">(</span><span class="n">options</span><span class="p">,</span><span class="n">default_key_schema</span><span class="o">=</span><span class="n">key_schema</span><span class="p">,</span><span class="n">default_value_schema</span><span class="o">=</span><span class="n">value_schema</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">publishEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topicName</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="c1"># Important: value DOES NOT come in JSON format from ContainerAvroProducer.py. Therefore, we must convert it to JSON format first</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">topic</span><span class="o">=</span><span class="n">topicName</span><span class="p">,</span><span class="n">value</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">value</span><span class="p">),</span><span class="n">key</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">value</span><span class="p">)[</span><span class="n">key</span><span class="p">],</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">delivery_report</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</pre></div>
+
+<h4 id="consumer">Consumer</h4>
+<p>Similarly to the producer, when we create a <code>KafkaConsumer</code> object we are just setting some of its attributes such as the kafka topic we will listen to and the schema registry url the producer will retrieve the data schemas from based on the schema ids messages comes with. It is only when we call the <code>prepareConsumer</code> method that we actually create the <strong>AvroConsumer</strong> and subscribe it to the intended kafka topic.</p>
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">confluent_kafka.avro</span> <span class="kn">import</span> <span class="n">AvroConsumer</span>
+
+<span class="k">class</span> <span class="nc">KafkaConsumer</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kafka_brokers</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">kafka_apikey</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">topic_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">schema_registry_url</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kafka_brokers</span> <span class="o">=</span> <span class="n">kafka_brokers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kafka_apikey</span> <span class="o">=</span> <span class="n">kafka_apikey</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">topic_name</span> <span class="o">=</span> <span class="n">topic_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">schema_registry_url</span> <span class="o">=</span> <span class="n">schema_registry_url</span> 
+
+    <span class="k">def</span> <span class="nf">prepareConsumer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">groupID</span> <span class="o">=</span> <span class="s2">&quot;pythonconsumers&quot;</span><span class="p">):</span>
+        <span class="n">options</span> <span class="o">=</span><span class="p">{</span>
+                <span class="s1">&#39;bootstrap.servers&#39;</span><span class="p">:</span>  <span class="bp">self</span><span class="o">.</span><span class="n">kafka_brokers</span><span class="p">,</span>
+                <span class="s1">&#39;group.id&#39;</span><span class="p">:</span> <span class="n">groupID</span><span class="p">,</span>
+                <span class="s1">&#39;auto.offset.reset&#39;</span><span class="p">:</span> <span class="s1">&#39;earliest&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;schema.registry.url&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema_registry_url</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span> <span class="o">=</span> <span class="n">AvroConsumer</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="o">.</span><span class="n">subscribe</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">topic_name</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">pollNextEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keyID</span><span class="p">,</span> <span class="n">keyname</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+<h3 id="schema-registry">Schema registry</h3>
+<p>For now, we have used the <a href="https://hub.docker.com/r/confluentinc/cp-schema-registry/">confluent schema registry</a> for our work although our goal is to use <strong>IBM Event Streams</strong>.</p>
+<p>The integration of the schema registry with your kafka broker is quite easy. In fact, all you need is to provide the schema registtry with your zookepeer cluster url and give your schema registry a hostname: https://docs.confluent.io/current/installation/docker/config-reference.html#schema-registry-configuration</p>
+<p>Once you have your schema registry up and running, this provides a rich API endpoint to operate with: https://docs.confluent.io/current/schema-registry/using.html#common-sr-usage-examples</p>
+<p>For example:</p>
+<p>Let's assume we have created a new kafka topic called <code>avrotest</code> for testing our work. And let's also assume we are sending persona messages/events whose data schema is the following:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;namespace&quot;</span><span class="p">:</span> <span class="s2">&quot;avro.test&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;persona&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;record&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;fields&quot;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;age&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;int&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;gender&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+ <span class="p">}</span>
+</pre></div>
+
+<ul>
+<li>Get the <strong>subjects</strong> (that is, the kafka topics to which we have a schema registered against. As explained before, we either have registered the schema manually ourselves or the Avro producer has registered it when we have sent the first message)</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="err">curl -X GET http://localhost:8081/subjects</span>
+
+<span class="err">[&quot;avrotest-value&quot;,&quot;avrotest-key&quot;]</span>
+</pre></div>
+
+<ul>
+<li>Get versions for a subject:</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="err">curl -X GET http://localhost:8081/subjects/avrotest-value/versions</span>
+
+<span class="err">[1]</span>
+</pre></div>
+
+<ul>
+<li>Get a specific version:</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="err">curl -X GET http://localhost:8081/subjects/avrotest-value/versions/1/</span>
+
+<span class="err">{</span>
+<span class="err">  &quot;subject&quot;: &quot;avrotest-value&quot;,</span>
+<span class="err">  &quot;version&quot;: 1,</span>
+<span class="err">  &quot;id&quot;: 1,</span>
+<span class="err">  &quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,\&quot;name\&quot;:\&quot;persona\&quot;,\&quot;namespace\&quot;:\&quot;avro.test\&quot;,\&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},{\&quot;name\&quot;:\&quot;gender\&quot;,\&quot;type\&quot;:\&quot;string\&quot;}]}&quot;</span>
+<span class="err">}</span>
+</pre></div>
+
+<ul>
+<li>Get the schema of a specific subjet version:</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="err">curl -X GET http://localhost:8081/subjects/avrotest-value/versions/1/schema</span>
+
+<span class="err">{</span>
+<span class="err">  &quot;type&quot;: &quot;record&quot;,</span>
+<span class="err">  &quot;name&quot;: &quot;persona&quot;,</span>
+<span class="err">  &quot;namespace&quot;: &quot;avro.test&quot;,</span>
+<span class="err">  &quot;fields&quot;: [</span>
+<span class="err">    {</span>
+<span class="err">      &quot;name&quot;: &quot;name&quot;,</span>
+<span class="err">      &quot;type&quot;: &quot;string&quot;</span>
+<span class="err">    },</span>
+<span class="err">    {</span>
+<span class="err">      &quot;name&quot;: &quot;age&quot;,</span>
+<span class="err">      &quot;type&quot;: &quot;int&quot;</span>
+<span class="err">    },</span>
+<span class="err">    {</span>
+<span class="err">      &quot;name&quot;: &quot;gender&quot;,</span>
+<span class="err">      &quot;type&quot;: &quot;string&quot;</span>
+<span class="err">    }</span>
+<span class="err">  ]</span>
+<span class="err">}</span>
+</pre></div>
+
+<ul>
+<li>Get the schema of a specific subjet latest version:</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="err">curl -X GET http://localhost:8081/subjects/avrotest-value/versions/latest/schema</span>
+
+<span class="err">{</span>
+<span class="err">  &quot;type&quot;: &quot;record&quot;,</span>
+<span class="err">  &quot;name&quot;: &quot;persona&quot;,</span>
+<span class="err">  &quot;namespace&quot;: &quot;avro.test&quot;,</span>
+<span class="err">  &quot;fields&quot;: [</span>
+<span class="err">    {</span>
+<span class="err">      &quot;name&quot;: &quot;name&quot;,</span>
+<span class="err">      &quot;type&quot;: &quot;string&quot;</span>
+<span class="err">    },</span>
+<span class="err">    {</span>
+<span class="err">      &quot;name&quot;: &quot;age&quot;,</span>
+<span class="err">      &quot;type&quot;: &quot;int&quot;</span>
+<span class="err">    },</span>
+<span class="err">    {</span>
+<span class="err">      &quot;name&quot;: &quot;gender&quot;,</span>
+<span class="err">      &quot;type&quot;: &quot;string&quot;</span>
+<span class="err">    }</span>
+<span class="err">  ]</span>
+<span class="err">}</span>
+</pre></div>
+
+<p>The above looks very good but let's dive into more insteresting real-case scenarios.</p>
+<ol>
+<li>Sending a correct message:</li>
+</ol>
+<div class="codehilite"><pre><span></span><span class="gd">--- Persona event to be published: ---</span>
+{&#39;name&#39;: &#39;david&#39;, &#39;age&#39;: 25, &#39;gender&#39;: &#39;male&#39;}
+<span class="gd">----------------------------------------</span>
+Message delivered to avrotest [0]
+</pre></div>
+
+<ol>
+<li>
+<p>What happens if I send incorrect data types in my message/event, for instace sending the age as a string rather than as an integer (already seen in the data schema section but take it as a refresher)?:</p>
+<div class="codehilite"><pre><span></span>avro.io.AvroTypeException: The datum {&#39;name&#39;: &#39;david&#39;, &#39;age&#39;: &#39;25&#39;, &#39;gender&#39;: &#39;male&#39;} is not an example of the schema {
+  &quot;type&quot;: &quot;record&quot;,
+  &quot;name&quot;: &quot;persona&quot;,
+  &quot;namespace&quot;: &quot;avro.test&quot;,
+  &quot;fields&quot;: [
+    {
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;name&quot;: &quot;name&quot;
+    },
+    {
+      &quot;type&quot;: &quot;int&quot;,
+      &quot;name&quot;: &quot;age&quot;
+    },
+    {
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;name&quot;: &quot;gender&quot;
+    }
+  ]
+}
+</pre></div>
+
+<p>We see that the Avro Producer will give us an <code>avro.io.AvroTypeException</code> error.</p>
+</li>
+<li>
+<p>What if we decide to change the data schema to add a new attribute such as place of birth?</p>
+</li>
+</ol>
+<p>that is,</p>
+<p><div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;namespace&quot;</span><span class="p">:</span> <span class="s2">&quot;avro.test&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;persona&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;record&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;fields&quot;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;age&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;int&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;gender&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;place_of_birth&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+ <span class="p">}</span>
+</pre></div>
+   and here is what we get</p>
+<div class="codehilite"><pre><span></span><span class="gd">--- Persona event to be published: ---</span>
+{&#39;name&#39;: &#39;david&#39;, &#39;age&#39;: &#39;25&#39;, &#39;gender&#39;: &#39;male&#39;, &#39;place_of_birth&#39;: &#39;USA&#39;}
+<span class="gd">----------------------------------------</span>
+Traceback (most recent call last):
+  File &quot;ContainerAvroProducer.py&quot;, line 73, in &lt;module&gt;
+    kp.publishEvent(TOPIC_NAME,container_event,&quot;1&quot;)
+  File &quot;/home/kafka/KcAvroProducer.py&quot;, line 42, in publishEvent
+    self.producer.produce(topic=topicName,value=json.loads(value),key=json.loads(key), callback=self.delivery_report)
+  File &quot;/root/.local/lib/python3.7/site-packages/confluent_kafka/avro/__init__.py&quot;, line 80, in produce
+    value = self._serializer.encode_record_with_schema(topic, value_schema, value)
+  File &quot;/root/.local/lib/python3.7/site-packages/confluent_kafka/avro/serializer/message_serializer.py&quot;, line 105, in encode_record_with_schema
+    schema_id = self.registry_client.register(subject, schema)
+  File &quot;/root/.local/lib/python3.7/site-packages/confluent_kafka/avro/cached_schema_registry_client.py&quot;, line 223, in register
+    raise ClientError(&quot;Invalid Avro schema:&quot; + str(code))
+confluent_kafka.avro.error.ClientError: Invalid Avro schema:422
+</pre></div>
+
+<p>We see we get an <code>Invalid Avro schema</code> error because Avro data schema not only validates the data being sent complies with the schema registered for a particular Kafka topic/subject but it also validates schema evolution. That is, based on the <a href="https://docs.confluent.io/current/schema-registry/avro.html">compatibility type configured</a>, a new schema version might be compatible or not.</p>
+<p>In this case, because the compatibility set for schema evolution is <em>BACKWARD</em> we can't just simply add a new attribute (since consumers using the new schema must be able to read data produced with the last schema).</p>
+<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot; --data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,\&quot;name\&quot;:\&quot;persona\&quot;,\&quot;namespace\&quot;:\&quot;avro.test\&quot;,\&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},{\&quot;name\&quot;:\&quot;gender\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;}]}&quot;}&#39; http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
+
+<span class="err">{&quot;is_compatible&quot;:false}</span>
+</pre></div>
+
+<p>How do we evolve our schema to add new attributes in a wat that the schema is <em>BACKWARD</em> compatible? Adding a <strong>default</strong> for such attribute:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;namespace&quot;</span><span class="p">:</span> <span class="s2">&quot;avro.test&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;persona&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;record&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;fields&quot;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;age&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;int&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;gender&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;place_of_birth&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;nonDefined&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+ <span class="p">}</span>
+</pre></div>
+
+<p>Rather than changing it straight in my code, I want first to do some sort of validation:</p>
+<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot; --data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,\&quot;name\&quot;:\&quot;persona\&quot;,\&quot;namespace\&quot;:\&quot;avro.test\&quot;,\&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},{\&quot;name\&quot;:\&quot;gender\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;, \&quot;default\&quot;:\&quot;nonDefined\&quot;}]}&quot;}&#39; http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
+
+<span class="err">{&quot;is_compatible&quot;:true}</span>
+</pre></div>
+
+<p>So we see that adding a default value of "nonDefined" to the "place_of_birth" attribute makes our new schema <em>BACKWARD</em> compatible. That is, will make our old persona events/messages compatible when a consumer reads them with the new schema.</p>
+<p>Then, by sending a new persona event/message the Avro producer will register our new schema which we can now validate using the schema registry API endpoint:</p>
+<div class="codehilite"><pre><span></span><span class="err">curl -X GET http://localhost:8081/subjects/avrotest-value/versions</span>
+
+<span class="err">[1,2]</span>
+
+<span class="err">curl -X GET http://localhost:8081/subjects/avrotest-value/versions/latest/schema</span>
+
+<span class="err">{&quot;type&quot;:&quot;record&quot;,&quot;name&quot;:&quot;persona&quot;,&quot;namespace&quot;:&quot;avro.test&quot;,&quot;fields&quot;:[{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;age&quot;,&quot;type&quot;:&quot;int&quot;},{&quot;name&quot;:&quot;gender&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;place_of_birth&quot;,&quot;type&quot;:&quot;string&quot;,&quot;default&quot;:&quot;nonDefined&quot;}]}</span>
+</pre></div>
+
+<ol>
+<li>What if we want to remove an attribute from our persona events/messages now? Well, this one is easy since the Avro consumer will simply ignore/drop all those attributes in the persona events/messages that are not defined in the new data schema and just take in those that are defined.</li>
+</ol>
+<p>Let's try to remove the <code>gender</code> attribute:</p>
+<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot; --data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,\&quot;name\&quot;:\&quot;persona\&quot;,\&quot;namespace\&quot;:\&quot;avro.test\&quot;,\&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},{\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;, \&quot;default\&quot;:\&quot;nonDefined\&quot;}]}&quot;}&#39; http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
+
+<span class="err">{&quot;is_compatible&quot;:true}</span>
+</pre></div>
+
+<ol>
+<li>How about removing an attribute when the compatibility type configured is set to <em>FORWARD</em> (data produced with a new schema can be read by consumers using the last schema)? In this case, it is not as simple as removing the attribute from the new schema as the consumer will expect such attribute the producer will not add to the events/messages.</li>
+</ol>
+<p>First, let's set the compatibility type to <em>FORWARD</em>:</p>
+<div class="codehilite"><pre><span></span><span class="err">curl -X PUT -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot; --data &#39;{&quot;compatibility&quot;: &quot;FORWARD&quot;}&#39; http://localhost:8081/config</span>
+
+<span class="err">{&quot;compatibility&quot;:&quot;FORWARD&quot;}</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span><span class="err">curl -X GET http://localhost:8081/config</span>
+
+<span class="err">{&quot;compatibilityLevel&quot;:&quot;FORWARD&quot;}</span>
+</pre></div>
+
+<p>Now, let's try to remove the gender attribute from the persona messages/events:</p>
+<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot; --data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,\&quot;name\&quot;:\&quot;persona\&quot;,\&quot;namespace\&quot;:\&quot;avro.test\&quot;,\&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},{\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;, \&quot;default\&quot;:\&quot;nonDefined\&quot;}]}&quot;}&#39; http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
+
+<span class="err">{&quot;is_compatible&quot;:false}</span>
+</pre></div>
+
+<p>So, how can we produce new persona events/messages (which do not include the gender attribute) that are compatible with the last data schema used by consumers (that expects an attribute called gender)?</p>
+<p>The trick here is to first register an "intermediate" schema that adds a default value to gender if it is not defined. This way, the "intermediate" schema will become the last schema for the consumers and when we producer sent messages that do not contain the gender attribute, the consumer will know what to do:</p>
+<p>Intermediate schema:</p>
+<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot; --data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,\&quot;name\&quot;:\&quot;persona\&quot;,\&quot;namespace\&quot;:\&quot;avro.test\&quot;,\&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},{\&quot;name\&quot;:\&quot;gender\&quot;,\&quot;type\&quot;: \&quot;string\&quot;,\&quot;default\&quot;: \&quot;nonProvided\&quot;},{\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;, \&quot;default\&quot;:\&quot;nonDefined\&quot;}]}&quot;}&#39; http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
+
+<span class="err">{&quot;is_compatible&quot;:true}</span>
+</pre></div>
+
+<p>New schema:</p>
+<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot; --data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,\&quot;name\&quot;:\&quot;persona\&quot;,\&quot;namespace\&quot;:\&quot;avro.test\&quot;,\&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},{\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;, \&quot;default\&quot;:\&quot;nonDefined\&quot;}]}&quot;}&#39; http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
+
+<span class="err">{&quot;is_compatible&quot;:true}</span>
+</pre></div>
+
+<p>If we send a persona message that does not contain the gender attribute now, we should succeed:</p>
+<div class="codehilite"><pre><span></span><span class="gd">--- Container event to be published: ---</span>
+{&#39;name&#39;: &#39;david&#39;, &#39;age&#39;: 25, &#39;place_of_birth&#39;: &#39;USA&#39;}
+<span class="gd">----------------------------------------</span>
+Message delivered to avrotest [0]
+</pre></div>
+
+<p>As you can imagine, there are few other cases to play with given the changes you could make to a data schema in conjunction with the compatibility tyes you can configure your schema registry to be like but we have already covered the basics for a good understanding.</p>
+<h2 id="links">Links</h2>
+<p>Here are some links we have visited to carry out our work and found interesting:</p>
+<p>https://www.confluent.io/blog/avro-kafka-data/</p>
+<p>https://avro.apache.org/docs/current/</p>
+<p>https://docs.confluent.io/current/schema-registry/index.html</p>
+<p>https://docs.confluent.io/current/schema-registry/schema_registry_tutorial.html#schema-registry-tutorial-definition</p>
+<p>https://docs.oracle.com/database/nosql-11.2.2.0/GettingStartedGuide/schemaevolution.html</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../../assets/javascripts/application.b806dc00.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:"../../.."}})</script>
+      
+    
+  </body>
+</html>
