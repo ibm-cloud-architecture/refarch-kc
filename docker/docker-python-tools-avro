@@ -12,8 +12,3 @@ RUN pip install --upgrade pip \
 RUN python -mpip install --user avro-python3==1.8.2
 COPY ./itg-tests /home
 
-# The following has been removed in order to be able run the specified python script at runtime
-#COPY ./docker/simple-flask.py /app/app.py
-#WORKDIR /app
-#ENTRYPOINT ["python3"]
-#CMD ["app.py"]

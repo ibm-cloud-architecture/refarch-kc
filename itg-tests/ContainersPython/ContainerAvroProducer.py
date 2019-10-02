@@ -33,7 +33,7 @@ except KeyError:
     exit(1)
 
 # Default values
-ID = "c_1"
+ID = "C01"
 TOPIC_NAME="containers"
 
 # Create a default container

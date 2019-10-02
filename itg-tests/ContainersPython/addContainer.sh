@@ -15,9 +15,9 @@ MAIN_DIR=`echo ${SCRIPTPATH} | sed 's/\(.*refarch-kc\).*/\1/g'`
 if [[ $# -ne 2 ]];then
     echo "Not enough arguments have been provided for the producer. Using the defaults:"
     echo "- Kafka environment --> LOCAL"
-    echo "- Container ID --> c_1"
+    echo "- Container ID --> C01"
     kcenv=LOCAL
-    cid="c_1"
+    cid="C01"
 else
     echo "Producer values:"
     echo "- Kafka environment --> $1"
