@@ -820,7 +820,7 @@
 </ul>
 <h2 id="avro-kafka-and-schema-registry">Avro, Kafka and Schema Registry</h2>
 <p>Avro relies on schemas. When Avro data is produced or read, the Avro schema for such piece of data is always present. This permits each datum to be written with no per-value overheads, making serialization both fast and small. An Avro schema defines the structure of the Avro data format. Schema Registry defines a scope in which schemas can evolve, and that scope is the subject. The name of the subject depends on the configured subject name strategy, which by default is set to derive subject name from topic name.</p>
-<p>In our case, this Avro data are messages (also called events) sent to a kafka topic. Each message is a key-value pair. Either the message key or the message value, or both, can be serialized as Avro. Integration with Schema Registry means that Kafka messages do not need to be written with the entire Avro schema. Instead, Kafka messages are written with the <strong>schema id</strong>. The producers writing the messages and the consumers reading the messages must be using the same Schema Registry to get the same mapping between a schema and schema id.</p>
+<p>In our case, this Avro data are messages sent to a kafka topic. Each message is a key-value pair. Either the message key or the message value, or both, can be serialized as Avro. Integration with Schema Registry means that Kafka messages do not need to be written with the entire Avro schema. Instead, Kafka messages are written with the <strong>schema id</strong>. The producers writing the messages and the consumers reading the messages must be using the same Schema Registry to get the same mapping between a schema and schema id.</p>
 <p>Kafka is used as Schema Registry storage backend. The special Kafka topic <code>&lt;kafkastore.topic&gt;</code> (default <code>_schemas</code>), with a single partition, is used as a highly available write ahead log. All schemas, subject/version and ID metadata, and compatibility settings are appended as messages to this log. A Schema Registry instance therefore both produces and consumes messages under the <code>_schemas</code> topic. It produces messages to the log when, for example, new schemas are registered under a subject, or when updates to compatibility settings are registered. Schema Registry consumes from the <code>_schemas</code> log in a background thread, and updates its local caches on consumption of each new <code>_schemas</code> message to reflect the newly added schema or compatibility setting. Updating local state from the Kafka log in this manner ensures durability, ordering, and easy recoverability.</p>
 <h3 id="how-does-it-all-work">How does it all work</h3>
 <p><img alt="schema registry management" src="../images/schema-registry-and-kafka.png" /></p>
@@ -828,8 +828,8 @@
 <p>When a consumer reads this data, it sees the <strong>Avro schema id and sends a schema request to Schema Registry</strong>. Schema Registry retrieves the schema associated to that schema id, and <strong>returns the schema to the consumer</strong>. The consumer <strong>caches</strong> this mapping between the schema and schema id for subsequent message reads, so it only contacts Schema Registry on the first schema id read.</p>
 <h2 id="our-implementation">Our implementation</h2>
 <p>As mentioned in the introduction, the integration of the Apache Avro data serialization system has been done in one of the integration test for the <code>refarch-kc-container-ms</code> component of the <a href="https://ibm-cloud-architecture.github.io/refarch-kc/">Reefer Containers reference implementation</a> of the <a href="https://ibm-cloud-architecture.github.io/refarch-eda/">IBM Event Driven Architectures reference architecture</a>.</p>
-<p>The <strong>refarch-kc-container-ms</strong> component will take care of the containers status. From adding new containers to the available containers list to assigning a container to a particular order and managing the status of that container throughout the shipment process aforementioned. </p>
-<p>The integration tests for our Reefer Containers reference implementation can be found <a href="https://github.com/ibm-cloud-architecture/refarch-kc/tree/master/itg-tests">here</a> (still under development). The integration tests are being developed in python and their main goal is to validate the successful deployment of the Reefer Containers reference implementation end-to-end.</p>
+<p>The <strong>refarch-kc-container-ms</strong> component will take care of the reefer containers status. From adding new reefers to the available containers list to assigning a container to a particular order and managing the status of that reefer throughout the shipment process aforementioned. </p>
+<p>The integration tests for our Reefer Containers reference implementation can be found <a href="https://github.com/ibm-cloud-architecture/refarch-kc/tree/master/itg-tests">here</a>. The integration tests are being developed in python and their main goal is to validate the successful deployment of the Reefer Containers reference implementation end-to-end.</p>
 <p>The particular integration test (still under development) where we have integrated the Apache Avro serialization system can be found under the <code>ContainersPython</code> folder. More precisely, these are the files and folders involved in our implementation:</p>
 <div class="codehilite"><pre><span></span>├── data_schemas
 │   ├── container_event.avsc
@@ -856,7 +856,7 @@
 <li><strong>Schema Registry</strong> for Apache Avro data schema management.</li>
 </ul>
 <h3 id="data-schemas">Data Schemas</h3>
-<p>Avro schemas are defined with JSON. An example of a Container Event for creating a new container to the available list of containers for our reference application looks like:</p>
+<p>Avro schemas are defined with JSON. An example of a Container Event for creating a new reefer container to the available list of containers for our reference application looks like:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;containerID&quot;</span><span class="p">:</span> <span class="s2">&quot;container01&quot;</span><span class="p">,</span>
   <span class="nt">&quot;timestamp&quot;</span><span class="p">:</span> <span class="mi">1569410690</span><span class="p">,</span>
@@ -1056,6 +1056,18 @@ Message delivered to containers [0]
         <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 </pre></div>
 
+<p>To use this class you need to do the following steps:</p>
+<div class="codehilite"><pre><span></span><span class="c1"># load schema definitions for key and value</span>
+<span class="kn">from</span> <span class="nn">utils.avroEDAUtils</span> <span class="kn">import</span> <span class="n">getContainerEventSchema</span><span class="p">,</span> <span class="n">getContainerKeySchema</span>
+<span class="n">container_event_value_schema</span> <span class="o">=</span> <span class="n">getContainerEventSchema</span><span class="p">(</span><span class="s2">&quot;/data_schemas/&quot;</span><span class="p">)</span>
+<span class="n">container_event_key_schema</span> <span class="o">=</span> <span class="n">getContainerKeySchema</span><span class="p">(</span><span class="s2">&quot;/data_schemas/&quot;</span><span class="p">)</span>
+<span class="c1"># Create a producer with the schema registry URL end point</span>
+<span class="n">kp</span> <span class="o">=</span> <span class="n">KafkaProducer</span><span class="p">(</span><span class="n">KAFKA_ENV</span><span class="p">,</span><span class="n">KAFKA_BROKERS</span><span class="p">,</span><span class="n">KAFKA_APIKEY</span><span class="p">,</span><span class="n">SCHEMA_REGISTRY_URL</span><span class="p">)</span>
+<span class="n">kp</span><span class="o">.</span><span class="n">prepareProducer</span><span class="p">(</span><span class="s2">&quot;ContainerProducerPython&quot;</span><span class="p">,</span><span class="n">container_event_key_schema</span><span class="p">,</span><span class="n">container_event_value_schema</span><span class="p">)</span>
+<span class="c1"># loop on publishing events</span>
+<span class="n">kp</span><span class="o">.</span><span class="n">publishEvent</span><span class="p">(</span><span class="n">TOPIC_NAME</span><span class="p">,</span><span class="n">container_event</span><span class="p">)</span>
+</pre></div>
+
 <h4 id="consumer">Consumer</h4>
 <p>Similarly to the producer, when we create a <code>KafkaConsumer</code> object we are just setting some of its attributes such as the kafka topic we will listen to and the schema registry url the producer will retrieve the data schemas from based on the schema ids messages comes with. It is only when we call the <code>prepareConsumer</code> method that we actually create the <strong>AvroConsumer</strong> and subscribe it to the intended kafka topic.</p>
 <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
@@ -1079,15 +1091,11 @@ Message delivered to containers [0]
         <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span> <span class="o">=</span> <span class="n">AvroConsumer</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="o">.</span><span class="n">subscribe</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">topic_name</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">pollNextEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keyID</span><span class="p">,</span> <span class="n">keyname</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="c1"># ...</span>
 </pre></div>
 
 <h3 id="schema-registry">Schema registry</h3>
-<p>For now, we have used the <a href="https://hub.docker.com/r/confluentinc/cp-schema-registry/">confluent schema registry</a> for our work although our goal is to use <strong>IBM Event Streams</strong>.</p>
+<p>For now, we have used the <a href="https://hub.docker.com/r/confluentinc/cp-schema-registry/">confluent schema registry</a> for our work although our goal is to use <a href="https://ibm.github.io/event-streams/schemas/overview/">IBM Event Streams</a>.</p>
 <p>The integration of the schema registry with your kafka broker is quite easy. In fact, all you need is to provide the schema registry with your zookeeper cluster url and give your schema registry a hostname: https://docs.confluent.io/current/installation/docker/config-reference.html#schema-registry-configuration</p>
 <p>Once you have your schema registry up and running, this provides a rich API endpoint to operate with: https://docs.confluent.io/current/schema-registry/using.html#common-sr-usage-examples</p>
 <p>For example:</p>
