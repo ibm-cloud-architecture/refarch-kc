@@ -884,7 +884,7 @@
                   <h1>From Analysis to Microservice Specifications</h1>
                 
                 <h2 id="goals-and-outline-of-section">Goals and outline of section</h2>
-<p>This section describes how to apply the domain driven design principles with the event driven approach to desing the reefer container shipment solution.</p>
+<p>This section describes how to apply the domain driven design principles with the event driven approach to design the reefer container shipment solution.</p>
 <p>For methodology discussion we recommend that you review our summary on combining DDD with event storming end event driven microservice design, in <a href="https://ibm-cloud-architecture.github.io/refarch-eda/methodology/ddd/">this note.</a></p>
 <div class="admonition note">
 <p class="admonition-title">Note<p>Since, we are delivering a demonstration application there will be some simulator / scaffolding / testing services mixed in with the required business processing.
@@ -985,7 +985,7 @@ This is a common occurrence in agile development and it may be helpful to show h
 <h3 id="4-modules">4- Modules</h3>
 <p>This is where this implementation differ from Eric Evans's proposed list of modules, as we apply a microservices approach, meaning basically that each aggregate with its repository are excellent candidate to be separate microservice.</p>
 <h4 id="order-microservice">Order microservice</h4>
-<p>For this one, we can see from the business requirements that we need to have complex tracking queries that enforce doing join between data from Voyage, Reefer, and Order, so we propose to implement CQRS for this order microservice, which means we will have at least two standalone, deployable microservices: the orders-command-ms to support the "write model" and the orders-query-ms for queries. We are detailing the design in <a href="">the repository itself</a>.</p>
+<p>For this one, we can see from the business requirements that we need to have complex tracking queries that enforce doing join between data from Voyage, Reefer, and Order, so we propose to implement CQRS for this order microservice, which means we will have at least two standalone, deployable microservices: the orders-command-ms to support the "write model" and the orders-query-ms for queries. We are detailing the design in <a href="https://ibm-cloud-architecture.github.io/refarch-kc-order-ms/">the repository itself</a>.</p>
 <h4 id="voyages-microservice">Voyages microservice</h4>
 <p>For Voyages we will need a voyages-command-ms which will maintain a list of all voyages and their current state. In any given run of the demonstration we will work with a fixed set of voyages - effectively the schedule for the container fleet - so there is no need for an API to create additional voyages. The voyage definition will be read from file when the build is initializing. We expect this voyage data to be well formed:</p>
 <ul>
