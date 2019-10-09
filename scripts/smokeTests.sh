@@ -10,7 +10,7 @@ if [[ $PWD != */refarch-kc ]]; then
 fi
 
 if [[ $# -ne 1 ]];then
- echo "Usage smokeTest [LOCAL | MINIKUBE | IBMCLOUD | ICP]"
+ echo "Usage smokeTest [LOCAL | IBMCLOUD | ICP]"
  exit 1
 fi
 
