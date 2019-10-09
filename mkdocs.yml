@@ -12,6 +12,7 @@ nav:
     - Container microservice with event sourcing and Kafka streams: https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/kstreams/
     - Container microservice with Python:  https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/flask
     - Container microservice with Springboot - Spring Kafka and PostgreSQL:  https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/springboot
+    - Adopting Schema Registry and Avro: avro/avro.md
   - Related repositories: ./deployments/reposlist.md
   - Deployments:
     - Backing Services: ./deployments/backing-services.md

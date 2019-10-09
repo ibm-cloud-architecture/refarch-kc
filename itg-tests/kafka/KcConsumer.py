@@ -20,7 +20,7 @@ class KafkaConsumer:
                  'auto.offset.reset': 'earliest',
                 'enable.auto.commit': self.kafka_auto_commit,
         }
-        if (self.kafka_env != 'LOCAL' and self.kafka_env != 'MINIKUBE'):
+        if (self.kafka_env != 'LOCAL'):
             options['security.protocol'] = 'SASL_SSL'
             options['sasl.mechanisms'] = 'PLAIN'
             options['sasl.username'] = 'token'
