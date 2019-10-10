@@ -1,16 +1,19 @@
-import json, os
-from confluent_kafka import KafkaError, Producer
+import json,os
+from confluent_kafka import KafkaError
+from confluent_kafka.avro import AvroProducer
 
 class KafkaProducer:
 
-    def __init__(self,kafka_env = 'LOCAL',kafka_brokers = "",kafka_apikey = ""):
+    def __init__(self,kafka_env = 'LOCAL',kafka_brokers = "",kafka_apikey = "",schema_registry_url = ""):
         self.kafka_env = kafka_env
         self.kafka_brokers = kafka_brokers
         self.kafka_apikey = kafka_apikey
+        self.schema_registry_url = schema_registry_url
 
-    def prepareProducer(self,groupID = "pythonproducers"):
+    def prepareProducer(self,groupID = "pythonproducers",key_schema = "", value_schema = ""):
         options ={
                 'bootstrap.servers':  self.kafka_brokers,
+                'schema.registry.url': self.schema_registry_url,
                 'group.id': groupID
         }
         # We need this test as local kafka does not expect SSL protocol.
@@ -21,9 +24,11 @@ class KafkaProducer:
             options['sasl.password'] = self.kafka_apikey
         if (self.kafka_env == 'ICP'):
             options['ssl.ca.location'] = os.environ['PEM_CERT']
-        print("This is the configuration for the producer:")
+            options['schema.registry.ssl.ca.location'] = os.environ['PEM_CERT']
+        print("--- This is the configuration for the producer: ---")
         print(options)
-        self.producer = Producer(options)
+        print("---------------------------------------------------")
+        self.producer = AvroProducer(options,default_key_schema=key_schema,default_value_schema=value_schema)
 
     def delivery_report(self,err, msg):
         """ Called once for each message produced to indicate delivery result.
@@ -33,7 +38,7 @@ class KafkaProducer:
         else:
             print('Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
 
-    def publishEvent(self, topicName, eventToSend, keyName):
-        dataStr = json.dumps(eventToSend)
-        self.producer.produce(topicName,key=eventToSend[keyName],value=dataStr.encode('utf-8'), callback=self.delivery_report)
+    def publishEvent(self, topicName, value, key):
+        # Important: value DOES NOT come in JSON format from ContainerAvroProducer.py. Therefore, we must convert it to JSON format first
+        self.producer.produce(topic=topicName,value=json.loads(value),key=json.loads(key), callback=self.delivery_report)
         self.producer.flush()

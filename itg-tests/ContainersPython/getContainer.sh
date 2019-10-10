@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Script we are executing
-echo -e " \e[32m@@@ Excuting script: \e[1;33mrunContainerAvroConsumer.sh \e[0m"
+echo -e " \e[32m@@@ Executing script: \e[1;33mrunContainerConsumer.sh \e[0m"
 
 ## Variables
 
@@ -11,30 +11,38 @@ SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 MAIN_DIR=`echo ${SCRIPTPATH} | sed 's/\(.*refarch-kc\).*/\1/g'`
 
 # Read arguments
-if [[ $# -ne 2 ]];then
-    echo "Not enough arguments have been provided for the consumer. Using the defaults:"
+if [[ $# -ne 3 ]];then
+    echo "Not enough arguments have been provided for the producer. Using the defaults:"
     echo "- Kafka environment --> LOCAL"
+    echo "- Kafka topic name --> containers"
     echo "- Container ID --> c_1"
     kcenv=LOCAL
     cid="c_1"
+    topic_name="containers"
 else
-    echo "Consumer values:"
+    echo "Producer values:"
     echo "- Kafka environment --> $1"
+    echo "- Kafka topic name --> $3"
     echo "- Container ID --> $2"
     kcenv=$1
     cid=$2
+    topic_name=$3
 fi
 
 # Check if the ibmcase/python docker image exists
-EXISTS="$(docker images | grep ibmcase/python)"
+EXISTS="$(docker images | awk '{print $1 ":" $2}' | grep ibmcase-python:test)"
 if [ -z "${EXISTS}" ]
 then
     echo -e "The ibmcase/python docker image does not exist. Creating such image..."
-    docker build -f ${MAIN_DIR}/docker/docker-python-tools -t ibmcase/python ${MAIN_DIR}/docker
+    docker build -f ${MAIN_DIR}/docker/docker-python-tools -t ibmcase-python:test ${MAIN_DIR}/docker
 fi
 
 # Set environment variables
 source ${MAIN_DIR}/scripts/setenv.sh $kcenv
+
+if [ "ICP" == "${kcenv}" ]; then
+    add_cert_to_container_command=" -e PEM_CERT=/certs/${PEM_FILE} -v ${CA_LOCATION}:/certs"
+fi
 
 # Run the container consumer
 # We are running the ConsumeContainer.py python script into a python enabled container
@@ -43,9 +51,10 @@ source ${MAIN_DIR}/scripts/setenv.sh $kcenv
 docker run  -e KAFKA_BROKERS=$KAFKA_BROKERS \
             -e KAFKA_APIKEY=$KAFKA_APIKEY \
             -e KAFKA_ENV=$KAFKA_ENV \
-            -e SCHEMA_REGISTRY_URL=$SCHEMA_REGISTRY_URL \
-            -v ${MAIN_DIR}/itg-tests:/home \
+            ${add_cert_to_container_command} \
+            -v ${MAIN_DIR}:/refarch-kc \
             --network=docker_default \
             --rm \
-            -ti ibmcase/python:avro bash \
-            -c "cd /home/ContainersPython && export PYTHONPATH=/home && python ConsumeAvroContainers.py $cid"
+            -ti ibmcase-python:test bash \
+            -c "cd /refarch-kc/itg-tests/ContainersPython && \
+                export PYTHONPATH=\${PYTHONPATH}:/refarch-kc/itg-tests && python ConsumeContainers.py $cid $topic_name"

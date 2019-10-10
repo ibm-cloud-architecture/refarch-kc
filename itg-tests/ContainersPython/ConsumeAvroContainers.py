@@ -1,8 +1,9 @@
 import os,sys
 from kafka.KcAvroConsumer import KafkaConsumer
 
-print(" @@@ Excuting script: ConsumeAvroContainers.py")
+print(" @@@ Executing script: ConsumeAvroContainers.py")
 
+####################### READ ENV VARIABLES #######################
 # Try to read the Kafka broker from the environment variables
 try:
     KAFKA_BROKERS = os.environ['KAFKA_BROKERS']
@@ -29,26 +30,29 @@ except KeyError:
     print("[ERROR] - The SCHEMA_REGISTRY_URL environment variable needs to be set.")
     exit(1)
 
-# Default values
-CID = "c_1"
-TOPIC_NAME="containers"
+####################### VARIABLES #######################
+ID = "c01"
+TOPIC_NAME="test"
 
+####################### FUNCTIONS #######################
 # Parse arguments to get the container ID to poll for
 def parseArguments():
+    global TOPIC_NAME, ID
     print("The arguments for the script are: " , str(sys.argv))
-    if len(sys.argv) != 2:
-        print("[ERROR] - Need to have at least one argument container ID")
+    if len(sys.argv) != 3:
+        print("[ERROR] - The ConsumeAvroContainer.py script expects two arguments: The container ID and the topic to send the container event to.")
         exit(1)
-    CID = sys.argv[1]
+    ID = sys.argv[1]
+    TOPIC_NAME = sys.argv[2]
     print("The Kafka environment is: " + KAFKA_ENV)
     print("The Kafka brokers are: " + KAFKA_BROKERS)
     print("The Kafka API key is: " + KAFKA_APIKEY)
     print("The Avro Schema Registry is at: " + SCHEMA_REGISTRY_URL)
-    return CID
 
+####################### MAIN #######################
 if __name__ == '__main__':
-    CID = parseArguments()
+    parseArguments()
     consumer = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_APIKEY,TOPIC_NAME,SCHEMA_REGISTRY_URL)
     consumer.prepareConsumer()
-    consumer.pollNextEvent(CID,'containerID')
+    consumer.pollNextEvent(ID,'containerID')
     consumer.close()

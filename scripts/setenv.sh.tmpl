@@ -31,10 +31,16 @@ case "$kcenv" in
         export IBMCLOUD_ACCOUNT=""
         ;;
    ICP)
+        # Event Streams bootstrap server
         export KAFKA_BROKERS="<>"
+        # Event Streams bootstrap server too
+        export SCHEMA_REGISTRY_URL="<>"
         export KAFKA_ENV="ICP"
         export KAFKA_APIKEY="<>"
-        export CA_LOCATION="es-cert.pem"
+        # Location for your PEM file
+        export CA_LOCATION=""
+        # PEM file name
+        export PEM_FILE=""
     ;;
    LOCAL)
         export KAFKA_BROKERS="kafka1:9092"

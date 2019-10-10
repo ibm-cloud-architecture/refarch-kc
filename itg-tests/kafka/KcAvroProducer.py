@@ -1,4 +1,4 @@
-import json
+import json,os
 from confluent_kafka import KafkaError
 from confluent_kafka.avro import AvroProducer
 
@@ -23,7 +23,8 @@ class KafkaProducer:
             options['sasl.username'] = 'token'
             options['sasl.password'] = self.kafka_apikey
         if (self.kafka_env == 'ICP'):
-            options['ssl.ca.location'] = 'es-cert.pem'
+            options['ssl.ca.location'] = os.environ['PEM_CERT']
+            options['schema.registry.ssl.ca.location'] = os.environ['PEM_CERT']
         print("--- This is the configuration for the producer: ---")
         print(options)
         print("---------------------------------------------------")
