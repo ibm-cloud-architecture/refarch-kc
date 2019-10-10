@@ -1,0 +1,11 @@
+{
+    "namespace": "ibm.eda.kc.container.event",
+    "name": "containerID",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "containerID",
+            "type" : "string"
+        }
+    ]
+ }

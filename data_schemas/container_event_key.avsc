@@ -2,4 +2,4 @@
     "namespace": "ibm.eda.kc.container.event",
     "name": "containerID",
     "type": "string"
- }
+}

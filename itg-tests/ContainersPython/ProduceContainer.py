@@ -1,8 +1,9 @@
 import os, time, sys
 from kafka.KcProducer import KafkaProducer
 
-print(" @@@ Excuting script: ContainerProducer.py")
+print(" @@@ Executing script: ProduceContainer.py")
 
+####################### READ ENV VARIABLES #######################
 # Try to read the Kafka broker from the environment variables
 try:
     KAFKA_BROKERS = os.environ['KAFKA_BROKERS']
@@ -22,10 +23,11 @@ try:
 except KeyError:
     KAFKA_ENV='LOCAL'
 
-# Default values
-ID = "c_1"
-TOPIC_NAME="containers"
+####################### VARIABLES #######################
+ID = "c01"
+TOPIC_NAME="test"
 
+####################### FUNCTIONS #######################
 # Create a default container
 def createContainer(id):
     print('Creating container...', end ='')
@@ -42,17 +44,21 @@ def createContainer(id):
 
 # Parse arguments to get the Container ID
 def parseArguments():
+    global TOPIC_NAME, ID
     print("The arguments for the script are: " , str(sys.argv))
-    if len(sys.argv) == 2:
+    if len(sys.argv) == 3:
         ID = sys.argv[1]
-    return ID
+        TOPIC_NAME = sys.argv[2]
+    else:
+        print("[ERROR] - The ProduceContainer.py script expects two arguments: The container ID and the topic to send the container event to.")
+        exit(1)
 
-
+####################### MAIN #######################
 if __name__ == '__main__':
-    CID = parseArguments()
-    evt = createContainer(CID)
+    parseArguments()
+    evt = createContainer(ID)
     print("Container event to be published:")
     print(evt)
     kp = KafkaProducer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_APIKEY)
-    kp.prepareProducer("ContainerProducerPython")
+    kp.prepareProducer("ProduceContainerPython")
     kp.publishEvent(TOPIC_NAME,evt,"containerID")

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Script we are executing
-echo -e " \e[32m@@@ Excuting script: \e[1;33maddContainer.sh \e[0m"
+echo -e " \e[32m@@@ Executing script: \e[1;33maddAvroContainerES.sh \e[0m"
 
 ## Variables
 
@@ -42,21 +42,28 @@ fi
 source ${MAIN_DIR}/scripts/setenv.sh $kcenv
 
 if [ "ICP" == "${kcenv}" ]; then
-    add_cert_to_container_command=" -e PEM_CERT=/certs/${PEM_FILE} -v ${CA_LOCATION}:/certs"
+    add_cert_to_container_command=" -e PEM_CERT=/tmp/certs/${PEM_FILE} -v ${CA_LOCATION}:/tmp/certs"
+    END_SCHEMA_REGISTRY_URL=`echo ${SCHEMA_REGISTRY_URL} | sed 's;https://;;g'`
+    FINAL_SCHEMA_REGISTRY_URL="https://token:${KAFKA_APIKEY}@${END_SCHEMA_REGISTRY_URL}" 
+else
+    FINAL_SCHEMA_REGISTRY_URL=${SCHEMA_REGISTRY_URL}
 fi
 
+
 # Run the container producer
-# We are running the ProduceContainer.py python script into a python enabled container
+# We are running the ProduceAvroContainerES.py python script into a python enabled container
 # Attached to the same docker_default docker network as the other components
 # We also pass to the python producer the Container ID we want to produce
 docker run  -e KAFKA_BROKERS=$KAFKA_BROKERS \
             -e KAFKA_APIKEY=$KAFKA_APIKEY \
             -e KAFKA_ENV=$KAFKA_ENV \
+            -e SCHEMA_REGISTRY_URL=$FINAL_SCHEMA_REGISTRY_URL \
+            -e DATA_SCHEMAS="/refarch-kc/data_schemas" \
             ${add_cert_to_container_command} \
             -v ${MAIN_DIR}:/refarch-kc \
             --network=docker_default \
             --rm \
             -ti ibmcase-python:test bash \
             -c "cd /refarch-kc/itg-tests/ContainersPython && \
-                export PYTHONPATH=\${PYTHONPATH}:/refarch-kc/itg-tests && \
-                python ProduceContainer.py $cid $topic_name"
+                export PYTHONPATH=\${PYTHONPATH}:/refarch-kc/itg-tests:/refarch-kc/data_schemas && \
+                python ProduceAvroContainerES.py $cid $topic_name"

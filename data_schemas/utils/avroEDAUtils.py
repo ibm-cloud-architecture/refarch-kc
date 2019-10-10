@@ -4,16 +4,22 @@ import json
 def getContainerEventSchema(schema_files_location):
   # Read all the schemas needed in order to produce the final Container Event Schema
   known_schemas = avro.schema.Names()
-  container_status_schema = LoadAvsc(schema_files_location + "container_status.avsc", known_schemas)
-  container_event_payload_schema = LoadAvsc(schema_files_location + "container_event_payload.avsc", known_schemas)
-  container_event_type_schema = LoadAvsc(schema_files_location + "container_event_type.avsc", known_schemas)
-  container_event_schema = LoadAvsc(schema_files_location + "container_event.avsc", known_schemas)
+  container_status_schema = LoadAvsc(schema_files_location + "/container_status.avsc", known_schemas)
+  container_event_payload_schema = LoadAvsc(schema_files_location + "/container_event_payload.avsc", known_schemas)
+  container_event_type_schema = LoadAvsc(schema_files_location + "/container_event_type.avsc", known_schemas)
+  container_event_schema = LoadAvsc(schema_files_location + "/container_event.avsc", known_schemas)
   return container_event_schema
 
 def getContainerKeySchema(schema_files_location):
   # Get the container event key schema
   known_schemas = avro.schema.Names()
-  container_event_key_schema = LoadAvsc(schema_files_location + "container_event_key.avsc", known_schemas)
+  container_event_key_schema = LoadAvsc(schema_files_location + "/container_event_key.avsc", known_schemas)
+  return container_event_key_schema
+
+def getContainerKeySchemaES(schema_files_location):
+  # Get the container event key schema
+  known_schemas = avro.schema.Names()
+  container_event_key_schema = LoadAvsc(schema_files_location + "/container_event_key_ES.avsc", known_schemas)
   return container_event_key_schema
 
 def LoadAvsc(file_path, names=None):
