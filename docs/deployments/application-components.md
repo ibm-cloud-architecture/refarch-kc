@@ -177,7 +177,7 @@ cd refarch-kc-order-ms/order-command-ms
 * Build the image
 
 ```shell
-docker build -t order-command-ms:latest -f Dockerfile.NoKubernetesPlugin
+docker build -t order-command-ms:latest -f Dockerfile.multistage .
 ```
 
 * Tag the image
@@ -239,7 +239,7 @@ cd refarch-kc-order-ms/order-query-ms
 * Build the image
 
 ```shell
-docker build -t order-query-ms:latest -f Dockerfile.NoKubernetesPlugin
+docker build -t order-query-ms:latest -f Dockerfile.multistage .
 ```
 
 * Tag the image
@@ -302,7 +302,7 @@ cd refarch-kc-container-ms/SpringContainerMS
 * Build the image
 
 ```shell
-docker build -t kc-spring-container-ms:latest -f Dockerfile.NoKubernetesPlugin
+docker build -t kc-spring-container-ms:latest -f Dockerfile .
 ```
 
 * Tag the image
@@ -368,7 +368,7 @@ cd refarch-kc-ms/voyages-ms
 * Build the image
 
 ```shell
-docker build -t kc-voyages-ms:latest -f Dockerfile
+docker build -t kc-voyages-ms:latest -f Dockerfile .
 ```
 
 * Tag the image
@@ -427,7 +427,7 @@ cd cd refarch-kc-ms/fleet-ms
 * Build the image
 
 ```shell
-docker build -t kc-fleet-ms:latest -f Dockerfile.multistage
+docker build -t kc-fleet-ms:latest -f Dockerfile.multistage .
 ```
 
 * Tag the image
@@ -489,7 +489,7 @@ cd refarch-kc-ui/
 * Build the image
 
 ```shell
-docker build -t kc-ui:latest -f Dockerfile.NoKubernetesPlugin
+docker build -t kc-ui:latest -f Dockerfile .
 ```
 
 * Tag the image
