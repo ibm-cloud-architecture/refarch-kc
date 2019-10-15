@@ -23,7 +23,7 @@ class KafkaConsumer:
                 'schema.registry.url': self.schema_registry_url,
                 'enable.auto.commit': self.kafka_auto_commit,
         }
-        if (self.kafka_env != 'LOCAL'):
+        if (self.kafka_env != 'LOCAL' and self.kafka_env != 'MINIKUBE'):
             options['security.protocol'] = 'SASL_SSL'
             options['sasl.mechanisms'] = 'PLAIN'
             options['sasl.username'] = 'token'
@@ -56,7 +56,7 @@ class KafkaConsumer:
                     gotIt= True
                 continue
             self.traceResponse(msg)
-            if (msg.key() == keyID):
+            if (msg.key()[keyname] == keyID):
                 gotIt = True
     
     def close(self):

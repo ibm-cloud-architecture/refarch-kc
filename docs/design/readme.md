@@ -1,7 +1,7 @@
 
 ## Goals and outline of section 
 
-This section describes how to apply the domain driven design principles with the event driven approach to desing the reefer container shipment solution.
+This section describes how to apply the domain driven design principles with the event driven approach to design the reefer container shipment solution.
 
 For methodology discussion we recommend that you review our summary on combining DDD with event storming end event driven microservice design, in [this note.](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/ddd/)
 
@@ -142,7 +142,7 @@ This is where this implementation differ from Eric Evans's proposed list of modu
 
 #### Order microservice 
 
-For this one, we can see from the business requirements that we need to have complex tracking queries that enforce doing join between data from Voyage, Reefer, and Order, so we propose to implement CQRS for this order microservice, which means we will have at least two standalone, deployable microservices: the orders-command-ms to support the "write model" and the orders-query-ms for queries. We are detailing the design in [the repository itself]().
+For this one, we can see from the business requirements that we need to have complex tracking queries that enforce doing join between data from Voyage, Reefer, and Order, so we propose to implement CQRS for this order microservice, which means we will have at least two standalone, deployable microservices: the orders-command-ms to support the "write model" and the orders-query-ms for queries. We are detailing the design in [the repository itself](https://ibm-cloud-architecture.github.io/refarch-kc-order-ms/).
 
 #### Voyages microservice 
 

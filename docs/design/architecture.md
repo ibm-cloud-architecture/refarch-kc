@@ -4,7 +4,7 @@
 
 When dealing with architecture we want to start by high level and drill down into more detail view. The system context view for the solution looks like the diagram below:
 
-![syst-ctx](./kc-syst-ctx.png)
+![syst-ctx](./images/kc-syst-ctx.png)
 
 ## Components view
 

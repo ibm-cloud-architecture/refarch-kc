@@ -10,7 +10,7 @@ Avro is an open source data serialization system that helps with data exchange b
 
 ### Why Apache Avro
 
-There are several websites that discuss the Apache Avro data serialization system benefits over other messaging data protocols. A simple google search will list dozens of them. Here, we will highlight just a few from a [confluent blog post](https://www.confluent.io/blog/avro-kafka-data/):
+There are several websites that discuss the Apache Avro data serialization system benefits over other messaging data protocols. A simple google search will list dozens of them. Here, we will highlight just a few from a [Confluent blog post](https://www.confluent.io/blog/avro-kafka-data/):
 
 - It has a direct mapping to and from JSON
 - It has a very compact format. The bulk of JSON, repeating every field name with every single record, is what makes JSON inefficient for high-volume usage.
@@ -342,7 +342,7 @@ class KafkaConsumer:
 
 ### Schema registry
 
-For now, we have used the [confluent schema registry](https://hub.docker.com/r/confluentinc/cp-schema-registry/) for our work although our goal is to use [IBM Event Streams](https://ibm.github.io/event-streams/schemas/overview/).
+For now, we have used the [Confluent schema registry](https://hub.docker.com/r/confluentinc/cp-schema-registry/) for our work although our goal is to use [IBM Event Streams](https://ibm.github.io/event-streams/schemas/overview/).
 
 The integration of the schema registry with your kafka broker is quite easy. In fact, all you need is to provide the schema registry with your zookeeper cluster url and give your schema registry a hostname: https://docs.confluent.io/current/installation/docker/config-reference.html#schema-registry-configuration
 
@@ -455,220 +455,336 @@ Let's assume we have created a new kafka topic called `avrotest` for testing our
   }
   ```
 
-The above looks very good but let's dive into more interesting real-case scenarios.
+### Data evolution
 
-1. Sending a correct message:
+So far we  have seen what Avro is, what a data schema is, what a schema registry is and how this all works together. From creating a data schema for your messages/events to comply with to how the schema registry and data schemas work together. And we have also seen the code for doing all this, from the python code to send and receive Avro encoded messages based on their schemas to the rich API the Confluent schema registry provides to interact with.
 
-   ```
-   --- Persona event to be published: ---
-   {'name': 'david', 'age': 25, 'gender': 'male'}
-   ----------------------------------------
-   Message delivered to avrotest [0]
-   ```
+However, we have said little about the need for data to evolve. When you design an Event Driven architecture for your application (by applying [Event Storming](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/eventstorming/) or [Domain Driven Design](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/ddd/) for example), it is very hard to come up with data structures/schemas that will not need to evolve/change in time. That is, your data like your use or business cases may need to evolve. As a result, Avro data schemas must be somehow flexible to allow your data to evolve along with your application and use cases.
 
-2. What happens if I send incorrect data types in my message/event, for instance sending the age as a string rather than as an integer (already seen in the data schema section but take it as a refresher)?:
+But it is not as easy as adding or removing data that travels in your events/messages or modifying the type of such data. And one of the reasons for this is that Kafka (or any other type of event broker) is many times used as the source of truth. That is, a place that you can trust as to what has happened. Hence, Kafka will serve as the event source of truth where all the events (that is, data) that happened (which could be bank transactions, communications, etc) will get stored (sometimes up to [hundreds of years](https://www.confluent.io/blog/publishing-apache-kafka-new-york-times/)) and will be able to be replayed if needed. As a result, there must be a data schema management and data schema evolution put in place that allow the compatibility of old and new data schemas and, in fact, data at the end of the day.
 
-    ```
-    avro.io.AvroTypeException: The datum {'name': 'david', 'age': '25', 'gender': 'male'} is not an example of the schema {
-      "type": "record",
-      "name": "persona",
-      "namespace": "avro.test",
-      "fields": [
+There are mainly three types of data compatibility:
+
+1. Backward
+2. Forward
+3. Full
+
+#### Backward compatibility
+
+Backward compatibility means that **consumers using the new schema can read data produced with the last schema**.
+
+Using the persona data schema already mentioned throughout this readme, what if we decide to change the data schema to add a new attribute such as place of birth? That is, the new schema would look like:
+
+```json
+{
+    "namespace": "avro.test",
+    "name": "persona",
+    "type": "record",
+    "fields" : [
         {
-          "type": "string",
-          "name": "name"
+            "name" : "name",
+            "type" : "string"
         },
         {
-          "type": "int",
-          "name": "age"
+            "name" : "age",
+            "type" : "int"
         },
         {
-          "type": "string",
-          "name": "gender"
+            "name" : "gender",
+            "type" : "string"
+        },
+        {
+            "name" : "place_of_birth",
+            "type" : "string"
         }
-      ]
-    }
-    ```
-  
-    We see that the Avro Producer will give us an `avro.io.AvroTypeException` error.
+    ]
+}
+```
 
-3. What if we decide to change the data schema to add a new attribute such as place of birth?
+here is the output when we try to produce an event/message with the above data schema:
 
-   that is,
-   
-   ```json
-   {
-       "namespace": "avro.test",
-       "name": "persona",
-       "type": "record",
-       "fields" : [
-           {
-               "name" : "name",
-               "type" : "string"
-           },
-           {
-               "name" : "age",
-               "type" : "int"
-           },
-           {
-               "name" : "gender",
-               "type" : "string"
-           },
-           {
-               "name" : "place_of_birth",
-               "type" : "string"
-           }
-       ]
-    }
-   ```
-   and here is what we get
-   
-   ```
-   --- Persona event to be published: ---
-   {'name': 'david', 'age': '25', 'gender': 'male', 'place_of_birth': 'USA'}
-   ----------------------------------------
-   Traceback (most recent call last):
-     File "ContainerAvroProducer.py", line 73, in <module>
-       kp.publishEvent(TOPIC_NAME,container_event,"1")
-     File "/home/kafka/KcAvroProducer.py", line 42, in publishEvent
-       self.producer.produce(topic=topicName,value=json.loads(value),key=json.loads(key), callback=self.delivery_report)
-     File "/root/.local/lib/python3.7/site-packages/confluent_kafka/avro/__init__.py", line 80, in produce
-       value = self._serializer.encode_record_with_schema(topic, value_schema, value)
-     File "/root/.local/lib/python3.7/site-packages/confluent_kafka/avro/serializer/message_serializer.py", line 105, in encode_record_with_schema
-       schema_id = self.registry_client.register(subject, schema)
-     File "/root/.local/lib/python3.7/site-packages/confluent_kafka/avro/cached_schema_registry_client.py", line 223, in register
-       raise ClientError("Invalid Avro schema:" + str(code))
-   confluent_kafka.avro.error.ClientError: Invalid Avro schema:422
-   ```
-   
-   We see we get an `Invalid Avro schema` error because Avro data schema not only validates the data being sent complies with the schema registered for a particular Kafka topic/subject but it also validates schema evolution. That is, based on the [compatibility type configured](https://docs.confluent.io/current/schema-registry/avro.html), a new schema version might be compatible or not.
-   
-   In this case, because the compatibility set for schema evolution is _BACKWARD_ we can't just simply add a new attribute (since consumers using the new schema must be able to read data produced with the last schema).
-   
-   ```http
-   curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"schema": "{\"type\":\"record\",\"name\":\"persona\",\"namespace\":\"avro.test\",\"fields\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"age\",\"type\":\"int\"},{\"name\":\"gender\",\"type\":\"string\"},{\"name\":\"place_of_birth\",\"type\":\"string\"}]}"}' http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest
-   
-   {"is_compatible":false}
-   ```
-   
-   How do we evolve our schema to add new attributes in a wat that the schema is _BACKWARD_ compatible? Adding a **default** for such attribute:
-   
-   ```json
-   {
-       "namespace": "avro.test",
-       "name": "persona",
-       "type": "record",
-       "fields" : [
-           {
-               "name" : "name",
-               "type" : "string"
-           },
-           {
-               "name" : "age",
-               "type" : "int"
-           },
-           {
-               "name" : "gender",
-               "type" : "string"
-           },
-           {
-               "name" : "place_of_birth",
-               "type" : "string",
-               "default": "nonDefined"
-           }
-       ]
-    }
-   ```
-   
-   Rather than changing it straight in my code, I want first to do some sort of validation:
-   
-   ```http
-   curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"schema": "{\"type\":\"record\",\"name\":\"persona\",\"namespace\":\"avro.test\",\"fields\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"age\",\"type\":\"int\"},{\"name\":\"gender\",\"type\":\"string\"},{\"name\":\"place_of_birth\",\"type\":\"string\", \"default\":\"nonDefined\"}]}"}' http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest
-   
-   {"is_compatible":true}
-   ```
-   
-   So we see that adding a default value of "nonDefined" to the "place_of_birth" attribute makes our new schema _BACKWARD_ compatible. That is, will make our old persona events/messages compatible when a consumer reads them with the new schema.
-   
-   Then, by sending a new persona event/message the Avro producer will register our new schema which we can now validate using the schema registry API endpoint:
-   
-   ```http
-   
-   curl -X GET http://localhost:8081/subjects/avrotest-value/versions
-   
-   [1,2]
-   
-   curl -X GET http://localhost:8081/subjects/avrotest-value/versions/latest/schema
-   
-   {"type":"record","name":"persona","namespace":"avro.test","fields":[{"name":"name","type":"string"},{"name":"age","type":"int"},{"name":"gender","type":"string"},{"name":"place_of_birth","type":"string","default":"nonDefined"}]}
-   ```
+```python
+### Persona event to be published: ###
+{'name': 'david', 'age': '25', 'gender': 'male', 'place_of_birth': 'USA'}
+######################################
+Traceback (most recent call last):
+  File "ContainerAvroProducer.py", line 73, in <module>
+    kp.publishEvent(TOPIC_NAME,container_event,"1")
+  File "/home/kafka/KcAvroProducer.py", line 42, in publishEvent
+    self.producer.produce(topic=topicName,value=json.loads(value),key=json.loads(key), callback=self.delivery_report)
+  File "/root/.local/lib/python3.7/site-packages/confluent_kafka/avro/__init__.py", line 80, in produce
+    value = self._serializer.encode_record_with_schema(topic, value_schema, value)
+  File "/root/.local/lib/python3.7/site-packages/confluent_kafka/avro/serializer/message_serializer.py", line 105, in encode_record_with_schema
+    schema_id = self.registry_client.register(subject, schema)
+  File "/root/.local/lib/python3.7/site-packages/confluent_kafka/avro/cached_schema_registry_client.py", line 223, in register
+    raise ClientError("Invalid Avro schema:" + str(code))
+confluent_kafka.avro.error.ClientError: Invalid Avro schema:422
+```
 
-4. What if we want to remove an attribute from our persona events/messages now? Well, this one is easy since the Avro consumer will simply ignore/drop all those attributes in the persona events/messages that are not defined in the new data schema and just take in those that are defined.
+And the reason for such error is that, because new schemas must be backward compatible (default compatibility mode for Confluent kafka data schemas topics), we can't just simply add a new attribute. Consumers using the new schema must be able to read data produced with the last schema. That is, if a consumer was to read old messages with the schema above, it would expect the `place_of_birth` attribute and its value on these old messages. However, the messages were produced with the old schema that did not enforce such attribute. Hence, the problem.
 
-   Let's try to remove the `gender` attribute:
-   
-   ```http
-   curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"schema": "{\"type\":\"record\",\"name\":\"persona\",\"namespace\":\"avro.test\",\"fields\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"age\",\"type\":\"int\"},{\"name\":\"place_of_birth\",\"type\":\"string\", \"default\":\"nonDefined\"}]}"}' http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest
-   
-   {"is_compatible":true}
-   ```
+We can also check the compatibility of this new schema using the API:
 
-5. How about removing an attribute when the compatibility type configured is set to _FORWARD_ (data produced with a new schema can be read by consumers using the last schema)? In this case, it is not as simple as removing the attribute from the new schema as the consumer will expect such attribute the producer will not add to the events/messages.
+```http
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json"
+--data '{"schema": "{\"type\":\"record\",
+                     \"name\":\"persona\",
+                     \"namespace\":\"avro.test\",
+                     \"fields\":[{\"name\":\"name\",\"type\":\"string\"},
+                                 {\"name\":\"age\",\"type\":\"int\"},
+                                 {\"name\":\"gender\",\"type\":\"string\"},
+                                 {\"name\":\"place_of_birth\",\"type\":\"string\"}]}"}' 
+        http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest
 
+{"is_compatible":false}
+```
 
-   First, let's set the compatibility type to _FORWARD_:
-   
-   ```http
-   curl -X PUT -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"compatibility": "FORWARD"}' http://localhost:8081/config
-   
-   {"compatibility":"FORWARD"}
-   
-   ```
-   
-   ```http
-   curl -X GET http://localhost:8081/config
-   
-   {"compatibilityLevel":"FORWARD"}
-   ```
-   
-   Now, let's try to remove the gender attribute from the persona messages/events:
-   
-   ```http
-   curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"schema": "{\"type\":\"record\",\"name\":\"persona\",\"namespace\":\"avro.test\",\"fields\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"age\",\"type\":\"int\"},{\"name\":\"place_of_birth\",\"type\":\"string\", \"default\":\"nonDefined\"}]}"}' http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest
-   
-   {"is_compatible":false}
-   ```
-   
-   So, how can we produce new persona events/messages (which do not include the gender attribute) that are compatible with the last data schema used by consumers (that expects an attribute called gender)?
-   
-   The trick here is to first register an "intermediate" schema that adds a default value to gender if it is not defined. This way, the "intermediate" schema will become the last schema for the consumers and when we producer sent messages that do not contain the gender attribute, the consumer will know what to do:
-   
-   Intermediate schema:
-   
-   ```http
-   curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"schema": "{\"type\":\"record\",\"name\":\"persona\",\"namespace\":\"avro.test\",\"fields\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"age\",\"type\":\"int\"},{\"name\":\"gender\",\"type\": \"string\",\"default\": \"nonProvided\"},{\"name\":\"place_of_birth\",\"type\":\"string\", \"default\":\"nonDefined\"}]}"}' http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest
-   
-   {"is_compatible":true}
-   ```
-   
-   New schema:
-   
-   ```http
-   curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"schema": "{\"type\":\"record\",\"name\":\"persona\",\"namespace\":\"avro.test\",\"fields\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"age\",\"type\":\"int\"},{\"name\":\"place_of_birth\",\"type\":\"string\", \"default\":\"nonDefined\"}]}"}' http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest
-   
-   {"is_compatible":true}
-   ```
-   
-   If we send a persona message that does not contain the gender attribute now, we should succeed:
-   
-   ```
-   --- Container event to be published: ---
-   {'name': 'david', 'age': 25, 'place_of_birth': 'USA'}
-   ----------------------------------------
-   Message delivered to avrotest [0]
-   ```
+How do we evolve our schema to add new attributes in a way that the schema is _BACKWARD_ compatible? Adding a **default** value for such attribute so the consumer can use it when reading old messages that were produced without that attribute:
 
-As you can imagine, there are few other cases to play with given the changes you could make to a data schema in conjunction with the compatibility types you can configure your schema registry to be like but we have already covered the basics for a good understanding.
+```json
+{
+    "namespace": "avro.test",
+    "name": "persona",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "name",
+            "type" : "string"
+        },
+        {
+            "name" : "age",
+            "type" : "int"
+        },
+        {
+            "name" : "gender",
+            "type" : "string"
+        },
+        {
+            "name" : "place_of_birth",
+            "type" : "string",
+            "default": "nonDefined"
+        }
+    ]
+}
+```
+
+Rather than changing it straight in the code, we can do some sort of validation through the API:
+
+```http
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" 
+--data '{"schema": "{\"type\":\"record\",
+                     \"name\":\"persona\",
+                     \"namespace\":\"avro.test\",
+                     \"fields\":[{\"name\":\"name\",\"type\":\"string\"},
+                                 {\"name\":\"age\",\"type\":\"int\"},
+                                 {\"name\":\"gender\",\"type\":\"string\"},
+                                 {\"name\":\"place_of_birth\",\"type\":\"string\", \"default\":\"nonDefined\"}]}"}'
+http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest
+
+{"is_compatible":true}
+```
+
+We now can evolve our data schema to enforce a new attribute with our new messages/events being produced but making sure the consumer is able to read old messages that do not contain such attribute. We do so by sending a new persona event/message along with this new data schema. This will make the schema registry to register the new data schema.
+
+We can validate the new data schema version has been registered by using the schema registry API:
+
+```http
+
+curl -X GET http://localhost:8081/subjects/avrotest-value/versions
+
+[1,2]
+
+curl -X GET http://localhost:8081/subjects/avrotest-value/versions/latest/schema
+
+{"type":"record",
+ "name":"persona",
+ "namespace":"avro.test",
+ "fields":[{"name":"name","type":"string"},
+           {"name":"age","type":"int"},
+           {"name":"gender","type":"string"},
+           {"name":"place_of_birth","type":"string","default":"nonDefined"}]}
+```
+
+What if we want to remove an attribute from our persona events/messages now? Well, this one is easy since the Avro consumer will simply ignore/drop all those attributes in the old persona events/messages that are not defined in the new data schema and just take in those that are defined.
+
+Let's try to remove the `gender` attribute:
+
+```http
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json"
+--data '{"schema": "{\"type\":\"record\",
+                     \"name\":\"persona\",
+                     \"namespace\":\"avro.test\",
+                     \"fields\":[{\"name\":\"name\",\"type\":\"string\"},
+                                 {\"name\":\"age\",\"type\":\"int\"},
+                                 {\"name\":\"place_of_birth\",\"type\":\"string\", \"default\":\"nonDefined\"}]}"}'
+http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest
+
+{"is_compatible":true}
+```
+
+#### Forward compatibility
+
+Forwards compatibility means that **data produced with a new schema can be read by consumers using the last schema**.
+
+First, let's set the compatibility type to _FORWARD_ (default compatibility mode in Confluent kafka is backward):
+
+```http
+curl -X PUT -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"compatibility": "FORWARD"}' http://localhost:8081/config
+
+{"compatibility":"FORWARD"}
+
+```
+
+```http
+curl -X GET http://localhost:8081/config
+
+{"compatibilityLevel":"FORWARD"}
+```
+
+Now, how about removing an attribute when the compatibility type configured is set to _FORWARD_? In this case, it is not as simple as removing the attribute from the new schema as the consumer will expect such attribute that the producer will not add to the events/messages. Let's try to remove the `gender` attribute from the persona messages/events:
+
+```http
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json"
+--data '{"schema": "{\"type\":\"record\",
+                     \"name\":\"persona\",
+                     \"namespace\":\"avro.test\",
+                     \"fields\":[{\"name\":\"name\",\"type\":\"string\"},
+                                 {\"name\":\"age\",\"type\":\"int\"},
+                                 {\"name\":\"place_of_birth\",\"type\":\"string\", \"default\":\"nonDefined\"}]}"}'
+http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest
+
+{"is_compatible":false}
+```
+
+So, how can we produce new persona events/messages (without the `gender` attribute) that are compatible with the last data schema used by consumers (that expects an attribute called gender)?
+
+The trick here is to **first register an "intermediate" data schema that adds a default value** to `gender` if it is not defined. This way, the "intermediate" data schema will become the last data schema for the consumers and when we producer sent messages that do not contain the `gender` attribute, the consumer will know what to do:
+
+Intermediate schema:
+
+```http
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json"
+--data '{"schema": "{\"type\":\"record\",
+                     \"name\":\"persona\",
+                     \"namespace\":\"avro.test\",
+                     \"fields\":[{\"name\":\"name\",\"type\":\"string\"},
+                                 {\"name\":\"age\",\"type\":\"int\"},
+                                 {\"name\":\"gender\",\"type\": \"string\",\"default\": \"nonProvided\"},
+                                 {\"name\":\"place_of_birth\",\"type\":\"string\", \"default\":\"nonDefined\"}]}"}'
+http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest
+
+{"is_compatible":true}
+```
+
+We register this data schema either by sending it along with a message/event using our producer or we simply register it using the schema registry API. Once we have this "intermediate" schema registered that will actually become the last data schema for the consumer, we check if our end goal data schema without the `gender` attribute is forward compatible or not:
+
+```http
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json"
+--data '{"schema": "{\"type\":\"record\",
+                     \"name\":\"persona\",
+                     \"namespace\":\"avro.test\",
+                     \"fields\":[{\"name\":\"name\",\"type\":\"string\"},
+                                 {\"name\":\"age\",\"type\":\"int\"},
+                                 {\"name\":\"place_of_birth\",\"type\":\"string\", \"default\":\"nonDefined\"}]}"}'
+http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest
+
+{"is_compatible":true}
+```
+
+If we send a persona message that does not contain the `gender` attribute now, we should succeed:
+
+```python
+### Persona event to be published: ###
+{'name': 'david', 'age': 25, 'place_of_birth': 'USA'}
+######################################
+Message delivered to avrotest [0]
+```
+
+Contrary to the backward compatibility, in forward compatibility, adding a new attribute to your events/messages is not a problem because the consumers will simply ignore/drop this new attribute since the schema they are still using (the last one) does not include it. So let's say we want to add a new attribute called `hair` to represent the color of a persona's hair:
+
+```http
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json"
+--data '{"schema": "{\"type\":\"record\",
+                     \"name\":\"persona\",
+                     \"namespace\":\"avro.test\",
+                     \"fields\":[{\"name\":\"name\",\"type\":\"string\"},
+                                 {\"name\":\"age\",\"type\":\"int\"},
+                                 {\"name\":\"place_of_birth\",\"type\":\"string\", \"default\":\"nonDefined\"},
+                                 {\"name\":\"hair\",\"type\":\"string\"}]}"}'
+http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest
+
+{"is_compatible":true}
+```
+
+We see there is no problem at all and if we try to send a message/event containing this new attribute along with the new schema:
+
+```python
+### Persona event to be published: ###
+{'name': 'John', 'age': 25, 'place_of_birth': 'London', 'hair': 'brown'}
+######################################
+Message delivered to avrotest [0]
+```
+
+The new data schema is registered and new messages/events complying with that new data schema are sent with no problem at all.
+
+#### Full compatibility
+
+Full compatibility means **data schemas are both backward and forward compatible**. Data schemas evolve in a fully compatible way: **old data can be read with the new data schema, and new data can also be read with the last data schema**.
+
+In some data formats, such as JSON, there are no full-compatible changes. Every modification is either only forward or only backward compatible. But in other data formats, like Avro, you can define fields with default values. In that case adding or removing a field with a default value is a fully compatible change.
+
+So let's see if we can delete the `place_of_birth` attribute, the only attribute in our data schema that defines a default value:
+
+```http
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json"
+--data '{"schema": "{\"type\":\"record\",
+                     \"name\":\"persona\",
+                     \"namespace\":\"avro.test\",
+                     \"fields\":[{\"name\":\"name\",\"type\":\"string\"},
+                                 {\"name\":\"age\",\"type\":\"int\"},
+                                 {\"name\":\"hair\",\"type\":\"string\"}]}"}' 
+http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest
+
+{"is_compatible":true}
+```
+
+It looks like it may work. Let's send a message without that attribute along with the new data schema:
+
+```python
+### Persona event to be published: ###
+{'name': 'John', 'age': 25, 'hair': 'brown'}
+######################################
+Message delivered to avrotest [0]
+```
+
+Let's now try to add an attribute with a default value. Let's say we want to add an attribute for the `hobbies` of a persona whose default value will be `none`
+
+```http
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json"
+--data '{"schema": "{\"type\":\"record\",
+                     \"name\":\"persona\",
+                     \"namespace\":\"avro.test\",
+                     \"fields\":[{\"name\":\"name\",\"type\":\"string\"},
+                                 {\"name\":\"age\",\"type\":\"int\"},
+                                 {\"name\":\"hair\",\"type\":\"string\"},
+                                 {\"name\":\"hobbies\",\"type\":\"string\", \"default\":\"none\"}]}"}'
+ßhttp://localhost:8081/compatibility/subjects/avrotest-value/versions/latest
+
+{"is_compatible":true}
+```
+
+Let's send a message along with the new data schema to be completely sure:
+
+```python
+### Persona event to be published: ###
+{'name': 'John', 'age': 25, 'hair': 'brown', 'hobbies': 'dance,music,food'}
+######################################
+Message delivered to avrotest [0]
+```
+
+As expected, it did work.
+
+We now know how a data schema can evolve when full compatibility is required. That is, we know what attributes can be removed and how to add new attributes.
 
 ## Links
 

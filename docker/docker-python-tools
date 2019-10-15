@@ -1,10 +1,11 @@
+# In order to build the docker image out of this file:
+#   1. Rename the file to Dockerfile --> cp docker-python-tools Dockerfile
+#   2. Build the Dockerfile --> docker build -t "ibmcase-python:test" <path_to_this_file>
+
 FROM python:3.7-stretch
 ENV PATH=/root/.local/bin:$PATH
 ENV PYTHONPATH=/home
 RUN pip install --upgrade pip \
-  && pip install --user pipenv requests black pytest numpy pandas confluent_kafka asyncio flask
-COPY ./itg-tests /home
-COPY ./docker/simple-flask.py /app/app.py
-WORKDIR /app
-ENTRYPOINT ["python3"]
-CMD ["app.py"]
+  && pip install pipenv requests black pytest numpy pandas confluent_kafka asyncio flask
+# Install the following avro version due to the following bug: https://github.com/confluentinc/confluent-kafka-python/issues/610
+RUN python -mpip install avro-python3==1.8.2
