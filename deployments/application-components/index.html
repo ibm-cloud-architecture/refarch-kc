@@ -1070,7 +1070,7 @@ $ kubectl <span class="nb">exec</span> -n <span class="si">${</span><span class=
 <ul>
 <li>Build the image</li>
 </ul>
-<div class="codehilite"><pre><span></span>docker build -t order-command-ms:latest -f Dockerfile.NoKubernetesPlugin
+<div class="codehilite"><pre><span></span>docker build -t order-command-ms:latest -f Dockerfile.multistage .
 </pre></div>
 
 <ul>
@@ -1133,7 +1133,7 @@ docker push &lt;private-registry&gt;/&lt;image-namespace&gt;/order-command-ms:la
 <ul>
 <li>Build the image</li>
 </ul>
-<div class="codehilite"><pre><span></span>docker build -t order-query-ms:latest -f Dockerfile.NoKubernetesPlugin
+<div class="codehilite"><pre><span></span>docker build -t order-query-ms:latest -f Dockerfile.multistage .
 </pre></div>
 
 <ul>
@@ -1196,7 +1196,7 @@ docker push &lt;private-registry&gt;/&lt;image-namespace&gt;/order-query-ms:late
 <ul>
 <li>Build the image</li>
 </ul>
-<div class="codehilite"><pre><span></span>docker build -t kc-spring-container-ms:latest -f Dockerfile.NoKubernetesPlugin
+<div class="codehilite"><pre><span></span>docker build -t kc-spring-container-ms:latest -f Dockerfile .
 </pre></div>
 
 <ul>
@@ -1263,7 +1263,7 @@ docker push &lt;private-registry&gt;/&lt;image-namespace&gt;/kc-spring-container
 <ul>
 <li>Build the image</li>
 </ul>
-<div class="codehilite"><pre><span></span>docker build -t kc-voyages-ms:latest -f Dockerfile
+<div class="codehilite"><pre><span></span>docker build -t kc-voyages-ms:latest -f Dockerfile .
 </pre></div>
 
 <ul>
@@ -1323,7 +1323,7 @@ docker push &lt;private-registry&gt;/&lt;image-namespace&gt;/kc-voyages-ms:lates
 <ul>
 <li>Build the image</li>
 </ul>
-<div class="codehilite"><pre><span></span>docker build -t kc-fleet-ms:latest -f Dockerfile.multistage
+<div class="codehilite"><pre><span></span>docker build -t kc-fleet-ms:latest -f Dockerfile.multistage .
 </pre></div>
 
 <ul>
@@ -1385,7 +1385,7 @@ docker push &lt;private-registry&gt;/&lt;image-namespace&gt;/kc-fleet-ms:latest
 <ul>
 <li>Build the image</li>
 </ul>
-<div class="codehilite"><pre><span></span>docker build -t kc-ui:latest -f Dockerfile.NoKubernetesPlugin
+<div class="codehilite"><pre><span></span>docker build -t kc-ui:latest -f Dockerfile .
 </pre></div>
 
 <ul>

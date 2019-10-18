@@ -519,6 +519,40 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#data-evolution" title="Data evolution" class="md-nav__link">
+    Data evolution
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backward-compatibility" title="Backward compatibility" class="md-nav__link">
+    Backward compatibility
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forward-compatibility" title="Forward compatibility" class="md-nav__link">
+    Forward compatibility
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-compatibility" title="Full compatibility" class="md-nav__link">
+    Full compatibility
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -772,6 +806,40 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#data-evolution" title="Data evolution" class="md-nav__link">
+    Data evolution
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backward-compatibility" title="Backward compatibility" class="md-nav__link">
+    Backward compatibility
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forward-compatibility" title="Forward compatibility" class="md-nav__link">
+    Forward compatibility
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-compatibility" title="Full compatibility" class="md-nav__link">
+    Full compatibility
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -809,7 +877,7 @@
 <h3 id="what-is-apache-avro">What is Apache Avro</h3>
 <p>Avro is an open source data serialization system that helps with data exchange between systems, programming languages, and processing frameworks. Avro helps define a binary format for your data, as well as map it to the programming language of your choice.</p>
 <h3 id="why-apache-avro">Why Apache Avro</h3>
-<p>There are several websites that discuss the Apache Avro data serialization system benefits over other messaging data protocols. A simple google search will list dozens of them. Here, we will highlight just a few from a <a href="https://www.confluent.io/blog/avro-kafka-data/">confluent blog post</a>:</p>
+<p>There are several websites that discuss the Apache Avro data serialization system benefits over other messaging data protocols. A simple google search will list dozens of them. Here, we will highlight just a few from a <a href="https://www.confluent.io/blog/avro-kafka-data/">Confluent blog post</a>:</p>
 <ul>
 <li>It has a direct mapping to and from JSON</li>
 <li>It has a very compact format. The bulk of JSON, repeating every field name with every single record, is what makes JSON inefficient for high-volume usage.</li>
@@ -1095,7 +1163,7 @@ Message delivered to containers [0]
 </pre></div>
 
 <h3 id="schema-registry">Schema registry</h3>
-<p>For now, we have used the <a href="https://hub.docker.com/r/confluentinc/cp-schema-registry/">confluent schema registry</a> for our work although our goal is to use <a href="https://ibm.github.io/event-streams/schemas/overview/">IBM Event Streams</a>.</p>
+<p>For now, we have used the <a href="https://hub.docker.com/r/confluentinc/cp-schema-registry/">Confluent schema registry</a> for our work although our goal is to use <a href="https://ibm.github.io/event-streams/schemas/overview/">IBM Event Streams</a>.</p>
 <p>The integration of the schema registry with your kafka broker is quite easy. In fact, all you need is to provide the schema registry with your zookeeper cluster url and give your schema registry a hostname: https://docs.confluent.io/current/installation/docker/config-reference.html#schema-registry-configuration</p>
 <p>Once you have your schema registry up and running, this provides a rich API endpoint to operate with: https://docs.confluent.io/current/schema-registry/using.html#common-sr-usage-examples</p>
 <p>For example:</p>
@@ -1202,48 +1270,20 @@ Message delivered to containers [0]
 <span class="err">}</span>
 </pre></div>
 
-<p>The above looks very good but let's dive into more interesting real-case scenarios.</p>
+<h3 id="data-evolution">Data evolution</h3>
+<p>So far we  have seen what Avro is, what a data schema is, what a schema registry is and how this all works together. From creating a data schema for your messages/events to comply with to how the schema registry and data schemas work together. And we have also seen the code for doing all this, from the python code to send and receive Avro encoded messages based on their schemas to the rich API the Confluent schema registry provides to interact with.</p>
+<p>However, we have said little about the need for data to evolve. When you design an Event Driven architecture for your application (by applying <a href="https://ibm-cloud-architecture.github.io/refarch-eda/methodology/eventstorming/">Event Storming</a> or <a href="https://ibm-cloud-architecture.github.io/refarch-eda/methodology/ddd/">Domain Driven Design</a> for example), it is very hard to come up with data structures/schemas that will not need to evolve/change in time. That is, your data like your use or business cases may need to evolve. As a result, Avro data schemas must be somehow flexible to allow your data to evolve along with your application and use cases.</p>
+<p>But it is not as easy as adding or removing data that travels in your events/messages or modifying the type of such data. And one of the reasons for this is that Kafka (or any other type of event broker) is many times used as the source of truth. That is, a place that you can trust as to what has happened. Hence, Kafka will serve as the event source of truth where all the events (that is, data) that happened (which could be bank transactions, communications, etc) will get stored (sometimes up to <a href="https://www.confluent.io/blog/publishing-apache-kafka-new-york-times/">hundreds of years</a>) and will be able to be replayed if needed. As a result, there must be a data schema management and data schema evolution put in place that allow the compatibility of old and new data schemas and, in fact, data at the end of the day.</p>
+<p>There are mainly three types of data compatibility:</p>
 <ol>
-<li>Sending a correct message:</li>
+<li>Backward</li>
+<li>Forward</li>
+<li>Full</li>
 </ol>
-<div class="codehilite"><pre><span></span><span class="gd">--- Persona event to be published: ---</span>
-{&#39;name&#39;: &#39;david&#39;, &#39;age&#39;: 25, &#39;gender&#39;: &#39;male&#39;}
-<span class="gd">----------------------------------------</span>
-Message delivered to avrotest [0]
-</pre></div>
-
-<ol>
-<li>
-<p>What happens if I send incorrect data types in my message/event, for instance sending the age as a string rather than as an integer (already seen in the data schema section but take it as a refresher)?:</p>
-<div class="codehilite"><pre><span></span>avro.io.AvroTypeException: The datum {&#39;name&#39;: &#39;david&#39;, &#39;age&#39;: &#39;25&#39;, &#39;gender&#39;: &#39;male&#39;} is not an example of the schema {
-  &quot;type&quot;: &quot;record&quot;,
-  &quot;name&quot;: &quot;persona&quot;,
-  &quot;namespace&quot;: &quot;avro.test&quot;,
-  &quot;fields&quot;: [
-    {
-      &quot;type&quot;: &quot;string&quot;,
-      &quot;name&quot;: &quot;name&quot;
-    },
-    {
-      &quot;type&quot;: &quot;int&quot;,
-      &quot;name&quot;: &quot;age&quot;
-    },
-    {
-      &quot;type&quot;: &quot;string&quot;,
-      &quot;name&quot;: &quot;gender&quot;
-    }
-  ]
-}
-</pre></div>
-
-<p>We see that the Avro Producer will give us an <code>avro.io.AvroTypeException</code> error.</p>
-</li>
-<li>
-<p>What if we decide to change the data schema to add a new attribute such as place of birth?</p>
-</li>
-</ol>
-<p>that is,</p>
-<p><div class="codehilite"><pre><span></span><span class="p">{</span>
+<h4 id="backward-compatibility">Backward compatibility</h4>
+<p>Backward compatibility means that <strong>consumers using the new schema can read data produced with the last schema</strong>.</p>
+<p>Using the persona data schema already mentioned throughout this readme, what if we decide to change the data schema to add a new attribute such as place of birth? That is, the new schema would look like:</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
     <span class="nt">&quot;namespace&quot;</span><span class="p">:</span> <span class="s2">&quot;avro.test&quot;</span><span class="p">,</span>
     <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;persona&quot;</span><span class="p">,</span>
     <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;record&quot;</span><span class="p">,</span>
@@ -1265,34 +1305,43 @@ Message delivered to avrotest [0]
             <span class="nt">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;string&quot;</span>
         <span class="p">}</span>
     <span class="p">]</span>
- <span class="p">}</span>
-</pre></div>
-   and here is what we get</p>
-<div class="codehilite"><pre><span></span><span class="gd">--- Persona event to be published: ---</span>
-{&#39;name&#39;: &#39;david&#39;, &#39;age&#39;: &#39;25&#39;, &#39;gender&#39;: &#39;male&#39;, &#39;place_of_birth&#39;: &#39;USA&#39;}
-<span class="gd">----------------------------------------</span>
-Traceback (most recent call last):
-  File &quot;ContainerAvroProducer.py&quot;, line 73, in &lt;module&gt;
-    kp.publishEvent(TOPIC_NAME,container_event,&quot;1&quot;)
-  File &quot;/home/kafka/KcAvroProducer.py&quot;, line 42, in publishEvent
-    self.producer.produce(topic=topicName,value=json.loads(value),key=json.loads(key), callback=self.delivery_report)
-  File &quot;/root/.local/lib/python3.7/site-packages/confluent_kafka/avro/__init__.py&quot;, line 80, in produce
-    value = self._serializer.encode_record_with_schema(topic, value_schema, value)
-  File &quot;/root/.local/lib/python3.7/site-packages/confluent_kafka/avro/serializer/message_serializer.py&quot;, line 105, in encode_record_with_schema
-    schema_id = self.registry_client.register(subject, schema)
-  File &quot;/root/.local/lib/python3.7/site-packages/confluent_kafka/avro/cached_schema_registry_client.py&quot;, line 223, in register
-    raise ClientError(&quot;Invalid Avro schema:&quot; + str(code))
-confluent_kafka.avro.error.ClientError: Invalid Avro schema:422
+<span class="p">}</span>
 </pre></div>
 
-<p>We see we get an <code>Invalid Avro schema</code> error because Avro data schema not only validates the data being sent complies with the schema registered for a particular Kafka topic/subject but it also validates schema evolution. That is, based on the <a href="https://docs.confluent.io/current/schema-registry/avro.html">compatibility type configured</a>, a new schema version might be compatible or not.</p>
-<p>In this case, because the compatibility set for schema evolution is <em>BACKWARD</em> we can't just simply add a new attribute (since consumers using the new schema must be able to read data produced with the last schema).</p>
-<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot; --data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,\&quot;name\&quot;:\&quot;persona\&quot;,\&quot;namespace\&quot;:\&quot;avro.test\&quot;,\&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},{\&quot;name\&quot;:\&quot;gender\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;}]}&quot;}&#39; http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
+<p>here is the output when we try to produce an event/message with the above data schema:</p>
+<div class="codehilite"><pre><span></span><span class="c1">### Persona event to be published: ###</span>
+<span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;david&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="s1">&#39;25&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">:</span> <span class="s1">&#39;male&#39;</span><span class="p">,</span> <span class="s1">&#39;place_of_birth&#39;</span><span class="p">:</span> <span class="s1">&#39;USA&#39;</span><span class="p">}</span>
+<span class="c1">######################################</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s2">&quot;ContainerAvroProducer.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">73</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+    <span class="n">kp</span><span class="o">.</span><span class="n">publishEvent</span><span class="p">(</span><span class="n">TOPIC_NAME</span><span class="p">,</span><span class="n">container_event</span><span class="p">,</span><span class="s2">&quot;1&quot;</span><span class="p">)</span>
+  <span class="n">File</span> <span class="s2">&quot;/home/kafka/KcAvroProducer.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">42</span><span class="p">,</span> <span class="ow">in</span> <span class="n">publishEvent</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">topic</span><span class="o">=</span><span class="n">topicName</span><span class="p">,</span><span class="n">value</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">value</span><span class="p">),</span><span class="n">key</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">delivery_report</span><span class="p">)</span>
+  <span class="n">File</span> <span class="s2">&quot;/root/.local/lib/python3.7/site-packages/confluent_kafka/avro/__init__.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">80</span><span class="p">,</span> <span class="ow">in</span> <span class="n">produce</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_serializer</span><span class="o">.</span><span class="n">encode_record_with_schema</span><span class="p">(</span><span class="n">topic</span><span class="p">,</span> <span class="n">value_schema</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+  <span class="n">File</span> <span class="s2">&quot;/root/.local/lib/python3.7/site-packages/confluent_kafka/avro/serializer/message_serializer.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">105</span><span class="p">,</span> <span class="ow">in</span> <span class="n">encode_record_with_schema</span>
+    <span class="n">schema_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">registry_client</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span>
+  <span class="n">File</span> <span class="s2">&quot;/root/.local/lib/python3.7/site-packages/confluent_kafka/avro/cached_schema_registry_client.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">223</span><span class="p">,</span> <span class="ow">in</span> <span class="n">register</span>
+    <span class="k">raise</span> <span class="n">ClientError</span><span class="p">(</span><span class="s2">&quot;Invalid Avro schema:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">code</span><span class="p">))</span>
+<span class="n">confluent_kafka</span><span class="o">.</span><span class="n">avro</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">ClientError</span><span class="p">:</span> <span class="n">Invalid</span> <span class="n">Avro</span> <span class="n">schema</span><span class="p">:</span><span class="mi">422</span>
+</pre></div>
+
+<p>And the reason for such error is that, because new schemas must be backward compatible (default compatibility mode for Confluent kafka data schemas topics), we can't just simply add a new attribute. Consumers using the new schema must be able to read data produced with the last schema. That is, if a consumer was to read old messages with the schema above, it would expect the <code>place_of_birth</code> attribute and its value on these old messages. However, the messages were produced with the old schema that did not enforce such attribute. Hence, the problem.</p>
+<p>We can also check the compatibility of this new schema using the API:</p>
+<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot;</span>
+<span class="err">--data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,</span>
+<span class="err">                     \&quot;name\&quot;:\&quot;persona\&quot;,</span>
+<span class="err">                     \&quot;namespace\&quot;:\&quot;avro.test\&quot;,</span>
+<span class="err">                     \&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;gender\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;}]}&quot;}&#39; </span>
+<span class="err">        http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
 
 <span class="err">{&quot;is_compatible&quot;:false}</span>
 </pre></div>
 
-<p>How do we evolve our schema to add new attributes in a wat that the schema is <em>BACKWARD</em> compatible? Adding a <strong>default</strong> for such attribute:</p>
+<p>How do we evolve our schema to add new attributes in a way that the schema is <em>BACKWARD</em> compatible? Adding a <strong>default</strong> value for such attribute so the consumer can use it when reading old messages that were produced without that attribute:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
     <span class="nt">&quot;namespace&quot;</span><span class="p">:</span> <span class="s2">&quot;avro.test&quot;</span><span class="p">,</span>
     <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;persona&quot;</span><span class="p">,</span>
@@ -1316,39 +1365,57 @@ confluent_kafka.avro.error.ClientError: Invalid Avro schema:422
             <span class="nt">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;nonDefined&quot;</span>
         <span class="p">}</span>
     <span class="p">]</span>
- <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
-<p>Rather than changing it straight in my code, I want first to do some sort of validation:</p>
-<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot; --data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,\&quot;name\&quot;:\&quot;persona\&quot;,\&quot;namespace\&quot;:\&quot;avro.test\&quot;,\&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},{\&quot;name\&quot;:\&quot;gender\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;, \&quot;default\&quot;:\&quot;nonDefined\&quot;}]}&quot;}&#39; http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
+<p>Rather than changing it straight in the code, we can do some sort of validation through the API:</p>
+<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot; </span>
+<span class="err">--data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,</span>
+<span class="err">                     \&quot;name\&quot;:\&quot;persona\&quot;,</span>
+<span class="err">                     \&quot;namespace\&quot;:\&quot;avro.test\&quot;,</span>
+<span class="err">                     \&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;gender\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;, \&quot;default\&quot;:\&quot;nonDefined\&quot;}]}&quot;}&#39;</span>
+<span class="err">http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
 
 <span class="err">{&quot;is_compatible&quot;:true}</span>
 </pre></div>
 
-<p>So we see that adding a default value of "nonDefined" to the "place_of_birth" attribute makes our new schema <em>BACKWARD</em> compatible. That is, will make our old persona events/messages compatible when a consumer reads them with the new schema.</p>
-<p>Then, by sending a new persona event/message the Avro producer will register our new schema which we can now validate using the schema registry API endpoint:</p>
+<p>We now can evolve our data schema to enforce a new attribute with our new messages/events being produced but making sure the consumer is able to read old messages that do not contain such attribute. We do so by sending a new persona event/message along with this new data schema. This will make the schema registry to register the new data schema.</p>
+<p>We can validate the new data schema version has been registered by using the schema registry API:</p>
 <div class="codehilite"><pre><span></span><span class="err">curl -X GET http://localhost:8081/subjects/avrotest-value/versions</span>
 
 <span class="err">[1,2]</span>
 
 <span class="err">curl -X GET http://localhost:8081/subjects/avrotest-value/versions/latest/schema</span>
 
-<span class="err">{&quot;type&quot;:&quot;record&quot;,&quot;name&quot;:&quot;persona&quot;,&quot;namespace&quot;:&quot;avro.test&quot;,&quot;fields&quot;:[{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;age&quot;,&quot;type&quot;:&quot;int&quot;},{&quot;name&quot;:&quot;gender&quot;,&quot;type&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;place_of_birth&quot;,&quot;type&quot;:&quot;string&quot;,&quot;default&quot;:&quot;nonDefined&quot;}]}</span>
+<span class="err">{&quot;type&quot;:&quot;record&quot;,</span>
+<span class="err"> &quot;name&quot;:&quot;persona&quot;,</span>
+<span class="err"> &quot;namespace&quot;:&quot;avro.test&quot;,</span>
+<span class="err"> &quot;fields&quot;:[{&quot;name&quot;:&quot;name&quot;,&quot;type&quot;:&quot;string&quot;},</span>
+<span class="err">           {&quot;name&quot;:&quot;age&quot;,&quot;type&quot;:&quot;int&quot;},</span>
+<span class="err">           {&quot;name&quot;:&quot;gender&quot;,&quot;type&quot;:&quot;string&quot;},</span>
+<span class="err">           {&quot;name&quot;:&quot;place_of_birth&quot;,&quot;type&quot;:&quot;string&quot;,&quot;default&quot;:&quot;nonDefined&quot;}]}</span>
 </pre></div>
 
-<ol>
-<li>What if we want to remove an attribute from our persona events/messages now? Well, this one is easy since the Avro consumer will simply ignore/drop all those attributes in the persona events/messages that are not defined in the new data schema and just take in those that are defined.</li>
-</ol>
+<p>What if we want to remove an attribute from our persona events/messages now? Well, this one is easy since the Avro consumer will simply ignore/drop all those attributes in the old persona events/messages that are not defined in the new data schema and just take in those that are defined.</p>
 <p>Let's try to remove the <code>gender</code> attribute:</p>
-<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot; --data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,\&quot;name\&quot;:\&quot;persona\&quot;,\&quot;namespace\&quot;:\&quot;avro.test\&quot;,\&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},{\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;, \&quot;default\&quot;:\&quot;nonDefined\&quot;}]}&quot;}&#39; http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
+<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot;</span>
+<span class="err">--data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,</span>
+<span class="err">                     \&quot;name\&quot;:\&quot;persona\&quot;,</span>
+<span class="err">                     \&quot;namespace\&quot;:\&quot;avro.test\&quot;,</span>
+<span class="err">                     \&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;, \&quot;default\&quot;:\&quot;nonDefined\&quot;}]}&quot;}&#39;</span>
+<span class="err">http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
 
 <span class="err">{&quot;is_compatible&quot;:true}</span>
 </pre></div>
 
-<ol>
-<li>How about removing an attribute when the compatibility type configured is set to <em>FORWARD</em> (data produced with a new schema can be read by consumers using the last schema)? In this case, it is not as simple as removing the attribute from the new schema as the consumer will expect such attribute the producer will not add to the events/messages.</li>
-</ol>
-<p>First, let's set the compatibility type to <em>FORWARD</em>:</p>
+<h4 id="forward-compatibility">Forward compatibility</h4>
+<p>Forwards compatibility means that <strong>data produced with a new schema can be read by consumers using the last schema</strong>.</p>
+<p>First, let's set the compatibility type to <em>FORWARD</em> (default compatibility mode in Confluent kafka is backward):</p>
 <div class="codehilite"><pre><span></span><span class="err">curl -X PUT -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot; --data &#39;{&quot;compatibility&quot;: &quot;FORWARD&quot;}&#39; http://localhost:8081/config</span>
 
 <span class="err">{&quot;compatibility&quot;:&quot;FORWARD&quot;}</span>
@@ -1359,34 +1426,123 @@ confluent_kafka.avro.error.ClientError: Invalid Avro schema:422
 <span class="err">{&quot;compatibilityLevel&quot;:&quot;FORWARD&quot;}</span>
 </pre></div>
 
-<p>Now, let's try to remove the gender attribute from the persona messages/events:</p>
-<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot; --data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,\&quot;name\&quot;:\&quot;persona\&quot;,\&quot;namespace\&quot;:\&quot;avro.test\&quot;,\&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},{\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;, \&quot;default\&quot;:\&quot;nonDefined\&quot;}]}&quot;}&#39; http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
+<p>Now, how about removing an attribute when the compatibility type configured is set to <em>FORWARD</em>? In this case, it is not as simple as removing the attribute from the new schema as the consumer will expect such attribute that the producer will not add to the events/messages. Let's try to remove the <code>gender</code> attribute from the persona messages/events:</p>
+<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot;</span>
+<span class="err">--data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,</span>
+<span class="err">                     \&quot;name\&quot;:\&quot;persona\&quot;,</span>
+<span class="err">                     \&quot;namespace\&quot;:\&quot;avro.test\&quot;,</span>
+<span class="err">                     \&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;, \&quot;default\&quot;:\&quot;nonDefined\&quot;}]}&quot;}&#39;</span>
+<span class="err">http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
 
 <span class="err">{&quot;is_compatible&quot;:false}</span>
 </pre></div>
 
-<p>So, how can we produce new persona events/messages (which do not include the gender attribute) that are compatible with the last data schema used by consumers (that expects an attribute called gender)?</p>
-<p>The trick here is to first register an "intermediate" schema that adds a default value to gender if it is not defined. This way, the "intermediate" schema will become the last schema for the consumers and when we producer sent messages that do not contain the gender attribute, the consumer will know what to do:</p>
+<p>So, how can we produce new persona events/messages (without the <code>gender</code> attribute) that are compatible with the last data schema used by consumers (that expects an attribute called gender)?</p>
+<p>The trick here is to <strong>first register an "intermediate" data schema that adds a default value</strong> to <code>gender</code> if it is not defined. This way, the "intermediate" data schema will become the last data schema for the consumers and when we producer sent messages that do not contain the <code>gender</code> attribute, the consumer will know what to do:</p>
 <p>Intermediate schema:</p>
-<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot; --data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,\&quot;name\&quot;:\&quot;persona\&quot;,\&quot;namespace\&quot;:\&quot;avro.test\&quot;,\&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},{\&quot;name\&quot;:\&quot;gender\&quot;,\&quot;type\&quot;: \&quot;string\&quot;,\&quot;default\&quot;: \&quot;nonProvided\&quot;},{\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;, \&quot;default\&quot;:\&quot;nonDefined\&quot;}]}&quot;}&#39; http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
+<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot;</span>
+<span class="err">--data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,</span>
+<span class="err">                     \&quot;name\&quot;:\&quot;persona\&quot;,</span>
+<span class="err">                     \&quot;namespace\&quot;:\&quot;avro.test\&quot;,</span>
+<span class="err">                     \&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;gender\&quot;,\&quot;type\&quot;: \&quot;string\&quot;,\&quot;default\&quot;: \&quot;nonProvided\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;, \&quot;default\&quot;:\&quot;nonDefined\&quot;}]}&quot;}&#39;</span>
+<span class="err">http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
 
 <span class="err">{&quot;is_compatible&quot;:true}</span>
 </pre></div>
 
-<p>New schema:</p>
-<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot; --data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,\&quot;name\&quot;:\&quot;persona\&quot;,\&quot;namespace\&quot;:\&quot;avro.test\&quot;,\&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},{\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},{\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;, \&quot;default\&quot;:\&quot;nonDefined\&quot;}]}&quot;}&#39; http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
+<p>We register this data schema either by sending it along with a message/event using our producer or we simply register it using the schema registry API. Once we have this "intermediate" schema registered that will actually become the last data schema for the consumer, we check if our end goal data schema without the <code>gender</code> attribute is forward compatible or not:</p>
+<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot;</span>
+<span class="err">--data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,</span>
+<span class="err">                     \&quot;name\&quot;:\&quot;persona\&quot;,</span>
+<span class="err">                     \&quot;namespace\&quot;:\&quot;avro.test\&quot;,</span>
+<span class="err">                     \&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;, \&quot;default\&quot;:\&quot;nonDefined\&quot;}]}&quot;}&#39;</span>
+<span class="err">http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
 
 <span class="err">{&quot;is_compatible&quot;:true}</span>
 </pre></div>
 
-<p>If we send a persona message that does not contain the gender attribute now, we should succeed:</p>
-<div class="codehilite"><pre><span></span><span class="gd">--- Container event to be published: ---</span>
-{&#39;name&#39;: &#39;david&#39;, &#39;age&#39;: 25, &#39;place_of_birth&#39;: &#39;USA&#39;}
-<span class="gd">----------------------------------------</span>
-Message delivered to avrotest [0]
+<p>If we send a persona message that does not contain the <code>gender</code> attribute now, we should succeed:</p>
+<div class="codehilite"><pre><span></span><span class="c1">### Persona event to be published: ###</span>
+<span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;david&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="s1">&#39;place_of_birth&#39;</span><span class="p">:</span> <span class="s1">&#39;USA&#39;</span><span class="p">}</span>
+<span class="c1">######################################</span>
+<span class="n">Message</span> <span class="n">delivered</span> <span class="n">to</span> <span class="n">avrotest</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 
-<p>As you can imagine, there are few other cases to play with given the changes you could make to a data schema in conjunction with the compatibility types you can configure your schema registry to be like but we have already covered the basics for a good understanding.</p>
+<p>Contrary to the backward compatibility, in forward compatibility, adding a new attribute to your events/messages is not a problem because the consumers will simply ignore/drop this new attribute since the schema they are still using (the last one) does not include it. So let's say we want to add a new attribute called <code>hair</code> to represent the color of a persona's hair:</p>
+<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot;</span>
+<span class="err">--data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,</span>
+<span class="err">                     \&quot;name\&quot;:\&quot;persona\&quot;,</span>
+<span class="err">                     \&quot;namespace\&quot;:\&quot;avro.test\&quot;,</span>
+<span class="err">                     \&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;place_of_birth\&quot;,\&quot;type\&quot;:\&quot;string\&quot;, \&quot;default\&quot;:\&quot;nonDefined\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;hair\&quot;,\&quot;type\&quot;:\&quot;string\&quot;}]}&quot;}&#39;</span>
+<span class="err">http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
+
+<span class="err">{&quot;is_compatible&quot;:true}</span>
+</pre></div>
+
+<p>We see there is no problem at all and if we try to send a message/event containing this new attribute along with the new schema:</p>
+<div class="codehilite"><pre><span></span><span class="c1">### Persona event to be published: ###</span>
+<span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="s1">&#39;place_of_birth&#39;</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">,</span> <span class="s1">&#39;hair&#39;</span><span class="p">:</span> <span class="s1">&#39;brown&#39;</span><span class="p">}</span>
+<span class="c1">######################################</span>
+<span class="n">Message</span> <span class="n">delivered</span> <span class="n">to</span> <span class="n">avrotest</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+<p>The new data schema is registered and new messages/events complying with that new data schema are sent with no problem at all.</p>
+<h4 id="full-compatibility">Full compatibility</h4>
+<p>Full compatibility means <strong>data schemas are both backward and forward compatible</strong>. Data schemas evolve in a fully compatible way: <strong>old data can be read with the new data schema, and new data can also be read with the last data schema</strong>.</p>
+<p>In some data formats, such as JSON, there are no full-compatible changes. Every modification is either only forward or only backward compatible. But in other data formats, like Avro, you can define fields with default values. In that case adding or removing a field with a default value is a fully compatible change.</p>
+<p>So let's see if we can delete the <code>place_of_birth</code> attribute, the only attribute in our data schema that defines a default value:</p>
+<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot;</span>
+<span class="err">--data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,</span>
+<span class="err">                     \&quot;name\&quot;:\&quot;persona\&quot;,</span>
+<span class="err">                     \&quot;namespace\&quot;:\&quot;avro.test\&quot;,</span>
+<span class="err">                     \&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;hair\&quot;,\&quot;type\&quot;:\&quot;string\&quot;}]}&quot;}&#39; </span>
+<span class="err">http://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
+
+<span class="err">{&quot;is_compatible&quot;:true}</span>
+</pre></div>
+
+<p>It looks like it may work. Let's send a message without that attribute along with the new data schema:</p>
+<div class="codehilite"><pre><span></span><span class="c1">### Persona event to be published: ###</span>
+<span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="s1">&#39;hair&#39;</span><span class="p">:</span> <span class="s1">&#39;brown&#39;</span><span class="p">}</span>
+<span class="c1">######################################</span>
+<span class="n">Message</span> <span class="n">delivered</span> <span class="n">to</span> <span class="n">avrotest</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+<p>Let's now try to add an attribute with a default value. Let's say we want to add an attribute for the <code>hobbies</code> of a persona whose default value will be <code>none</code></p>
+<div class="codehilite"><pre><span></span><span class="err">curl -X POST -H &quot;Content-Type: application/vnd.schemaregistry.v1+json&quot;</span>
+<span class="err">--data &#39;{&quot;schema&quot;: &quot;{\&quot;type\&quot;:\&quot;record\&quot;,</span>
+<span class="err">                     \&quot;name\&quot;:\&quot;persona\&quot;,</span>
+<span class="err">                     \&quot;namespace\&quot;:\&quot;avro.test\&quot;,</span>
+<span class="err">                     \&quot;fields\&quot;:[{\&quot;name\&quot;:\&quot;name\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;age\&quot;,\&quot;type\&quot;:\&quot;int\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;hair\&quot;,\&quot;type\&quot;:\&quot;string\&quot;},</span>
+<span class="err">                                 {\&quot;name\&quot;:\&quot;hobbies\&quot;,\&quot;type\&quot;:\&quot;string\&quot;, \&quot;default\&quot;:\&quot;none\&quot;}]}&quot;}&#39;</span>
+<span class="err">ßhttp://localhost:8081/compatibility/subjects/avrotest-value/versions/latest</span>
+
+<span class="err">{&quot;is_compatible&quot;:true}</span>
+</pre></div>
+
+<p>Let's send a message along with the new data schema to be completely sure:</p>
+<div class="codehilite"><pre><span></span><span class="c1">### Persona event to be published: ###</span>
+<span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="s1">&#39;hair&#39;</span><span class="p">:</span> <span class="s1">&#39;brown&#39;</span><span class="p">,</span> <span class="s1">&#39;hobbies&#39;</span><span class="p">:</span> <span class="s1">&#39;dance,music,food&#39;</span><span class="p">}</span>
+<span class="c1">######################################</span>
+<span class="n">Message</span> <span class="n">delivered</span> <span class="n">to</span> <span class="n">avrotest</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+<p>As expected, it did work.</p>
+<p>We now know how a data schema can evolve when full compatibility is required. That is, we know what attributes can be removed and how to add new attributes.</p>
 <h2 id="links">Links</h2>
 <p>Here are some links we have visited to carry out our work and found interesting:</p>
 <p>https://www.confluent.io/blog/avro-kafka-data/</p>
