@@ -786,16 +786,16 @@ As expected, it did work.
 
 We now know how a data schema can evolve when full compatibility is required. That is, we know what attributes can be removed and how to add new attributes.
 
-## Links
+## Compendium
 
-Here are some links we have visited to carry out our work and found interesting:
+Here are some links we have visited to carry out our work and found interesting to read:
 
-https://www.confluent.io/blog/avro-kafka-data/
+* [https://www.confluent.io/blog/avro-kafka-data/](https://www.confluent.io/blog/avro-kafka-data/)
 
-https://avro.apache.org/docs/current/
+* [https://avro.apache.org/docs/current/](https://avro.apache.org/docs/current/)
 
-https://docs.confluent.io/current/schema-registry/index.html
+* [https://docs.confluent.io/current/schema-registry/index.html](https://docs.confluent.io/current/schema-registry/index.html)
 
-https://docs.confluent.io/current/schema-registry/schema_registry_tutorial.html#schema-registry-tutorial-definition
+* [https://docs.confluent.io/current/schema-registry/schema_registry_tutorial.html#schema-registry-tutorial-definition](https://docs.confluent.io/current/schema-registry/schema_registry_tutorial.html#schema-registry-tutorial-definition)
 
-https://docs.oracle.com/database/nosql-11.2.2.0/GettingStartedGuide/schemaevolution.html
+* [https://docs.oracle.com/database/nosql-11.2.2.0/GettingStartedGuide/schemaevolution.html](https://docs.oracle.com/database/nosql-11.2.2.0/GettingStartedGuide/schemaevolution.html)
