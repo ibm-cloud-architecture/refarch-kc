@@ -1,0 +1,41 @@
+# This yaml file starts the basic microservices for the Reefer Container Shipment reference implementation
+# These microservices are meant to run with a local backbone as no SSL or certificates are expected
+
+version: '3'
+services:
+    ordercmd:
+        image: kc-ordercmdms:test
+        hostname: ordercmd
+        ports:
+            - "10080:9080"
+        environment:
+            KAFKA_ENV: ${KAFKA_ENV}
+            KAFKA_BROKERS: ${KAFKA_BROKERS}
+    orderquery:
+        image: kc-orderqueryms:test
+        hostname: orderquery
+        ports:
+            - "11080:9080"
+        environment:
+            KAFKA_ENV: ${KAFKA_ENV}
+            KAFKA_BROKERS: ${KAFKA_BROKERS}
+    voyages:
+        image: kc-voyagesms:test
+        hostname: voyages
+        ports:
+            - "3100:3000"
+        environment:
+            KAFKA_ENV: ${KAFKA_ENV}
+            KAFKA_BROKERS: ${KAFKA_BROKERS}
+    springcontainerms:
+        image: kc-springcontainerms:test
+        hostname: springcontainerms
+        ports:
+            - "12081:8080"
+        environment:
+            KAFKA_ENV: ${KAFKA_ENV}
+            KAFKA_BROKERS: ${KAFKA_BROKERS}
+            POSTGRESQL_URL: ${POSTGRESQL_URL}
+            POSTGRESQL_USER: ${POSTGRESQL_USER}
+            POSTGRESQL_PWD: ${POSTGRESQL_PWD}
+            POSTGRESQL_CA_PEM: ${POSTGRESQL_CA_PEM}
