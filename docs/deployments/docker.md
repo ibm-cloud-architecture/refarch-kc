@@ -77,7 +77,7 @@ $ ./scripts/buildDocker.sh
 3. Deploy on docker
 
 ```
-$ docker run -it --name ordercmd -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -e KAFKA_APIKEY="<your_kafka_api_key>" -d -p 10080:9080 ibmcase/kc-ordercommandms
+$ docker run -it --name ordercmd -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -e KAFKA_APIKEY="<your_kafka_api_key>" -d -p 10080:9080 ibmcase/kcontainer-order-command-ms
 ```
 
 ## Order query ms
@@ -97,7 +97,7 @@ $ ./scripts/buildDocker.sh
 3. Deploy on docker
 
 ```
-$ docker run -it --name orderquery -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -e KAFKA_APIKEY="<your_kafka_api_key>" -d -p 11080:9080 ibmcase/kc-orderqueryms
+$ docker run -it --name orderquery -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -e KAFKA_APIKEY="<your_kafka_api_key>" -d -p 11080:9080 ibmcase/kcontainer-order-query-ms
 ```
 
 ## Container ms

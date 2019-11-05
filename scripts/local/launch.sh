@@ -24,7 +24,7 @@ if [[ $# -eq 0 ]];then
 else
     # Read the option to launch
     toLaunch=$1
-    
+
     # Validate the option to launch
     if [[ "${toLaunch}" != "BACKEND" ]] && [[ "${toLaunch}" != "SOLUTION" ]] && [[ "${toLaunch}" != "ITGTESTS" ]]
     then
@@ -45,7 +45,7 @@ else
             rm -r kafka1 zookeeper1
             # Launching the backbone components in detached mode so that the output is cleaner
             # To see the logs execute either:
-            # 1. docker-compose -f ${MAIN_DIR}/docker/backbone-compose.yml logs 
+            # 1. docker-compose -f ${MAIN_DIR}/docker/backbone-compose.yml logs
             # 2. docker logs <docker_container_id>
             docker-compose -f ${MAIN_DIR}/docker/backbone-compose.yml up -d
             sleep 15
@@ -63,7 +63,7 @@ else
             echo -e "\e[32m@@@ Start all solution microservices\e[39m"
             # Launching the solution components in detached mode so that the output is cleaner
             # To see the logs execute either:
-            # 1. docker-compose -f ${MAIN_DIR}/docker/kc-solution-compose.yml logs 
+            # 1. docker-compose -f ${MAIN_DIR}/docker/kc-solution-compose.yml logs
             # 2. docker logs <docker_container_id>
             docker-compose -f ${MAIN_DIR}/docker/kc-solution-compose.yml up -d
         else
@@ -73,49 +73,49 @@ else
     ITGTESTS)
         # Launch itgtests components
         echo -e " \e[32m@@@ Start itgtests components\e[39m"
-        MICROSERVICES="kc-ordercmdms
-            kc-orderqueryms
-            kc-voyagesms
-            kc-springcontainerms"
+        MICROSERVICES="kcontainer-order-command-ms
+            kcontainer-order-query-ms
+            kcontainer-voyages-ms
+            kcontainer-spring-container-ms"
         # Check if we already have the docker images built
         for microservice in ${MICROSERVICES}
         do
             echo -e "Building the ${microservice}:test docker image..."
             case ${microservice} in
-            kc-ordercmdms)
+            kcontainer-order-command-ms)
                 if [ ! -d "${MAIN_DIR}/../refarch-kc-order-ms" ]; then
                     echo -e "\e[31m[ERROR] - The repository ${MAIN_DIR}/../refarch-kc-order-ms for ${microservice} does not exist.\e[0m"
                     echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
                     exit 1
                 fi
-                docker build -f ${MAIN_DIR}/../refarch-kc-order-ms/order-command-ms/Dockerfile.multistage -t ${microservice}:test ${MAIN_DIR}/../refarch-kc-order-ms/order-command-ms/
+                docker build -f ${MAIN_DIR}/../refarch-kc-order-ms/order-command-ms/Dockerfile.multistage -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-order-ms/order-command-ms/
                 echo -e "Done"
                 ;;
-            kc-orderqueryms)
+            kcontainer-order-query-ms)
                 if [ ! -d "${MAIN_DIR}/../refarch-kc-order-ms" ]; then
                     echo -e "\e[31m[ERROR] - The repository ${MAIN_DIR}/../refarch-kc-order-ms for ${microservice} does not exist.\e[0m"
                     echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
                     exit 1
                 fi
-                docker build -f ${MAIN_DIR}/../refarch-kc-order-ms/order-query-ms/Dockerfile.multistage -t ${microservice}:test ${MAIN_DIR}/../refarch-kc-order-ms/order-query-ms/
+                docker build -f ${MAIN_DIR}/../refarch-kc-order-ms/order-query-ms/Dockerfile.multistage -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-order-ms/order-query-ms/
                 echo -e "Done"
                 ;;
-            kc-voyagesms)
+            kcontainer-voyages-ms)
                 if [ ! -d "${MAIN_DIR}/../refarch-kc-ms" ]; then
                     echo -e "\e[31m[ERROR] - The repository ${MAIN_DIR}/../refarch-kc-ms for ${microservice} does not exist.\e[0m"
                     echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
                     exit 1
                 fi
-                docker build -f ${MAIN_DIR}/../refarch-kc-ms/voyages-ms/Dockerfile -t ${microservice}:test ${MAIN_DIR}/../refarch-kc-ms/voyages-ms/
+                docker build -f ${MAIN_DIR}/../refarch-kc-ms/voyages-ms/Dockerfile -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-ms/voyages-ms/
                 echo -e "Done"
                 ;;
-            kc-springcontainerms)
+            kcontainer-spring-container-ms)
                 if [ ! -d "${MAIN_DIR}/../refarch-kc-container-ms" ]; then
                     echo -e "\e[31m[ERROR] - The repository ${MAIN_DIR}/../refarch-kc-container-ms for ${microservice} does not exist.\e[0m"
                     echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
                     exit 1
                 fi
-                docker build -f ${MAIN_DIR}/../refarch-kc-container-ms/SpringContainerMS/Dockerfile-local -t ${microservice}:test ${MAIN_DIR}/../refarch-kc-container-ms/SpringContainerMS/
+                docker build -f ${MAIN_DIR}/../refarch-kc-container-ms/SpringContainerMS/Dockerfile-local -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-container-ms/SpringContainerMS/
                 echo -e "Done"
                 ;;
             *)

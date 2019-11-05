@@ -4,7 +4,7 @@
 version: '3'
 services:
     ordercmd:
-        image: kc-ordercmdms:test
+        image: ibmcase/kcontainer-order-command-ms:test
         hostname: ordercmd
         ports:
             - "10080:9080"
@@ -12,7 +12,7 @@ services:
             KAFKA_ENV: ${KAFKA_ENV}
             KAFKA_BROKERS: ${KAFKA_BROKERS}
     orderquery:
-        image: kc-orderqueryms:test
+        image: ibmcase/kcontainer-order-query-ms:test
         hostname: orderquery
         ports:
             - "11080:9080"
@@ -20,7 +20,7 @@ services:
             KAFKA_ENV: ${KAFKA_ENV}
             KAFKA_BROKERS: ${KAFKA_BROKERS}
     voyages:
-        image: kc-voyagesms:test
+        image: ibmcase/kcontainer-voyages-ms:test
         hostname: voyages
         ports:
             - "3100:3000"
@@ -28,7 +28,7 @@ services:
             KAFKA_ENV: ${KAFKA_ENV}
             KAFKA_BROKERS: ${KAFKA_BROKERS}
     springcontainerms:
-        image: kc-springcontainerms:test
+        image: ibmcase/kcontainer-spring-container-ms:test
         hostname: springcontainerms
         ports:
             - "12081:8080"
