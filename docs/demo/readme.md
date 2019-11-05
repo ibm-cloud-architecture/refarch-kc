@@ -108,6 +108,7 @@ Selecting one boat with the edit button, goes to the boat detail view:
 ![](kc-ship-detail.png)  
 
 You can start the simulation on the ship movement by seleting one of the three pre-defined scenarios:
+
 * Fire some containers
 * One reefer down
 * Or boat going thru a heat waves

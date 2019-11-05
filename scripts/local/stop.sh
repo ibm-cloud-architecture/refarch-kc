@@ -3,24 +3,53 @@
 # Script we are executing
 echo -e " \e[32m@@@ Excuting script: \e[1;33mstop.sh \e[0m"
 
-
 # Get the absolute path for this file
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 # Get the absolute path for the refarch-kc project
 MAIN_DIR=`echo ${SCRIPTPATH} | sed 's/\(.*refarch-kc\).*/\1/g'`
 
-# Read environment variables
-source ${MAIN_DIR}/scripts/setenv.sh LOCAL
+SETENV="${MAIN_DIR}/scripts/setenv.sh"
 
-# Stop the soltion components (i.e. microservices)
-echo "Stopping the solution components"
-docker-compose -f ${MAIN_DIR}/docker/kc-solution-compose.yml  down
+# Get what option the user wants to stop
+if [[ $# -eq 0 ]];then
+    echo -e "\e[31m [ERROR] - Specify which option to stop: stop.sh [ BACKEND | SOLUTION | ITGTESTS ]\e[0m"
+    exit 1
+else
+    # Read the option to stop
+    toStop=$1
+    
+    # Validate the option to stop
+    if [[ "${toStop}" != "BACKEND" ]] && [[ "${toStop}" != "SOLUTION" ]] && [[ "${toStop}" != "ITGTESTS" ]]
+    then
+        echo -e "\e[31m [ERROR] - Specify an appropriate option to stop: stop.sh [ BACKEND | SOLUTION | ITGTESTS ]\e[0m"
+        exit 1
+    fi
 
-sleep 15
+    # Read environment variables
+    source $SETENV LOCAL
 
-# Stop the backbone components
-echo "Stopping the backbone components"
-docker-compose -f ${MAIN_DIR}/docker/backbone-compose.yml  down
+    case ${toStop} in
+    BACKEND)
+        # Stop backend components
+        echo -e " \e[32m@@@ Stop backend components\e[39m"
+        docker-compose -f ${MAIN_DIR}/docker/backbone-compose.yml down
+        ;;
+    SOLUTION)
+        # Stop solution components
+        echo -e " \e[32m@@@ Stop solution components\e[39m"
+        docker-compose -f ${MAIN_DIR}/docker/kc-solution-compose.yml down
+        ;;
+    ITGTESTS)
+        # Stop itgtests components
+        echo -e " \e[32m@@@ Stop itgtests components\e[39m"
+        docker-compose -f ${MAIN_DIR}/docker/itg-tests-compose.yml down
+        ;;
+    *)
+        echo -e "\e[31m [ERROR] - Specify an appropriate option to stop: stop.sh [ BACKEND | SOLUTION | ITGTESTS ]\e[0m"
+        exit 1
+        ;;
+    esac
+fi
 
 # Script we are executing
 echo -e " \e[32m@@@ End script: \e[1;33mstop.sh \e[0m"

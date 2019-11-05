@@ -185,7 +185,7 @@ There is no requirement for any separate microservice maintining additional info
 
 --- 
 
-TODO
+TODO rework next sections
 
 ### 6 - Microservice interactions
 
