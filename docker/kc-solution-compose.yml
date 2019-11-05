@@ -1,7 +1,7 @@
 version: '3'
 services:
     simulator:
-        image: ibmcase/kc-fleetms:latest
+        image: ibmcase/kcontainer-fleet-ms:latest
         hostname: fleetms
         ports:
             - "9080:9080"
@@ -11,7 +11,7 @@ services:
             KAFKA_BROKERS: ${KAFKA_BROKERS}
             KAFKA_APIKEY: ${KAFKA_APIKEY}
     web:
-        image: ibmcase/kc-ui:latest
+        image: ibmcase/kcontainer-ui:latest
         hostname: kcsolution
         ports:
             - "3010:3010"
@@ -28,7 +28,7 @@ services:
             - orderquery
             - voyages
     ordercmd:
-        image: ibmcase/kc-ordercmdms:latest
+        image: ibmcase/kcontainer-order-command-ms:latest
         hostname: ordercmd
         ports:
             - "10080:9080"
@@ -37,7 +37,7 @@ services:
             KAFKA_BROKERS: ${KAFKA_BROKERS}
             KAFKA_APIKEY: ${KAFKA_APIKEY}
     orderquery:
-        image: ibmcase/kc-orderqueryms:latest
+        image: ibmcase/kcontainer-order-query-ms:latest
         hostname: orderquery
         ports:
             - "11080:9080"
@@ -46,7 +46,7 @@ services:
             KAFKA_BROKERS: ${KAFKA_BROKERS}
             KAFKA_APIKEY: ${KAFKA_APIKEY}
     voyages:
-        image: ibmcase/kc-voyagesms:latest
+        image: ibmcase/kcontainer-voyages-ms:latest
         hostname: voyages
         ports:
             - "3100:3000"
@@ -55,7 +55,7 @@ services:
             KAFKA_BROKERS: ${KAFKA_BROKERS}
             KAFKA_APIKEY: ${KAFKA_APIKEY}
     springcontainerms:
-        image: ibmcase/kc-springcontainerms:latest
+        image: ibmcase/kcontainer-spring-container-ms:latest
         hostname: springcontainerms
         ports:
             - "12081:8080"

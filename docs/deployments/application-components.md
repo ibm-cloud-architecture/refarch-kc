@@ -67,7 +67,7 @@ ibmcloud cr namespace-add ibmcaseeda
 We will use this namespace when tagging the docker images for our microservices. Here is an example of tagging:
 
 ```shell
-docker tag ibmcase/kc-ui us.icr.io/ibmcaseeda/kc-ui:latest
+docker tag ibmcase/kcontainer-ui us.icr.io/ibmcaseeda/kcontainer-ui:latest
 ```
 
 To see the images in your private registry you can use the user interface at [https://cloud.ibm.com/containers-kubernetes/registry/main/private](https://cloud.ibm.com/containers-kubernetes/registry/main/private) or the command:
@@ -489,20 +489,20 @@ cd refarch-kc-ui/
 * Build the image
 
 ```shell
-docker build -t kc-ui:latest -f Dockerfile .
+docker build -t kcontainer-ui:latest -f Dockerfile .
 ```
 
 * Tag the image
 
 ```shell
-docker tag kc-ui <private-registry>/<image-namespace>/kc-ui:latest
+docker tag kc-ui <private-registry>/<image-namespace>/kcontainer-ui:latest
 ```
 
 * Push the image
 
 ```shell
 docker login <private-registry>
-docker push <private-registry>/<image-namespace>/kc-ui:latest
+docker push <private-registry>/<image-namespace>/kcontainer-ui:latest
 ```
 
 * Generate application YAMLs via `helm template` with the following parameters:
