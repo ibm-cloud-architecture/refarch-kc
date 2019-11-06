@@ -17,9 +17,9 @@ verifyImage() {
     fi
 }
 
-verifyImage kc-voyagesms 
-verifyImage fleetms
-verifyImage kc-ui
-verifyImage kc-ordercmdms
-verifyImage kc-orderqueryms
-verifyImage kc-containerms
+verifyImage kcontainer-voyages-ms
+verifyImage kcontainer-fleet-ms
+verifyImage kcontainer-ui
+verifyImage kcontainer-order-command-ms
+verifyImage kcontainer-order-query-ms
+verifyImage kcontainer-spring-container-ms

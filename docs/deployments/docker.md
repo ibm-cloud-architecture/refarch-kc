@@ -1,4 +1,4 @@
-# Build and run using docker-compose 
+# Build and run using docker-compose
 
 To build and run the solution locally using docker, please follow the below instructions.
 
@@ -37,7 +37,7 @@ $ ./scripts/buildDocker.sh
 3. Deploy on docker
 
 ```
-$ docker run -it --name fleetms -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -d -p 9080:9080 -p 9444:9443 ibmcase/kc-fleetms
+$ docker run -it --name fleetms -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -d -p 9080:9080 -p 9444:9443 ibmcase/kcontainer-fleet-ms
 ```
 
 ## Voyage ms
@@ -57,7 +57,7 @@ $ ./scripts/buildDocker.sh
 3. Deploy on docker
 
 ```
-$ docker run -it --name voyages -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -e KAFKA_APIKEY="<your_kafka_api_key>" -d -p 3100:3000 ibmcase/kc-voyagesms
+$ docker run -it --name voyages -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -e KAFKA_APIKEY="<your_kafka_api_key>" -d -p 3100:3000 ibmcase/kcontainer-voyages-ms
 ```
 
 ## Order command ms
@@ -77,7 +77,7 @@ $ ./scripts/buildDocker.sh
 3. Deploy on docker
 
 ```
-$ docker run -it --name ordercmd -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -e KAFKA_APIKEY="<your_kafka_api_key>" -d -p 10080:9080 ibmcase/kc-ordercommandms
+$ docker run -it --name ordercmd -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -e KAFKA_APIKEY="<your_kafka_api_key>" -d -p 10080:9080 ibmcase/kcontainer-order-command-ms
 ```
 
 ## Order query ms
@@ -97,7 +97,7 @@ $ ./scripts/buildDocker.sh
 3. Deploy on docker
 
 ```
-$ docker run -it --name orderquery -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -e KAFKA_APIKEY="<your_kafka_api_key>" -d -p 11080:9080 ibmcase/kc-orderqueryms
+$ docker run -it --name orderquery -e KAFKA_BROKERS="<your_kafka_brokers>" -e KAFKA_ENV="<LOCAL or IBMCLOUD or ICP>" -e KAFKA_APIKEY="<your_kafka_api_key>" -d -p 11080:9080 ibmcase/kcontainer-order-query-ms
 ```
 
 ## Container ms
@@ -127,7 +127,7 @@ docker run --name springcontainerms \
   -e POSTGRESQL_USER=$POSTGRESQL_USER \
   -e POSTGRESQL_PWD=$POSTGRESQL_PWD \
   -e TRUSTSTORE_PWD=${TRUSTSTORE_PWD} \
-  -p 8080:8080 -ti  ibmcase/kc-springcontainerms
+  -p 8080:8080 -ti  ibmcase/kcontainer-spring-container-ms
 ```
 
 ## Web
@@ -147,5 +147,5 @@ $ ./scripts/buildDocker.sh
 3. Deploy on docker
 
 ```
-docker run -it --name kcsolution -e KAFKA_BROKERS="<your_kafka_brokers>" -e FLEET_MS_URL="<fleetms_url" ORDER_MS_URL="<orderms_url>" VOYAGE_MS_URL="<voyagems_url>" --link fleetms:fleetms --link voyages:voyages --link ordercmd:ordercmd --link orderquery:orderquery --link springcontainerms:springcontainerms -d -p 3110:3010 ibmcase/kc-ui
+docker run -it --name kcsolution -e KAFKA_BROKERS="<your_kafka_brokers>" -e FLEET_MS_URL="<fleetms_url" ORDER_MS_URL="<orderms_url>" VOYAGE_MS_URL="<voyagems_url>" --link fleetms:fleetms --link voyages:voyages --link ordercmd:ordercmd --link orderquery:orderquery --link springcontainerms:springcontainerms -d -p 3110:3010 ibmcase/kcontainer-ui
 ```
