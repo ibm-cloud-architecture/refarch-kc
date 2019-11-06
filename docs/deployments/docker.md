@@ -127,7 +127,7 @@ docker run --name springcontainerms \
   -e POSTGRESQL_USER=$POSTGRESQL_USER \
   -e POSTGRESQL_PWD=$POSTGRESQL_PWD \
   -e TRUSTSTORE_PWD=${TRUSTSTORE_PWD} \
-  -p 8080:8080 -ti  ibmcase/kc-springcontainerms
+  -p 8080:8080 -ti  ibmcase/kcontainer-spring-container-ms
 ```
 
 ## Web
