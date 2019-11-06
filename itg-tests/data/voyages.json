@@ -1,0 +1,6 @@
+[ 
+    {"voyageID":"100", "shipID":"JimminyCricket", "srcPort":"Oakland", "plannedDeparture":"2019-02-15T20:20Z", "destPort":"Shanghai", "plannedArrival":"2019-02-30T20:20Z", "freeCapacity":400},
+    {"voyageID":"101", "shipID":"JimminyCricket", "srcPort":"Shanghai", "plannedDeparture":"2019-03-05T20:20Z", "destPort":"Oakland", "plannedArrival":"2019-03-30T20:20Z", "freeCapacity":1000},
+    {"voyageID":"200", "shipID":"BlackBear", "srcPort":"NYC", "plannedDeparture":"2019-02-20T20:20Z", "destPort":"London", "plannedArrival":"2019-02-300T20:20Z","freeCapacity":200},
+    {"voyageID":"201", "shipID":"BlackBear", "srcPort":"London", "plannedDeparture":"2019-03-02T20:20Z", "destPort":"NYC", "plannedArrival":"2019-03-10T20:20Z", "freeCapacity":300}
+  ]
