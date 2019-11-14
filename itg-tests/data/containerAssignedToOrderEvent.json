@@ -1,0 +1,9 @@
+{
+  "containerID": "",
+  "payload": {
+    "containerID": "",
+    "orderID": ""
+  },
+  "timestamp": "",
+  "type": "ContainerAssignedToOrder"
+}

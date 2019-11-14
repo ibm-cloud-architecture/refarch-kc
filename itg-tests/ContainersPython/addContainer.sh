@@ -41,7 +41,7 @@ fi
 # Set environment variables
 source ${MAIN_DIR}/scripts/setenv.sh $kcenv
 
-if [ "ICP" == "${kcenv}" ]; then
+if [ "OCP" == "${kcenv}" ]; then
     add_cert_to_container_command=" -e PEM_CERT=/certs/${PEM_FILE} -v ${CA_LOCATION}:/certs"
 fi
 

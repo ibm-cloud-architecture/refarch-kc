@@ -1,6 +1,6 @@
 {
   "productID":"Fish",
-  "quantity":1,
+  "quantity":100,
   "customerID": "FishFarm",
   "expectedDeliveryDate":"2019-03-31T13:30Z",
   "pickupDate":"2019-01-25T13:30Z",

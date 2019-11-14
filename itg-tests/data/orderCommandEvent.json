@@ -1,0 +1,28 @@
+{
+  "payload": {
+    "orderID": "",
+    "productID": "Fish",
+    "customerID": "FishFarm",
+    "quantity": 100,
+    "pickupAddress": {
+      "street": "1 a new street",
+      "city": "Shanghai",
+      "country": "China",
+      "state": "NE",
+      "zipcode": "090"
+    },
+    "pickupDate": "2019-01-25T13:30Z",
+    "destinationAddress": {
+      "street": "100 Main street",
+      "city": "Oakland",
+      "country": "USA",
+      "state": "CA",
+      "zipcode": "95053"
+    },
+    "expectedDeliveryDate": "2019-03-31T13:30Z",
+    "status": "pending"
+  },
+  "timestampMillis": "",
+  "type": "CreateOrderCommand",
+  "version": "1"
+}

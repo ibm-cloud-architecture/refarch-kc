@@ -61,7 +61,7 @@ spec:
               key: binding
         # Based on this parameter we add the appropriate certificates for when Event Streams is hosted either on ICP or OCP
         - name: KAFKA_ENV
-          value: "ICP"
+          value: "OCP"
         # Location of your Event Streams pem certificate for ssl connections. You MUST download it in advance.
         # This can be downloaded from the Event Streams UI.
         - name: PEM_CERT
