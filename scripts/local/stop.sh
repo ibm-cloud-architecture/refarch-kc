@@ -12,16 +12,16 @@ SETENV="${MAIN_DIR}/scripts/setenv.sh"
 
 # Get what option the user wants to stop
 if [[ $# -eq 0 ]];then
-    echo -e "\e[31m [ERROR] - Specify which option to stop: stop.sh [ BACKEND | SOLUTION | ITGTESTS ]\e[0m"
+    echo -e "\e[31m [ERROR] - Specify which option to stop: stop.sh [ BACKEND | SOLUTION | DEV ]\e[0m"
     exit 1
 else
     # Read the option to stop
     toStop=$1
     
     # Validate the option to stop
-    if [[ "${toStop}" != "BACKEND" ]] && [[ "${toStop}" != "SOLUTION" ]] && [[ "${toStop}" != "ITGTESTS" ]]
+    if [[ "${toStop}" != "BACKEND" ]] && [[ "${toStop}" != "SOLUTION" ]] && [[ "${toStop}" != "DEV" ]]
     then
-        echo -e "\e[31m [ERROR] - Specify an appropriate option to stop: stop.sh [ BACKEND | SOLUTION | ITGTESTS ]\e[0m"
+        echo -e "\e[31m [ERROR] - Specify an appropriate option to stop: stop.sh [ BACKEND | SOLUTION | DEV ]\e[0m"
         exit 1
     fi
 
@@ -39,13 +39,13 @@ else
         echo -e " \e[32m@@@ Stop solution components\e[39m"
         docker-compose -f ${MAIN_DIR}/docker/kc-solution-compose.yml down
         ;;
-    ITGTESTS)
+    DEV)
         # Stop itgtests components
         echo -e " \e[32m@@@ Stop itgtests components\e[39m"
-        docker-compose -f ${MAIN_DIR}/docker/itg-tests-compose.yml down
+        docker-compose -f ${MAIN_DIR}/docker/kc-development-compose.yml down
         ;;
     *)
-        echo -e "\e[31m [ERROR] - Specify an appropriate option to stop: stop.sh [ BACKEND | SOLUTION | ITGTESTS ]\e[0m"
+        echo -e "\e[31m [ERROR] - Specify an appropriate option to stop: stop.sh [ BACKEND | SOLUTION | DEV ]\e[0m"
         exit 1
         ;;
     esac

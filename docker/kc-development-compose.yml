@@ -3,6 +3,33 @@
 
 version: '3'
 services:
+    simulator:
+        image: ibmcase/kcontainer-fleet-ms:test
+        hostname: fleetms
+        ports:
+            - "9080:9080"
+            - "9443:9443"
+        environment:
+            KAFKA_ENV: ${KAFKA_ENV}
+            KAFKA_BROKERS: ${KAFKA_BROKERS}
+            KAFKA_APIKEY: ${KAFKA_APIKEY}
+    web:
+        image: ibmcase/kcontainer-ui:test
+        hostname: kcsolution
+        ports:
+            - "3010:3010"
+        environment:
+            KAFKA_ENV: ${KAFKA_ENV}
+            KAFKA_BROKERS: ${KAFKA_BROKERS}
+            KAFKA_APIKEY: ${KAFKA_APIKEY}
+            FLEET_MS_URL: http://simulator:9080/fleetms
+            ORDER_MS_URL: http://ordercmd:9080/orders
+            ORDER_QUERY_MS_URL: http://orderquery:9080/orders
+        depends_on:
+            - simulator
+            - ordercmd
+            - orderquery
+            - voyages
     ordercmd:
         image: ibmcase/kcontainer-order-command-ms:test
         hostname: ordercmd
@@ -11,12 +38,14 @@ services:
         environment:
             KAFKA_ENV: ${KAFKA_ENV}
             KAFKA_BROKERS: ${KAFKA_BROKERS}
+            KAFKA_APIKEY: ${KAFKA_APIKEY}
     orderquery:
         image: ibmcase/kcontainer-order-query-ms:test
         hostname: orderquery
         ports:
             - "11080:9080"
         environment:
+            KAFKA_APIKEY: ${KAFKA_APIKEY}
             KAFKA_ENV: ${KAFKA_ENV}
             KAFKA_BROKERS: ${KAFKA_BROKERS}
     voyages:
@@ -25,6 +54,7 @@ services:
         ports:
             - "3100:3000"
         environment:
+            KAFKA_APIKEY: ${KAFKA_APIKEY}
             KAFKA_ENV: ${KAFKA_ENV}
             KAFKA_BROKERS: ${KAFKA_BROKERS}
     springcontainerms:
@@ -33,6 +63,7 @@ services:
         ports:
             - "12081:8080"
         environment:
+            KAFKA_APIKEY: ${KAFKA_APIKEY}
             KAFKA_ENV: ${KAFKA_ENV}
             KAFKA_BROKERS: ${KAFKA_BROKERS}
             POSTGRESQL_URL: ${POSTGRESQL_URL}
