@@ -26,9 +26,9 @@ else
     toLaunch=$1
 
     # Validate the option to launch
-    if [[ "${toLaunch}" != "BACKEND" ]] && [[ "${toLaunch}" != "SOLUTION" ]] && [[ "${toLaunch}" != "ITGTESTS" ]]
+    if [[ "${toLaunch}" != "BACKEND" ]] && [[ "${toLaunch}" != "SOLUTION" ]] && [[ "${toLaunch}" != "DEV" ]]
     then
-        echo -e "\e[31m [ERROR] - Specify an appropriate option to launch: launch.sh [ BACKEND | SOLUTION | ITGTESTS ]\e[0m"
+        echo -e "\e[31m [ERROR] - Specify an appropriate option to launch: launch.sh [ BACKEND | SOLUTION | DEV ]\e[0m"
         exit 1
     fi
 
@@ -70,10 +70,12 @@ else
             echo -e "\e[32m@@@ all solution microservices are running\e[39m"
         fi
         ;;
-    ITGTESTS)
+    DEV)
         # Launch itgtests components
         echo -e " \e[32m@@@ Start itgtests components\e[39m"
-        MICROSERVICES="kcontainer-order-command-ms
+        MICROSERVICES="kcontainer-ui
+            kcontainer-fleet-ms
+            kcontainer-order-command-ms
             kcontainer-order-query-ms
             kcontainer-voyages-ms
             kcontainer-spring-container-ms"
@@ -82,6 +84,24 @@ else
         do
             echo -e "Building the ${microservice}:test docker image..."
             case ${microservice} in
+            kcontainer-ui)
+                if [ ! -d "${MAIN_DIR}/../refarch-kc-ui" ]; then
+                    echo -e "\e[31m[ERROR] - The repository ${MAIN_DIR}/../refarch-kc-ui for ${microservice} does not exist.\e[0m"
+                    echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
+                    exit 1
+                fi
+                docker build -f ${MAIN_DIR}/../refarch-kc-ui/Dockerfile -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-ui/
+                echo -e "Done"
+                ;;
+            kcontainer-fleet-ms)
+                if [ ! -d "${MAIN_DIR}/../refarch-kc-ms" ]; then
+                    echo -e "\e[31m[ERROR] - The repository ${MAIN_DIR}/../refarch-kc-ms for ${microservice} does not exist.\e[0m"
+                    echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
+                    exit 1
+                fi
+                docker build -f ${MAIN_DIR}/../refarch-kc-ms/fleet-ms/Dockerfile.multistage -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-ms/fleet-ms/
+                echo -e "Done"
+                ;;
             kcontainer-order-command-ms)
                 if [ ! -d "${MAIN_DIR}/../refarch-kc-order-ms" ]; then
                     echo -e "\e[31m[ERROR] - The repository ${MAIN_DIR}/../refarch-kc-order-ms for ${microservice} does not exist.\e[0m"
@@ -130,11 +150,11 @@ else
         # To see the logs execute either:
         # 1. docker-compose -f ${MAIN_DIR}/docker/kc-solution-compose.yml logs
         # 2. docker logs <docker_container_id>
-        docker-compose -f ${MAIN_DIR}/docker/itg-tests-compose.yml up -d
+        docker-compose -f ${MAIN_DIR}/docker/kc-development-compose.yml up -d
         echo -e "\e[32m@@@ all itgtest components are running\e[39m"
         ;;
     *)
-        echo -e "\e[31m [ERROR] - Specify an appropriate option to launch: launch.sh [ BACKEND | SOLUTION | ITGTESTS ]\e[0m"
+        echo -e "\e[31m [ERROR] - Specify an appropriate option to launch: launch.sh [ BACKEND | SOLUTION | DEV ]\e[0m"
         exit 1
         ;;
     esac
