@@ -10,7 +10,7 @@ Avro is an open source data serialization system that helps with data exchange b
 
 ### Why Apache Avro
 
-There are several websites that discuss the Apache Avro data serialization system benefits over other messaging data protocols. A simple google search will list dozens of them. Here, we will highlight just a few from a [Confluent blog post](https://www.confluent.io/blog/avro-kafka-data/):
+There are several websites that discuss the Apache Avro data serialization system benefits over other messaging data protocols. A simple google search will list dozens of them. Here, we will highlight just a few of those benefits from a [Confluent blog post](https://www.confluent.io/blog/avro-kafka-data/):
 
 - It has a direct mapping to and from JSON
 - It has a very compact format. The bulk of JSON, repeating every field name with every single record, is what makes JSON inefficient for high-volume usage.
