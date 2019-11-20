@@ -30,33 +30,47 @@ case "$kcenv" in
         export IBMCLOUD_PWD=""
         export IBMCLOUD_ACCOUNT=""
         ;;
-   ICP)
+   OCP)
         # Event Streams bootstrap server
         export KAFKA_BROKERS="<>"
         # Event Streams bootstrap server too
         export SCHEMA_REGISTRY_URL="<>"
-        export KAFKA_ENV="ICP"
+        export KAFKA_ENV="OCP"
         export KAFKA_APIKEY="<>"
         # Location for your PEM file
         export CA_LOCATION=""
         # PEM file name
         export PEM_FILE=""
+        # Order command microservice url
+        export ORDER_CMD_MS=""
+        # Order Query microservice url
+        export ORDER_QUERY_MS=""
+        # Container microservice url
+        export CONTAINER_SPRING_MS=""
+        # Voyage microservice url
+        export VOYAGE_MS=""
+        # Name of the orders, orderCommand and containers topics
+        export ITGTESTS_ORDERS_TOPIC="orders"
+        export ITGTESTS_ORDER_COMMANDS_TOPIC="orderCommands"
+        export ITGTESTS_CONTAINERS_TOPIC="itgtests"
     ;;
    LOCAL)
         export KAFKA_BROKERS="kafka1:9092"
-        export KAFKA_APIKEY="nokey"
         export KAFKA_ENV="LOCAL"
         export WEBAPP="kcsolution:3010"
         export FLEET_MS="fleetms:9080"
         export ORDER_CMD_MS="ordercmd:9080"
         export ORDER_QUERY_MS="orderquery:9080"
         export CONTAINER_SPRING_MS="springcontainerms:8080"
-        export VOYAGE_MS="voyages:3100"
+        export VOYAGE_MS="voyages:3000"
         export POSTGRESQL_URL="jdbc:postgresql1://postgres:5432/postgres"
         export POSTGRESQL_USER="postgres"
         export POSTGRESQL_PWD="supersecret"
         export POSTGRESQL_CA_PEM=""
         export SCHEMA_REGISTRY_URL="http://schemaregistry1:8081"
+        export ITGTESTS_ORDERS_TOPIC="orders"
+        export ITGTESTS_ORDER_COMMANDS_TOPIC="orderCommands"
+        export ITGTESTS_CONTAINERS_TOPIC="containers"
    ;;
    MINIKUBE)
         export KAFKA_BROKERS="kafkabitmani:9092"

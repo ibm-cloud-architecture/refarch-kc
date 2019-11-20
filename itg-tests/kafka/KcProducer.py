@@ -19,19 +19,19 @@ class KafkaProducer:
             options['sasl.mechanisms'] = 'PLAIN'
             options['sasl.username'] = 'token'
             options['sasl.password'] = self.kafka_apikey
-        if (self.kafka_env == 'ICP'):
+        if (self.kafka_env == 'OCP'):
             options['ssl.ca.location'] = os.environ['PEM_CERT']
-        print("This is the configuration for the producer:")
-        print(options)
+        print("[KafkaProducer] - This is the configuration for the producer:")
+        print('[KafkaProducer] - {}'.format(options))
         self.producer = Producer(options)
 
     def delivery_report(self,err, msg):
         """ Called once for each message produced to indicate delivery result.
             Triggered by poll() or flush(). """
         if err is not None:
-            print('[ERROR] - Message delivery failed: {}'.format(err))
+            print('[ERROR] - [KafkaProducer] - Message delivery failed: {}'.format(err))
         else:
-            print('Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
+            print('[KafkaProducer] - Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
 
     def publishEvent(self, topicName, eventToSend, keyName):
         dataStr = json.dumps(eventToSend)

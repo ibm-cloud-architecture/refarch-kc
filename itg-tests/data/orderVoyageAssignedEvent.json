@@ -1,0 +1,9 @@
+{
+  "timestamp": "",
+  "type": "VoyageAssigned",
+  "version": "1",
+  "payload": {
+    "voyageID": "101",
+    "orderID": ""
+  }
+}
