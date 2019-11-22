@@ -1,4 +1,4 @@
-Deployment of backing services for the Event-Driven Architecture Reference Application, which includes Event Streams and Postgresql
+Deployment of backing services for the Event-Driven Architecture Reference Application, which includes Event Streams and Postgresql.  As part of the reference implementation, a Kafka instance is used as the main communication channel for all components of the application, while one of the [components](https://github.com/ibm-cloud-architecture/refarch-kc-container-ms) uses Postgresql for it's backing datastore.  You will need these backing services deployed in the cluster or as a public cloud service before the application will run successfully.
 
 ## Kafka & Event Streams
 
