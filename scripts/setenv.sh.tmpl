@@ -53,6 +53,8 @@ case "$kcenv" in
         export ITGTESTS_ORDERS_TOPIC="orders"
         export ITGTESTS_ORDER_COMMANDS_TOPIC="orderCommands"
         export ITGTESTS_CONTAINERS_TOPIC="itgtests"
+        # BPM service for the container anomalies
+        export BPM_ANOMALY=""
     ;;
    LOCAL)
         export KAFKA_BROKERS="kafka1:9092"
@@ -71,6 +73,8 @@ case "$kcenv" in
         export ITGTESTS_ORDERS_TOPIC="orders"
         export ITGTESTS_ORDER_COMMANDS_TOPIC="orderCommands"
         export ITGTESTS_CONTAINERS_TOPIC="containers"
+        # BPM service for the container anomalies
+        export BPM_ANOMALY=""
    ;;
    MINIKUBE)
         export KAFKA_BROKERS="kafkabitmani:9092"
