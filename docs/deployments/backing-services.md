@@ -78,11 +78,11 @@ If you are using Event Streams as your Kafka broker provider and it is deployed 
 
 ### Using community-based Kafka Helm charts, deployed locally in-cluster
 
-If you simply want to deploy Kafka using the open source, community-supported Helm Charts, you can do so with the following commands.
+If you simply want to deploy Kafka using the open source, community-supported Helm Charts, you can do so with the following commands to deploy the [bitnami Kafka Stack Helm Charts](https://bitnami.com/stack/kafka/helm).
 
 #### Environment Considerations
 
-**TODO** Needs update to account for ServiceAccount integration after `helm template` generation
+As of the time of this document being authored, the Bitnami Kafka Stack Helm Chart does not expose the required security configuration elements to run optimally on OpenShift.  After generating the Helm templates below, you may need to manually update the YAML files to apply the ServiceAccount you have configured for your environment to run the containers accordingly.
 
 #### Service Deployment
 
@@ -103,10 +103,10 @@ kubectl create namespace <target namespace>
 mkdir bitnami
 mkdir templates
 helm fetch --untar --untardir bitnami 'bitnami/kafka'
-helm template --name kafka --set persistence.enabled=false --set securityContext.enabled=false \ 
+helm template kafka --set persistence.enabled=false --set securityContext.enabled=false \
+  --set zookeeper.securityContext.enabled=false \
   bitnami/kafka --namespace <target namespace> --output-dir templates
-(kubectl/oc) apply -f templates/kafka/charts/zookeeper/templates/
-(kubectl/oc) apply -f templates/kafka/templates
+(kubectl/oc) apply -R -f templates/
 ```
 It will take a few minutes to get the pods ready.
 
@@ -206,8 +206,8 @@ mkdir bitnami
 mkdir templates
 helm fetch --untar --untardir bitnami bitnami/postgresql
 helm template --name postgre-db --set postgresqlPassword=supersecret \
-  --set persistence.enabled=false --set serviceAccount.enabled=true \ 
-  --set serviceAccount.name=<existing service account> bitnami/postgresql \ 
+  --set persistence.enabled=false --set serviceAccount.enabled=true \
+  --set serviceAccount.name=<existing service account> bitnami/postgresql \
   --namespace <target namespace> --output-dir templates
 (kubectl/oc) apply -f templates/postgresql/templates
 ```
