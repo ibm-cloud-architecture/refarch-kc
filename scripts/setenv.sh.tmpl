@@ -75,6 +75,11 @@ case "$kcenv" in
         export ITGTESTS_CONTAINERS_TOPIC="containers"
         # BPM service for the container anomalies
         export BPM_ANOMALY=""
+        # Logging levels for the Container MS component. Defaults to INFO
+        export LOGGING_CONTAINER_MS_ROOT="INFO"
+        export LOGGING_CONTAINER_MS_CONSUMER_CONFIG="ERROR"
+        export LOGGING_CONTAINER_MS_PRODUCER_CONFIG="ERROR"
+
    ;;
    MINIKUBE)
         export KAFKA_BROKERS="kafkabitmani:9092"
