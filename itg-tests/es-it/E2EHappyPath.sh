@@ -44,4 +44,5 @@ docker run  -v ${MAIN_DIR}:/refarch-kc \
             -c "cd /refarch-kc/itg-tests/es-it && \
                 source /refarch-kc/scripts/setenv.sh ${ENV} && \
                 export PYTHONPATH=\${PYTHONPATH}:/refarch-kc/itg-tests && \
-                python E2EHappyPath.py"
+                python E2EHappyPath.py && source /tmp/E2EHappyPath.properties && \
+                python ContainerAnomaly.py"
