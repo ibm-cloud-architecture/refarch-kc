@@ -569,6 +569,17 @@ class E2EHappyPath(unittest.TestCase):
         self.assertEqual(sorted(expected_order_query.items()),sorted(order_query.items()))
         print("Done\n")
 
+    def test7_exportValues(self):
+        print('---------------------')
+        print('--- Export values ---')
+        print('---------------------\n')
+        print('File where values will be exported to: /tmp/E2EHappyPath.properties')
+        f = open("/tmp/E2EHappyPath.properties", "w")
+        print("E2EHappyPath_ORDER_ID=" + ORDER_ID +"\n")
+        f.write("export E2EHappyPath_ORDER_ID=" + ORDER_ID +"\n")
+        print("E2EHappyPath_CONTAINER_ID=" + CONTAINER_ID +"\n")
+        f.write("export E2EHappyPath_CONTAINER_ID=" + CONTAINER_ID +"\n")
+        f.close()
        
 ################
 ##### MAIN #####

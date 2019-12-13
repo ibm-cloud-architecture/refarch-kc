@@ -1,0 +1,12 @@
+{
+  "id": "",
+  "latitude": 31.4,
+  "longitude": 121.5,
+  "type": "Reefer",
+  "status": "Empty",
+  "brand": "itgtests-brand",
+  "currentCity": "Shanghai",
+  "capacity": 100,
+  "createdAt": "",
+  "updatedAt": ""
+}
