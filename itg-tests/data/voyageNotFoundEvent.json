@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "payload": {
+    "reason": "Insufficient free capacity",
+    "orderID": ""
+  },
+  "timestamp": "",
+  "type": "VoyageNotFound"
+}
