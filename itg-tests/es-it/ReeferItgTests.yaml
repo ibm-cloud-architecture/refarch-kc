@@ -1,0 +1,166 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: reefer-itgtests-job
+spec:
+  template:
+    metadata:
+      name: reefer-itgtests-job
+    spec:
+      containers:
+      - name: ibmcase-python
+        image: ibmcase/kcontainer-python:itgtests
+        imagePullPolicy: Always
+        command:
+        - /bin/bash
+        - -c
+        - |
+              echo "-----------------------------------------------------------------"
+              echo "-- Reefer Container Shipment EDA application Integration Tests --"
+              echo "-----------------------------------------------------------------"
+              echo
+              echo "Executing integrations tests from branch $BRANCH of $GITHUB_REPO"
+              echo "Kafka Brokers: $KAFKA_BROKERS"
+              echo "Kafka API Key: $KAFKA_APIKEY"
+              echo "Kafka Env: $KAFKA_ENV"
+              echo "Orders topic name: $ITGTESTS_ORDERS_TOPIC"
+              echo "Order Command topic name: $ITGTESTS_ORDER_COMMANDS_TOPIC"
+              echo "Containers topic name: $ITGTESTS_CONTAINERS_TOPIC"
+              echo "------------------------------------------------------------------"
+              echo
+              
+              # Check important environments variables are properly set
+              if [ -z "$KAFKA_BROKERS" ] || [ -z "$KAFKA_APIKEY" ] || [ "$KAFKA_ENV" != "IBMCLOUD" -a "$KAFKA_ENV" != "OCP" ]; then
+                echo "[ERROR] - Either the KAFKA_ENV, KAFKA_BROKERS or KAFKA_APIKEY environment variables is incorrect. Please, review them."
+                exit 1
+              fi
+
+              # Check that if we are using IBM Event Streams on prem, we are providing the PEM certificate to connect to it.
+              if [ "$KAFKA_ENV" == "OCP" ]  && [ ! -f "/tmp/certs/es-cert.pem" ]; then
+                echo "[ERROR] - The PEM certificate to connect to IBM Event Streams on premise could not be found."
+                echo "[ERROR] - Please make sure you have created the kubernetes secret with the PEM certificate and"
+                echo "[ERROR] - you have uncommented the mount of such secret in the integration tests yaml file."
+                exit 1
+              fi
+
+              # Creating the working directory
+              mkdir ${WORKING_DIR} && cd ${WORKING_DIR}
+
+              # Clone the repository where the integration tests to be executed are and checkout the specific branch
+              git clone ${GITHUB_REPO} && cd ${REPO_NAME} && if [ "master" != "${BRANCH}" ]; then git checkout ${BRANCH}; fi
+              
+              # Get into the location for the integration tests
+              cd ${ITGTESTS_LOCATION}
+
+              # Execute the integration tests
+              
+              export PYTHONPATH=${PYTHONPATH}:${WORKING_DIR}/${REPO_NAME}/itg-tests
+
+              echo '******************************************'
+              echo '******************************************'
+              echo '**********   E2E Happy Path   ************'
+              echo '******************************************'
+              echo '******************************************'
+              
+              python -u E2EHappyPath.py && source /tmp/E2EHappyPath.properties
+              
+              echo '******************************************'
+              echo '******************************************'
+              echo '*********   Saga No Container   **********'
+              echo '******************************************'
+              echo '******************************************'
+              
+              python -u Saga_NoContainer.py
+              
+              echo '******************************************'
+              echo '******************************************'
+              echo '**********   Saga No Voyage   ************'
+              echo '******************************************'
+              echo '******************************************'
+              
+              python -u Saga_NoVoyage.py
+              
+              echo '******************************************'
+              echo '******************************************'
+              echo '*********   Container Anomaly   **********'
+              echo '******************************************'
+              echo '******************************************'
+              
+              python -u ContainerAnomaly.py
+
+              echo "---------"
+              echo "-- END --"
+              echo "---------"
+        env:
+        # Your working directory within the container
+        - name: WORKING_DIR
+          value: "/tmp/github"
+        # Github repository containing the integration tests to be executed
+        - name: GITHUB_REPO
+          value: "https://github.com/ibm-cloud-architecture/refarch-kc.git"
+        # Specific branch for the integration tests
+        - name: BRANCH
+          value: "master"
+        # Name of the repository
+        - name: REPO_NAME
+          value: "refarch-kc"
+        # Location of the integration tests folder within the repository
+        - name: ITGTESTS_LOCATION
+          value: "itg-tests/es-it"
+        # Event Streams Kafka brokers. You MUST create a configmap in advance with the brokers information:
+        # oc create configmap kafka-brokers --from-literal=brokers='<replace with comma-separated list of brokers>' -n <namespace>
+        # You can find the list of brokers either in the Event Streams UI or when you login through the CLI: cloudctl es init
+        - name: KAFKA_BROKERS
+          valueFrom:
+            configMapKeyRef:
+              name: "kafka-brokers"
+              key: brokers
+        # Your Event Streams API Key. You can find it in the Event Streams UI on the connect to this cluster link
+        # You MUST create this secret in advance with the Event Streams API key:
+        # oc create secret generic eventstreams-apikey --from-literal=binding='<replace with api key>' -n <namespace>
+        - name: KAFKA_APIKEY
+          valueFrom:
+            secretKeyRef:
+              name: "eventstreams-apikey"
+              key: binding
+        # Based on this parameter we add the appropriate certificates for when Event Streams is hosted either on ICP or OCP
+        - name: KAFKA_ENV
+          value: "IBMCLOUD"
+        # Order command microservice's service name
+        - name: ORDER_CMD_MS
+          value: "ordercommandms-service:9080"
+        # Order query microservice's service name
+        - name: ORDER_QUERY_MS
+          value: "orderqueryms-service:9080"
+        # Container microservice's service name
+        - name: CONTAINER_SPRING_MS
+          value: "springcontainerms-service:8080"
+        # Voyage microservice's service name
+        - name: VOYAGE_MS
+          value: "voyagesms-service:3000"
+        # Orders topic name
+        - name: ITGTESTS_ORDERS_TOPIC
+          value: "itg-orders"
+        # Order Command topic name
+        - name: ITGTESTS_ORDER_COMMANDS_TOPIC
+          value: "itg-orderCommands"
+        # Containers topic name
+        - name: ITGTESTS_CONTAINERS_TOPIC
+          value: "itg-containers"  
+        # Location of your Event Streams pem certificate for ssl connections. You MUST download it in advance.
+        # This can be downloaded from the Event Streams UI.
+        ### Uncomment the following if you are working with Event Streams on premises ###
+      #   - name: PEM_CERT
+      #     value: "/tmp/certs/es-cert.pem"
+      #   # Location where the Event Streams pem certificate contained in the eventstreams-pem-file secret will be loaded to.
+      #   volumeMounts:
+      #     - mountPath: "/tmp/certs"
+      #       name: eventstreams-pem-file
+      # volumes:
+      #   # You MUST create this secret with the Event Streams pem certificate in advance. First, download the Event Streams pem certificate.
+      #   # Then create the secret: oc create secret generic eventstreams-pem-file --from-file=es-cert.pem=<LOCATION_OF_YOUR_EVENT_STREAMS_PEM_CERTIFICATE> -n <namespace>
+      #   - name: eventstreams-pem-file
+      #     secret:
+      #       secretName: "eventstreams-pem-file"
+      restartPolicy: Never
+  backoffLimit: 0
