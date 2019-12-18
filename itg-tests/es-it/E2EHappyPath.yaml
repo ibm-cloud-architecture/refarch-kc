@@ -18,8 +18,31 @@ spec:
               mkdir ${WORKING_DIR} && cd ${WORKING_DIR} &&
               git clone ${GITHUB_REPO} && cd ${REPO_NAME} && if [ "master" != "${BRANCH}" ]; then git checkout ${BRANCH}; fi &&
               cd ${ITGTESTS_LOCATION} &&
-              export PYTHONPATH=${PYTHONPATH}:${WORKING_DIR}/${REPO_NAME}/itg-tests && 
-              python -u E2EHappyPath.py
+              export PYTHONPATH=${PYTHONPATH}:${WORKING_DIR}/${REPO_NAME}/itg-tests &&
+              echo '******************************************' &&
+              echo '******************************************' &&
+              echo '**********   E2E Happy Path   ************' &&
+              echo '******************************************' &&
+              echo '******************************************' &&
+              python -u E2EHappyPath.py && source /tmp/E2EHappyPath.properties &&
+              echo '******************************************' &&
+              echo '******************************************' &&
+              echo '*********   Saga No Container   **********' &&
+              echo '******************************************' &&
+              echo '******************************************' &&
+              python -u Saga_NoContainer.py &&
+              echo '******************************************' &&
+              echo '******************************************' &&
+              echo '**********   Saga No Voyage   ************' &&
+              echo '******************************************' &&
+              echo '******************************************' &&
+              python -u Saga_NoVoyage.py &&
+              echo '******************************************' &&
+              echo '******************************************' &&
+              echo '*********   Container Anomaly   **********' &&
+              echo '******************************************' &&
+              echo '******************************************' &&
+              python -u ContainerAnomaly.py
         env:
         # Your working directory within the container
         - name: WORKING_DIR
