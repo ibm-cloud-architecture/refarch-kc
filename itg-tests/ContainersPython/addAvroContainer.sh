@@ -47,6 +47,7 @@ if [ "OCP" == "${kcenv}" ]; then
     FINAL_SCHEMA_REGISTRY_URL="https://token:${KAFKA_APIKEY}@${END_SCHEMA_REGISTRY_URL}" 
 else
     FINAL_SCHEMA_REGISTRY_URL=${SCHEMA_REGISTRY_URL}
+    attach_to_network="--network=docker_default"
 fi
 
 
@@ -61,7 +62,7 @@ docker run  -e KAFKA_BROKERS=$KAFKA_BROKERS \
             -e DATA_SCHEMAS="/refarch-kc/data_schemas" \
             ${add_cert_to_container_command} \
             -v ${MAIN_DIR}:/refarch-kc \
-            --network=docker_default \
+            ${attach_to_network} \
             --rm \
             -ti ibmcase-python:test bash \
             -c "cd /refarch-kc/itg-tests/ContainersPython && \
