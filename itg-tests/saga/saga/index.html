@@ -36,7 +36,7 @@
     
     
       
-        <title>SAGA pattern integration test case - Container Shipment EDA reference implementation</title>
+        <title>Saga Pattern - Container Shipment EDA reference implementation</title>
       
     
     
@@ -105,7 +105,7 @@
             </span>
             <span class="md-header-nav__topic">
               
-                SAGA pattern integration test case
+                Saga Pattern
               
             </span>
           
@@ -454,10 +454,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-9" type="checkbox" id="nav-9">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-9" type="checkbox" id="nav-9" checked>
     
     <label class="md-nav__link" for="nav-9">
       Integration tests
@@ -475,7 +477,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../itg-tests.md" title="Overview" class="md-nav__link">
+    <a href="../../itgtests/" title="Overview" class="md-nav__link">
       Overview
     </a>
   </li>
@@ -487,7 +489,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../happy_path.md" title="Happy Path" class="md-nav__link">
+    <a href="../../happy-path/happy_path/" title="Happy Path" class="md-nav__link">
       Happy Path
     </a>
   </li>
@@ -497,11 +499,138 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="../../saga.md" title="Saga Pattern" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Saga Pattern
+      </label>
+    
+    <a href="./" title="Saga Pattern" class="md-nav__link md-nav__link--active">
       Saga Pattern
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#saga-pattern-no-container" class="md-nav__link">
+    SAGA pattern - no container
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-1-no-container-create-order" class="md-nav__link">
+    Test 1 - No Container - Create order
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-2-no-container-container-not-found" class="md-nav__link">
+    Test 2 - No Container - Container Not Found
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-3-no-container-order-rejected" class="md-nav__link">
+    Test 3 - No Container - Order Rejected
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-4-no-container-order-rejected-rest" class="md-nav__link">
+    Test 4 - No Container - Order Rejected REST
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#saga-pattern-no-voyage" class="md-nav__link">
+    SAGA pattern - no voyage
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-1-no-voyage-create-container" class="md-nav__link">
+    Test 1 - No Voyage - Create container
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-2-no-voyage-create-order" class="md-nav__link">
+    Test 2 - No Voyage - Create order
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-3-no-voyage-container-allocated" class="md-nav__link">
+    Test 3 - No Voyage - Container Allocated
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-4-no-voyage-voyage-not-found" class="md-nav__link">
+    Test 4 - No Voyage - Voyage Not Found
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-5-no-voyage-order-rejected" class="md-nav__link">
+    Test 5 - No Voyage - Order Rejected
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-6-no-voyage-order-rejected-rest" class="md-nav__link">
+    Test 6 - No Voyage - Order Rejected REST
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -511,7 +640,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../containerAnomaly.md" title="Container Anomaly" class="md-nav__link">
+    <a href="../../containerAnomaly/containerAnomaly/" title="Container Anomaly" class="md-nav__link">
       Container Anomaly
     </a>
   </li>
@@ -725,6 +854,41 @@
       
         
 <footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../../happy-path/happy_path/" title="Happy Path" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Happy Path
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../../containerAnomaly/containerAnomaly/" title="Container Anomaly" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Container Anomaly
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
