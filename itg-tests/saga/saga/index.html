@@ -36,7 +36,7 @@
     
     
       
-        <title>Happy Path integration test case - Container Shipment EDA reference implementation</title>
+        <title>SAGA pattern integration test case - Container Shipment EDA reference implementation</title>
       
     
     
@@ -79,7 +79,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#happy-path-integration-test-case" tabindex="1" class="md-skip">
+      <a href="#saga-pattern-integration-test-case" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -105,7 +105,7 @@
             </span>
             <span class="md-header-nav__topic">
               
-                Happy Path integration test case
+                SAGA pattern integration test case
               
             </span>
           
@@ -495,51 +495,92 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#tests" class="md-nav__link">
-    Tests
+  <a href="#saga-pattern-no-container" class="md-nav__link">
+    SAGA pattern - no container
   </a>
   
     <nav class="md-nav">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#test-1-create-container" class="md-nav__link">
-    Test 1 - Create container
+  <a href="#test-1-no-container-create-order" class="md-nav__link">
+    Test 1 - No Container - Create order
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-2-voyages-exist" class="md-nav__link">
-    Test 2 - Voyages exist
+  <a href="#test-2-no-container-container-not-found" class="md-nav__link">
+    Test 2 - No Container - Container Not Found
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-3-create-order" class="md-nav__link">
-    Test 3 - Create order
+  <a href="#test-3-no-container-order-rejected" class="md-nav__link">
+    Test 3 - No Container - Order Rejected
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-4-container-allocated" class="md-nav__link">
-    Test 4 - Container Allocated
+  <a href="#test-4-no-container-order-rejected-rest" class="md-nav__link">
+    Test 4 - No Container - Order Rejected REST
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#saga-pattern-no-voyage" class="md-nav__link">
+    SAGA pattern - no voyage
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-1-no-voyage-create-container" class="md-nav__link">
+    Test 1 - No Voyage - Create container
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-5-voyage-assigned" class="md-nav__link">
-    Test 5 - Voyage Assigned
+  <a href="#test-2-no-voyage-create-order" class="md-nav__link">
+    Test 2 - No Voyage - Create order
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-6-order-assigned" class="md-nav__link">
-    Test 6 - Order Assigned
+  <a href="#test-3-no-voyage-container-allocated" class="md-nav__link">
+    Test 3 - No Voyage - Container Allocated
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-4-no-voyage-voyage-not-found" class="md-nav__link">
+    Test 4 - No Voyage - Voyage Not Found
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-5-no-voyage-order-rejected" class="md-nav__link">
+    Test 5 - No Voyage - Order Rejected
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-6-no-voyage-order-rejected-rest" class="md-nav__link">
+    Test 6 - No Voyage - Order Rejected REST
   </a>
   
 </li>
@@ -565,33 +606,49 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/ibm-cloud-architecture/refarch-kc/edit/master/docs/itg-tests/happy-path/itgtests.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/ibm-cloud-architecture/refarch-kc/edit/master/docs/itg-tests/saga/saga.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="happy-path-integration-test-case">Happy Path integration test case</h1>
-<p>Here you can find the so called "happy path" integration test for the Reefer Containers EDA reference implementation. This test case tests the expected happy path for the application where a new order is created, the order gets a container and a voyage assigned and this new order becomes an assigned order. The following diagram depics roughly this path on a flow base fashion where the blue square rectangles, purple rounded rectangles and orange rectangles represent actions taken by the test case, events produced to the event backbone (either Kafka or IBM Event Streams) and object statuses respectively.</p>
-<p><img alt="flow" src="../images/Slide1.png" /></p>
-<p>The idea behind this integration test case is to be used as a validation for any new deployment of the Reefer Containers EDA reference implementation. This test case is intended to be extended along with the creation of other tests cases to verify other scenarios or edge cases.</p>
-<h2 id="tests">Tests</h2>
-<p>The following sequence diagrams represent each of the tests within this happy path integration test case.</p>
-<h3 id="test-1-create-container">Test 1 - Create container</h3>
-<p>This tests will make sure that a container with the appropriate capacity and location for the expected new order to be created exists.</p>
-<p><img alt="create container" src="../images/Slide2.png" /></p>
-<h3 id="test-2-voyages-exist">Test 2 - Voyages exist</h3>
-<p>This test will make sure the expected voyages exist.</p>
-<p><img alt="voyages exist" src="../images/Slide3.png" /></p>
-<h3 id="test-3-create-order">Test 3 - Create order</h3>
-<p>This test will make sure that the expected new order event is created along with a new order command event.</p>
-<p><img alt="create order" src="../images/Slide4.png" /></p>
-<h3 id="test-4-container-allocated">Test 4 - Container Allocated</h3>
-<p>This test will make sure that the expected container is assigned to the new order.</p>
-<p><img alt="container allocated" src="../images/Slide5.png" /></p>
-<h3 id="test-5-voyage-assigned">Test 5 - Voyage Assigned</h3>
-<p>This test will make sure that the expected voyage is assigned to the new order.</p>
-<p><img alt="voyage assigned" src="../images/Slide6.png" /></p>
-<h3 id="test-6-order-assigned">Test 6 - Order Assigned</h3>
-<p>This test will make sure that the resulting order is as expected. That is, it transitions to the assigned status and has a container and voyage assigned to it.</p>
-<p><img alt="order assigned" src="../images/Slide7.png" /></p>
+                <h1 id="saga-pattern-integration-test-case">SAGA pattern integration test case</h1>
+<p>Here you can find two test cases to test the SAGA pattern implemented for our Reefer Container EDA reference application. These test cases verify a new order creation does not get into assigned state unless a container and a voyage are allocated and assigned to it. These test cases are meant to be executed after the <a href="../../happy-path/happy_path/">happy path test case</a>. Since the case that a container is allocated and a voyage assigned to an newly created order is tested previously by our happy path test case, in these test cases we're actually testing the behavior when either a container or  a voyage does not exist for the order. </p>
+<h2 id="saga-pattern-no-container">SAGA pattern - no container</h2>
+<p>This test case will ensure that the SAGA pattern for our EDA application works as expected by setting the newly created order to <strong>rejected</strong> as a result of not finding a suitable container available for the order. The following diagram depics roughly this case on a flow base fashion where the blue square rectangles, purple rounded rectangles and orange rectangles represent actions taken by the test case, events produced to the event backbone (either Kafka or IBM Event Streams) and object statuses respectively.</p>
+<p><img alt="flow_container" src="../images_no_container/Slide1.png" /></p>
+<p>The following sequence diagrams represent each of the tests within this SAGA pattern - no container integration test case.</p>
+<h3 id="test-1-no-container-create-order">Test 1 - No Container - Create order</h3>
+<p>This test will make sure that the expected CreateOrderCommand event to create an order is delivered into the orderCommands topic after the Create Order API endpoint is called. It will also ensure that an OrderCreated event is also delivered into the orders topic.</p>
+<p><img alt="no container create order" src="../images_no_container/Slide2.png" /></p>
+<h3 id="test-2-no-container-container-not-found">Test 2 - No Container - Container Not Found</h3>
+<p>This test will make sure that the expected ContainerNotFound event is delivered into the orders topic once the Spring Container microservice could not find a container suitable for the order available.</p>
+<p><img alt="no container container not found" src="../images_no_container/Slide3.png" /></p>
+<h3 id="test-3-no-container-order-rejected">Test 3 - No Container - Order Rejected</h3>
+<p>This test will make sure that the expected OrderRejected event is delivered into the orders topic after the Order Command microservice received the ContainerNotFound event.</p>
+<p><img alt="no container order rejected" src="../images_no_container/Slide4.png" /></p>
+<h3 id="test-4-no-container-order-rejected-rest">Test 4 - No Container - Order Rejected REST</h3>
+<p>This test will make sure that the order is set to <strong>rejected</strong> through the Order Command and Order Query microservices.</p>
+<p><img alt="no container order rejected REST" src="../images_no_container/Slide5.png" /></p>
+<h2 id="saga-pattern-no-voyage">SAGA pattern - no voyage</h2>
+<p>This test case will ensure that the SAGA pattern for our EDA application works as expected by setting the newly created order to <strong>rejected</strong> as a result of not finding a suitable voyage available for the order. The following diagram depics roughly this case on a flow base fashion where the blue square rectangles, purple rounded rectangles and orange rectangles represent actions taken by the test case, events produced to the event backbone (either Kafka or IBM Event Streams) and object statuses respectively.</p>
+<p><img alt="flow_voyage" src="../images_no_voyage/Slide1.png" /></p>
+<p>The following sequence diagrams represent each of the tests within this SAGA pattern - no voyage integration test case.</p>
+<h3 id="test-1-no-voyage-create-container">Test 1 - No Voyage - Create container</h3>
+<p>This test will make sure that the expected ContainerAdded event to create a new container is delivered into the containers topic. It will then make sure the container is properly created through the Spring Container API endpoints.</p>
+<p><img alt="no voyage create container" src="../images_no_voyage/Slide2.png" /></p>
+<h3 id="test-2-no-voyage-create-order">Test 2 - No Voyage - Create order</h3>
+<p>This test will make sure that the expected CreateOrderCommand event to create an order is delivered into the orderCommands topic after the Create Order API endpoint is called. It will also ensure that an OrderCreated event is also delivered into the orders topic.</p>
+<p><img alt="no voyage create order" src="../images_no_voyage/Slide3.png" /></p>
+<h3 id="test-3-no-voyage-container-allocated">Test 3 - No Voyage - Container Allocated</h3>
+<p>This test will make sure that the expected ContainerAssignedToOrder event is delivered into the containers topic as well as the expected ContainerAllocated event is delivered into the orders topic. It will then verify the container state is as expected through the Spring Container API endpoint.</p>
+<p><img alt="no voyage container allocated" src="../images_no_voyage/Slide4.png" /></p>
+<h3 id="test-4-no-voyage-voyage-not-found">Test 4 - No Voyage - Voyage Not Found</h3>
+<p>This test will make sure that the expected VoyageNotFound event is delivered into the orders topic.</p>
+<p><img alt="no voyage voyage not found" src="../images_no_voyage/Slide5.png" /></p>
+<h3 id="test-5-no-voyage-order-rejected">Test 5 - No Voyage - Order Rejected</h3>
+<p>This test will make sure that the expected OrderRejected event is delivered into the orders topic after the Order Command microservice received the ContainerNotFound event.</p>
+<p><img alt="no voyage order rejected" src="../images_no_voyage/Slide6.png" /></p>
+<h3 id="test-6-no-voyage-order-rejected-rest">Test 6 - No Voyage - Order Rejected REST</h3>
+<p>This test will make sure that the order is set to <strong>rejected</strong> through the Order Command and Order Query microservices.</p>
+<p><img alt="no voyage order rejected REST" src="../images_no_voyage/Slide7.png" /></p>
                 
                   
                 
