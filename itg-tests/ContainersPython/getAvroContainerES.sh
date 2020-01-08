@@ -58,7 +58,6 @@ docker run  -e KAFKA_BROKERS=$KAFKA_BROKERS \
             -e SCHEMA_REGISTRY_URL=$FINAL_SCHEMA_REGISTRY_URL \
             ${add_cert_to_container_command} \
             -v ${MAIN_DIR}:/refarch-kc \
-            --network=docker_default \
             --rm \
             -ti ibmcase-python:test bash \
             -c "cd /refarch-kc/itg-tests/ContainersPython \
