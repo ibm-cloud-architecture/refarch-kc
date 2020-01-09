@@ -18,7 +18,11 @@ nav:
     - Backing Services: ./deployments/backing-services.md
     - Application Components: ./deployments/application-components.md
   - Security: ./security.md
-  - Integration tests: ./itg-tests/README.md
+  - Integration tests:
+    - Overview: ./itg-tests/itgtests.md
+    - Happy Path: ./itg-tests/happy-path/happy_path.md
+    - Saga Pattern: ./itg-tests/saga/saga.md
+    - Container Anomaly: ./itg-tests/containerAnomaly/containerAnomaly.md
   - Demonstration script: ./demo/readme.md
 
 

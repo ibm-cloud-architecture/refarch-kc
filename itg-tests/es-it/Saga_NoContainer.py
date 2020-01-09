@@ -98,7 +98,7 @@ class E2EHappyPath(unittest.TestCase):
         # Close the file
         f.close()
         print("Done\n")
-        
+
         print("2 - Create order by POST to order microservice's API endpoint")
         res = requests.post("http://" + ORDER_CMD_MS + "/orders",json=order)
         # Get the request response as a JSON object
@@ -127,7 +127,7 @@ class E2EHappyPath(unittest.TestCase):
         order_command = kc.pollNextEventByKey(ORDER_ID)
         # Verify an order command event object is read
         self.assertIsNotNone(order_command)
-        # Removing the timestamp from the comparison since we can't know what time exactly it was created at 
+        # Removing the timestamp from the comparison since we can't know what time exactly it was created at
         order_command['timestampMillis'] = ""
         print("This is the order command event read from the topic:")
         print(json.dumps(order_command, indent=4, sort_keys=True))
@@ -170,7 +170,7 @@ class E2EHappyPath(unittest.TestCase):
         order = kc.pollNextEventByKey(ORDER_ID)
         # Verify an order command event object is read
         self.assertIsNotNone(order)
-        # Removing the timestamp from the comparison since we can't know what time exactly it was created at 
+        # Removing the timestamp from the comparison since we can't know what time exactly it was created at
         order['timestampMillis'] = ""
         print("This is the order event read from the topic:")
         print(json.dumps(order, indent=4, sort_keys=True))
@@ -288,7 +288,7 @@ class E2EHappyPath(unittest.TestCase):
         print("Done\n")
 
 
-    def test6_orderRejectedREST(self):
+    def test4_orderRejectedREST(self):
         print('------------------------------------')
         print('--- [TEST] : Order Rejected REST ---')
         print('------------------------------------\n')
@@ -307,7 +307,7 @@ class E2EHappyPath(unittest.TestCase):
         # Close the file
         f_order.close()
         print("Done\n")
-        
+
         print("2 - Read order from the order command microservice's API endpoint")
         response = requests.get("http://" + ORDER_CMD_MS + "/orders/" + ORDER_ID)
         # Verify we get a response
@@ -322,7 +322,7 @@ class E2EHappyPath(unittest.TestCase):
         # Verify order from the order command API's endpoint is as expected
         self.assertEqual(sorted(expected_order.items()),sorted(order_command.items()))
         print("Done\n")
-        
+
         print("4 - Read order from the order query microservice's API endpoint")
         response = requests.get("http://" + ORDER_QUERY_MS + "/orders/" + ORDER_ID)
         # Verify we get a response
@@ -338,7 +338,7 @@ class E2EHappyPath(unittest.TestCase):
         self.assertEqual(sorted(expected_order.items()),sorted(order_query.items()))
         print("Done\n")
 
-       
+
 ################
 ##### MAIN #####
 ################

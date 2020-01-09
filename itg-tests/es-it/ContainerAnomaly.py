@@ -54,7 +54,7 @@ try:
 except KeyError:
     print("The ITGTESTS_ORDERS_TOPIC environment variable not set... assume local deployment")
     ORDERS_TOPIC="orders"
-    
+
 try:
     CONTAINERS_TOPIC = os.environ['ITGTESTS_CONTAINERS_TOPIC']
 except KeyError:
@@ -75,7 +75,7 @@ except KeyError:
 ##### UNIT TEST #####
 #####################
 class SpoilOrder(unittest.TestCase):
-    
+
     def test1_sendAnomalyEvents(self):
         print('----------------------------------')
         print('-- [TEST] : Send Anomaly Events --')
@@ -127,7 +127,7 @@ class SpoilOrder(unittest.TestCase):
         print("This is the container: ")
         print(json.dumps(container, indent=4, sort_keys=True))
 
-        print("2 - Read the expected container")       
+        print("2 - Read the expected container")
         # Open file to read
         f = open('../data/containerMaintenanceNeeded.json','r')
         # Load the expected container object
@@ -149,12 +149,12 @@ class SpoilOrder(unittest.TestCase):
         # Verify the container object returned by the API endpoint is the expected container object
         self.assertEqual(sorted(expected_container.items()),sorted(container.items()))
         print("Done\n")
-    
-    def test2_containerOrderSpoilt(self):
+
+    def test3_containerOrderSpoilt(self):
         print('---------------------------')
         print('-- [TEST] : Order Spoilt --')
         print('---------------------------\n')
-    
+
         print("1 - Load the expected order spoilt event its json file")
         # Open file to read
         f = open('../data/orderSpoiltEvent.json','r')
@@ -210,7 +210,7 @@ class SpoilOrder(unittest.TestCase):
         # Close the file
         f_order_command.close()
         print("Done\n")
-        
+
         print("5 - Read order from the order command microservice's API endpoint")
         response = requests.get("http://" + ORDER_CMD_MS + "/orders/" + ORDER_ID)
         # Verify we get an http 200 response
@@ -241,7 +241,7 @@ class SpoilOrder(unittest.TestCase):
         # Close the file
         f_order_query.close()
         print("Done\n")
-        
+
         print("8 - Read order from the order query microservice's API endpoint")
         response = requests.get("http://" + ORDER_QUERY_MS + "/orders/" + ORDER_ID)
         # Verify we get an http 200 response
@@ -257,7 +257,7 @@ class SpoilOrder(unittest.TestCase):
         self.assertEqual(sorted(expected_order_query.items()),sorted(order_query.items()))
         print("Done\n")
 
-    def test3_containerToMaintenance(self):
+    def test4_containerToMaintenance(self):
         print('---------------------------------------')
         print('-- [TEST] : Container to maintenance --')
         print('---------------------------------------\n')
@@ -276,13 +276,13 @@ class SpoilOrder(unittest.TestCase):
         # Close the file
         f.close()
         print("Done\n")
-        
+
         print("2 - Set container to maintenance by POST to container microservice's API endpoint")
         res = requests.post("http://" + CONTAINER_SPRING_MS + "/containers/toMaintenance",json=container)
         # Make sure we get http 200 response
         self.assertEqual(200,res.status_code)
-        
-    def test4_containerInMaintenance(self):
+
+    def test5_containerInMaintenance(self):
         print('---------------------------------------------')
         print('-- [TEST] : Container InMaintenance status --')
         print('---------------------------------------------\n')
@@ -300,7 +300,7 @@ class SpoilOrder(unittest.TestCase):
         print("This is the container: ")
         print(json.dumps(container, indent=4, sort_keys=True))
 
-        print("2 - Read the expected container")       
+        print("2 - Read the expected container")
         # Open file to read
         f = open('../data/containerInMaintenance.json','r')
         # Load the expected container object
@@ -323,7 +323,7 @@ class SpoilOrder(unittest.TestCase):
         self.assertEqual(sorted(expected_container.items()),sorted(container.items()))
         print("Done\n")
 
-    def test5_containerOffMaintenance(self):
+    def test6_containerOffMaintenance(self):
         print('----------------------------------------')
         print('-- [TEST] : Container off maintenance --')
         print('----------------------------------------\n')
@@ -342,13 +342,13 @@ class SpoilOrder(unittest.TestCase):
         # Close the file
         f.close()
         print("Done\n")
-        
+
         print("2 - Set container off maintenance by POST to container microservice's API endpoint")
         res = requests.post("http://" + CONTAINER_SPRING_MS + "/containers/offMaintenance",json=container)
         # Make sure we get http 200 response
         self.assertEqual(200,res.status_code)
-        
-    def test6_containerEmpty(self):
+
+    def test7_containerEmpty(self):
         print('-------------------------------------')
         print('-- [TEST] : Container Empty status --')
         print('-------------------------------------\n')
@@ -366,7 +366,7 @@ class SpoilOrder(unittest.TestCase):
         print("This is the container: ")
         print(json.dumps(container, indent=4, sort_keys=True))
 
-        print("2 - Read the expected container")       
+        print("2 - Read the expected container")
         # Open file to read
         f = open('../data/containerEmpty.json','r')
         # Load the expected container object
@@ -389,7 +389,7 @@ class SpoilOrder(unittest.TestCase):
         self.assertEqual(sorted(expected_container.items()),sorted(container.items()))
         print("Done\n")
 
-       
+
 ################
 ##### MAIN #####
 ################
