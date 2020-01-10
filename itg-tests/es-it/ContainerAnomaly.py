@@ -76,7 +76,39 @@ except KeyError:
 #####################
 class SpoilOrder(unittest.TestCase):
 
-    def test1_sendAnomalyEvents(self):
+    def test1_disableBPM(self):
+        print('--------------------------')
+        print('-- [TEST] : Disable BPM --')
+        print('--------------------------\n')
+
+        print("1 - Get BPM status")
+        response = requests.get("http://" + CONTAINER_SPRING_MS + "/bpm/status")
+        # Verify we get a response
+        self.assertIsNotNone(response)
+
+        print("This is the BPM status: " + response.text)
+        print("Done\n")
+
+        print("2 - Check BPM status")
+        expected_status="BPM service enabled = true"
+        # Check BPM status is true
+        self.assertEqual(response.text,expected_status)
+        print("Done\n")
+
+        print("3 - Disable BPM")
+        response = requests.get("http://" + CONTAINER_SPRING_MS + "/bpm/disable")
+        # Verify we get a response
+        self.assertIsNotNone(response)
+        print("This is the BPM status: " + response.text)
+        print("Done\n")
+
+        print("4 - Check BPM status")
+        expected_status="BPM service enabled = false"
+        # Check BPM status is true
+        self.assertEqual(response.text,expected_status)
+        print("Done\n")
+
+    def test2_sendAnomalyEvents(self):
         print('----------------------------------')
         print('-- [TEST] : Send Anomaly Events --')
         print('----------------------------------\n')
@@ -111,7 +143,7 @@ class SpoilOrder(unittest.TestCase):
             time.sleep(3)
         print("Done\n")
 
-    def test2_containerMaintenanceNeeded(self):
+    def test3_containerMaintenanceNeeded(self):
         print('----------------------------------------------------')
         print('-- [TEST] : Container in MaintenanceNeeded status --')
         print('----------------------------------------------------\n')
@@ -150,7 +182,7 @@ class SpoilOrder(unittest.TestCase):
         self.assertEqual(sorted(expected_container.items()),sorted(container.items()))
         print("Done\n")
 
-    def test3_containerOrderSpoilt(self):
+    def test4_containerOrderSpoilt(self):
         print('---------------------------')
         print('-- [TEST] : Order Spoilt --')
         print('---------------------------\n')
@@ -257,7 +289,7 @@ class SpoilOrder(unittest.TestCase):
         self.assertEqual(sorted(expected_order_query.items()),sorted(order_query.items()))
         print("Done\n")
 
-    def test4_containerToMaintenance(self):
+    def test5_containerToMaintenance(self):
         print('---------------------------------------')
         print('-- [TEST] : Container to maintenance --')
         print('---------------------------------------\n')
@@ -282,7 +314,7 @@ class SpoilOrder(unittest.TestCase):
         # Make sure we get http 200 response
         self.assertEqual(200,res.status_code)
 
-    def test5_containerInMaintenance(self):
+    def test6_containerInMaintenance(self):
         print('---------------------------------------------')
         print('-- [TEST] : Container InMaintenance status --')
         print('---------------------------------------------\n')
@@ -323,7 +355,7 @@ class SpoilOrder(unittest.TestCase):
         self.assertEqual(sorted(expected_container.items()),sorted(container.items()))
         print("Done\n")
 
-    def test6_containerOffMaintenance(self):
+    def test7_containerOffMaintenance(self):
         print('----------------------------------------')
         print('-- [TEST] : Container off maintenance --')
         print('----------------------------------------\n')
@@ -348,7 +380,7 @@ class SpoilOrder(unittest.TestCase):
         # Make sure we get http 200 response
         self.assertEqual(200,res.status_code)
 
-    def test7_containerEmpty(self):
+    def test8_containerEmpty(self):
         print('-------------------------------------')
         print('-- [TEST] : Container Empty status --')
         print('-------------------------------------\n')
@@ -387,6 +419,37 @@ class SpoilOrder(unittest.TestCase):
         print("3 - Compare Containers")
         # Verify the container object returned by the API endpoint is the expected container object
         self.assertEqual(sorted(expected_container.items()),sorted(container.items()))
+        print("Done\n")
+
+    def test9_enableBPM(self):
+        print('-------------------------')
+        print('-- [TEST] : Enable BPM --')
+        print('-------------------------\n')
+
+        print("1 - Get BPM status")
+        response = requests.get("http://" + CONTAINER_SPRING_MS + "/bpm/status")
+        # Verify we get a response
+        self.assertIsNotNone(response)
+        print("This is the BPM status: " + response.text)
+        print("Done\n")
+
+        print("2 - Check BPM status")
+        expected_status="BPM service enabled = false"
+        # Check BPM status is true
+        self.assertEqual(response.text,expected_status)
+        print("Done\n")
+
+        print("3 - Enable BPM")
+        response = requests.get("http://" + CONTAINER_SPRING_MS + "/bpm/enable")
+        # Verify we get a response
+        self.assertIsNotNone(response)
+        print("This is the BPM status: " + response.text)
+        print("Done\n")
+
+        print("4 - Check BPM status")
+        expected_status="BPM service enabled = true"
+        # Check BPM status is true
+        self.assertEqual(response.text,expected_status)
         print("Done\n")
 
 
