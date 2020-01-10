@@ -254,3 +254,33 @@ To connect to your database from outside the cluster execute the following comma
     kubectl port-forward --namespace <target namespace> svc/postgre-db-postgresql 5432:5432 &&\
     PGPASSWORD="$POSTGRES_PASSWORD" psql --host 127.0.0.1 -U postgres -p 5432
 ```
+
+## BPM
+
+The containers microservice component of this Reefer Container EDA reference application can be integrated with a BPM process for the the maintenance of the containers. This BPM process will dispatch a field engineer so that the engineer can go to the reefer container to fix it. The process of scheduling an engineer and then completing the work can best be facilitated through a process based, structured workflow. We will be using IBM BPM on Cloud or Cloud Pak for Automation to best demonstrate the workflow. This workflow can be explored in detail [here](https://github.com/ibm-cloud-architecture/refarch-reefer-ml/tree/master/docs/bpm).
+
+In order for the containers microservice to fire the BPM workflow, we need to provide the following information through Kubernetes configMaps and secrets:
+
+1. Provide the **BPM authentication login endpoint** and the **BPM workflow endpoint** in a configMap:
+
+   ```shell
+   kubectl create configmap bpm-anomaly --from-literal=url='<replace with your BPM workflow endpoint>' --from-literal=login='<replace with your BPM authentication endpoint>' -n <target k8s namespace / ocp project>
+   kubectl describe configmap bpm-anomaly -n <target k8s namespace / ocp project>
+   ```
+
+2. Provide your BPM instance's **credentials** in a secret:
+
+   ```shell
+   kubectl create secret generic bpm-anomaly --from-literal=user='<replace with your BPM user>' --from-literal=user='<replace with your BPM password>' -n <target k8s namespace / ocp project>
+   kubectl describe secrets -n <target k8s namespace / ocp project>
+   ```
+
+**IMPORTANT:** The names for both the secret and configMap (`bpm-anomaly`) is the default the container microservice uses in its [helm chart](https://github.com/ibm-cloud-architecture/refarch-kc-container-ms/tree/master/SpringContainerMS/chart/springcontainerms). Make sure the name for the configMap and secret you create **match** the names you used in the containers microservice's helm chart.
+
+If you do not have access to any BPM instance with this field engineer dispatching workflow, you can bypass the call to BPM by disabling such call in the container microservice component. For doing so, you can use the following container microservice's API endpoints:
+
+1. Enable BPM: [http://<container_microservice_endpoint>/bpm/enable](#bpm)
+2. Disable BPM: [http://<container_microservice_endpoint>/bpm/disable](#bpm)
+3. BPM status: [http://<container_microservice_endpoint>/bpm/status](#bpm)
+
+where `<container_microservice_endpoint>` is the route, ingress or nodeport service you associated to your container microservice component at deployment time.
