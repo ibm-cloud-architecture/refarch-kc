@@ -1474,43 +1474,7 @@ helm template --set image.repository<span class="o">=</span>rhos-quay.internal-n
 </ul>
 <p>Point your web browser to <a href="#">http://cluster-endpoints:31010</a> and login with username: eddie@email.com and password Eddie.</p>
 <h2 id="integration-tests">Integration Tests</h2>
-<p>Integration tests are provided in the <a href="itg-tests/">itg-tests</a> directory and are designed to be run in cluster with the rest of the application components.  However, they are regular Python scripts that can be adapted to be runnable anywhere, given the correct Kafka endpoints and configuration information.  For simplicity, this quick walkthrough will document how you can build and deploy Docker images that will run the integration tests inside the cluster, with the results visible via <code>kubectl logs</code> and the rest of the application's APIs.</p>
-<ul>
-<li>Build the base Docker image
-<div class="codehilite"><pre><span></span><span class="c1"># From the root of the &#39;refarch-kc&#39; repository</span>
-docker build -f docker/docker-python-tools -t osowski/python-tools .
-docker push osowski/python-tools
-</pre></div></li>
-</ul>
-<p>The above image is a base Python image with our integration tests, defined in the <code>itg-tests</code> directory.  It is a long-running Flask process that provides a simple web server, so once deployed, it will remain available to "exec" into for additional in-cluster CLI interaction.  However, for simplicity, we have defined a few integration scenarios, using a Kubernetes Deployment and multiple Kubernetes Jobs, that will automate some of the integration test scenarios.</p>
-<ul>
-<li>
-<p>Update the <code>itg-tests/kustomization.yaml</code> file with the specifics for your <code>python-tools</code> Docker image, changing the <code>newName</code> and <code>newTag</code> fields, as appropriate, along with the <code>namespace</code> field.</p>
-</li>
-<li>
-<p>Then run the following the command to apply the customization and deploy to the platform:
-<div class="codehilite"><pre><span></span><span class="c1"># From the root of the &#39;refarch-kc&#39; repository</span>
-kubectl apply -k itg-tests/
-</pre></div>
-<strong>NOTE:</strong> <code>kubectl</code> must be at level <code>1.14</code> or higher for the <code>-k</code> flag to be available.</p>
-</li>
-</ul>
-<p>This Kubernetes YAML will create one Deployment and one Job.  The long-running Deployment will run the <a href="#">OrdersPython/OrderConsumer.py</a> script to watch for order events in the Kafka backend, while the short-lived Job create all the necessary order events via the <a href="#">es-it/ProducerOrderEvents.py</a> script and publish them to Kafka.</p>
-<ul>
-<li>
-<p>View the output of the <code>es-it/ProducerOrderEvents.py</code> Job:
-<div class="codehilite"><pre><span></span><span class="o">(</span>kubectl/oc<span class="o">)</span> get <span class="nb">jobs</span> <span class="p">|</span> grep kcontainer
-<span class="o">(</span>kubectl/oc<span class="o">)</span> logs -f &lt;pod_name&gt;
-</pre></div></p>
-</li>
-<li>
-<p>View the output of the <code>OrdersPython/OrderConsumer.py</code> Deployment:
-<div class="codehilite"><pre><span></span><span class="o">(</span>kubectl/oc<span class="o">)</span> get pods <span class="p">|</span> grep consumer
-<span class="o">(</span>kubectl/oc<span class="o">)</span> logs -f &lt;pod_name&gt;
-</pre></div></p>
-</li>
-</ul>
-<p>You should see the same Order ID created by the Job in the output of the Deployment's container.</p>
+<p>Integration tests are provided in the <a href="/itg-tests/itgtests/">itg-tests/</a> directory and are designed to be run in-cluster with the rest of the application components.  However, they are regular Python scripts that can be adapted to be runnable anywhere, given the correct Kafka endpoints and configuration information.  For simplicity, we have created the integration tests as Kubernetes Jobs for ease of deployment and reuse.</p>
 <h2 id="universal-deployment-considerations">Universal deployment considerations</h2>
 <p>When deploying kafka consumer it is important to assess the horizontal pod autoscaler settings and needs, as adding consumers will not address scalability if the number of partitions in the topic(s) to consume does not match the increase of consumers. So disable HPA by default. If you want to use HPA you also need to ensure that a metrics-server is running, then set the number of partition, and the <code>hpa.maxReplicas</code> to the number of partitions.</p>
                 

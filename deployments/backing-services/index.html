@@ -642,6 +642,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bpm" class="md-nav__link">
+    BPM
+  </a>
+  
+</li>
+      
       
       
       
@@ -987,6 +994,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bpm" class="md-nav__link">
+    BPM
+  </a>
+  
+</li>
+      
       
       
       
@@ -1211,6 +1225,32 @@ kubectl create secret generic postgresql-url --from-literal<span class="o">=</sp
 <div class="codehilite"><pre><span></span>    <span class="n">kubectl</span> <span class="n">port</span><span class="o">-</span><span class="k">forward</span> <span class="c1">--namespace &lt;target namespace&gt; svc/postgre-db-postgresql 5432:5432 &amp;&amp;\</span>
     <span class="n">PGPASSWORD</span><span class="o">=</span><span class="ss">&quot;$POSTGRES_PASSWORD&quot;</span> <span class="n">psql</span> <span class="c1">--host 127.0.0.1 -U postgres -p 5432</span>
 </pre></div>
+
+<h2 id="bpm">BPM</h2>
+<p>The containers microservice component of this Reefer Container EDA reference application can be integrated with a BPM process for the the maintenance of the containers. This BPM process will dispatch a field engineer so that the engineer can go to the reefer container to fix it. The process of scheduling an engineer and then completing the work can best be facilitated through a process based, structured workflow. We will be using IBM BPM on Cloud or Cloud Pak for Automation to best demonstrate the workflow. This workflow can be explored in detail <a href="https://github.com/ibm-cloud-architecture/refarch-reefer-ml/tree/master/docs/bpm">here</a>.</p>
+<p>In order for the containers microservice to fire the BPM workflow, we need to provide the following information through Kubernetes configMaps and secrets:</p>
+<ol>
+<li>Provide the <strong>BPM authentication login endpoint</strong> and the <strong>BPM workflow endpoint</strong> in a configMap:</li>
+</ol>
+<div class="codehilite"><pre><span></span>kubectl create configmap bpm-anomaly --from-literal<span class="o">=</span><span class="nv">url</span><span class="o">=</span><span class="s1">&#39;&lt;replace with your BPM workflow endpoint&gt;&#39;</span> --from-literal<span class="o">=</span><span class="nv">login</span><span class="o">=</span><span class="s1">&#39;&lt;replace with your BPM authentication endpoint&gt;&#39;</span> -n &lt;target k8s namespace / ocp project&gt;
+kubectl describe configmap bpm-anomaly -n &lt;target k8s namespace / ocp project&gt;
+</pre></div>
+
+<ol>
+<li>Provide your BPM instance's <strong>credentials</strong> in a secret:</li>
+</ol>
+<div class="codehilite"><pre><span></span>kubectl create secret generic bpm-anomaly --from-literal<span class="o">=</span><span class="nv">user</span><span class="o">=</span><span class="s1">&#39;&lt;replace with your BPM user&gt;&#39;</span> --from-literal<span class="o">=</span><span class="nv">user</span><span class="o">=</span><span class="s1">&#39;&lt;replace with your BPM password&gt;&#39;</span> -n &lt;target k8s namespace / ocp project&gt;
+kubectl describe secrets -n &lt;target k8s namespace / ocp project&gt;
+</pre></div>
+
+<p><strong>IMPORTANT:</strong> The names for both the secret and configMap (<code>bpm-anomaly</code>) is the default the container microservice uses in its <a href="https://github.com/ibm-cloud-architecture/refarch-kc-container-ms/tree/master/SpringContainerMS/chart/springcontainerms">helm chart</a>. Make sure the name for the configMap and secret you create <strong>match</strong> the names you used in the containers microservice's helm chart.</p>
+<p>If you do not have access to any BPM instance with this field engineer dispatching workflow, you can bypass the call to BPM by disabling such call in the container microservice component. For doing so, you can use the following container microservice's API endpoints:</p>
+<ol>
+<li>Enable BPM: <a href="#bpm">http://<container_microservice_endpoint>/bpm/enable</a></li>
+<li>Disable BPM: <a href="#bpm">http://<container_microservice_endpoint>/bpm/disable</a></li>
+<li>BPM status: <a href="#bpm">http://<container_microservice_endpoint>/bpm/status</a></li>
+</ol>
+<p>where <code>&lt;container_microservice_endpoint&gt;</code> is the route, ingress or nodeport service you associated to your container microservice component at deployment time.</p>
                 
                   
                 

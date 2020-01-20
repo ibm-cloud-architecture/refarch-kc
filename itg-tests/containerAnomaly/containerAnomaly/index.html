@@ -548,50 +548,64 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#test-1-send-anomaly-events" class="md-nav__link">
-    Test 1 - Send Anomaly Events
+  <a href="#test-1-disable-bpm" class="md-nav__link">
+    Test 1 - Disable BPM
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-2-container-in-maintenanceneeded-status" class="md-nav__link">
-    Test 2 - Container in MaintenanceNeeded Status
+  <a href="#test-2-send-anomaly-events" class="md-nav__link">
+    Test 2 - Send Anomaly Events
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-3-order-spoilt" class="md-nav__link">
-    Test 3 - Order Spoilt
+  <a href="#test-3-container-in-maintenanceneeded-status" class="md-nav__link">
+    Test 3 - Container in MaintenanceNeeded Status
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-4-container-to-maintenance" class="md-nav__link">
-    Test 4 - Container To Maintenance
+  <a href="#test-4-order-spoilt" class="md-nav__link">
+    Test 4 - Order Spoilt
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-5-container-inmaintenance-status" class="md-nav__link">
-    Test 5 - Container InMaintenance Status
+  <a href="#test-5-container-to-maintenance" class="md-nav__link">
+    Test 5 - Container To Maintenance
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-6-container-off-maintenance" class="md-nav__link">
-    Test 6 - Container Off Maintenance
+  <a href="#test-6-container-inmaintenance-status" class="md-nav__link">
+    Test 6 - Container InMaintenance Status
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-7-container-empty-status" class="md-nav__link">
-    Test 7 - Container Empty Status
+  <a href="#test-7-container-off-maintenance" class="md-nav__link">
+    Test 7 - Container Off Maintenance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-8-container-empty-status" class="md-nav__link">
+    Test 8 - Container Empty Status
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-9-enable-bpm" class="md-nav__link">
+    Test 9 - Enable BPM
   </a>
   
 </li>
@@ -658,50 +672,64 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#test-1-send-anomaly-events" class="md-nav__link">
-    Test 1 - Send Anomaly Events
+  <a href="#test-1-disable-bpm" class="md-nav__link">
+    Test 1 - Disable BPM
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-2-container-in-maintenanceneeded-status" class="md-nav__link">
-    Test 2 - Container in MaintenanceNeeded Status
+  <a href="#test-2-send-anomaly-events" class="md-nav__link">
+    Test 2 - Send Anomaly Events
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-3-order-spoilt" class="md-nav__link">
-    Test 3 - Order Spoilt
+  <a href="#test-3-container-in-maintenanceneeded-status" class="md-nav__link">
+    Test 3 - Container in MaintenanceNeeded Status
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-4-container-to-maintenance" class="md-nav__link">
-    Test 4 - Container To Maintenance
+  <a href="#test-4-order-spoilt" class="md-nav__link">
+    Test 4 - Order Spoilt
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-5-container-inmaintenance-status" class="md-nav__link">
-    Test 5 - Container InMaintenance Status
+  <a href="#test-5-container-to-maintenance" class="md-nav__link">
+    Test 5 - Container To Maintenance
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-6-container-off-maintenance" class="md-nav__link">
-    Test 6 - Container Off Maintenance
+  <a href="#test-6-container-inmaintenance-status" class="md-nav__link">
+    Test 6 - Container InMaintenance Status
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-7-container-empty-status" class="md-nav__link">
-    Test 7 - Container Empty Status
+  <a href="#test-7-container-off-maintenance" class="md-nav__link">
+    Test 7 - Container Off Maintenance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-8-container-empty-status" class="md-nav__link">
+    Test 8 - Container Empty Status
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-9-enable-bpm" class="md-nav__link">
+    Test 9 - Enable BPM
   </a>
   
 </li>
@@ -735,27 +763,33 @@
 <p><img alt="flow" src="../container_anomaly_images/Slide1.png" /></p>
 <h2 id="tests">Tests</h2>
 <p>The following sequence diagrams represent each of the tests within this container anomaly integration test case.</p>
-<h3 id="test-1-send-anomaly-events">Test 1 - Send Anomaly Events</h3>
-<p>This tests will send the ContainerAnomaly events needed to trigger the bpm call process and order spoilage.</p>
+<h3 id="test-1-disable-bpm">Test 1 - Disable BPM</h3>
+<p>This test will make sure that when the application is deployed, the BPM anomaly service is enabled. However, it will then disable the BPM anomaly service in order to mockup the call and be able to carry on with this container anomaly test.</p>
 <p><img alt="container anomaly" src="../container_anomaly_images/Slide2.png" /></p>
-<h3 id="test-2-container-in-maintenanceneeded-status">Test 2 - Container in MaintenanceNeeded Status</h3>
+<h3 id="test-2-send-anomaly-events">Test 2 - Send Anomaly Events</h3>
+<p>This tests will send the ContainerAnomaly events needed to trigger the bpm call process and order spoilage.</p>
+<p><img alt="container anomaly" src="../container_anomaly_images/Slide3.png" /></p>
+<h3 id="test-3-container-in-maintenanceneeded-status">Test 3 - Container in MaintenanceNeeded Status</h3>
 <p>This test will make sure the container which ContainerAnomaly events have been sent for gets into MaintenanceNeeded status as a result.</p>
-<p><img alt="maintenanceNeeded" src="../container_anomaly_images/Slide3.png" /></p>
-<h3 id="test-3-order-spoilt">Test 3 - Order Spoilt</h3>
+<p><img alt="maintenanceNeeded" src="../container_anomaly_images/Slide4.png" /></p>
+<h3 id="test-4-order-spoilt">Test 4 - Order Spoilt</h3>
 <p>This test will make sure that the order the container which ContainerAnomaly events have been sent for was carrying gets into spoilt status as a result.</p>
-<p><img alt="order spoilt" src="../container_anomaly_images/Slide4.png" /></p>
-<h3 id="test-4-container-to-maintenance">Test 4 - Container To Maintenance</h3>
+<p><img alt="order spoilt" src="../container_anomaly_images/Slide5.png" /></p>
+<h3 id="test-5-container-to-maintenance">Test 5 - Container To Maintenance</h3>
 <p>This test will call the toMaintenance API endpoint for setting a container into inMaintenance mode.</p>
-<p><img alt="container toMaintenance" src="../container_anomaly_images/Slide5.png" /></p>
-<h3 id="test-5-container-inmaintenance-status">Test 5 - Container InMaintenance Status</h3>
+<p><img alt="container toMaintenance" src="../container_anomaly_images/Slide6.png" /></p>
+<h3 id="test-6-container-inmaintenance-status">Test 6 - Container InMaintenance Status</h3>
 <p>This test will make sure that the container that was set into inMaintenance mode in the previous test, is now indeed into inMaintenance mode.</p>
-<p><img alt="container inMaintenance" src="../container_anomaly_images/Slide6.png" /></p>
-<h3 id="test-6-container-off-maintenance">Test 6 - Container Off Maintenance</h3>
+<p><img alt="container inMaintenance" src="../container_anomaly_images/Slide7.png" /></p>
+<h3 id="test-7-container-off-maintenance">Test 7 - Container Off Maintenance</h3>
 <p>This test will set the container that was inMaintenance status off maintenance.</p>
-<p><img alt="order assigned" src="../container_anomaly_images/Slide7.png" /></p>
-<h3 id="test-7-container-empty-status">Test 7 - Container Empty Status</h3>
+<p><img alt="order assigned" src="../container_anomaly_images/Slide8.png" /></p>
+<h3 id="test-8-container-empty-status">Test 8 - Container Empty Status</h3>
 <p>This test will make sure that the container that was set off maintenance mode in the previous test, is now indeed empty and available.</p>
-<p><img alt="container empty" src="../container_anomaly_images/Slide8.png" /></p>
+<p><img alt="container empty" src="../container_anomaly_images/Slide9.png" /></p>
+<h3 id="test-9-enable-bpm">Test 9 - Enable BPM</h3>
+<p>This test will make sure that the BPM anomaly service is enabled for the application to work as expected.</p>
+<p><img alt="container anomaly" src="../container_anomaly_images/Slide10.png" /></p>
                 
                   
                 
