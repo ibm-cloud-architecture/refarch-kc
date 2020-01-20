@@ -55,6 +55,12 @@ case "$kcenv" in
         export ITGTESTS_CONTAINERS_TOPIC="itgtests"
         # BPM service for the container anomalies
         export BPM_ANOMALY=""
+        # BPM service login endpoint for the container anomalies
+        export BPM_ANOMALY_LOGIN=""
+        # BPM service user for the container anomalies
+        export BPM_ANOMALY_USER=""
+        # BPM service password for the container anomalies
+        export BPM_ANOMALY_PASSWORD=""
     ;;
    LOCAL)
         export KAFKA_BROKERS="kafka1:9092"
@@ -75,6 +81,12 @@ case "$kcenv" in
         export ITGTESTS_CONTAINERS_TOPIC="containers"
         # BPM service for the container anomalies
         export BPM_ANOMALY=""
+        # BPM service login endpoint for the container anomalies
+        export BPM_ANOMALY_LOGIN=""
+        # BPM service user for the container anomalies
+        export BPM_ANOMALY_USER=""
+        # BPM service password for the container anomalies
+        export BPM_ANOMALY_PASSWORD=""
         # Logging levels for the Container MS component. Defaults to INFO
         export LOGGING_CONTAINER_MS_ROOT="INFO"
         export LOGGING_CONTAINER_MS_CONSUMER_CONFIG="ERROR"

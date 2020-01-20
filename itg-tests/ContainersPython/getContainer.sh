@@ -42,6 +42,8 @@ source ${MAIN_DIR}/scripts/setenv.sh $kcenv
 
 if [ "OCP" == "${kcenv}" ]; then
     add_cert_to_container_command=" -e PEM_CERT=/certs/${PEM_FILE} -v ${CA_LOCATION}:/certs"
+else
+    attach_to_network="--network=docker_default"
 fi
 
 # Run the container consumer
@@ -53,7 +55,7 @@ docker run  -e KAFKA_BROKERS=$KAFKA_BROKERS \
             -e KAFKA_ENV=$KAFKA_ENV \
             ${add_cert_to_container_command} \
             -v ${MAIN_DIR}:/refarch-kc \
-            --network=docker_default \
+            ${attach_to_network} \
             --rm \
             -ti ibmcase-python:test bash \
             -c "cd /refarch-kc/itg-tests/ContainersPython && \

@@ -64,6 +64,9 @@ services:
             - "12081:8080"
         environment:
             BPM_ANOMALY: ${BPM_ANOMALY:-https://postman-echo.com/status/404}
+            BPM_ANOMALY_LOGIN: ${BPM_ANOMALY_LOGIN:-https://postman-echo.com/status/404}
+            BPM_ANOMALY_USER: ${BPM_ANOMALY_USER:-user}
+            BPM_ANOMALY_PASSWORD: ${BPM_ANOMALY_PASSWORD:-password}
             KAFKA_APIKEY: ${KAFKA_APIKEY}
             KAFKA_ENV: ${KAFKA_ENV:-LOCAL}
             KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka1:9092}
