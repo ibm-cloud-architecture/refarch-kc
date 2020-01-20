@@ -532,7 +532,7 @@ Point your web browser to [http://cluster-endpoints:31010](#) and login with use
 
 ## Integration Tests
 
-Integration tests are provided in the [itg-tests/](/itg-tests/itgtests/) directory and are designed to be run in-cluster with the rest of the application components.  However, they are regular Python scripts that can be adapted to be runnable anywhere, given the correct Kafka endpoints and configuration information.  For simplicity, we have created the integration tests as Kubernetes Jobs for ease of deployment and reuse.
+Integration tests are provided in the [itg-tests/](../../itg-tests/itgtests/) directory and are designed to be run in-cluster with the rest of the application components.  However, they are regular Python scripts that can be adapted to be runnable anywhere, given the correct Kafka endpoints and configuration information.  For simplicity, we have created the integration tests as Kubernetes Jobs for ease of deployment and reuse.
 
 ## Universal deployment considerations
 
