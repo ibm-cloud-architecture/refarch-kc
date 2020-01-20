@@ -1,7 +1,0 @@
-resources:
-  - deployment.yaml
-images:
-  - name: osowski/python-tools
-    newName: my-registry/python-tools
-    newTag: latest
-namespace: new-namespace
