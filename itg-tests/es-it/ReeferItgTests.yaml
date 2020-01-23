@@ -30,13 +30,21 @@ spec:
               echo
 
               # Check important environments variables are properly set
-              if [ -z "$KAFKA_BROKERS" ] || [ -z "$KAFKA_APIKEY" ] || [ "$KAFKA_ENV" != "IBMCLOUD" -a "$KAFKA_ENV" != "OCP" ]; then
-                echo "[ERROR] - Either the KAFKA_ENV, KAFKA_BROKERS or KAFKA_APIKEY environment variables is incorrect. Please, review them."
+              if [ -z "$KAFKA_BROKERS" ]; then
+                echo "[ERROR] - KAFKA_BROKERS environment variable must be set."
+                exit 1
+              fi
+              if [ "$KAFKA_ENV" != "IBMCLOUD" -a "$KAFKA_ENV" != "OCP" -a "$KAFKA_ENV" != "LOCAL" ]; then
+                echo "[ERROR] - KAFKA_ENV environment variable must be one of 'IBMCLOUD', 'OCP' or 'LOCAL'."
+                exit 1
+              fi
+              if [ "$KAFKA_ENV" != "LOCAL" -a -z "$KAFKA_APIKEY" ]; then
+                echo "[ERROR] - KAFKA_APIKEY environment variable must be set."
                 exit 1
               fi
 
               # Check that if we are using IBM Event Streams on prem, we are providing the PEM certificate to connect to it.
-              if [ "$KAFKA_ENV" == "OCP" ]  && [ ! -f "/tmp/certs/es-cert.pem" ]; then
+              if [ "$KAFKA_ENV" == "OCP" ]  && [ ! -f "$PEM_CERT" ]; then
                 echo "[ERROR] - The PEM certificate to connect to IBM Event Streams on premise could not be found."
                 echo "[ERROR] - Please make sure you have created the kubernetes secret with the PEM certificate and"
                 echo "[ERROR] - you have uncommented the mount of such secret in the integration tests yaml file."
@@ -123,6 +131,7 @@ spec:
             secretKeyRef:
               name: "eventstreams-apikey"
               key: binding
+              optional: true
         # Based on this parameter we add the appropriate certificates for when Event Streams is hosted either on ICP or OCP
         - name: KAFKA_ENV
           value: "IBMCLOUD"
