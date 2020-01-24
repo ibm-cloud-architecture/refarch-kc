@@ -1246,9 +1246,9 @@ kubectl describe secrets -n &lt;target k8s namespace / ocp project&gt;
 <p><strong>IMPORTANT:</strong> The names for both the secret and configMap (<code>bpm-anomaly</code>) is the default the container microservice uses in its <a href="https://github.com/ibm-cloud-architecture/refarch-kc-container-ms/tree/master/SpringContainerMS/chart/springcontainerms">helm chart</a>. Make sure the name for the configMap and secret you create <strong>match</strong> the names you used in the containers microservice's helm chart.</p>
 <p>If you do not have access to any BPM instance with this field engineer dispatching workflow, you can bypass the call to BPM by disabling such call in the container microservice component. For doing so, you can use the following container microservice's API endpoints:</p>
 <ol>
-<li>Enable BPM: <a href="#bpm">http://<container_microservice_endpoint>/bpm/enable</a></li>
-<li>Disable BPM: <a href="#bpm">http://<container_microservice_endpoint>/bpm/disable</a></li>
-<li>BPM status: <a href="#bpm">http://<container_microservice_endpoint>/bpm/status</a></li>
+<li>Enable BPM: <a href="#bpm"><code>http://&lt;container_microservice_endpoint&gt;/bpm/enable</code></a></li>
+<li>Disable BPM: <a href="#bpm"><code>http://&lt;container_microservice_endpoint&gt;/bpm/disable</code></a></li>
+<li>BPM status: <a href="#bpm"><code>http://&lt;container_microservice_endpoint&gt;/bpm/status</code></a></li>
 </ol>
 <p>where <code>&lt;container_microservice_endpoint&gt;</code> is the route, ingress or nodeport service you associated to your container microservice component at deployment time.</p>
                 
