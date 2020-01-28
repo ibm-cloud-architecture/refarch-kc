@@ -1,10 +1,11 @@
 # Container Shipment Analysis
 
-This section defines the overall steps in the methodology to analyse a specific global shipping example and derive the event driven solution. We combined some elements of the [design thinking](https://www.ibm.com/cloud/garage/content/think/practice_design_thinking/) methodology with the [event storming](https://www.ibm.com/cloud/garage/architectures/eventDrivenArchitecture/event-storming-methodology) and [domain driven design](https://www.ibm.com/cloud/garage/content/code/domain-driven-design/) to extract the following analysis of the business domain.
+This section defines the overall steps in the methodology to analyse a specific global shipping example and derive the event driven solution. We combined some elements of the [design thinking](https://www.ibm.com/cloud/garage/content/think/practice_design_thinking/) methodology with the [event storming](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/eventstorming/) and [domain driven design](https://www.ibm.com/cloud/garage/content/code/domain-driven-design/) to extract the following analysis of the business domain.
 
 ## Output from Domain Driven Design workshop
 
 From the design thinking workshop we extracted the following artifacts:
+
 * a persona list
 * the MVP hills
 
@@ -14,14 +15,14 @@ We develop personas for each of the business stakeholders to better understand t
 
 Persona name | Objectives | Challenges
 --- | --- | ---
-Retailer |Receive shipped goods on time, on date contracted with manufacturer <br>Receive assurance that temperature sensitive goods have remained with bounds| Late delivery may miss market opportunity <br> long delivery time makes market opportunitiy prediction more difficult
-Manufacturer |Good enough estimates of shipment times from Shipment Company to close sale and delivery with Retailer<br>Pickup of containers by land transporter <br> Timely delivery of container to Retailer as contracted with Shipment company <br> Able to get information on current location and state of container in transit| Contract with Shipment company will include timing estimates and penalty clauses <br> must update Retailer as sonn as schedule changes known <br> Must receive and communicate to retailer assurance on history of temperature sensitive goods  
-Shipping Company |Provide good enough estimates of shipment time to close shipment contract with Manufacturer<br>Execute shipment contracts on time profitably ( with minimal cost)|Fixed ship and itinerary schedule <br> variability in ship leg travel times and costs <br> variability in port congestion and load / unload times at dock <br> variability in Land transport timings 
-Land Transporter |Pick up and drop off containers at times and locations agreed with Shipment company |May be short notice requests <br> may actually use bids in a market to resolve at lowest cost best response etc.
-Port Dock Operator |Load and unload containers from docked ship as specified by Shipping Company with minimal time and effort <br> free up dock asset quickly to become available for next ship | Highly complex sequence of operation in Dockyard to be coordinated to minimize effort and time 
-Customs Officer|Clear containers for export and assess duty on import containers|Depends on quality of manifest and certification of origin documentation for each container from Manufacturer 
+**Retailer** |Receive shipped goods on time, on date contracted with manufacturer <br>Receive assurance that temperature sensitive goods have remained with bounds| Late delivery may miss market opportunity <br> long delivery time makes market opportunitiy prediction more difficult
+**Manufacturer** |Good enough estimates of shipment times from Shipment Company to close sale and delivery with Retailer<br>Pickup of containers by land transporter <br> Timely delivery of container to Retailer as contracted with Shipment company <br> Able to get information on current location and state of container in transit| Contract with Shipment company will include timing estimates and penalty clauses <br> must update Retailer as sonn as schedule changes known <br> Must receive and communicate to retailer assurance on history of temperature sensitive goods  
+**Shipping Company** |Provide good enough estimates of shipment time to close shipment contract with Manufacturer<br>Execute shipment contracts on time profitably ( with minimal cost)|Fixed ship and itinerary schedule <br> variability in ship leg travel times and costs <br> variability in port congestion and load / unload times at dock <br> variability in Land transport timings 
+**Land Transporter** |Pick up and drop off containers at times and locations agreed with Shipment company |May be short notice requests <br> may actually use bids in a market to resolve at lowest cost best response etc.
+**Port Dock Operator** |Load and unload containers from docked ship as specified by Shipping Company with minimal time and effort <br> free up dock asset quickly to become available for next ship | Highly complex sequence of operation in Dockyard to be coordinated to minimize effort and time 
+**Customs Officer** |Clear containers for export and assess duty on import containers|Depends on quality of manifest and certification of origin documentation for each container from Manufacturer 
 
-### MVP hills 
+### MVP hills
 
 The challenges listed in the persona table above identify a possible set of MVP hills for this end to end solution. The event storming methodology described below will lead to picking out specific subareas of the solution with most value as initial MVPs.
 
@@ -31,23 +32,23 @@ At the high level the shipment process flow is suggested and illustrated in the 
 
 ![shipment-bp1](./shipment-bp1.png)
 
-For the purposes of showing how to design a reference EDA solution we select on a simple subcase of all actual and possible variations of the global container flow. Very high level steps in this flow are as follows: 
+For the purposes of showing how to design a reference EDA solution we select on a simple subcase of all actual and possible variations of the global container flow. Very high level steps in this flow are as follows:
 
-1. Retailer and manufacturer interact to create agreement to deliver specific goods in a container from manufacturer's location to retailer's location with an expected arrival date. 
+1. Retailer and manufacturer interact to create agreement to deliver specific goods in a container from manufacturer's location to retailer's location with an expected arrival date.
 1. Manufacturer places shipping order with 'Shipping Company' to pickup container and deliver under the condition expected above.
-1. Shipping Company arranges for land transport to pick up loaded container and required documentation from Manufacturer and deliver the container to dockside at source port (adjacent to Maufacturer) for loading onto container carrier. 
+1. Shipping Company arranges for land transport to pick up loaded container and required documentation from Manufacturer and deliver the container to dockside at source port (adjacent to Maufacturer) for loading onto container carrier.
 1. Shipping company works with Customs Officer at source port to clear outbound container for export.
 1. When Container Ship is in dock at source port Shipping company arranges with Port Dock Operator to load and unload containers at this port.
 1. Loaded container ship leaves dock in source port adjacent to Manufacturer and sails to destination port.
-1. Container ship arrives at destination port (adjacent to Retailer) and queues to enter Port Docking area. 
+1. Container ship arrives at destination port (adjacent to Retailer) and queues to enter Port Docking area.
 1. Shipment company arranges with Port Docking Operator to unload specific containers needed at this port and reload additional ones for next shipping leg.
 1. Shipment company works with Import Export office at destination port to clear and collect any import duties.
 1. Shipment company works with Land Transporter at destination port to pick up container and deliver to Retailer.
 1. Container is delivered by Land Transporter to Retailer's location - transaction is complete.
 
-## Event storming analysis of the container shipping flow 
+## Event storming analysis of the container shipping flow
 
-We use the [event storming](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/methodology/readme.md) analysis to move from the high level description of a business process flow above to a specific event timeline with identified bounded contexts each of which could be a target MVP component linked through EDA architecture. 
+We use the [event storming](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/eventstorming) analysis to move from the high level description of a business process flow above to a specific event timeline with identified bounded contexts each of which could be a target MVP component linked through EDA architecture.
 
 Event storming is a rapid lightweight design process enabling the team of business owners and stake holders, architects and IT specialists to fomalize a complex solution in a clearly communicable event timeline. This step is effective in developing event-based microservices linked through an EDA architecture in one or more MVP contexts. 
 
@@ -55,11 +56,11 @@ Steps in an eight hours event storming analysis workshop of the container shippi
 
 ### Step 1: Capture the Domain Event Timeline, swim lanes and key phases
 
-(This section of the example description covers activities identified as event storming workshop steps 1,2,3 in the generic description of the [event storming method](https://www.ibm.com/cloud/garage/architectures/eventDrivenArchitecture/event-storming-methodology). 
+This section of the example description covers activities identified as event storming workshop steps 1,2,3 in the generic description of the [event storming method](hhttps://ibm-cloud-architecture.github.io/refarch-eda/methodology/eventstorming/).
 
 The initial step in event storming analysis is to capture all events, things which have happened at a point in time, and organize them into a timeline:
 
-* Each event goes on an orange "sticky note" 
+* Each event goes on an orange "sticky note"
 * Parallel or independent processes may be separated with blue horizontal swim lanes
 * Critical event indicate a new stage, or pivot, in the flow shown with vertical blue bars.
 
@@ -75,9 +76,9 @@ This section of the event time line deals with initial contracts to ship contain
 * Retailer and Manufacturer setting on an initial order for delivery of goods in a container.
 * Manufacturer placing order for shipment with Shipping Company.
 * Land transport arranged to pick up container and deliver to source port.
-* Container ship approach source port adjacent to Manufacturer's location. 
+* Container ship approach source port adjacent to Manufacturer's location.
 
-The events are organized into separate swim lanes for Manufacturer, Retailer and Ship perspectives operating in parallel. 
+The events are organized into separate swim lanes for Manufacturer, Retailer and Ship perspectives operating in parallel.
 
 Swim lanes help to clearly separate ship events as it approaches the source port from container specific events with agreements to ship etc. There is no time coupling or precise causality between events in these two swim lanes.
 
@@ -87,22 +88,20 @@ The red sticky note is a comment.
 
 #### Container shipping event timeline section 2
 
-
 ![ship-dom-evt2](./ship-dom-evt2.png)
 
-This section continues event time line development with a swim lane now focussing on loading and pickup of a specific container at the Manufacturer's location and its delivery to the source port dockside. 
+This section continues event time line development with a swim lane now focussing on loading and pickup of a specific container at the Manufacturer's location and its delivery to the source port dockside.
 
-There is a critical event (indicated by vertical blue bar) separating the "source dockside" phase of the solution. Before this critical event we are dealing with container specific activities in collecting and transporting the container from Manufacturer's location to dockside. 
-In the following dockside phase there are interactions with Customs Officer to get the container cleared for export. 
+There is a critical event (indicated by vertical blue bar) separating the "source dockside" phase of the solution. Before this critical event we are dealing with container specific activities in collecting and transporting the container from Manufacturer's location to dockside.
+In the following dockside phase there are interactions with Customs Officer to get the container cleared for export.
 
-The Manufacturer will need an empty container (refrigerated if necessary for the shipment of interest) to load the goods into. We show an event for empty container being delivered. The solution is simplified if we assume that the Manufacture has a pool of empty containers always available. Alternatively this can be analyzed fully in some more complete generalized version of the solution. 
+The Manufacturer will need an empty container (refrigerated if necessary for the shipment of interest) to load the goods into. We show an event for empty container being delivered. The solution is simplified if we assume that the Manufacture has a pool of empty containers always available. Alternatively this can be analyzed fully in some more complete generalized version of the solution.
 
-When the container arrives at source port dockside it may or may not be intime for the cutoff time required by the Customs Officer to get containers cleared for export before the scheduled departure of a particular container ship. If the cutoff deadline is missed the shipment will need to be rebooked on a later container ship and the client Manufacturer notified of expected delay in delivery. 
+When the container arrives at source port dockside it may or may not be intime for the cutoff time required by the Customs Officer to get containers cleared for export before the scheduled departure of a particular container ship. If the cutoff deadline is missed the shipment will need to be rebooked on a later container ship and the client Manufacturer notified of expected delay in delivery.
 
-#### Container shipping event timeline section 3 
+#### Container shipping event timeline section 3
 
 ![ship-dom-evt3](./ship-dom-evt3.png)
-
 
 This section continues the event timelines with swim lanes relating to a specific container shipment and also to the movement of a ship potentially carrying hundreds of containers.
 
@@ -114,12 +113,12 @@ It introduces two new critical events:
       * If additional time is required for the clearance process, the original booking and expected delivery date may need to be modified. 
       * If export clearance is denied, then shipmen is cancelled and requesting parties notified.
 
-1. Ship enters dock ready to start unloading and loading is a new critical event: 
-      * Previous ship events in Event Timeline section 1 dealt with ship "booking" a load/unload timeslot at a dock in the source port.   
-      * Also getting  national authority or Customs clearance to enter that jurisdiction.    
-      * Now on arrival at the source port anchorage area, the ship requests permission to moor at an available dock facility.   
-      * The critical event when a ship is cleared and moored at a dock hence ready to start unloading and loading containers is the start of the next event phase - container loading (and unloading).   
+1. Ship enters dock ready to start unloading and loading is a new critical event:
 
+      * Previous ship events in Event Timeline section 1 dealt with ship "booking" a load/unload timeslot at a dock in the source port.
+      * Also getting  national authority or Customs clearance to enter that jurisdiction.
+      * Now on arrival at the source port anchorage area, the ship requests permission to moor at an available dock facility.
+      * The critical event when a ship is cleared and moored at a dock hence ready to start unloading and loading containers is the start of the next event phase - container loading (and unloading).
 
 #### Container shipping event timeline section 4
 

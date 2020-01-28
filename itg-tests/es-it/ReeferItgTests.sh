@@ -13,7 +13,7 @@ MAIN_DIR=`echo ${SCRIPTPATH} | sed 's/\(.*refarch-kc\).*/\1/g'`
 SETENV="${MAIN_DIR}/scripts/setenv.sh"
 
 # Get what option the user wants to launch
-if [[ "$1" != "LOCAL" && "$1" != "OCP" || $# -eq 0 ]];then
+if [[ "$1" != "LOCAL" && "$1" != "OCP" && "$1" != "IBMCLOUD" || $# -eq 0 ]];then
     echo -e "\e[31m [ERROR] - Specify which environment to run the integration test against: E2EHappyPath.sh [ LOCAL | OCP ]\e[0m"
     exit 1
 else
