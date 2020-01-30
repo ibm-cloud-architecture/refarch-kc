@@ -279,8 +279,8 @@ In order for the containers microservice to fire the BPM workflow, we need to pr
 
 If you do not have access to any BPM instance with this field engineer dispatching workflow, you can bypass the call to BPM by disabling such call in the container microservice component. For doing so, you can use the following container microservice's API endpoints:
 
-1. Enable BPM: [http://<container_microservice_endpoint>/bpm/enable](#bpm)
-2. Disable BPM: [http://<container_microservice_endpoint>/bpm/disable](#bpm)
-3. BPM status: [http://<container_microservice_endpoint>/bpm/status](#bpm)
+1. Enable BPM: [`http://<container_microservice_endpoint>/bpm/enable`](#bpm)
+2. Disable BPM: [`http://<container_microservice_endpoint>/bpm/disable`](#bpm)
+3. BPM status: [`http://<container_microservice_endpoint>/bpm/status`](#bpm)
 
 where `<container_microservice_endpoint>` is the route, ingress or nodeport service you associated to your container microservice component at deployment time.
