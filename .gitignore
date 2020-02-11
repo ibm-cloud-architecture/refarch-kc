@@ -10,5 +10,7 @@ itg-tests/**/*.pem
 itg-tests/kafka/__pycache__
 postgres-data/
 docker/*.logs
+docker/kafka-connect/worker-standalone-ies.properties
+docker/kafka-connect/access_log.txt
 *.pyc
 .DS_Store

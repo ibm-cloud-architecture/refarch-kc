@@ -2,7 +2,7 @@
 version: '3'
 services:
     zookeeper1:
-        image: bitnami/zookeeper
+        image: bitnami/zookeeper:3
         hostname: zookeeper1
         ports:
             - "2181:2181"
@@ -15,7 +15,7 @@ services:
             - ./zookeeper1/data:/data
             - ./zookeeper1/datalog:/datalog
     kafka1:
-        image: bitnami/kafka
+        image: bitnami/kafka:2
         hostname: kafka1
         ports:
             - "9092:9092"
@@ -28,7 +28,7 @@ services:
             - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
         volumes:
             - ./kafka1/data:/var/lib/kafka/data
-            - /var/run/docker.sock:/var/run/docker.sock
+            - /var/run/docker.sock:/var/run/docker.sock            
         depends_on:
             - zookeeper1
     postgresql1:
@@ -41,3 +41,7 @@ services:
             - ./postgres-data:/var/lib/postgresql/data
         environment:
             - POSTGRES_PASSWORD=supersecret
+networks:
+    default:
+        external:
+            name: kafkanet
