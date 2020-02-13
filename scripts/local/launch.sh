@@ -19,16 +19,16 @@ fi
 
 # Get what option the user wants to launch
 if [[ $# -eq 0 ]];then
-    echo -e "\e[31m [ERROR] - Specify which option to launch: launch.sh [ BACKEND | SOLUTION | ITGTESTS ]\e[0m"
+    echo -e "\e[31m [ERROR] - Specify which option to launch: launch.sh [ BACKEND | SOLUTION | ITGTESTS | TELEMETRY ]\e[0m"
     exit 1
 else
     # Read the option to launch
     toLaunch=$1
 
     # Validate the option to launch
-    if [[ "${toLaunch}" != "BACKEND" ]] && [[ "${toLaunch}" != "SOLUTION" ]] && [[ "${toLaunch}" != "DEV" ]]
+    if [[ "${toLaunch}" != "BACKEND" ]] && [[ "${toLaunch}" != "SOLUTION" ]] && [[ "${toLaunch}" != "DEV" ]] && [[ "${toLaunch}" != "TELEMETRY" ]]
     then
-        echo -e "\e[31m [ERROR] - Specify an appropriate option to launch: launch.sh [ BACKEND | SOLUTION | DEV ]\e[0m"
+        echo -e "\e[31m [ERROR] - Specify an appropriate option to launch: launch.sh [ BACKEND | SOLUTION | DEV | TELEMETRY ]\e[0m"
         exit 1
     fi
 
@@ -153,8 +153,69 @@ else
         docker-compose -f ${MAIN_DIR}/docker/kc-development-compose.yml up -d
         echo -e "\e[32m@@@ all itgtest components are running\e[39m"
         ;;
+    TELEMETRY)
+        # Launch anomaly detection from telemetries use case's components
+        echo "This is the path for appsody binaries: "
+        which appsody
+        if [ $? -eq 1 ]; then
+            echo -e "\e[31m [ERROR] - Appsody binaries could not be found. Please, install appsody first.\e[0m" 
+            exit 1
+        fi
+        echo -e " \e[32m@@@ Start anomaly detection components\e[39m"
+        MICROSERVICES="kcontainer-spring-container-ms
+            kcontainer-reefer-ml"
+        # Check if we already have the docker images built
+        for microservice in ${MICROSERVICES}
+        do
+            case ${microservice} in
+            kcontainer-spring-container-ms)
+                echo -e "Building the ${microservice}:test docker image..."
+                if [ ! -d "${MAIN_DIR}/../refarch-kc-container-ms" ]; then
+                    echo -e "\e[31m[ERROR] - The repository ${MAIN_DIR}/../refarch-kc-container-ms for ${microservice} does not exist.\e[0m"
+                    echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
+                    exit 1
+                fi
+                docker build -f ${MAIN_DIR}/../refarch-kc-container-ms/SpringContainerMS/Dockerfile-local -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-container-ms/SpringContainerMS/
+                echo -e "Done"
+                ;;
+            kcontainer-reefer-ml)
+                echo -e "Building the ${microservice}-scoringmp:test docker image..."
+                if [ ! -d "${MAIN_DIR}/../refarch-reefer-ml" ]; then
+                    echo -e "\e[31m[ERROR] - The repository ${MAIN_DIR}/../refarch-reefer-ml for ${microservice} does not exist.\e[0m"
+                    echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
+                    exit 1
+                fi
+                docker build -f ${MAIN_DIR}/../refarch-reefer-ml/scoring-mp/Dockerfile.multistage -t ibmcase/${microservice}-scoringmp:test ${MAIN_DIR}/../refarch-reefer-ml/scoring-mp/
+                echo -e "Done"
+
+                echo -e "Building the ${microservice}-flask-simulator:test docker image..."
+                if [ ! -d "${MAIN_DIR}/../refarch-reefer-ml" ]; then
+                    echo -e "\e[31m[ERROR] - The repository ${MAIN_DIR}/../refarch-reefer-ml for ${microservice} does not exist.\e[0m"
+                    echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
+                    exit 1
+                fi
+                pushd ${MAIN_DIR}/../refarch-reefer-ml/simulator
+                appsody build -t ibmcase/${microservice}-flask-simulator:test
+                popd
+                echo -e "Done"
+                ;;
+            *)
+                echo -e "\e[31m[ERROR] - ${microservice} is incorrect.\e[0m"
+                exit 1
+                ;;
+            esac
+        done
+
+        echo -e "\e[32m@@@ Start all anomaly detection microservices\e[39m"
+        # Launching the solution components in detached mode so that the output is cleaner
+        # To see the logs execute either:
+        # 1. docker-compose -f ${MAIN_DIR}/docker/kc-solution-compose.yml logs
+        # 2. docker logs <docker_container_id>
+        docker-compose -f ${MAIN_DIR}/docker/kc-development-compose-anomaly.yml up -d
+        echo -e "\e[32m@@@ all anomaly detection components are running\e[39m"
+        ;;
     *)
-        echo -e "\e[31m [ERROR] - Specify an appropriate option to launch: launch.sh [ BACKEND | SOLUTION | DEV ]\e[0m"
+        echo -e "\e[31m [ERROR] - Specify an appropriate option to launch: launch.sh [ BACKEND | SOLUTION | DEV | TELEMETRY ]\e[0m"
         exit 1
         ;;
     esac

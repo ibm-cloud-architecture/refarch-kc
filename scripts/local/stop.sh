@@ -19,9 +19,9 @@ else
     toStop=$1
     
     # Validate the option to stop
-    if [[ "${toStop}" != "BACKEND" ]] && [[ "${toStop}" != "SOLUTION" ]] && [[ "${toStop}" != "DEV" ]]
+    if [[ "${toStop}" != "BACKEND" ]] && [[ "${toStop}" != "SOLUTION" ]] && [[ "${toStop}" != "DEV" ]] && [[ "${toStop}" != "TELEMETRY" ]]
     then
-        echo -e "\e[31m [ERROR] - Specify an appropriate option to stop: stop.sh [ BACKEND | SOLUTION | DEV ]\e[0m"
+        echo -e "\e[31m [ERROR] - Specify an appropriate option to stop: stop.sh [ BACKEND | SOLUTION | DEV | TELEMETRY ]\e[0m"
         exit 1
     fi
 
@@ -40,12 +40,17 @@ else
         docker-compose -f ${MAIN_DIR}/docker/kc-solution-compose.yml down
         ;;
     DEV)
-        # Stop itgtests components
-        echo -e " \e[32m@@@ Stop itgtests components\e[39m"
+        # Stop development components
+        echo -e " \e[32m@@@ Stop development components\e[39m"
         docker-compose -f ${MAIN_DIR}/docker/kc-development-compose.yml down
         ;;
+    TELEMETRY)
+        # Stop anomaly detection components
+        echo -e " \e[32m@@@ Stop anomaly detection components\e[39m"
+        docker-compose -f ${MAIN_DIR}/docker/kc-development-compose-anomaly.yml down
+        ;;
     *)
-        echo -e "\e[31m [ERROR] - Specify an appropriate option to stop: stop.sh [ BACKEND | SOLUTION | DEV ]\e[0m"
+        echo -e "\e[31m [ERROR] - Specify an appropriate option to stop: stop.sh [ BACKEND | SOLUTION | DEV | TELEMETRY ]\e[0m"
         exit 1
         ;;
     esac

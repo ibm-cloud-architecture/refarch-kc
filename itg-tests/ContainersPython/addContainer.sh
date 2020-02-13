@@ -43,7 +43,8 @@ source ${MAIN_DIR}/scripts/setenv.sh $kcenv
 
 if [ "OCP" == "${kcenv}" ]; then
     add_cert_to_container_command=" -e PEM_CERT=/certs/${PEM_FILE} -v ${CA_LOCATION}:/certs"
-else 
+fi
+if [ "LOCAL" == "${kcenv}" ]; then
     attach_to_network="--network=docker_default"
 fi
 
