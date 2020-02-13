@@ -19,7 +19,7 @@ fi
 
 # Get what option the user wants to launch
 if [[ $# -eq 0 ]];then
-    echo -e "\e[31m [ERROR] - Specify which option to launch: launch.sh [ BACKEND | SOLUTION | ITGTESTS | TELEMTRY ]\e[0m"
+    echo -e "\e[31m [ERROR] - Specify which option to launch: launch.sh [ BACKEND | SOLUTION | ITGTESTS | TELEMETRY ]\e[0m"
     exit 1
 else
     # Read the option to launch
