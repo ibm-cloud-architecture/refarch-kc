@@ -27,6 +27,33 @@ kubectl create configmap kafka-brokers --from-literal=brokers='<replace with com
 kubectl describe configmap kafka-brokers -n <target k8s namespace / ocp project>
 ```
 
+#### Event Streams Kafka Topics
+
+Regardless of specific deployment targets (OCP, IKS, k8s), the following prerequisite Kubernetes ConfigMap needs to be created to support the deployments of the application's microservices.  These artifacts need to be created once per unique deployment of the entire application and can be shared between application components in the same overall application deployment.  The values of each individual topic name set as a value in this ConfigMap will be used by all microservices to communicate via Kafka.
+
+You can _(and should)_ customize the values _(right-hand side)_ of each of the lines in the `data` section below to ensure your topics are only being published to by the correct deployments of microservices. Do not edit the keys _(left-hand side)_ of the any of the lines in the `data` section below, or else your microservice components will fail to start.
+
+```shell
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-topics
+data:
+  allocatedOrdersTopic: allocated-orders
+  bluewaterContainerTopic: bluewaterContainer
+  bluewaterProblemTopic: bluewaterProblem
+  bluewaterShipTopic: bluewaterShip
+  containersTopic: containers
+  errorsTopic: errors
+  orderCommandTopics: orderCommands
+  ordersTopic: orders
+  reeferTelemetryTopic: reeferTelemetry
+  rejectedOrdersTopic: rejectedOrders
+EOF
+```
+
+
 #### Event Streams API Key
 
 The Event Streams Broker API Key is needed to connect any deployed consumers or producers to the service in IBM Cloud. To avoid sharing security keys, create a Kubernetes Secret in the target cluster you will deploy the application microservices to.  This is available from the Service Credentials information you just created above.
@@ -51,6 +78,32 @@ Regardless of specific deployment targets (OCP, IKS, k8s), the following prerequ
 ```shell
 kubectl create configmap kafka-brokers --from-literal=brokers='<replace with comma-separated list of brokers>' -n <target k8s namespace / ocp project>
 kubectl describe configmap kafka-brokers -n <target k8s namespace / ocp project>
+```
+
+#### Event Streams Kafka Topics
+
+Regardless of specific deployment targets (OCP, IKS, k8s), the following prerequisite Kubernetes ConfigMap needs to be created to support the deployments of the application's microservices.  These artifacts need to be created once per unique deployment of the entire application and can be shared between application components in the same overall application deployment.  The values of each individual topic name set as a value in this ConfigMap will be used by all microservices to communicate via Kafka.
+
+You can _(and should)_ customize the values _(right-hand side)_ of each of the lines in the `data` section below to ensure your topics are only being published to by the correct deployments of microservices. Do not edit the keys _(left-hand side)_ of the any of the lines in the `data` section below, or else your microservice components will fail to start.
+
+```shell
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-topics
+data:
+  allocatedOrdersTopic: allocated-orders
+  bluewaterContainerTopic: bluewaterContainer
+  bluewaterProblemTopic: bluewaterProblem
+  bluewaterShipTopic: bluewaterShip
+  containersTopic: containers
+  errorsTopic: errors
+  orderCommandTopics: orderCommands
+  ordersTopic: orders
+  reeferTelemetryTopic: reeferTelemetry
+  rejectedOrdersTopic: rejectedOrders
+EOF
 ```
 
 #### Event Streams API Key
@@ -110,13 +163,39 @@ helm template kafka --set persistence.enabled=false --set securityContext.enable
 ```
 It will take a few minutes to get the pods ready.
 
-### Kafka Brokers
+#### Kafka Brokers
 
 Regardless of specific deployment targets (OCP, IKS, k8s), the following prerequisite Kubernetes ConfigMap needs to be created to support the deployments of the application's microservices.  These artifacts need to be created once per unique deployment of the entire application and can be shared between application components in the same overall application deployment.
 
 ```shell
 kubectl create configmap kafka-brokers --from-literal=brokers='<replace with comma-separated list of brokers>' -n <target k8s namespace / ocp project>
 kubectl describe configmap kafka-brokers -n <target k8s namespace / ocp project>
+```
+
+#### Kafka Topics
+
+Regardless of specific deployment targets (OCP, IKS, k8s), the following prerequisite Kubernetes ConfigMap needs to be created to support the deployments of the application's microservices.  These artifacts need to be created once per unique deployment of the entire application and can be shared between application components in the same overall application deployment.  The values of each individual topic name set as a value in this ConfigMap will be used by all microservices to communicate via Kafka.
+
+You can _(and should)_ customize the values _(right-hand side)_ of each of the lines in the `data` section below to ensure your topics are only being published to by the correct deployments of microservices. Do not edit the keys _(left-hand side)_ of the any of the lines in the `data` section below, or else your microservice components will fail to start.
+
+```shell
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-topics
+data:
+  allocatedOrdersTopic: allocated-orders
+  bluewaterContainerTopic: bluewaterContainer
+  bluewaterProblemTopic: bluewaterProblem
+  bluewaterShipTopic: bluewaterShip
+  containersTopic: containers
+  errorsTopic: errors
+  orderCommandTopics: orderCommands
+  ordersTopic: orders
+  reeferTelemetryTopic: reeferTelemetry
+  rejectedOrdersTopic: rejectedOrders
+EOF
 ```
 
 ---
