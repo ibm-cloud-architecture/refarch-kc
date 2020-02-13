@@ -91,6 +91,17 @@ case "$kcenv" in
         export LOGGING_CONTAINER_MS_ROOT="INFO"
         export LOGGING_CONTAINER_MS_CONSUMER_CONFIG="ERROR"
         export LOGGING_CONTAINER_MS_PRODUCER_CONFIG="ERROR"
+        # Mockup the call to the anomaly detection prediction service
+        export MOCKUP="yes"
+        # Url composition for the anomaly detection prediction service
+        export CP4D_BASE_URL=""
+        export CP4D_PREDICTION_URL=""
+        # Credentials for the anomaly detection prediction service
+        export CP4D_USER=""
+        export CP4D_PWD=""
+        # Topics the anomaly scoring will read and produce messages from and to.
+        export TELEMETRY_TOPIC="reeferTelemetry"
+        export CONTAINERS_TOPIC="containers"
 
    ;;
    MINIKUBE)
