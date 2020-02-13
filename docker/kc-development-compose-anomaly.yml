@@ -1,0 +1,49 @@
+# This yaml file starts the microservices for the reefer anomaly detection use case
+# These microservices are meant to run with a local backbone as no SSL or certificates are expected
+
+version: '3'
+services:
+    simulator:
+        image: ibmcase/kcontainer-reefer-ml-flask-simulator:test
+        hostname: fleetms
+        ports:
+            - "8080:8080"
+        environment:
+            KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka1:9092}
+            TELEMETRY_TOPIC: ${TELEMETRY_TOPIC:-reeferTelemetry}
+            CONTAINER_TOPIC: ${CONTAINER_TOPIC:-containers}
+    springcontainerms:
+        image: ibmcase/kcontainer-spring-container-ms:test
+        hostname: springcontainerms
+        ports:
+            - "12081:8080"
+        environment:
+            BPM_ANOMALY: ${BPM_ANOMALY:-https://postman-echo.com/status/404}
+            BPM_ANOMALY_LOGIN: ${BPM_ANOMALY_LOGIN:-https://postman-echo.com/status/404}
+            BPM_ANOMALY_USER: ${BPM_ANOMALY_USER:-user}
+            BPM_ANOMALY_PASSWORD: ${BPM_ANOMALY_PASSWORD:-password}
+            KAFKA_APIKEY: ${KAFKA_APIKEY}
+            KAFKA_ENV: ${KAFKA_ENV:-LOCAL}
+            KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka1:9092}
+            POSTGRESQL_URL: ${POSTGRESQL_URL:-jdbc:postgresql://postgresql1:5432/postgres}
+            POSTGRESQL_USER: ${POSTGRESQL_USER:-postgres}
+            POSTGRESQL_PWD: ${POSTGRESQL_PWD:-supersecret}
+            POSTGRESQL_CA_PEM: ${POSTGRESQL_CA_PEM}
+            LOGGING_CONTAINER_MS_ROOT: ${LOGGING_CONTAINER_MS_ROOT:-INFO}
+            LOGGING_CONTAINER_MS_CONSUMER_CONFIG: ${LOGGING_CONTAINER_MS_CONSUMER_CONFIG:-ERROR}
+            LOGGING_CONTAINER_MS_PRODUCER_CONFIG: ${LOGGING_CONTAINER_MS_PRODUCER_CONFIG:-ERROR}
+    scoringmp:
+        image: ibmcase/kcontainer-reefer-ml-scoringmp:test
+        hostname: scoringmp
+        ports:
+            - "22080:9080"
+            - "22443:9443"
+        environment:
+            MOCKUP: ${MOCKUP:-no}
+            CP4D_BASE_URL: ${CP4D_BASE_URL:-wrongBaseUrl}
+            CP4D_PREDICTION_URL: ${CP4D_PREDICTION_URL:-wrongPredictionUrl}
+            CP4D_USER: ${CP4D_USER:-wrongUser}
+            CP4D_PWD: ${CP4D_PWD:-wrongPassword}
+            MP_MESSAGING_INCOMING_REEFERTELEMETRY_TOPIC: ${TELEMETRY_TOPIC:-reeferTelemetry}
+            MP_MESSAGING_OUTGOING_CONTAINERS_TOPIC: ${CONTAINERS_TOPIC:-containers}
+            MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BROKERS:-kafka1:9092}
