@@ -46,7 +46,7 @@ data:
   bluewaterShipTopic: bluewaterShip
   containersTopic: containers
   errorsTopic: errors
-  orderCommandTopics: orderCommands
+  orderCommandsTopic: orderCommands
   ordersTopic: orders
   reeferTelemetryTopic: reeferTelemetry
   rejectedOrdersTopic: rejectedOrders
