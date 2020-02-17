@@ -80,7 +80,7 @@ CONTAINER_ID=str(random.randrange(10000))
 #####################
 ##### UNIT TEST #####
 #####################
-class E2EHappyPath(unittest.TestCase):
+class SagaNoVoyage(unittest.TestCase):
 
     def test1_createContainer(self):
         print('-------------------------------')
@@ -601,6 +601,15 @@ class E2EHappyPath(unittest.TestCase):
         self.assertEqual(sorted(expected_empty_container.items()),sorted(api_container.items()))
         print("Done\n")
 
+    def test8_exportValues(self):
+        print('---------------------')
+        print('--- Export values ---')
+        print('---------------------\n')
+        print('File where values will be exported to: /tmp/SagaNoVoyage.properties')
+        f = open("/tmp/SagaNoVoyage.properties", "w")
+        print("SagaNoVoyage_CONTAINER_ID=" + CONTAINER_ID +"\n")
+        f.write("export SagaNoVoyage_CONTAINER_ID=" + CONTAINER_ID +"\n")
+        f.close()
 
 ################
 ##### MAIN #####
