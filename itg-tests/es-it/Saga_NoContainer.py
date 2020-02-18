@@ -80,7 +80,7 @@ CONTAINER_ID=str(random.randrange(10000))
 #####################
 ##### UNIT TEST #####
 #####################
-class E2EHappyPath(unittest.TestCase):
+class SagaNoContainer(unittest.TestCase):
 
     def test1_createOrder(self):
         print('-----------------------------')
