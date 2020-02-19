@@ -36,7 +36,7 @@ For the purposes of showing how to design a reference EDA solution we select on 
 
 1. Retailer and manufacturer interact to create agreement to deliver specific goods in a container from manufacturer's location to retailer's location with an expected arrival date.
 1. Manufacturer places shipping order with 'Shipping Company' to pickup container and deliver under the condition expected above.
-1. Shipping Company arranges for land transport to pick up loaded container and required documentation from Manufacturer and deliver the container to dockside at source port (adjacent to Maufacturer) for loading onto container carrier.
+1. Shipping Company arranges for land transport to pick up loaded container and required documentation from Manufacturer and deliver the container to dockside at source port (adjacent to Manufacturer) for loading onto container vessel.
 1. Shipping company works with Customs Officer at source port to clear outbound container for export.
 1. When Container Ship is in dock at source port Shipping company arranges with Port Dock Operator to load and unload containers at this port.
 1. Loaded container ship leaves dock in source port adjacent to Manufacturer and sails to destination port.
