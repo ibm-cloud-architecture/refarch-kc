@@ -1,0 +1,24 @@
+{
+  "containerID":"",
+  "customerID":"FishFarm",
+  "destinationAddress": {
+    "city":"Oakland",
+    "country":"USA",
+    "state":"CA",
+    "street":"100 Main street",
+    "zipcode":"95053"
+  },
+  "expectedDeliveryDate":"2019-03-31T13:30Z",
+  "orderID":"",
+  "pickupAddress":{"city":"Shanghai",
+    "country":"China",
+    "state":"NE",
+    "street":"1 a new street",
+    "zipcode":"090"
+  },
+  "pickupDate":"2019-01-25T13:30Z",
+  "productID":"Fish",
+  "quantity":100,
+  "status":"rejected",
+  "voyageID":"101"
+}

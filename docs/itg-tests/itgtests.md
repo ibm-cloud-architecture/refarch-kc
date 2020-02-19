@@ -6,6 +6,7 @@ So far we have the following integration test cases:
 
 - [Happy path](happy-path/happy_path.md) - End to end happy path test.
 - [SAGA pattern](saga/saga.md) - SAGA pattern for new order creation test.
+- [Order Rejection](order-rejected/order-rejected.md) - Order Rejection test.
 - [Container Anomaly](containerAnomaly/containerAnomaly.md) - Container anomaly and maintenance test.
 
 New integration test cases will be added in order to test other parts of the application as well as use cases and other Event Driven Patterns.
