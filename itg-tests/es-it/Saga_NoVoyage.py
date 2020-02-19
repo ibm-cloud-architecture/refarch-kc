@@ -77,10 +77,54 @@ except KeyError:
 ORDER_ID=""
 CONTAINER_ID=str(random.randrange(10000))
 
+number_of_tests = 0
+number_of_test_failed = 0
+results_file=None
+
 #####################
 ##### UNIT TEST #####
 #####################
 class SagaNoVoyage(unittest.TestCase):
+
+    ########################################## Reporting ############################################
+    @classmethod
+    def setUpClass(cls):
+        global results_file
+        results_file = open("/tmp/results.txt","a")
+        results_file.write('TEST CASE - ' + cls.__name__ + '\n')
+        results_file.write('-----------------------------------\n')
+    
+    def setUp(self):
+        global number_of_tests 
+        number_of_tests += 1
+        results_file.write(self.id().split('.')[2])
+
+    def tearDown(self):
+        global number_of_test_failed
+        result = self.defaultTestResult()
+        self._feedErrorsToResult(result, self._outcome.errors)
+        error = self.list2reason(result.errors)
+        failure = self.list2reason(result.failures)
+        ok = not error and not failure
+        if not ok:
+            results_file.write('...FAILED\n')
+            number_of_test_failed += 1
+        else:
+            results_file.write('...OK\n')
+
+    @classmethod
+    def tearDownClass(cls):
+        global results_file
+        results_file.write('-----------------------------------\n')
+        results_file.write('PASSED: ' + str(number_of_tests) + '\n')
+        results_file.write('FAILED: ' + str(number_of_test_failed) + '\n\n')
+        results_file.close()
+
+    def list2reason(self, exc_list):
+        if exc_list and exc_list[-1][0] is self:
+            return exc_list[-1][1]
+
+    #################################################################################################
 
     def test1_createContainer(self):
         print('-------------------------------')
