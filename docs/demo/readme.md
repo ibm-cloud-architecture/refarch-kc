@@ -95,7 +95,7 @@ or at the `orders` topic:
 
 ## Step3: Simulate the ship in blue water
 
-From the home page goes to the `Simulate the bluewater` tile, then in the main page select one of the available fleet. Only the North Pacific has data as of now:
+From the home page, select the `Simulate the bluewater` tile. In the main page, select one of the available fleet. As of now, only the North Pacific has data:
 
 ![](kc-fleet-select.png)  
 
@@ -107,11 +107,11 @@ Selecting one boat with the edit button, goes to the boat detail view:
 
 ![](kc-ship-detail.png)  
 
-You can start the simulation on the ship movement by seleting one of the three pre-defined scenarios:
+You can start a simulation on the ship movement by selecting one of three pre-defined scenarios:
 
-* Fire some containers
-* One reefer down
-* Or boat going thru a heat waves
+* Fire affecting some containers
+* Reefer down
+* Boat experiencing a heat wave
 
 ![](kc-ship-scenarios.png)  
 
