@@ -44,7 +44,7 @@ Selecting one order using the `Arrow` icon, allow the user to view the order det
 
 As illustrated in the CQRS diagram:
 
-<img src="https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/cqrs-es-api.png" width="500px">
+<img src="https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/design-patterns/images/cqrs-es-api.png" width="500px">
 
 the creation of the order goes to the [order command microservice](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/tree/master/order-command-ms) which publishes a `OrderCreated` event to the `orders` topic and then consumes it to persist the data to its database. See [source code here](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/6de424c443c05262ae013620f5f11b4a1b2e6f90/order-command-ms/src/main/java/ibm/labs/kc/order/command/service/OrderCRUDService.java#L51-L74)
 
