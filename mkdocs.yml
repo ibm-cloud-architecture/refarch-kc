@@ -1,5 +1,8 @@
 site_name: Container Shipment EDA reference implementation
 repo_url: https://github.com/ibm-cloud-architecture/refarch-kc
+google_analytics:
+  - 'UA-149377589-3'
+  - 'auto'
 nav:
   - Introduction: index.md
   - Business problem statement:
