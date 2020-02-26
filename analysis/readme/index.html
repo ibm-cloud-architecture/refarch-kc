@@ -61,6 +61,31 @@
     
     
       
+        
+<script>
+  window.ga = window.ga || function() {
+    (ga.q = ga.q || []).push(arguments)
+  }
+  ga.l = +new Date
+  /* Setup integration and send page view */
+  ga("create", "UA-149377589-3", "auto")
+  ga("set", "anonymizeIp", true)
+  ga("send", "pageview")
+  /* Register handler to log search on blur */
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.forms.search) {
+      var query = document.forms.search.query
+      query.addEventListener("blur", function() {
+        if (this.value) {
+          var path = document.location.pathname;
+          ga("send", "pageview", path + "?q=" + this.value)
+        }
+      })
+    }
+  })
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+      
     
     
   </head>
@@ -1034,7 +1059,7 @@
 <ol>
 <li>Retailer and manufacturer interact to create agreement to deliver specific goods in a container from manufacturer's location to retailer's location with an expected arrival date.</li>
 <li>Manufacturer places shipping order with 'Shipping Company' to pickup container and deliver under the condition expected above.</li>
-<li>Shipping Company arranges for land transport to pick up loaded container and required documentation from Manufacturer and deliver the container to dockside at source port (adjacent to Maufacturer) for loading onto container carrier.</li>
+<li>Shipping Company arranges for land transport to pick up loaded container and required documentation from Manufacturer and deliver the container to dockside at source port (adjacent to Manufacturer) for loading onto container vessel.</li>
 <li>Shipping company works with Customs Officer at source port to clear outbound container for export.</li>
 <li>When Container Ship is in dock at source port Shipping company arranges with Port Dock Operator to load and unload containers at this port.</li>
 <li>Loaded container ship leaves dock in source port adjacent to Manufacturer and sails to destination port.</li>

@@ -61,6 +61,31 @@
     
     
       
+        
+<script>
+  window.ga = window.ga || function() {
+    (ga.q = ga.q || []).push(arguments)
+  }
+  ga.l = +new Date
+  /* Setup integration and send page view */
+  ga("create", "UA-149377589-3", "auto")
+  ga("set", "anonymizeIp", true)
+  ga("send", "pageview")
+  /* Register handler to log search on blur */
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.forms.search) {
+      var query = document.forms.search.query
+      query.addEventListener("blur", function() {
+        if (this.value) {
+          var path = document.location.pathname;
+          ga("send", "pageview", path + "?q=" + this.value)
+        }
+      })
+    }
+  })
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+      
     
     
   </head>
@@ -680,6 +705,7 @@
 <ul>
 <li><a href="../happy-path/happy_path/">Happy path</a> - End to end happy path test.</li>
 <li><a href="../saga/saga/">SAGA pattern</a> - SAGA pattern for new order creation test.</li>
+<li><a href="order-rejected/order-rejected.md">Order Rejection</a> - Order Rejection test.</li>
 <li><a href="../containerAnomaly/containerAnomaly/">Container Anomaly</a> - Container anomaly and maintenance test.</li>
 </ul>
 <p>New integration test cases will be added in order to test other parts of the application as well as use cases and other Event Driven Patterns.</p>

@@ -61,6 +61,31 @@
     
     
       
+        
+<script>
+  window.ga = window.ga || function() {
+    (ga.q = ga.q || []).push(arguments)
+  }
+  ga.l = +new Date
+  /* Setup integration and send page view */
+  ga("create", "UA-149377589-3", "auto")
+  ga("set", "anonymizeIp", true)
+  ga("send", "pageview")
+  /* Register handler to log search on blur */
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.forms.search) {
+      var query = document.forms.search.query
+      query.addEventListener("blur", function() {
+        if (this.value) {
+          var path = document.location.pathname;
+          ga("send", "pageview", path + "?q=" + this.value)
+        }
+      })
+    }
+  })
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+      
     
     
   </head>
@@ -751,7 +776,7 @@
 <li>A project manager, you may understand all the artifacts to develop in an EDA solution, and we may help in the future to do project estimation.</li>
 </ul>
 <h2 id="business-process-statement">Business process statement</h2>
-<p>In <a href="introduction/">this first chapter</a> we are presenting the business process for shipping fresh good over sees and we are detailing the analysis we have done in San Francisco in November 2108 using the event storming analysis workshop. You could read more on how to organize and execute such workshop <a href="https://ibm-cloud-architecture.github.io/refarch-eda/methodology/readme/">here</a>. The workshop execution transcript is detailed in <a href="analysis/readme/">a second chapter</a>.</p>
+<p>In <a href="introduction/">this first chapter</a> we are presenting the business process for shipping fresh good over sees and we are detailing the analysis we have done in San Francisco in November 2018 using the event storming analysis workshop. You could read more on how to organize and execute such workshop <a href="https://ibm-cloud-architecture.github.io/refarch-eda/methodology/readme/">here</a>. The workshop execution transcript is detailed in <a href="analysis/readme/">a second chapter</a>.</p>
 <h2 id="design-considerations">Design considerations</h2>
 <p>In the <a href="design/readme/">third chapter</a> we are detailing how to transform the analysis outcomes into some light design, conceptual view, just enough to start coding some microservices.</p>
 <h2 id="architecture">Architecture</h2>

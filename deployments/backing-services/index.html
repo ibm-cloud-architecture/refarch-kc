@@ -61,6 +61,31 @@
     
     
       
+        
+<script>
+  window.ga = window.ga || function() {
+    (ga.q = ga.q || []).push(arguments)
+  }
+  ga.l = +new Date
+  /* Setup integration and send page view */
+  ga("create", "UA-149377589-3", "auto")
+  ga("set", "anonymizeIp", true)
+  ga("send", "pageview")
+  /* Register handler to log search on blur */
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.forms.search) {
+      var query = document.forms.search.query
+      query.addEventListener("blur", function() {
+        if (this.value) {
+          var path = document.location.pathname;
+          ga("send", "pageview", path + "?q=" + this.value)
+        }
+      })
+    }
+  })
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+      
     
     
   </head>
@@ -1101,7 +1126,7 @@ kubectl describe configmap kafka-brokers -n &lt;target k8s namespace / ocp proje
 <span class="s">  bluewaterShipTopic: bluewaterShip</span>
 <span class="s">  containersTopic: containers</span>
 <span class="s">  errorsTopic: errors</span>
-<span class="s">  orderCommandTopics: orderCommands</span>
+<span class="s">  orderCommandsTopic: orderCommands</span>
 <span class="s">  ordersTopic: orders</span>
 <span class="s">  reeferTelemetryTopic: reeferTelemetry</span>
 <span class="s">  rejectedOrdersTopic: rejectedOrders</span>

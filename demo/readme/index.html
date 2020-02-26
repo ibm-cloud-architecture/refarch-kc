@@ -61,6 +61,31 @@
     
     
       
+        
+<script>
+  window.ga = window.ga || function() {
+    (ga.q = ga.q || []).push(arguments)
+  }
+  ga.l = +new Date
+  /* Setup integration and send page view */
+  ga("create", "UA-149377589-3", "auto")
+  ga("set", "anonymizeIp", true)
+  ga("send", "pageview")
+  /* Register handler to log search on blur */
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.forms.search) {
+      var query = document.forms.search.query
+      query.addEventListener("blur", function() {
+        if (this.value) {
+          var path = document.location.pathname;
+          ga("send", "pageview", path + "?q=" + this.value)
+        }
+      })
+    }
+  })
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+      
     
     
   </head>
@@ -690,7 +715,7 @@ The BFF is calling the <a href="https://github.com/ibm-cloud-architecture/refarc
 <p>Selecting one order using the <code>Arrow</code> icon, allow the user to view the order details:</p>
 <p><img alt="" src="../kc-order.png" /></p>
 <p>As illustrated in the CQRS diagram:</p>
-<p><img src="https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/cqrs-es-api.png" width="500px"></p>
+<p><img src="https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/design-patterns/images/cqrs-es-api.png" width="500px"></p>
 <p>the creation of the order goes to the <a href="https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/tree/master/order-command-ms">order command microservice</a> which publishes a <code>OrderCreated</code> event to the <code>orders</code> topic and then consumes it to persist the data to its database. See <a href="https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/6de424c443c05262ae013620f5f11b4a1b2e6f90/order-command-ms/src/main/java/ibm/labs/kc/order/command/service/OrderCRUDService.java#L51-L74">source code here</a></p>
 <p>If you plug a 'orders topic' consumer you can see the following trace with the status of the order being <code>pending</code> and the type of event being <code>OrderCreated</code>. </p>
 <div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;payload&quot;</span><span class="p">:{</span>
@@ -722,17 +747,17 @@ The BFF is calling the <a href="https://github.com/ibm-cloud-architecture/refarc
 </pre></div>
 
 <h2 id="step3-simulate-the-ship-in-blue-water">Step3: Simulate the ship in blue water</h2>
-<p>From the home page goes to the <code>Simulate the bluewater</code> tile, then in the main page select one of the available fleet. Only the North Pacific has data as of now:</p>
+<p>From the home page, select the <code>Simulate the bluewater</code> tile. In the main page, select one of the available fleet. As of now, only the North Pacific has data:</p>
 <p><img alt="" src="../kc-fleet-select.png" />  </p>
 <p>The fleet panel lists the boats, their location and status and a map:</p>
 <p><img alt="" src="../kc-fleet-home.png" />  </p>
 <p>Selecting one boat with the edit button, goes to the boat detail view:</p>
 <p><img alt="" src="../kc-ship-detail.png" />  </p>
-<p>You can start the simulation on the ship movement by seleting one of the three pre-defined scenarios:</p>
+<p>You can start a simulation on the ship movement by selecting one of three pre-defined scenarios:</p>
 <ul>
-<li>Fire some containers</li>
-<li>One reefer down</li>
-<li>Or boat going thru a heat waves</li>
+<li>Fire affecting some containers</li>
+<li>Reefer down</li>
+<li>Boat experiencing a heat wave</li>
 </ul>
 <p><img alt="" src="../kc-ship-scenarios.png" />  </p>
 <p>The command is sent to the Simulator and the boat will start to move and generate container metrics:</p>
