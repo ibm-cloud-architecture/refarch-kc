@@ -24,7 +24,7 @@ You will be greatly interested by the subjects addressed in this solution if you
 
 ## Business process statement
 
-In [this first chapter](introduction.md) we are presenting the business process for shipping fresh good over sees and we are detailing the analysis we have done in San Francisco in November 2108 using the event storming analysis workshop. You could read more on how to organize and execute such workshop [here](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/readme/). The workshop execution transcript is detailed in [a second chapter](analysis/readme.md).
+In [this first chapter](introduction.md) we are presenting the business process for shipping fresh good over sees and we are detailing the analysis we have done in San Francisco in November 2018 using the event storming analysis workshop. You could read more on how to organize and execute such workshop [here](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/readme/). The workshop execution transcript is detailed in [a second chapter](analysis/readme.md).
 
 ## Design considerations
 

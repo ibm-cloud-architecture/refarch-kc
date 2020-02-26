@@ -44,6 +44,7 @@ docker run  -v ${MAIN_DIR}:/refarch-kc \
             -c "cd /refarch-kc/itg-tests/es-it && \
                 source /refarch-kc/scripts/setenv.sh ${ENV} && \
                 export PYTHONPATH=\${PYTHONPATH}:/refarch-kc/itg-tests && \
+                touch /tmp/results.txt && \
                 echo '******************************************' && \
                 echo '******************************************' && \
                 echo '**********   E2E Happy Path   ************' && \
@@ -61,10 +62,18 @@ docker run  -v ${MAIN_DIR}:/refarch-kc \
                 echo '**********   Saga No Voyage   ************' && \
                 echo '******************************************' && \
                 echo '******************************************' && \
-                python Saga_NoVoyage.py && \
+                python Saga_NoVoyage.py && source /tmp/SagaNoVoyage.properties && \
+                echo '******************************************' && \
+                echo '******************************************' && \
+                echo '**********   Order Rejected   ************' && \
+                echo '******************************************' && \
+                echo '******************************************' && \
+                python OrderRejection.py && \
                 echo '******************************************' && \
                 echo '******************************************' && \
                 echo '*********   Container Anomaly   **********' && \
                 echo '******************************************' && \
                 echo '******************************************' && \
-                python ContainerAnomaly.py"
+                python ContainerAnomaly.py && \
+                echo && echo 'END RESULTS:' && echo && \
+                cat /tmp/results.txt"

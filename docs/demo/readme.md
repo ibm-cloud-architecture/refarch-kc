@@ -44,7 +44,7 @@ Selecting one order using the `Arrow` icon, allow the user to view the order det
 
 As illustrated in the CQRS diagram:
 
-<img src="https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/evt-microservices/cqrs-es-api.png" width="500px">
+<img src="https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/docs/design-patterns/images/cqrs-es-api.png" width="500px">
 
 the creation of the order goes to the [order command microservice](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/tree/master/order-command-ms) which publishes a `OrderCreated` event to the `orders` topic and then consumes it to persist the data to its database. See [source code here](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/6de424c443c05262ae013620f5f11b4a1b2e6f90/order-command-ms/src/main/java/ibm/labs/kc/order/command/service/OrderCRUDService.java#L51-L74)
 
@@ -95,7 +95,7 @@ or at the `orders` topic:
 
 ## Step3: Simulate the ship in blue water
 
-From the home page goes to the `Simulate the bluewater` tile, then in the main page select one of the available fleet. Only the North Pacific has data as of now:
+From the home page, select the `Simulate the bluewater` tile. In the main page, select one of the available fleet. As of now, only the North Pacific has data:
 
 ![](kc-fleet-select.png)  
 
@@ -107,11 +107,11 @@ Selecting one boat with the edit button, goes to the boat detail view:
 
 ![](kc-ship-detail.png)  
 
-You can start the simulation on the ship movement by seleting one of the three pre-defined scenarios:
+You can start a simulation on the ship movement by selecting one of three pre-defined scenarios:
 
-* Fire some containers
-* One reefer down
-* Or boat going thru a heat waves
+* Fire affecting some containers
+* Reefer down
+* Boat experiencing a heat wave
 
 ![](kc-ship-scenarios.png)  
 
