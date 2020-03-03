@@ -66,7 +66,7 @@ try:
     ORDER_COMMANDS_TOPIC = os.environ['ITGTESTS_ORDER_COMMANDS_TOPIC']
 except KeyError:
     print("The ITGTESTS_ORDER_COMMANDS_TOPIC environment variable not set... assume local deployment")
-    ORDER_COMMANDS_TOPIC="orderCommands"
+    ORDER_COMMANDS_TOPIC="order-commands"
 
 try:
     CONTAINERS_TOPIC = os.environ['ITGTESTS_CONTAINERS_TOPIC']
@@ -97,9 +97,9 @@ class OrderRejection(unittest.TestCase):
         results_file = open("/tmp/results.txt","a")
         results_file.write('TEST CASE - ' + cls.__name__ + '\n')
         results_file.write('-----------------------------------\n')
-    
+
     def setUp(self):
-        global number_of_tests 
+        global number_of_tests
         number_of_tests += 1
         results_file.write(self.id().split('.')[2])
 
@@ -129,7 +129,7 @@ class OrderRejection(unittest.TestCase):
             return exc_list[-1][1]
 
     #################################################################################################
-    
+
     def test1_createOrder(self):
         print('-----------------------------')
         print('--- [TEST] : Create order ---')
@@ -146,7 +146,7 @@ class OrderRejection(unittest.TestCase):
         # Close the file
         f.close()
         print("Done\n")
-        
+
         print("2 - Create order by POST to order microservice's API endpoint")
         res = requests.post("http://" + ORDER_CMD_MS + "/orders",json=order)
         # Get the request response as a JSON object
@@ -163,7 +163,7 @@ class OrderRejection(unittest.TestCase):
         print("Sleeping for 5 secs\n")
         time.sleep(10)
 
-        print("3 - Make sure a new order command event was delivered into the orderCommands topic")
+        print("3 - Make sure a new order command event was delivered into the order-commands topic")
         # Create a KafkaConsumer object to interact with Kafka/Event Streams
         kc = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_APIKEY,ORDER_COMMANDS_TOPIC)
         # Verify we have a KafkaConsumer object
@@ -175,7 +175,7 @@ class OrderRejection(unittest.TestCase):
         order_command = kc.pollNextEventByKey(ORDER_ID)
         # Verify an order command event object is read
         self.assertIsNotNone(order_command)
-        # Removing the timestamp from the comparison since we can't know what time exactly it was created at 
+        # Removing the timestamp from the comparison since we can't know what time exactly it was created at
         order_command['timestampMillis'] = ""
         print("This is the order command event read from the topic:")
         print(json.dumps(order_command, indent=4, sort_keys=True))
@@ -218,7 +218,7 @@ class OrderRejection(unittest.TestCase):
         order = kc.pollNextEventByKey(ORDER_ID)
         # Verify an order command event object is read
         self.assertIsNotNone(order)
-        # Removing the timestamp from the comparison since we can't know what time exactly it was created at 
+        # Removing the timestamp from the comparison since we can't know what time exactly it was created at
         order['timestampMillis'] = ""
         print("This is the order event read from the topic:")
         print(json.dumps(order, indent=4, sort_keys=True))
@@ -251,7 +251,7 @@ class OrderRejection(unittest.TestCase):
         print('--- [TEST] : Container Allocated ---')
         print('------------------------------------\n')
 
-       
+
         print("1 - Load the expected container assigned to order event on the containers topic from its json files")
         # Open file to read
         f_container = open('../data/containerAssignedToOrderEvent.json','r')
@@ -269,7 +269,7 @@ class OrderRejection(unittest.TestCase):
         # Close the file
         f_container.close()
         print("Done\n")
-       
+
         print("2 - Read container assigned to order event from the containers topic")
         # Create a KafkaConsumer object to interact with Kafka/Event Streams
         kc = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_APIKEY,CONTAINERS_TOPIC)
@@ -292,7 +292,7 @@ class OrderRejection(unittest.TestCase):
         # Verify container assigned to order event read from the topic is as expected
         self.assertEqual(sorted(expected_container.items()),sorted(container_event.items()))
         print("Done\n")
-        
+
         print("4 - Load the expected container allocated event on the order topic from its json files")
         # Open file to read
         f_order = open('../data/orderContainerAllocatedEvent.json','r')
@@ -375,7 +375,7 @@ class OrderRejection(unittest.TestCase):
         print("3 - Verify voyage assigned event")
         # Verify voyage assigned event read from the topic is as expected
         self.assertEqual(sorted(expected_voyage_assigned.items()),sorted(voyage_assigned.items()))
-        print("Done\n")    
+        print("Done\n")
 
 
     def test4_orderAssignedREST(self):
@@ -398,7 +398,7 @@ class OrderRejection(unittest.TestCase):
         # Close the file
         f_order_command.close()
         print("Done\n")
-        
+
         print("2 - Read order from the order command microservice's API endpoint")
         response = requests.get("http://" + ORDER_CMD_MS + "/orders/" + ORDER_ID)
         # Verify we get a response
@@ -429,7 +429,7 @@ class OrderRejection(unittest.TestCase):
         # Close the file
         f_order_query.close()
         print("Done\n")
-        
+
         print("5 - Read order from the order query microservice's API endpoint")
         response = requests.get("http://" + ORDER_QUERY_MS + "/orders/" + ORDER_ID)
         # Verify we get a response
@@ -450,7 +450,7 @@ class OrderRejection(unittest.TestCase):
         print('-------------------------------')
         print('--- [TEST] : Order Rejected ---')
         print('-------------------------------\n')
-        
+
         print("1 - Reject order by POST to order microservice's API endpoint")
         res = requests.post("http://" + ORDER_CMD_MS + "/orders/reject/" + ORDER_ID)
         # Verify the post request has been successful
@@ -460,7 +460,7 @@ class OrderRejection(unittest.TestCase):
         print("Sleeping for 5 secs\n")
         time.sleep(10)
 
-        print("2 - Make sure a new reject order command event was delivered into the orderCommands topic")
+        print("2 - Make sure a new reject order command event was delivered into the order-commands topic")
         # Create a KafkaConsumer object to interact with Kafka/Event Streams
         kc = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_APIKEY,ORDER_COMMANDS_TOPIC)
         # Verify we have a KafkaConsumer object
@@ -472,7 +472,7 @@ class OrderRejection(unittest.TestCase):
         reject_order_command = kc.pollNextEventByKey(ORDER_ID)
         # Verify an order command event object is read
         self.assertIsNotNone(reject_order_command)
-        # Removing the timestamp from the comparison since we can't know what time exactly it was created at 
+        # Removing the timestamp from the comparison since we can't know what time exactly it was created at
         reject_order_command['timestampMillis'] = ""
         print("This is the order command event read from the topic:")
         print(json.dumps(reject_order_command, indent=4, sort_keys=True))
@@ -564,7 +564,7 @@ class OrderRejection(unittest.TestCase):
         # Close the file
         f_order_command.close()
         print("Done\n")
-        
+
         print("2 - Read order from the order command microservice's API endpoint")
         response = requests.get("http://" + ORDER_CMD_MS + "/orders/" + ORDER_ID)
         # Verify we get a response
@@ -595,7 +595,7 @@ class OrderRejection(unittest.TestCase):
         # Close the file
         f_order_query.close()
         print("Done\n")
-        
+
         print("5 - Read order from the order query microservice's API endpoint")
         response = requests.get("http://" + ORDER_QUERY_MS + "/orders/" + ORDER_ID)
         # Verify we get a response
@@ -646,7 +646,7 @@ class OrderRejection(unittest.TestCase):
         # Fill in the container ID
         expected_empty_container['id'] = CONTAINER_ID
         # Setting appropriate capacity
-        expected_empty_container['capacity'] = 50000    
+        expected_empty_container['capacity'] = 50000
         print("This is the expected container object:")
         print(json.dumps(expected_empty_container, indent=4, sort_keys=True))
         # Close the file
@@ -658,11 +658,11 @@ class OrderRejection(unittest.TestCase):
         self.assertEqual(sorted(expected_empty_container.items()),sorted(api_container.items()))
         print("Done\n")
 
-    
+
     def test8_voyageCompensated(self):
         print('-----------------------------------')
         print('--- [TEST] : Voyage compensated ---')
-        print('-----------------------------------\n')     
+        print('-----------------------------------\n')
 
         print("1 - Read voyages from the voyages microservice's API endpoint")
         response = requests.get("http://" + VOYAGE_MS + "/voyage")

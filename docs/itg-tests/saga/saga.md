@@ -1,6 +1,6 @@
 # SAGA pattern integration test case
 
-Here you can find two test cases to test the SAGA pattern implemented for our Reefer Container EDA reference application. These test cases verify a new order creation does not get into assigned state unless a container and a voyage are allocated and assigned to it. These test cases are meant to be executed after the [happy path test case](../happy-path/happy_path.md). Since the case that a container is allocated and a voyage assigned to an newly created order is tested previously by our happy path test case, in these test cases we're actually testing the behavior when either a container or  a voyage does not exist for the order. 
+Here you can find two test cases to test the SAGA pattern implemented for our Reefer Container EDA reference application. These test cases verify a new order creation does not get into assigned state unless a container and a voyage are allocated and assigned to it. These test cases are meant to be executed after the [happy path test case](../happy-path/happy_path.md). Since the case that a container is allocated and a voyage assigned to an newly created order is tested previously by our happy path test case, in these test cases we're actually testing the behavior when either a container or  a voyage does not exist for the order.
 
 ## SAGA pattern - no container
 
@@ -12,7 +12,7 @@ The following sequence diagrams represent each of the tests within this SAGA pat
 
 ### Test 1 - No Container - Create order
 
-This test will make sure that the expected CreateOrderCommand event to create an order is delivered into the orderCommands topic after the Create Order API endpoint is called. It will also ensure that an OrderCreated event is also delivered into the orders topic.
+This test will make sure that the expected CreateOrderCommand event to create an order is delivered into the order-commands topic after the Create Order API endpoint is called. It will also ensure that an OrderCreated event is also delivered into the orders topic.
 
 ![no container create order](images_no_container/Slide2.png)
 
@@ -51,7 +51,7 @@ This test will make sure that the expected ContainerAdded event to create a new 
 
 ### Test 2 - No Voyage - Create order
 
-This test will make sure that the expected CreateOrderCommand event to create an order is delivered into the orderCommands topic after the Create Order API endpoint is called. It will also ensure that an OrderCreated event is also delivered into the orders topic.
+This test will make sure that the expected CreateOrderCommand event to create an order is delivered into the order-commands topic after the Create Order API endpoint is called. It will also ensure that an OrderCreated event is also delivered into the orders topic.
 
 ![no voyage create order](images_no_voyage/Slide3.png)
 

@@ -39,14 +39,14 @@ Other required variables for the integration tests need to be defined within the
 
 - Orders topic name: This could be specified within the integration tests kubernetes job yaml file under the variable **ITGTESTS_ORDERS_TOPIC** which defaults to `itg-orders`.
 
-- Order Command topic name: This could be specified within the integration tests kubernetes job yaml file under the variable **ITGTESTS_ORDER_COMMANDS_TOPIC** which defaults to `itg-orderCommands`.
+- Order Command topic name: This could be specified within the integration tests kubernetes job yaml file under the variable **ITGTESTS_ORDER_COMMANDS_TOPIC** which defaults to `itg-order-commands`.
 
 - Containers topic name: This could be specified within the integration tests kubernetes job yaml file under the variable **ITGTESTS_CONTAINERS_TOPIC** which defaults to `itg-containers`.
 
 - Kafka Environment: It should be either **OCP** or **IBMCLOUD** depending on where your IBM Event Streams instance is deployed onto. If it is deployed on premises in your OpenShift or Kubernetes cluster, then it `KAFKA_ENV` should be set to `OCP`. If you are using an IBM Event Streams instance in the IBM Cloud, then `KAFKA_ENV` should be set to `IBMCLOUD`.
 
   This is important as the **IBM Event Streams on-prem instances require a PEM certificate** for the Kafka libraries to successfully connect to it. So, if you are using IBM Event Streams on-prem in your OpenShift or Kubernetes cluster, you also have to:
-  
+
   1. Uncomment the bottom part of the integration tests kubernetes job yaml file.
   2. Make sure you created the **eventstreams-pem-file** secret that will hold your IBM Event Streams PEM certificate, in step #1 of this pre-requisites section.
 
@@ -116,7 +116,7 @@ Kafka Brokers: broker-0-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9
 Kafka API Key: 98YA5dC-G6cODJtRFPJwi4DwNbwZABmsrSFI115jP6k5
 Kafka Env: IBMCLOUD
 Orders topic name: itg-orders
-Order Command topic name: itg-orderCommands
+Order Command topic name: itg-order-commands
 Containers topic name: itg-containers
 ------------------------------------------------------------------
 ```

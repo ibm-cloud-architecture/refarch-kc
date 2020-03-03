@@ -46,7 +46,7 @@ data:
   bluewaterShipTopic: bluewaterShip
   containersTopic: containers
   errorsTopic: errors
-  orderCommandsTopic: orderCommands
+  orderCommandsTopic: order-commands
   ordersTopic: orders
   reeferTelemetryTopic: reeferTelemetry
   rejectedOrdersTopic: rejectedOrders
@@ -99,7 +99,7 @@ data:
   bluewaterShipTopic: bluewaterShip
   containersTopic: containers
   errorsTopic: errors
-  orderCommandTopics: orderCommands
+  orderCommandTopics: order-commands
   ordersTopic: orders
   reeferTelemetryTopic: reeferTelemetry
   rejectedOrdersTopic: rejectedOrders
@@ -191,7 +191,7 @@ data:
   bluewaterShipTopic: bluewaterShip
   containersTopic: containers
   errorsTopic: errors
-  orderCommandTopics: orderCommands
+  orderCommandTopics: order-commands
   ordersTopic: orders
   reeferTelemetryTopic: reeferTelemetry
   rejectedOrdersTopic: rejectedOrders
