@@ -38,7 +38,7 @@ The topics that need to be created are:
 - `errors`
 - `containers`
 - `containerMetrics`
-- `reeferTelemetries`
+- `reefer-telemetry`
 
 The command `scripts/createTopicsOnK8S.sh` creates those topics automatically.
 
