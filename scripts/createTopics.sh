@@ -35,7 +35,7 @@ containers
 order-commands
 errors
 orders
-reeferTelemetry
+reefer-telemetry
 rejected-orders"
 
 ### Script
