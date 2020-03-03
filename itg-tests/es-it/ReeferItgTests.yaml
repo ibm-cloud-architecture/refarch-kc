@@ -168,7 +168,7 @@ spec:
           value: "itg-orders"
         # Order Command topic name
         - name: ITGTESTS_ORDER_COMMANDS_TOPIC
-          value: "itg-orderCommands"
+          value: "itg-order-commands"
         # Containers topic name
         - name: ITGTESTS_CONTAINERS_TOPIC
           value: "itg-containers"

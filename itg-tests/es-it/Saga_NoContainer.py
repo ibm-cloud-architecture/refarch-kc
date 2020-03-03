@@ -66,7 +66,7 @@ try:
     ORDER_COMMANDS_TOPIC = os.environ['ITGTESTS_ORDER_COMMANDS_TOPIC']
 except KeyError:
     print("The ITGTESTS_ORDER_COMMANDS_TOPIC environment variable not set... assume local deployment")
-    ORDER_COMMANDS_TOPIC="orderCommands"
+    ORDER_COMMANDS_TOPIC="order-commands"
 
 try:
     CONTAINERS_TOPIC = os.environ['ITGTESTS_CONTAINERS_TOPIC']
@@ -93,9 +93,9 @@ class SagaNoContainer(unittest.TestCase):
         results_file = open("/tmp/results.txt","a")
         results_file.write('TEST CASE - ' + cls.__name__ + '\n')
         results_file.write('-----------------------------------\n')
-    
+
     def setUp(self):
-        global number_of_tests 
+        global number_of_tests
         number_of_tests += 1
         results_file.write(self.id().split('.')[2])
 
@@ -159,7 +159,7 @@ class SagaNoContainer(unittest.TestCase):
         print("Sleeping for 5 secs\n")
         time.sleep(10)
 
-        print("3 - Make sure a new order command event was delivered into the orderCommands topic")
+        print("3 - Make sure a new order command event was delivered into the order-commands topic")
         # Create a KafkaConsumer object to interact with Kafka/Event Streams
         kc = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_APIKEY,ORDER_COMMANDS_TOPIC)
         # Verify we have a KafkaConsumer object

@@ -32,7 +32,7 @@ The topics that need to be created are:
 - `bluewaterShip`
 - `bluewaterProblem`
 - `orders`
-- `orderCommands`
+- `order-commands`
 - `rejected-orders`
 - `allocated-orders`
 - `errors`

@@ -3,7 +3,7 @@
 # Script we are executing
 echo -e "\e[32m@@@ Excuting script: \e[1;33mCreateTopics.sh \e[0m"
 
-# Help 
+# Help
 if [[ $# -ne 1 ]];then
  echo "Usage smokeTest [LOCAL | MINIKUBE | IBMCLOUD | ICP]"
  exit 1
@@ -32,7 +32,7 @@ bluewaterContainer
 bluewaterProblem
 bluewaterShip
 containers
-orderCommands
+order-commands
 errors
 orders
 reeferTelemetry
@@ -66,7 +66,7 @@ then
     # There are other alternative such as sed. Using sed 's/.$//g' we are removing the last character of every line which should be that carriage return character.
     # However, if for any reason there is no such character we would have a bug.
     # Other option, that I could not get to work, is the one described here: https://www.cyberciti.biz/faq/unix-linux-sed-ascii-control-codes-nonprintable/
-    
+
 else
     export POD_NAME=$(kubectl get pods --namespace $KC_NAMESPACE -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=kafkabitmani,app.kubernetes.io/component=kafka" -o jsonpath="{.items[0].metadata.name}")
     # The sed 's/'$(echo "\015")'//g' is to emulate the dos2unix command in order to remove the ^M character returned at the end of each line by the kafka-topics.sh script
