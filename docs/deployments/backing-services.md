@@ -49,7 +49,7 @@ data:
   orderCommandsTopic: order-commands
   ordersTopic: orders
   reeferTelemetryTopic: reefer-telemetry
-  rejectedOrdersTopic: rejectedOrders
+  rejectedOrdersTopic: rejected-orders
 EOF
 ```
 
@@ -102,7 +102,7 @@ data:
   orderCommandTopics: order-commands
   ordersTopic: orders
   reeferTelemetryTopic: reefer-telemetry
-  rejectedOrdersTopic: rejectedOrders
+  rejectedOrdersTopic: rejected-orders
 EOF
 ```
 
@@ -194,7 +194,7 @@ data:
   orderCommandTopics: order-commands
   ordersTopic: orders
   reeferTelemetryTopic: reefer-telemetry
-  rejectedOrdersTopic: rejectedOrders
+  rejectedOrdersTopic: rejected-orders
 EOF
 ```
 
