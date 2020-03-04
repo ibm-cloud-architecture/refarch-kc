@@ -28,9 +28,9 @@ $ kubectl exec -n ${NAMESPACE} -ti ${KPOF} -- bash -c "/opt/kafka/bin/kafka-topi
 
 The topics that need to be created are:
 
-- `bluewaterContainer`
-- `bluewaterShip`
-- `bluewaterProblem`
+- `bluewater-container`
+- `bluewater-ship`
+- `bluewater-problem`
 - `orders`
 - `order-commands`
 - `rejected-orders`

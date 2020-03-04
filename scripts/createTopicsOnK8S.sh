@@ -37,9 +37,9 @@ createTopic(){
     fi
 }
 
-createTopic "bluewaterContainer"
-createTopic "bluewaterShip"
-createTopic "bluewaterProblem"
+createTopic "bluewater-container"
+createTopic "bluewater-ship"
+createTopic "bluewater-problem"
 createTopic "orders"
 createTopic "rejected-orders"
 createTopic "allocated-orders"

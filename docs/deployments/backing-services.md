@@ -41,9 +41,9 @@ metadata:
   name: kafka-topics
 data:
   allocatedOrdersTopic: allocated-orders
-  bluewaterContainerTopic: bluewaterContainer
-  bluewaterProblemTopic: bluewaterProblem
-  bluewaterShipTopic: bluewaterShip
+  bluewaterContainerTopic: bluewater-container
+  bluewaterProblemTopic: bluewater-problem
+  bluewaterShipTopic: bluewater-ship
   containersTopic: containers
   errorsTopic: errors
   orderCommandsTopic: order-commands
@@ -94,9 +94,9 @@ metadata:
   name: kafka-topics
 data:
   allocatedOrdersTopic: allocated-orders
-  bluewaterContainerTopic: bluewaterContainer
-  bluewaterProblemTopic: bluewaterProblem
-  bluewaterShipTopic: bluewaterShip
+  bluewaterContainerTopic: bluewater-container
+  bluewaterProblemTopic: bluewater-problem
+  bluewaterShipTopic: bluewater-ship
   containersTopic: containers
   errorsTopic: errors
   orderCommandTopics: order-commands
@@ -186,9 +186,9 @@ metadata:
   name: kafka-topics
 data:
   allocatedOrdersTopic: allocated-orders
-  bluewaterContainerTopic: bluewaterContainer
-  bluewaterProblemTopic: bluewaterProblem
-  bluewaterShipTopic: bluewaterShip
+  bluewaterContainerTopic: bluewater-container
+  bluewaterProblemTopic: bluewater-problem
+  bluewaterShipTopic: bluewater-ship
   containersTopic: containers
   errorsTopic: errors
   orderCommandTopics: order-commands
