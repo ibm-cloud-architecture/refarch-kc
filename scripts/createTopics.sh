@@ -28,9 +28,9 @@ createTopic(){
 ### Variables
 
 ALL="allocated-orders
-bluewaterContainer
-bluewaterProblem
-bluewaterShip
+bluewater-container
+bluewater-problem
+bluewater-ship
 containers
 order-commands
 errors
