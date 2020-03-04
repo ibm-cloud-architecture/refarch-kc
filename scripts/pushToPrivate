@@ -1,5 +1,0 @@
-docker push us.icr.io/ibmcaseeda/kcontainer-order-query-ms
-docker push us.icr.io/ibmcaseeda/kcontainer-order-command-ms
-docker push us.icr.io/ibmcaseeda/kcontainer-fleet-ms
-docker push us.icr.io/ibmcaseeda/kcontainer-voyages-ms
-docker push us.icr.io/ibmcaseeda/kcontainer-ui

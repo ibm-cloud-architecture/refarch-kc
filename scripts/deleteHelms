@@ -1,5 +1,0 @@
-helm delete --purge kc-voyagesms
-helm delete --purge kc-fleetms
-helm delete --purge kc-ordercmdms
-helm delete --purge kc-orderqueryms
-helm delete --purge kc-ui

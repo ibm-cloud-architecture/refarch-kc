@@ -1,6 +1,0 @@
-rm solution.logs
-rm backend.logs
-rm -rf kafka1
-rm -rf zookeeper1
-docker network rm docker_default || true
-
