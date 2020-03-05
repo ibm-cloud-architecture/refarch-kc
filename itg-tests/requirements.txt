@@ -1,3 +1,0 @@
-confluent_kafka
-request
-asyncio
