@@ -6,7 +6,7 @@ So far we have the following integration test cases:
 
 - [Happy path](happy-path/happy_path.md) - End to end happy path test.
 - [SAGA pattern](saga/saga.md) - SAGA pattern for new order creation test.
-- [Order Rejection](order-rejected/order-rejected.md) - Order Rejection test.
+- [Order Rejection](order-rejected/order_rejected.md) - Order Rejection test.
 - [Container Anomaly](containerAnomaly/containerAnomaly.md) - Container anomaly and maintenance test.
 
 New integration test cases will be added in order to test other parts of the application as well as use cases and other Event Driven Patterns.
@@ -18,7 +18,7 @@ New integration test cases will be added in order to test other parts of the app
 In order to run the integration tests against the Reefer container shipment solution you first need to have this solution deployed on an Openshift or Kubernetes cluster. The solution is made up of:
 
 1. Backing services such as IBM Event Streams and PostgreSQL - Instructions [here](https://ibm-cloud-architecture.github.io/refarch-kc/deployments/backing-services/).
-2.  The Reefer container shipment solution components - Instructions [here](https://ibm-cloud-architecture.github.io/refarch-kc/deployments/application-components/).
+2. The Reefer container shipment solution components - Instructions [here](https://ibm-cloud-architecture.github.io/refarch-kc/deployments/application-components/).
 
 Once you have the solution deployed into your cluster, apart from an instance of IBM Event Streams and PostgreSQL either on premises or in IBM Cloud, you should have the following components at the very least for the integration tests to run:
 
@@ -113,7 +113,7 @@ The output of the integration test cases is made up of a brief description of th
 
 Executing integrations tests from branch master of https://github.com/ibm-cloud-architecture/refarch-kc.git
 Kafka Brokers: broker-0-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9093,broker-3-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9093,broker-5-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9093,broker-2-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9093,broker-1-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9093,broker-4-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9093
-Kafka API Key: 98YA5dC-G6cODJtRFPJwi4DwNbwZABmsrSFI115jP6k5
+Kafka API Key: XXXXXXX
 Kafka Env: IBMCLOUD
 Orders topic name: itg-orders
 Order Command topic name: itg-order-commands
@@ -153,7 +153,7 @@ Done
 
 2 - Read voyage assigned from oder topic
 [KafkaConsumer] - This is the configuration for the consumer:
-[KafkaConsumer] - {'bootstrap.servers': 'broker-0-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9093,broker-3-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9093,broker-5-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9093,broker-2-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9093,broker-1-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9093,broker-4-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9093', 'group.id': 'pythonconsumers', 'auto.offset.reset': 'earliest', 'enable.auto.commit': True, 'security.protocol': 'SASL_SSL', 'sasl.mechanisms': 'PLAIN', 'sasl.username': 'token', 'sasl.password': '98YA5dC-G6cODJtRFPJwi4DwNbwZABmsrSFI115jP6k5'}
+[KafkaConsumer] - {'bootstrap.servers': 'broker-0-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9093,broker-3-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9093,broker-5-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9093,broker-2-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9093,broker-1-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9093,broker-4-hnkssdz.kafka.svc01.us-east.eventstreams.cloud.ibm.com:9093', 'group.id': 'pythonconsumers', 'auto.offset.reset': 'earliest', 'enable.auto.commit': True, 'security.protocol': 'SASL_SSL', 'sasl.mechanisms': 'PLAIN', 'sasl.username': 'token', 'sasl.password': 'XXXXXXXX'}
 .[KafkaConsumer] - @@@ pollNextOrder itg-orders partition: [0] at offset 2 with key b'a467070e-797e-40f9-9644-7393e8553f1f':
 	value: {"timestamp":1576667245430,"type":"VoyageAssigned","version":"1","payload":{"voyageID":"101","orderID":"a467070e-797e-40f9-9644-7393e8553f1f"}}
 This is the event read from the order topic:
@@ -173,11 +173,83 @@ Done
 
 ```
 
-A summary of the test case execution is shown at the end and look like:
+A summary of the test case execution is shown at the end of each test case:
 
 ```bash
 ----------------------------------------------------------------------
 Ran 7 tests in 64.262s
 
 OK
+```
+
+A final summary of all tests cases is shown at the very end and looks like the following:
+
+```bash
+END RESULTS:
+
+TEST CASE - E2EHappyPath
+-----------------------------------
+test1_createContainer...OK
+test2_voyagesExist...OK
+test3_createOrder...OK
+test4_containerAllocated...OK
+test5_voyageAssigned...OK
+test6_orderAssignedREST...OK
+test7_exportValues...OK
+-----------------------------------
+PASSED: 7
+FAILED: 0
+
+TEST CASE - SagaNoContainer
+-----------------------------------
+test1_createOrder...OK
+test2_containerNotFound...OK
+test3_orderRejected...OK
+test4_orderRejectedREST...OK
+-----------------------------------
+PASSED: 4
+FAILED: 0
+
+TEST CASE - SagaNoVoyage
+-----------------------------------
+test1_createContainer...OK
+test2_createOrder...OK
+test3_containerAllocated...OK
+test4_voyageNotFound...OK
+test5_orderRejected...OK
+test6_orderRejectedREST...OK
+test7_containerUnassignedREST...OK
+test8_exportValues...OK
+-----------------------------------
+PASSED: 8
+FAILED: 0
+
+TEST CASE - OrderRejection
+-----------------------------------
+test1_createOrder...OK
+test2_containerAllocated...OK
+test3_voyageAssigned...OK
+test4_orderAssignedREST...OK
+test5_orderRejected...OK
+test6_orderRejectedREST...OK
+test7_containerUnassignedREST...OK
+test8_voyageCompensated...OK
+-----------------------------------
+PASSED: 8
+FAILED: 0
+
+TEST CASE - SpoilOrder
+-----------------------------------
+test1_disableBPM...OK
+test2_sendAnomalyEvents...OK
+test3_containerMaintenanceNeeded...OK
+test4_containerOrderSpoilt...OK
+test5_containerToMaintenance...OK
+test6_containerInMaintenance...OK
+test7_containerOffMaintenance...OK
+test8_containerEmpty...OK
+test9_enableBPM...OK
+-----------------------------------
+PASSED: 9
+FAILED: 0
 ```
