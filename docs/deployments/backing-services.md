@@ -352,8 +352,6 @@ In order for the containers microservice to fire the BPM workflow, we need to pr
    * the **BPM anomaly event threshold**
    * the **BPM authentication token time expiration**
 
-You can _(and should)_ customize the values _(right-hand side)_ of each of the lines in the `data` section below to ensure your topics are only being published to by the correct deployments of microservices. Do not edit the keys _(left-hand side)_ of the any of the lines in the `data` section below, or else your microservice components will fail to start.
-
    ```shell
    cat <<EOF | kubectl apply -f -
    apiVersion: v1

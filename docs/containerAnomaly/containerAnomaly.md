@@ -22,7 +22,7 @@ Once we have received 3 ContainerAnomaly events for a specific container, the Sp
 
 Once the BPM process has received the call from the Spring Container component, it will trigger a process whereby a field engineer will get assigned the task of checking and fixing the container, either at the dock where it is if it was not carrying goods overseas in a ship when the anomaly happened or once it gets to the destination port otherwise. Before the field engineer starts its work, the BPM process will interact to put the container into **InMaintenance** state. It will also interact to get the container off maintenance mode into **Empty** state, so that the container is again available for order allocation, once the container has been fixed.
 
-As a result of the **OrderSpoilt** event sent into the orders topic, the Order Command component of our Reefer Conttainer Reference Application that manages the orders will set the order, which the container with anomalies was allocated to and carrying goods for, to **Spoilt**. This could potentially trigger a customer care interaction process whereby the customer gets notified.
+As a result of the **OrderSpoilt** event sent into the orders topic, the Order Command component of our Reefer Container Reference Application that manages the orders will set the order, which the container with anomalies was allocated to and carrying goods for, to **Spoilt**. This could potentially trigger a customer care interaction process whereby the customer gets notified.
 
 ## IBM Business Process Manager (BPM) process
 

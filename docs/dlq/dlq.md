@@ -8,7 +8,7 @@ A brief description about the problem and how non-blocking reprocessing and dead
 
 As explained in the [Container Anomaly Use Case](../containerAnomaly/containerAnomaly.md) of our Reefer Container Reference Application, the Spring Containers component calls a BPM process in order to get a field engineer assigned to checking and fixing a potentially bad container based on the telemetry events being sent by it.
 
-As said in the introduction above, this call to the BPM process migh fail so we need to implement a mechanism whereby we use non-blocking request reprocessing and dead letter queues (DLQ) to achieve decoupled, observable error-handling without disrupting real-time traffic.
+As said in the introduction above, this call to the BPM process might fail so we need to implement a mechanism whereby we use non-blocking request reprocessing and dead letter queues (DLQ) to achieve decoupled, observable error-handling without disrupting real-time traffic.
 
 We have done so by creating two new topics the Spring Container component will subscribe and publish to: **container-anomaly-retry** and **container-anomaly-dead**.
 
