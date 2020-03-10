@@ -15,3 +15,4 @@ docker/kafka-connect/connectors/*.jar
 docker/kafka-connect/es-cert.jks
 *.pyc
 .DS_Store
+~$*.pptx

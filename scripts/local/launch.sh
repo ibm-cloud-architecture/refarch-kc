@@ -91,7 +91,13 @@ else
                     exit 1
                 fi
                 docker build -f ${MAIN_DIR}/../refarch-kc-ui/Dockerfile -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-ui/
-                echo -e "Done"
+                if [[ $? -ne 0 ]]
+                then 
+                    echo -e "\e[31m[ERROR] - A problem occurred building the Docker image for ${microservice}\e[0m"
+                    exit 1
+                else
+                    echo -e "Done"
+                fi
                 ;;
             kcontainer-fleet-ms)
                 if [ ! -d "${MAIN_DIR}/../refarch-kc-ms" ]; then
@@ -100,7 +106,13 @@ else
                     exit 1
                 fi
                 docker build -f ${MAIN_DIR}/../refarch-kc-ms/fleet-ms/Dockerfile.multistage -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-ms/fleet-ms/
-                echo -e "Done"
+                if [[ $? -ne 0 ]]
+                then 
+                    echo -e "\e[31m[ERROR] - A problem occurred building the Docker image for ${microservice}\e[0m"
+                    exit 1
+                else
+                    echo -e "Done"
+                fi
                 ;;
             kcontainer-order-command-ms)
                 if [ ! -d "${MAIN_DIR}/../refarch-kc-order-ms" ]; then
@@ -109,7 +121,13 @@ else
                     exit 1
                 fi
                 docker build -f ${MAIN_DIR}/../refarch-kc-order-ms/order-command-ms/Dockerfile.multistage -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-order-ms/order-command-ms/
-                echo -e "Done"
+                if [[ $? -ne 0 ]]
+                then 
+                    echo -e "\e[31m[ERROR] - A problem occurred building the Docker image for ${microservice}\e[0m"
+                    exit 1
+                else
+                    echo -e "Done"
+                fi
                 ;;
             kcontainer-order-query-ms)
                 if [ ! -d "${MAIN_DIR}/../refarch-kc-order-ms" ]; then
@@ -118,7 +136,13 @@ else
                     exit 1
                 fi
                 docker build -f ${MAIN_DIR}/../refarch-kc-order-ms/order-query-ms/Dockerfile.multistage -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-order-ms/order-query-ms/
-                echo -e "Done"
+                if [[ $? -ne 0 ]]
+                then 
+                    echo -e "\e[31m[ERROR] - A problem occurred building the Docker image for ${microservice}\e[0m"
+                    exit 1
+                else
+                    echo -e "Done"
+                fi
                 ;;
             kcontainer-voyages-ms)
                 if [ ! -d "${MAIN_DIR}/../refarch-kc-ms" ]; then
@@ -127,7 +151,13 @@ else
                     exit 1
                 fi
                 docker build -f ${MAIN_DIR}/../refarch-kc-ms/voyages-ms/Dockerfile -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-ms/voyages-ms/
-                echo -e "Done"
+                if [[ $? -ne 0 ]]
+                then 
+                    echo -e "\e[31m[ERROR] - A problem occurred building the Docker image for ${microservice}\e[0m"
+                    exit 1
+                else
+                    echo -e "Done"
+                fi
                 ;;
             kcontainer-spring-container-ms)
                 if [ ! -d "${MAIN_DIR}/../refarch-kc-container-ms" ]; then
@@ -136,7 +166,13 @@ else
                     exit 1
                 fi
                 docker build -f ${MAIN_DIR}/../refarch-kc-container-ms/SpringContainerMS/Dockerfile-local -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-container-ms/SpringContainerMS/
-                echo -e "Done"
+                if [[ $? -ne 0 ]]
+                then 
+                    echo -e "\e[31m[ERROR] - A problem occurred building the Docker image for ${microservice}\e[0m"
+                    exit 1
+                else
+                    echo -e "Done"
+                fi
                 ;;
             *)
                 echo -e "\e[31m[ERROR] - ${microservice} is incorrect.\e[0m"
@@ -176,7 +212,13 @@ else
                     exit 1
                 fi
                 docker build -f ${MAIN_DIR}/../refarch-kc-container-ms/SpringContainerMS/Dockerfile-local -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-container-ms/SpringContainerMS/
-                echo -e "Done"
+                if [[ $? -ne 0 ]]
+                then 
+                    echo -e "\e[31m[ERROR] - A problem occurred building the Docker image for ${microservice}\e[0m"
+                    exit 1
+                else
+                    echo -e "Done"
+                fi
                 ;;
             kcontainer-reefer-ml)
                 echo -e "Building the ${microservice}-scoringmp:test docker image..."
@@ -186,7 +228,13 @@ else
                     exit 1
                 fi
                 docker build -f ${MAIN_DIR}/../refarch-reefer-ml/scoring-mp/Dockerfile.multistage -t ibmcase/${microservice}-scoringmp:test ${MAIN_DIR}/../refarch-reefer-ml/scoring-mp/
-                echo -e "Done"
+                if [[ $? -ne 0 ]]
+                then 
+                    echo -e "\e[31m[ERROR] - A problem occurred building the Docker image for ${microservice}\e[0m"
+                    exit 1
+                else
+                    echo -e "Done"
+                fi
 
                 echo -e "Building the ${microservice}-flask-simulator:test docker image..."
                 if [ ! -d "${MAIN_DIR}/../refarch-reefer-ml" ]; then
