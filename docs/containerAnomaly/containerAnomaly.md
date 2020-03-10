@@ -10,7 +10,7 @@ We have implemented a [Container Anomaly](https://ibm-cloud-architecture.github.
 
 This section outlines the process the container management component of our Reefer Container Reference Application follows to handle the **ContainerAnomaly** events for a given container:
 
-![sequence diagram](images/slide1.png)
+![sequence diagram](images/Slide1.png)
 
 As we can see in the image, the container management component called **Spring Containers** (since it is written using the Spring Framework) listens to the **containers** topic. The Spring Containers component expects **ContainerAnomaly** events. However, it will not trigger the "container to maintenance" process until it receives 3 ContainerAnomaly events for a given container (this decreases the load on the BPM process).
 
