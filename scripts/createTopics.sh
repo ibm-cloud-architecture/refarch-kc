@@ -33,6 +33,8 @@ bluewater-problem
 bluewater-ship
 containers
 order-commands
+container-anomaly-retry
+container-anomaly-dead
 errors
 orders
 reefer-telemetry

@@ -61,6 +61,7 @@ case "$kcenv" in
         export BPM_ANOMALY_USER=""
         # BPM service password for the container anomalies
         export BPM_ANOMALY_PASSWORD=""
+        
     ;;
    LOCAL)
         export KAFKA_BROKERS="kafka1:9092"
@@ -87,6 +88,10 @@ case "$kcenv" in
         export BPM_ANOMALY_USER=""
         # BPM service password for the container anomalies
         export BPM_ANOMALY_PASSWORD=""
+        # BPM authentication token time expiration
+        export BPM_EXPIRATION=60
+        # Threshold for number of anomaly events before calling BPM
+        export ANOMALY_THRESHOLD=3
         # Logging levels for the Container MS component. Defaults to INFO
         export LOGGING_CONTAINER_MS_ROOT="INFO"
         export LOGGING_CONTAINER_MS_CONSUMER_CONFIG="ERROR"
@@ -101,7 +106,14 @@ case "$kcenv" in
         export CP4D_PWD=""
         # Topics the anomaly scoring will read and produce messages from and to.
         export TELEMETRY_TOPIC="reefer-telemetry"
-        export CONTAINERS_TOPIC="containers"
+        # Topic for the container events
+        export KCSOLUTION_CONTAINERS_TOPIC="containers"
+        # Topic for the container anomaly retry events
+        export KCSOLUTION_CONTAINER_ANOMALY_RETRY_TOPIC="container-anomaly-retry"
+        # Topic for the container anomaly dead events
+        export KCSOLUTION_CONTAINER_ANOMALY_DEAD_TOPIC="container-anomaly-dead"
+        # Topic for the orders events
+        export KCSOLUTION_ORDERS_TOPIC="orders"
 
    ;;
    MINIKUBE)

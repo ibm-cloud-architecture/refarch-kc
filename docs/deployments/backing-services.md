@@ -45,6 +45,8 @@ data:
   bluewaterProblemTopic: bluewater-problem
   bluewaterShipTopic: bluewater-ship
   containersTopic: containers
+  containerAnomalyRetryTopic: container-anomaly-retry
+  containerAnomalyDeadTopic: container-anomaly-dead
   errorsTopic: errors
   orderCommandsTopic: order-commands
   ordersTopic: orders
@@ -98,6 +100,8 @@ data:
   bluewaterProblemTopic: bluewater-problem
   bluewaterShipTopic: bluewater-ship
   containersTopic: containers
+  containerAnomalyRetryTopic: container-anomaly-retry
+  containerAnomalyDeadTopic: container-anomaly-dead
   errorsTopic: errors
   orderCommandTopics: order-commands
   ordersTopic: orders
@@ -190,6 +194,8 @@ data:
   bluewaterProblemTopic: bluewater-problem
   bluewaterShipTopic: bluewater-ship
   containersTopic: containers
+  containerAnomalyRetryTopic: container-anomaly-retry
+  containerAnomalyDeadTopic: container-anomaly-dead
   errorsTopic: errors
   orderCommandTopics: order-commands
   ordersTopic: orders
@@ -340,11 +346,24 @@ The containers microservice component of this Reefer Container EDA reference app
 
 In order for the containers microservice to fire the BPM workflow, we need to provide the following information through Kubernetes configMaps and secrets:
 
-1. Provide the **BPM authentication login endpoint** and the **BPM workflow endpoint** in a configMap:
+1. Provide in a configMap:
+   * the **BPM authentication login endpoint**
+   * the **BPM workflow endpoint**
+   * the **BPM anomaly event threshold**
+   * the **BPM authentication token time expiration**
 
    ```shell
-   kubectl create configmap bpm-anomaly --from-literal=url='<replace with your BPM workflow endpoint>' --from-literal=login='<replace with your BPM authentication endpoint>' -n <target k8s namespace / ocp project>
-   kubectl describe configmap bpm-anomaly -n <target k8s namespace / ocp project>
+   cat <<EOF | kubectl apply -f -
+   apiVersion: v1
+   kind: ConfigMap
+   metadata:
+     name: bpm-anomaly
+   data:
+     url: <replace with your BPM workflow endpoint>
+     login: <replace with your BPM authentication endpoint>
+     expiration: <replace with the number of second for the auth token to expire after>
+     anomalyThreshold: <replace with the number of anomaly events to receive before calling BPM>
+   EOF
    ```
 
 2. Provide your BPM instance's **credentials** in a secret:
