@@ -8,6 +8,7 @@ So far we have the following integration test cases:
 - [SAGA pattern](saga/saga.md) - SAGA pattern for new order creation test.
 - [Order Rejection](order-rejected/order_rejected.md) - Order Rejection test.
 - [Container Anomaly](containerAnomaly/containerAnomaly.md) - Container anomaly and maintenance test.
+- [Dead Letter Queue](dlq/dlq.md) - Container Anomaly Dead Letter Queue Pattern test.
 
 New integration test cases will be added in order to test other parts of the application as well as use cases and other Event Driven Patterns.
 
@@ -43,6 +44,10 @@ Other required variables for the integration tests need to be defined within the
 
 - Containers topic name: This could be specified within the integration tests kubernetes job yaml file under the variable **ITGTESTS_CONTAINERS_TOPIC** which defaults to `itg-containers`.
 
+- Container anomaly retry topic name: This could be specified within the integration tests kubernetes job yaml file under the variable **ITGTESTS_CONTAINER_ANOMALY_RETRY_TOPIC** which defaults to `itg-container-anomaly-retry`.
+
+- Container anomaly dead topic name: This could be specified within the integration tests kubernetes job yaml file under the variable **ITGTESTS_CONTAINER_ANOMALY_DEAD_TOPIC** which defaults to `itg-container-anomaly-dead`.
+
 - Kafka Environment: It should be either **OCP** or **IBMCLOUD** depending on where your IBM Event Streams instance is deployed onto. If it is deployed on premises in your OpenShift or Kubernetes cluster, then it `KAFKA_ENV` should be set to `OCP`. If you are using an IBM Event Streams instance in the IBM Cloud, then `KAFKA_ENV` should be set to `IBMCLOUD`.
 
   This is important as the **IBM Event Streams on-prem instances require a PEM certificate** for the Kafka libraries to successfully connect to it. So, if you are using IBM Event Streams on-prem in your OpenShift or Kubernetes cluster, you also have to:
@@ -50,13 +55,19 @@ Other required variables for the integration tests need to be defined within the
   1. Uncomment the bottom part of the integration tests kubernetes job yaml file.
   2. Make sure you created the **eventstreams-pem-file** secret that will hold your IBM Event Streams PEM certificate, in step #1 of this pre-requisites section.
 
-**IMPORTANT:** For the integration tests to work fine, we **must** mockup the BPM integration by pointing it to a testing post endpoint such as: `https://postman-echo.com/post`. For doing this, you will need to make sure the **bpm-anomaly** configMap you created for the Spring Container microservice component of the Reefer container shipment solution holds that testing post endpoint. You can do so by manually editing the configMap:
+**IMPORTANT:** For the integration test suite to work fine, more precisely to get the test case for testing [the dead letter queue pattern](../dlq/dlq.md)) to succeed, we **must** mockup the BPM integration by pointing it to a testing post endpoint such as: `https://postman-echo.com/post`. For doing this, you will need to make sure the **bpm-anomaly** configMap you created for the Spring Container microservice component of the Reefer container shipment solution holds a **valid BPM instance login and credential values** and the following value for the bpm url attribute so that the request retry and dead letter queue pattern kick in:
+
+```bash
+url: 'https://postman-echo.com/status/404'
+```
+
+You can do so by manually editing the configMap:
 
 ```bash
 $ oc edit configmap bpm-anomaly -n eda-integration
 ```
 
-The above will require to restart the Spring Container microservice component.
+The above will require to restart the Spring Container microservice component, although we **strongly suggest** the integration tests are run on a separate testing environment where the **bpm-anomaly** (and any other configuration item) holds testing values as well as the **recreation** of the kafka topics involved in the integration tests suite.
 
 ### Run
 
@@ -251,5 +262,16 @@ test8_containerEmpty...OK
 test9_enableBPM...OK
 -----------------------------------
 PASSED: 9
+FAILED: 0
+
+TEST CASE - Dlq
+-----------------------------------
+test1_createContainer...OK
+test2_sendAnomalyEvents...OK
+test3_containerMaintenanceNeeded...OK
+test4_containerAnomalyRetry...OK
+test5_containerAnomalyDead...OK
+-----------------------------------
+PASSED: 5
 FAILED: 0
 ```

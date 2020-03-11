@@ -45,6 +45,8 @@ createTopic "rejected-orders"
 createTopic "allocated-orders"
 createTopic "errors"
 createTopic "containers"
+createTopic "container-anomaly-retry"
+createTopic "container-anomaly-dead"
 createTopic "reefer-telemetry"
 createTopic "order-commands"
 

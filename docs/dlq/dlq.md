@@ -21,7 +21,7 @@ Another important thing to have in mind when implementing retry and graceful fai
 
 To illustrate this, we have decided that any failure in authenticating with BPM is an error and that it does not make sense to retry since it will fail again due to bad Spring Container component configuration (wrong BPM credentials provided).
 
-### Service Unavailability
+### Service Unavailable
 
 ![retry](images/Slide1.png)
 
@@ -52,11 +52,9 @@ public void onMessage(ConsumerRecord<Integer, String> message) {
 }
 ```
 
+The ContainerAnomalyEventRetry events sent to the container-anomaly-retry topic look like this:
+
 ```json
-Key:         1111
-Partition:   0
-Offset:      0
-Timestamp:   2020-03-09 12:07:14.348 +0100 CET
 {
   "containerID": "1111",
   "payload": {
@@ -83,7 +81,7 @@ Timestamp:   2020-03-09 12:07:14.348 +0100 CET
 }
 ```
 
-If the BPM service is still unreachable/unavailable after three attempts, the Spring Container component will eventually send a **ContainerAnomalyDead** event into the **container-anomaly-dead** topic, which should be somehow monitored to take the appropriate action based on the type of events that get published:
+where you can see a new attribute called **retries** so that we keep the count of how many times we have called the BPM service. If the BPM service is still unreachable/unavailable after three attempts, the Spring Container component will eventually send a **ContainerAnomalyDead** event into the **container-anomaly-dead** topic, which should be somehow monitored to take the appropriate action based on the type of events that get published:
 
 ```java
 private void toRetryTopic(ContainerAnomalyEvent cae){
@@ -108,11 +106,9 @@ private void toRetryTopic(ContainerAnomalyEvent cae){
 }
 ```
 
+and the ContainerAnomalyDead event looks like:
+
 ```json
-Key:         1111
-Partition:   0
-Offset:      2
-Timestamp:   2020-03-09 12:08:15.628 +0100 CET
 {
   "containerID": "1111",
   "payload": {
@@ -138,6 +134,8 @@ Timestamp:   2020-03-09 12:08:15.628 +0100 CET
   "type": "ContainerAnomalyDead"
 }
 ```
+
+where you can see we have added the **reason** so that if any operator or automated system monitors this queue, they know what might be the problem.
 
 ### Errors
 
@@ -169,11 +167,9 @@ if (bpm_token == "" || expired) {
 }
 ```
 
+In this case, the ContainerAnomalyDead event looks exactly the same as in the service unavailable section but with a different reason, potentially indicating another problem this time.
+
 ```json
-Key:         1111
-Partition:   0
-Offset:      1
-Timestamp:   2020-03-09 12:00:49.081 +0100 CET
 {
   "containerID": "1111",
   "payload": {
@@ -199,3 +195,7 @@ Timestamp:   2020-03-09 12:00:49.081 +0100 CET
   "type": "ContainerAnomalyDead"
 }
 ```
+
+### What to do next
+
+As already said, the idea of implementing the Request Retry and Dead Letter Queue Pattern is not only to alleviate the load an, external or not, system we depend on might have but also as a sink for potential problems. Whether ContainerAnomaly messages end up in the container-anomaly-dead topic because the BPM service was (temporarily or not) unavailable or there was an, expected or not, error in the system, this dead letter queue will ideally have some automated/manual monitoring system/person so that the appropriate action can be taken as a result in an attempt to minimize the incorrect functioning of your system/service. This is, for instance, one good reason to wrap up your messages being sent to the dead letter queue with some code/reason that can be quickly understood by whatever monitor system. Not only understood but possibly aggregated and queried to better understand your system performance over time.

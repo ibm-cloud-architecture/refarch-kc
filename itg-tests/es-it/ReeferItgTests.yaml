@@ -107,6 +107,14 @@ spec:
 
               python -u ContainerAnomaly.py
 
+              echo '****************************************************'
+              echo '****************************************************'
+              echo '*********   Retry and Dead Letter Queue   **********'
+              echo '****************************************************'
+              echo '****************************************************'
+
+              python -u ContainerAnomalyDlq.py
+
               echo
               echo 'END RESULTS:'
               echo
@@ -172,6 +180,12 @@ spec:
         # Containers topic name
         - name: ITGTESTS_CONTAINERS_TOPIC
           value: "itg-containers"
+        # Container anomaly retry topic name
+        - name: ITGTESTS_CONTAINER_ANOMALY_RETRY_TOPIC
+          value: "itg-container-anomaly-retry"
+        # Container anomaly dead topic name
+        - name: ITGTESTS_CONTAINER_ANOMALY_DEAD_TOPIC
+          value: "itg-container-anomaly-dead"
         # Location of your Event Streams pem certificate for ssl connections. You MUST download it in advance.
         # This can be downloaded from the Event Streams UI.
         - name: PEM_CERT
