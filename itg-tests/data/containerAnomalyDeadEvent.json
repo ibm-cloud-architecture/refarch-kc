@@ -1,0 +1,24 @@
+{
+"containerID": "",
+"reason": "No more BPM process retries left",
+"timestamp": "",
+"type":"ContainerAnomalyDead",
+"payload": {
+        "temperature": 5.49647,
+        "target_temperature": 6.0,
+        "ambiant_temperature": 19.8447,
+        "kilowatts": 3.44686,
+        "content_type" : 2,
+        "oxygen_level" : 20.4543   ,
+        "nitrogen_level" : 79.4046,
+        "carbon_dioxide_level" : 4.42579,
+        "humidity_level" : 60.3148,
+        "latitude": 31.4,
+        "longitude": 121.5,
+        "vent_1": true,
+        "vent_2" : true,
+        "vent_3" : true,
+        "time_door_open" : 0.822024,
+        "defrost_cycle": 6
+        }
+}
