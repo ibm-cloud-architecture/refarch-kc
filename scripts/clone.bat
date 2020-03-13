@@ -1,8 +1,7 @@
-#!/bin/bash
+::ECHO OFF
+SET SCRIPT_DIR=%~dp0
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-cd ${SCRIPT_DIR}/../..
+cd %SCRIPT_DIR%\..\..
 git clone https://github.com/ibm-cloud-architecture/refarch-kc-ui
 git clone https://github.com/ibm-cloud-architecture/refarch-kc-ms
 git clone https://github.com/ibm-cloud-architecture/refarch-kc-streams
