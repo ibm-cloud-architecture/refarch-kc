@@ -1,0 +1,39 @@
+apiVersion: kafka.strimzi.io/v1beta1
+kind: Kafka
+metadata:
+  name: my-cluster
+  namespace: kafka
+spec:
+  kafka:
+    version: 2.4.0
+    replicas: 1
+    listeners:
+      plain: {}
+      tls: {}
+      external:
+        type: nodeport
+        tls: false
+        overrides:
+          bootstrap:
+            nodePort: 32100
+          brokers:
+          - broker: 0
+            nodePort: 32000
+            advertisedHost: localhost
+          - broker: 1
+            nodePort: 32001
+            advertisedHost: localhost
+    config:
+      offsets.topic.replication.factor: 1
+      transaction.state.log.replication.factor: 1
+      transaction.state.log.min.isr: 1
+      log.message.format.version: "2.3"
+    storage:
+      type: ephemeral
+  zookeeper:
+    replicas: 1
+    storage:
+      type: ephemeral
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}
