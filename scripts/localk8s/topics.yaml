@@ -6,7 +6,6 @@ metadata:
   labels:
     strimzi.io/cluster: my-cluster
 spec:
-  topicName: bluewater-container
   partitions: 1
   replicas: 1
 ---
@@ -18,7 +17,6 @@ metadata:
   labels:
     strimzi.io/cluster: my-cluster
 spec:
-  topicName: bluewater-ship
   partitions: 1
   replicas: 1
 ---
@@ -30,7 +28,6 @@ metadata:
   labels:
     strimzi.io/cluster: my-cluster
 spec:
-  topicName: bluewater-problem
   partitions: 1
   replicas: 1
 ---
@@ -42,7 +39,6 @@ metadata:
   labels:
     strimzi.io/cluster: my-cluster
 spec:
-  topicName: orders
   partitions: 1
   replicas: 1
 ---
@@ -54,7 +50,6 @@ metadata:
   labels:
     strimzi.io/cluster: my-cluster
 spec:
-  topicName: order-commands
   partitions: 1
   replicas: 1
 ---
@@ -66,7 +61,6 @@ metadata:
   labels:
     strimzi.io/cluster: my-cluster
 spec:
-  topicName: rejected-orders
   partitions: 1
   replicas: 1
 ---
@@ -78,7 +72,6 @@ metadata:
   labels:
     strimzi.io/cluster: my-cluster
 spec:
-  topicName: allocated-orders
   partitions: 1
   replicas: 1
 ---
@@ -90,7 +83,6 @@ metadata:
   labels:
     strimzi.io/cluster: my-cluster
 spec:
-  topicName: errors
   partitions: 1
   replicas: 1
 ---
@@ -102,7 +94,6 @@ metadata:
   labels:
     strimzi.io/cluster: my-cluster
 spec:
-  topicName: containers
   partitions: 1
   replicas: 1
 ---
@@ -114,7 +105,6 @@ metadata:
   labels:
     strimzi.io/cluster: my-cluster
 spec:
-  topicName: reefer-telemetry
   partitions: 1
   replicas: 1
 ---
@@ -126,7 +116,6 @@ metadata:
   labels:
     strimzi.io/cluster: my-cluster
 spec:
-  topicName: container-anomaly-retry
   partitions: 1
   replicas: 1
 ---
@@ -138,7 +127,6 @@ metadata:
   labels:
     strimzi.io/cluster: my-cluster
 spec:
-  topicName: container-anomaly-dead
   partitions: 1
   replicas: 1
 ---

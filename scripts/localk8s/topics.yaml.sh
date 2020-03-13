@@ -14,14 +14,11 @@ reefer-telemetry
 container-anomaly-retry
 container-anomaly-dead"
 
-# Note: the lower-casing logic in this part is no longer necessary because
-# we replaced camelCased topic names with hypenated ones. The presence of
-# the 'topicName' in the spec is also not necessary as the k8s resource name
-# and topic name will match.
-# These could be deleted in the future.
+# Note: topics must also be valid k8s resource names, otherwise they will
+# need to be converted (eg. lowercased) and specified via the 'topicName'
+# spec in the KafkaTopic CR.
 echo -n "" > $SCRIPTLOC/topics.yaml
 for TOPIC in $TOPICS; do
-    TOPICLC=`echo $TOPIC | tr '[:upper:]' '[:lower:]'`
-    cat $SCRIPTLOC/topics.yaml.template | sed -e"s#  name: \$#  name: ${TOPICLC}#" -e"s#  topicName: \$#  topicName: ${TOPIC}#" >> topics.yaml
+    cat $SCRIPTLOC/topics.yaml.template | sed -e"s#  name: \$#  name: ${TOPIC}#" >> topics.yaml
     echo "---" >> $SCRIPTLOC/topics.yaml
 done
