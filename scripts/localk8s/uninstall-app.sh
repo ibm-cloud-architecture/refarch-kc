@@ -20,6 +20,10 @@ kubectl delete secret postgresql-url -n shipping
 kubectl delete secret postgresql-user -n shipping
 kubectl delete secret postgresql-pwd -n shipping
 
+# Delete BPM configmap and secret
+kubectl delete configmap bpm-anomaly -n shipping
+kubectl delete secret bpm-anomaly -n shipping
+
 # Delete Kafka configmap
 kubectl delete configmap kafka-brokers -n shipping
 
