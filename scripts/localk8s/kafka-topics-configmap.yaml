@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-topics
+data:
+  allocatedOrdersTopic: allocated-orders
+  bluewaterContainerTopic: bluewater-container
+  bluewaterProblemTopic: bluewater-problem
+  bluewaterShipTopic: bluewater-ship
+  containersTopic: containers
+  containerAnomalyRetryTopic: container-anomaly-retry
+  containerAnomalyDeadTopic: container-anomaly-dead
+  errorsTopic: errors
+  orderCommandsTopic: order-commands
+  ordersTopic: orders
+  reeferTelemetryTopic: reefer-telemetry
+  rejectedOrdersTopic: rejected-orders
