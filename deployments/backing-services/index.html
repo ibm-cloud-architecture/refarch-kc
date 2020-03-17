@@ -371,30 +371,6 @@
 
 
   <li class="md-nav__item">
-    <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/kstreams/" title="Container microservice with event sourcing and Kafka streams" class="md-nav__link">
-      Container microservice with event sourcing and Kafka streams
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/flask" title="Container microservice with Python" class="md-nav__link">
-      Container microservice with Python
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/springboot" title="Container microservice with Springboot - Spring Kafka and PostgreSQL" class="md-nav__link">
       Container microservice with Springboot - Spring Kafka and PostgreSQL
     </a>
@@ -409,6 +385,54 @@
   <li class="md-nav__item">
     <a href="../../avro/avro/" title="Adopting Schema Registry and Avro" class="md-nav__link">
       Adopting Schema Registry and Avro
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../saga/saga/" title="Saga applied to container solution" class="md-nav__link">
+      Saga applied to container solution
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../dlq/dlq/" title="Dead letter pattern for this solution" class="md-nav__link">
+      Dead letter pattern for this solution
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../rejection/rejection/" title="Order rejection principle" class="md-nav__link">
+      Order rejection principle
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../containerAnomaly/containerAnomaly/" title="Container anomaly" class="md-nav__link">
+      Container anomaly
     </a>
   </li>
 
@@ -801,6 +825,30 @@
   <li class="md-nav__item">
     <a href="../../itg-tests/saga/saga/" title="Saga Pattern" class="md-nav__link">
       Saga Pattern
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../itg-tests/order-rejected/order_rejected/" title="Order rejection" class="md-nav__link">
+      Order rejection
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../itg-tests/dlq/dlq/" title="Dead letter" class="md-nav__link">
+      Dead letter
     </a>
   </li>
 
@@ -1406,7 +1454,7 @@ kubectl create secret generic postgresql-url --from-literal<span class="o">=</sp
 <ol>
 <li>Provide your BPM instance's <strong>credentials</strong> in a secret:</li>
 </ol>
-<div class="codehilite"><pre><span></span>kubectl create secret generic bpm-anomaly --from-literal<span class="o">=</span><span class="nv">user</span><span class="o">=</span><span class="s1">&#39;&lt;replace with your BPM user&gt;&#39;</span> --from-literal<span class="o">=</span><span class="nv">user</span><span class="o">=</span><span class="s1">&#39;&lt;replace with your BPM password&gt;&#39;</span> -n &lt;target k8s namespace / ocp project&gt;
+<div class="codehilite"><pre><span></span>kubectl create secret generic bpm-anomaly --from-literal<span class="o">=</span><span class="nv">user</span><span class="o">=</span><span class="s1">&#39;&lt;replace with your BPM user&gt;&#39;</span> --from-literal<span class="o">=</span><span class="nv">password</span><span class="o">=</span><span class="s1">&#39;&lt;replace with your BPM password&gt;&#39;</span> -n &lt;target k8s namespace / ocp project&gt;
 kubectl describe secrets -n &lt;target k8s namespace / ocp project&gt;
 </pre></div>
 

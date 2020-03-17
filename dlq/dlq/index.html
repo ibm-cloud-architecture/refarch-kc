@@ -36,7 +36,7 @@
     
     
       
-        <title>Dead Letter Queue Pattern - Container Shipment EDA reference implementation</title>
+        <title>Dead letter pattern for this solution - Container Shipment EDA reference implementation</title>
       
     
     
@@ -146,7 +146,7 @@
               Container Shipment EDA reference implementation
             </span>
             <span class="md-header-nav__topic">
-              Dead Letter Queue Pattern
+              Dead letter pattern for this solution
             </span>
           
         </div>
@@ -338,10 +338,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
     
     <label class="md-nav__link" for="nav-5">
       Development practices
@@ -371,30 +373,6 @@
 
 
   <li class="md-nav__item">
-    <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/kstreams/" title="Container microservice with event sourcing and Kafka streams" class="md-nav__link">
-      Container microservice with event sourcing and Kafka streams
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/flask" title="Container microservice with Python" class="md-nav__link">
-      Container microservice with Python
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/springboot" title="Container microservice with Springboot - Spring Kafka and PostgreSQL" class="md-nav__link">
       Container microservice with Springboot - Spring Kafka and PostgreSQL
     </a>
@@ -409,6 +387,119 @@
   <li class="md-nav__item">
     <a href="../../avro/avro/" title="Adopting Schema Registry and Avro" class="md-nav__link">
       Adopting Schema Registry and Avro
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../saga/saga/" title="Saga applied to container solution" class="md-nav__link">
+      Saga applied to container solution
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Dead letter pattern for this solution
+      </label>
+    
+    <a href="./" title="Dead letter pattern for this solution" class="md-nav__link md-nav__link--active">
+      Dead letter pattern for this solution
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#implementation" title="Implementation" class="md-nav__link">
+    Implementation
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#service-unavailable" title="Service Unavailable" class="md-nav__link">
+    Service Unavailable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#errors" title="Errors" class="md-nav__link">
+    Errors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-to-do-next" title="What to do next" class="md-nav__link">
+    What to do next
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../rejection/rejection/" title="Order rejection principle" class="md-nav__link">
+      Order rejection principle
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../containerAnomaly/containerAnomaly/" title="Container anomaly" class="md-nav__link">
+      Container anomaly
     </a>
   </li>
 
@@ -541,6 +632,30 @@
   <li class="md-nav__item">
     <a href="../../itg-tests/saga/saga/" title="Saga Pattern" class="md-nav__link">
       Saga Pattern
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../itg-tests/order-rejected/order_rejected/" title="Order rejection" class="md-nav__link">
+      Order rejection
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../itg-tests/dlq/dlq/" title="Dead letter" class="md-nav__link">
+      Dead letter
     </a>
   </li>
 
@@ -834,6 +949,41 @@
       
         
 <footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../../saga/saga/" title="Saga applied to container solution" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Saga applied to container solution
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../../rejection/rejection/" title="Order rejection principle" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Order rejection principle
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">

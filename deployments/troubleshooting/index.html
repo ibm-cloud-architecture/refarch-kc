@@ -371,30 +371,6 @@
 
 
   <li class="md-nav__item">
-    <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/kstreams/" title="Container microservice with event sourcing and Kafka streams" class="md-nav__link">
-      Container microservice with event sourcing and Kafka streams
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/flask" title="Container microservice with Python" class="md-nav__link">
-      Container microservice with Python
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/springboot" title="Container microservice with Springboot - Spring Kafka and PostgreSQL" class="md-nav__link">
       Container microservice with Springboot - Spring Kafka and PostgreSQL
     </a>
@@ -409,6 +385,54 @@
   <li class="md-nav__item">
     <a href="../../avro/avro/" title="Adopting Schema Registry and Avro" class="md-nav__link">
       Adopting Schema Registry and Avro
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../saga/saga/" title="Saga applied to container solution" class="md-nav__link">
+      Saga applied to container solution
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../dlq/dlq/" title="Dead letter pattern for this solution" class="md-nav__link">
+      Dead letter pattern for this solution
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../rejection/rejection/" title="Order rejection principle" class="md-nav__link">
+      Order rejection principle
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../containerAnomaly/containerAnomaly/" title="Container anomaly" class="md-nav__link">
+      Container anomaly
     </a>
   </li>
 
@@ -551,6 +575,30 @@
 
 
   <li class="md-nav__item">
+    <a href="../../itg-tests/order-rejected/order_rejected/" title="Order rejection" class="md-nav__link">
+      Order rejection
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../itg-tests/dlq/dlq/" title="Dead letter" class="md-nav__link">
+      Dead letter
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../../itg-tests/containerAnomaly/containerAnomaly/" title="Container Anomaly" class="md-nav__link">
       Container Anomaly
     </a>
@@ -616,13 +664,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#ltpa-configuration-error-unable-to-create-or-read-ltpa-key-file-optibmwlpusrserversdefaultserverresourcessecurityltpakeys" title="LTPA configuration error. Unable to create or read LTPA key file: /opt/ibm/wlp/usr/servers/defaultServer/resources/security/ltpa.keys" class="md-nav__link">
-    LTPA configuration error. Unable to create or read LTPA key file: /opt/ibm/wlp/usr/servers/defaultServer/resources/security/ltpa.keys
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -649,14 +690,6 @@
                 
                 <h1 id="work-in-progress">Work in Progress</h1>
 <h3 id="troubleshouting">Troubleshouting</h3>
-<p>Here is a way to assess, within the kafka container, how the message arrived on a topic:</p>
-<div class="codehilite"><pre><span></span>$ kubectl <span class="nb">exec</span> -ti rolling-streams-ibm-es-kafka-sts-0 -n streams bash
-nobody@rolling-streams-ibm-es-kafka-sts-0 $ <span class="nb">cd</span> /opt/kafka/bin
-nobody@rolling-streams-ibm-es-kafka-sts-0:/opt/kafka/bin$ ./kafka-console-consumer.sh --bootstrap-server rolling-streams-ibm-es-kafka-broker-svc-0.streams.svc.cluster.local:9092 --topic containers --from-beginning
-
-&gt; <span class="o">{</span><span class="s2">&quot;timestamp&quot;</span>: <span class="m">1554338808</span>, <span class="s2">&quot;type&quot;</span>: <span class="s2">&quot;ContainerAdded&quot;</span>, <span class="s2">&quot;version&quot;</span>: <span class="s2">&quot;1&quot;</span>, <span class="s2">&quot;containerID&quot;</span>: <span class="s2">&quot;c_0&quot;</span>, <span class="s2">&quot;payload&quot;</span>: <span class="o">{</span><span class="s2">&quot;containerID&quot;</span>: <span class="s2">&quot;c_0&quot;</span>, <span class="s2">&quot;type&quot;</span>: <span class="s2">&quot;Reefer&quot;</span>, <span class="s2">&quot;status&quot;</span>: <span class="s2">&quot;atDock&quot;</span>, <span class="s2">&quot;city&quot;</span>: <span class="s2">&quot;Oakland&quot;</span>, <span class="s2">&quot;brand&quot;</span>: <span class="s2">&quot;brand-reefer&quot;</span>, <span class="s2">&quot;capacity&quot;</span>: <span class="m">100</span><span class="o">}}</span>
-</pre></div>
-
 <h4 id="no-resolvable-bootstrap-urls-given-in-bootstrapservers">No resolvable bootstrap urls given in bootstrap.servers</h4>
 <p>It is obvious reason, but when deploying a kafka consumer or producer on Kubernetes it is important to know which name to use. As the communication will be on the overlay network we should use the internal broker name. The name will be linked to the deployed configuration of Kafka or event streams. Here are a set of commands to debug that:</p>
 <p><div class="codehilite"><pre><span></span><span class="c1"># Get the namespace name for the deployed kafka instance</span>
@@ -706,10 +739,6 @@ For other DNS troubleshooting see <a href="https://kubernetes.io/docs/tasks/admi
     <span class="err">&#39;sasl.username&#39;:</span> <span class="err">&#39;token&#39;,</span>
     <span class="err">&#39;sasl.password&#39;:</span> <span class="err">KAFKA_APIKEY,</span>
 </pre></div>
-
-<h4 id="ltpa-configuration-error-unable-to-create-or-read-ltpa-key-file-optibmwlpusrserversdefaultserverresourcessecurityltpakeys">LTPA configuration error. Unable to create or read LTPA key file: /opt/ibm/wlp/usr/servers/defaultServer/resources/security/ltpa.keys</h4>
-<p><TBD></p>
-<p>Our how to on ICP troublshouting: https://github.com/ibm-cloud-architecture/refarch-integration/blob/master/docs/icp/troubleshooting.md</p>
                 
                   
                 

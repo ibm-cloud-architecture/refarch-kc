@@ -371,30 +371,6 @@
 
 
   <li class="md-nav__item">
-    <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/kstreams/" title="Container microservice with event sourcing and Kafka streams" class="md-nav__link">
-      Container microservice with event sourcing and Kafka streams
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/flask" title="Container microservice with Python" class="md-nav__link">
-      Container microservice with Python
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/springboot" title="Container microservice with Springboot - Spring Kafka and PostgreSQL" class="md-nav__link">
       Container microservice with Springboot - Spring Kafka and PostgreSQL
     </a>
@@ -409,6 +385,54 @@
   <li class="md-nav__item">
     <a href="../../avro/avro/" title="Adopting Schema Registry and Avro" class="md-nav__link">
       Adopting Schema Registry and Avro
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../saga/saga/" title="Saga applied to container solution" class="md-nav__link">
+      Saga applied to container solution
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../dlq/dlq/" title="Dead letter pattern for this solution" class="md-nav__link">
+      Dead letter pattern for this solution
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../rejection/rejection/" title="Order rejection principle" class="md-nav__link">
+      Order rejection principle
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../containerAnomaly/containerAnomaly/" title="Container anomaly" class="md-nav__link">
+      Container anomaly
     </a>
   </li>
 
@@ -560,6 +584,30 @@
 
 
   <li class="md-nav__item">
+    <a href="../../itg-tests/order-rejected/order_rejected/" title="Order rejection" class="md-nav__link">
+      Order rejection
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../itg-tests/dlq/dlq/" title="Dead letter" class="md-nav__link">
+      Dead letter
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../../itg-tests/containerAnomaly/containerAnomaly/" title="Container Anomaly" class="md-nav__link">
       Container Anomaly
     </a>
@@ -664,13 +712,6 @@ In each repository we are explaining the design and implementation approach, how
 <td>Supports the order management and ship voyage assignment, using Nodejs / express and kafka javascript APIs.</td>
 </tr>
 <tr>
-<td>Real time analytics</td>
-<td><a href="https://github.com/ibm-cloud-architecture/refarch-kc-streams">refarch-kc-streams</a></td>
-<td>3</td>
-<td>Python</td>
-<td>IBM Streaming Analytics to identify problem on containers from real time events.</td>
-</tr>
-<tr>
 <td>Reefer predictive maintenance</td>
 <td><a href="https://ibm-cloud-architecture.github.io/refarch-reefer-ml/">refarch-reefer-ml</a></td>
 <td>3</td>
@@ -685,8 +726,29 @@ In each repository we are explaining the design and implementation approach, how
 <td>Bi-directional connections between MQ and Kafka, using a legacy JEE app to manage the inventory for metal and Reefer containers, but only Reefer information is sent to Kafka.</td>
 </tr>
 <tr>
-<td>Kafka order producer</td>
-<td><a href="https://github.com/jbcodeforce/order-producer-python">jbcodeforce/order-producer-pythong</a></td>
+<td>Microprofile 3.0 producer and consumer template</td>
+<td><a href="https://github.com/jbcodeforce/microprofile-event-driven-microservice-template">microprofile-event-driven-microservice-template</a></td>
+<td>n/a</td>
+<td>Java microprofile 3.0</td>
+<td>Get started from a DDD project template on Openliberty and microprofile 3.0- Kafka API</td>
+</tr>
+<tr>
+<td>Quarkus Microprofile 3.0 consumer template</td>
+<td><a href="https://github.com/jbcodeforce/quarkus-event-driven-consumer-microservice-template">quarkus-event-driven-consumer-microservice-template</a></td>
+<td>n/a</td>
+<td>Quarkus Java microprofile 3.0</td>
+<td>Get started from a DDD project template on Quarkus and microprofile 3.0- Kafka consumer API</td>
+</tr>
+<tr>
+<td>Quarkus Microprofile 3.0 producer template</td>
+<td><a href="https://github.com/jbcodeforce/quarkus-event-driven-producer-microservice-template">quarkus-event-driven-producer-microservice-template</a></td>
+<td>n/a</td>
+<td>Quarkus Java microprofile 3.0</td>
+<td>Get started from a DDD project template on Quarkus and microprofile 3.0- Kafka producer API</td>
+</tr>
+<tr>
+<td>Kafka order producer in python</td>
+<td><a href="https://github.com/jbcodeforce/order-producer-python">jbcodeforce/order-producer-python</a></td>
 <td>n/a</td>
 <td>Python and Flask</td>
 <td>Quickly test an IBM Cloud Event Streams deployment.</td>
@@ -714,7 +776,7 @@ In each repository we are explaining the design and implementation approach, how
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../../avro/avro/" title="Adopting Schema Registry and Avro" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../../containerAnomaly/containerAnomaly/" title="Container anomaly" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -723,7 +785,7 @@ In each repository we are explaining the design and implementation approach, how
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Adopting Schema Registry and Avro
+                Container anomaly
               </span>
             </div>
           </a>
