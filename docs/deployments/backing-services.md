@@ -369,7 +369,7 @@ In order for the containers microservice to fire the BPM workflow, we need to pr
 2. Provide your BPM instance's **credentials** in a secret:
 
    ```shell
-   kubectl create secret generic bpm-anomaly --from-literal=user='<replace with your BPM user>' --from-literal=user='<replace with your BPM password>' -n <target k8s namespace / ocp project>
+   kubectl create secret generic bpm-anomaly --from-literal=user='<replace with your BPM user>' --from-literal=password='<replace with your BPM password>' -n <target k8s namespace / ocp project>
    kubectl describe secrets -n <target k8s namespace / ocp project>
    ```
 
