@@ -9,6 +9,9 @@ helm uninstall spring-container-ms -n shipping
 helm uninstall voyages-ms -n shipping
 helm uninstall fleet-ms -n shipping
 
+:: Delete configmap for topic names
+kubectl delete -f %SCRIPTLOC%\kafka-topics-configmap.yaml -n shipping
+
 :: Remove Kafka topics
 kubectl delete -f %SCRIPTLOC%\topics.yaml
 

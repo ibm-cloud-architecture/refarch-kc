@@ -40,9 +40,13 @@ Each of the microservices is then installed using its respective Helm chart. The
 
 ### Integration tests
 
-Running the `run-integration-tests.sh` script will create a Kubernetes job using the `itg-tests/es-it/ReggerItgTests.yaml` definition, with the `KAFKA_ENV` variable set to `LOCAL`, and the topic names set to their default values (without the `itg-` prefix).
-
-It will then follow the log so that the output and progress of the tests can be viewed on the console.
+Running the `run-integration-tests.sh` script will:
+- Update the `kafka-topics` configmap to prefix each Kafka topic with `itg-`,
+- Create the itg-prefixed topics,
+- Restart the microservices so that they pick up the new topic configuration,
+- Create a Kubernetes job using the `itg-tests/es-it/ReeferItgTests.yaml` definition, with the `KAFKA_ENV` variable set to `LOCAL`,
+- Follow the log so that the output and progress of the tests can be viewed on the console,
+- Revert the topic names to their normal values, and restart the microservices.
 
 ## Uninstalling
 
