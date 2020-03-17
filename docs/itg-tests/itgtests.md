@@ -55,10 +55,11 @@ Other required variables for the integration tests need to be defined within the
   1. Uncomment the bottom part of the integration tests kubernetes job yaml file.
   2. Make sure you created the **eventstreams-pem-file** secret that will hold your IBM Event Streams PEM certificate, in step #1 of this pre-requisites section.
 
-**IMPORTANT:** For the integration test suite to work fine, more precisely to get the test case for testing [the dead letter queue pattern](../dlq/dlq.md)) to succeed, we **must** mockup the BPM integration by pointing it to a testing post endpoint such as: `https://postman-echo.com/post`. For doing this, you will need to make sure the **bpm-anomaly** configMap you created for the Spring Container microservice component of the Reefer container shipment solution holds a **valid BPM instance login and credential values** and the following value for the bpm url attribute so that the request retry and dead letter queue pattern kick in:
+**IMPORTANT:** For the integration test suite to work fine, more precisely to get the test case for testing [the Dead Letter Queue pattern](../dlq/dlq.md)) to succeed, we **must** mockup the BPM integration which we have developed some internal endpoints for. To use the BPM mockup endpoints, you will need to make sure the **bpm-anomaly** configMap you created for the Spring Container microservice component of the Reefer container shipment solution holds the following values for the url and login attributes:
 
 ```bash
-url: 'https://postman-echo.com/status/404'
+login: 'http://localhost:8080/bpm_mockup/login'
+url: 'http://localhost:8080/bpm_mockup/bpm_process_404'
 ```
 
 You can do so by manually editing the configMap:
