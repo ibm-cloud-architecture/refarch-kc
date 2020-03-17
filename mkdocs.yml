@@ -12,10 +12,12 @@ nav:
   - Architecture: ./design/architecture.md
   - Development practices:
     - Order microservice with CQRS and Event Sourcing: https://ibm-cloud-architecture.github.io/refarch-kc-order-ms
-    - Container microservice with event sourcing and Kafka streams: https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/kstreams/
-    - Container microservice with Python:  https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/flask
     - Container microservice with Springboot - Spring Kafka and PostgreSQL:  https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/springboot
     - Adopting Schema Registry and Avro: avro/avro.md
+    - Saga applied to container solution: saga/saga.md
+    - Dead letter pattern for this solution: dlq/dlq.md
+    - Order rejection principle: ./rejection/rejection.md
+    - Container anomaly: containerAnomaly/containerAnomaly.md
   - Related repositories: ./deployments/reposlist.md
   - Deployments:
     - Backing Services: ./deployments/backing-services.md
@@ -25,6 +27,8 @@ nav:
     - Overview: ./itg-tests/itgtests.md
     - Happy Path: ./itg-tests/happy-path/happy_path.md
     - Saga Pattern: ./itg-tests/saga/saga.md
+    - Order rejection: ./itg-tests/order-rejected/order_rejected.md
+    - Dead letter: ./itg-tests/dlq/dlq.md
     - Container Anomaly: ./itg-tests/containerAnomaly/containerAnomaly.md
   - Demonstration script: ./demo/readme.md
 

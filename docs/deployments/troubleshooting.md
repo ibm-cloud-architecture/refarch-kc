@@ -2,16 +2,6 @@
 
 ### Troubleshouting
 
-Here is a way to assess, within the kafka container, how the message arrived on a topic:
-
-```shell
-$ kubectl exec -ti rolling-streams-ibm-es-kafka-sts-0 -n streams bash
-nobody@rolling-streams-ibm-es-kafka-sts-0 $ cd /opt/kafka/bin
-nobody@rolling-streams-ibm-es-kafka-sts-0:/opt/kafka/bin$ ./kafka-console-consumer.sh --bootstrap-server rolling-streams-ibm-es-kafka-broker-svc-0.streams.svc.cluster.local:9092 --topic containers --from-beginning
-
-> {"timestamp": 1554338808, "type": "ContainerAdded", "version": "1", "containerID": "c_0", "payload": {"containerID": "c_0", "type": "Reefer", "status": "atDock", "city": "Oakland", "brand": "brand-reefer", "capacity": 100}}
-```
-
 
 #### No resolvable bootstrap urls given in bootstrap.servers
 
@@ -71,9 +61,3 @@ The producer or consumer code needs to specify where to get the ssl certificates
     'sasl.username': 'token',
     'sasl.password': KAFKA_APIKEY,
 ```
-
-#### LTPA configuration error. Unable to create or read LTPA key file: /opt/ibm/wlp/usr/servers/defaultServer/resources/security/ltpa.keys
-
-<TBD>
-
-Our how to on ICP troublshouting: https://github.com/ibm-cloud-architecture/refarch-integration/blob/master/docs/icp/troubleshooting.md
