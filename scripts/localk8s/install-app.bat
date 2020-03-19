@@ -24,6 +24,11 @@ kubectl create secret generic postgresql-url --from-literal=binding="jdbc:postgr
 kubectl create secret generic postgresql-user --from-literal=binding="postgres" -n shipping
 kubectl create secret generic postgresql-pwd --from-literal=binding="supersecret" -n shipping
 
+:: Create configmap and secret to allow container microservice to connect to BPM
+:: Note: you will need to modify bpm-configmap.yaml, bpm-username.txt and bpm-password.txt appropriately.
+kubectl apply -f %SCRIPTLOC%\bpm-configmap.yaml -n shipping
+kubectl create secret generic bpm-anomaly --from-file=%SCRIPTLOC%\bpm-username.txt --from-file=%SCRIPTLOC%\bpm-password.txt -n shipping
+
 :: Create a configmap to allow microservices to find Kafka
 :: This uses port 9092 (without TLS)
 kubectl create configmap kafka-brokers --from-literal=brokers="my-cluster-kafka-bootstrap.kafka.svc:9092" -n shipping

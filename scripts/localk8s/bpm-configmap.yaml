@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bpm-anomaly
+data:
+  url: "my-bpm-endpoint"  # replace with your BPM workflow endpoint
+  login: "user"           # replace with your BPM authentication endpoint
+  expiration: "100"       # replace with the number of second for the auth token to expire after
+  anomalyThreshold: "3"   # replace with the number of anomaly events to receive before calling BPM

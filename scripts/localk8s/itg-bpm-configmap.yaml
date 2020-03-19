@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bpm-anomaly
+data:
+  url: "http://localhost:8080/bpm_mockup/bpm_process_404"
+  login: "http://localhost:8080/bpm_mockup/login"
+  expiration: "100"
+  anomalyThreshold: "3"

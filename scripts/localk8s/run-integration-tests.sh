@@ -11,6 +11,9 @@ kubectl delete -f $SCRIPTLOC/../../itg-tests/es-it/ReeferItgTests.yaml -n shippi
 kubectl apply -f $SCRIPTLOC/itg-kafka-topics-configmap.yaml -n shipping
 kubectl apply -f $SCRIPTLOC/itg-topics.yaml -n kafka
 
+# Configure BPM to use mockup instance
+kubectl apply -f $SCRIPTLOC/itg-bpm-configmap.yaml -n shipping
+
 # Restart services so that they are configured with the new topic names
 kubectl scale deployment --replicas=0 -n shipping --all
 kubectl scale deployment --replicas=1 -n shipping --all
@@ -36,6 +39,9 @@ kubectl logs job/reefer-itgtests-job -n shipping -f
 
 # Deploy normal Kafka topics
 kubectl apply -f $SCRIPTLOC/kafka-topics-configmap.yaml -n shipping
+
+# Restore BPM config
+kubectl apply -f $SCRIPTLOC/bpm-configmap.yaml -n shipping
 
 # Restart services so that they are configured with the new topic names
 kubectl scale deployment --replicas=0 -n shipping --all
