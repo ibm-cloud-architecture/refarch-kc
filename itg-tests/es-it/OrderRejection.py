@@ -482,7 +482,7 @@ class OrderRejection(unittest.TestCase):
 
         print("3 - Load the expected reject order command event from json file")
         # Open file to read
-        f = open('../data/RejectOrderCommandEvent.json','r')
+        f = open('../data/rejectOrderCommandEvent.json','r')
         # Load expected order command event
         expected_reject_order_command = json.load(f)
         # Verify we have read a container
