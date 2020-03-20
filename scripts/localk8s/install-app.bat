@@ -1,11 +1,13 @@
 @ECHO OFF
 SET SCRIPTLOC=%~dp0
-echo Running from: %SCRIPTLOC%
-SET REPOBASE=%SCRIPTLOC%\..\..\..
-echo Other repos should be at: %REPOBASE%
-echo One is:
-dir %REPOBASE%\refarch-kc-order-ms
 
+:: REPOBASE defines parent directory of the refarch-kc repo. If this script
+:: is moved, this path should be updated accordingly.
+SET REPOBASE=%SCRIPTLOC%\..\..\..
+
+CALL %SCRIPTLOC%\ocpversion.bat
+
+:: Check whether an existing repo exists - if not, run the clone script
 IF NOT EXIST %REPOBASE%\refarch-kc-order-ms GOTO clone
 GOTO install
 
@@ -16,8 +18,12 @@ call %SCRIPTLOC%\..\clone.bat
 :: Create namespace for refarch-kc microservices
 kubectl create ns shipping
 
-:: TODO - is this required outside of OpenShift?
+:: Create a service account for the microservices to use
 kubectl create serviceaccount -n shipping kcserviceaccount
+:: Add the anyuid permission to allow microservices to run on OpenShift
+:: IF NOT "%OCPVERSION%" == "" (
+    :: No additional permissions required yet
+:: )
 
 :: Configure secrets to allow microservices to connect to Postgres
 kubectl create secret generic postgresql-url --from-literal=binding="jdbc:postgresql://postgresql.postgres.svc:5432/postgres" -n shipping
@@ -38,8 +44,6 @@ kubectl apply -f %SCRIPTLOC%\kafka-topics-configmap.yaml -n shipping
 
 :: Create Kafka topics using Strimzi CRs
 kubectl apply -f %SCRIPTLOC%\topics.yaml -n kafka
-
-:: TODO - make sure other repos are cloned
 
 :: Install order-command-ms using pre-built image
 :: note: --set eventstreams.enabled=false and --set eventstreams.truststoreRequired=false 
@@ -70,4 +74,5 @@ kubectl rollout status -n shipping deployment ordercommandms-deployment
 kubectl rollout status -n shipping deployment orderqueryms-deployment
 kubectl rollout status -n shipping deployment voyagesms-deployment
 
+:end
 :: call %SCRIPTLOC%\postinstall.bat

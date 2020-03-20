@@ -37,6 +37,9 @@ kubectl wait --for=condition=ready pod -l job-name=reefer-itgtests-job -n shippi
 # Follow the job log
 kubectl logs job/reefer-itgtests-job -n shipping -f
 
+# Wait for job completion (just in case network is interrupted while following log)
+kubectl wait --for=condition=complete job reefer-itgtests-job -n shipping --timeout 600s
+
 # Deploy normal Kafka topics
 kubectl apply -f $SCRIPTLOC/kafka-topics-configmap.yaml -n shipping
 

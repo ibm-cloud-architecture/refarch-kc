@@ -1,12 +1,13 @@
 #!/bin/bash
 SCRIPTLOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-echo "Running from: $SCRIPTLOC"
+# REPOBASE defines parent directory of the refarch-kc repo. If this script
+# is moved, this path should be updated accordingly.
 REPOBASE="$SCRIPTLOC/../../.."
-echo "Other repos should be at: $REPOBASE"
-echo "One is:"
-ls $REPOBASE/refarch-kc-order-ms
 
+. $SCRIPTLOC/ocpversion.sh
+
+# Check whether an existing repo exists - if not, run the clone script
 if [ ! -d "$REPOBASE/refarch-kc-order-ms" ]; then
     $SCRIPTLOC/../clone.sh
 fi
@@ -14,8 +15,11 @@ fi
 # Create namespace for refarch-kc microservices
 kubectl create ns shipping
 
-# TODO - is this required outside of OpenShift?
+# Create a service account for the microservices to use
 kubectl create serviceaccount -n shipping kcserviceaccount
+# if [ ! -z "$OCPVERSION" ]; then
+    # No additional permissions required yet
+# fi
 
 # Configure secrets to allow microservices to connect to Postgres
 kubectl create secret generic postgresql-url --from-literal=binding="jdbc:postgresql://postgresql.postgres.svc:5432/postgres" -n shipping
