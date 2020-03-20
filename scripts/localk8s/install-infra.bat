@@ -1,6 +1,8 @@
 @ECHO OFF
 SET SCRIPTLOC=%~dp0
 
+CALL %SCRIPTLOC%\ocpversion.bat
+
 :: Create namespaces for Strimzi and Kafka
 kubectl create ns strimzi
 kubectl create ns kafka
@@ -15,8 +17,12 @@ kubectl apply -f %SCRIPTLOC%\kafka-strimzi.yml -n kafka
 :: Create namespace for Postgres
 kubectl create ns postgres
 
-:: TODO - is this required outside of OpenShift?
+:: Create a service account for the postgres container to use
 kubectl create serviceaccount -n postgres pgserviceaccount
+:: Postgres requires root permissions which must be explicitly granted on OpenShift
+IF NOT "%OCPVERSION%" == "" (
+    oc adm policy add-scc-to-user anyuid -z pgserviceaccount -n postgres
+)
 
 :: Install Postgres Helm chart
 helm repo add bitnami https://charts.bitnami.com/bitnami
