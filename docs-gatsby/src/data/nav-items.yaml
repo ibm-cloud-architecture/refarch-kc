@@ -9,5 +9,32 @@
       path: security
     - title: Contributing
       path: contributing
+- title: Analysis
+  pages:
+    - path: analysis/readme
+- title: Avro
+  pages:
+    - path: avro/avro
+- title: Deployments
+  pages:
+    - title: Application Components
+      path: deployments/application-components
+    - title: Backing services
+      path: deployments/backing-services
+    - title: Docker
+      path: deployments/docker
+    - title: Troubleshooting
+      path: deployments/troubleshooting
+    - title: Repositories 
+      path: deployments/reposlist
+- title: Design
+  pages:
+    - title: Goals and outline
+      path: design/readme
+    - title: Architecture
+      path: design/architecture
+- title: Integration tests
+  pages:
+    - path: itg-tests/README
 
 
