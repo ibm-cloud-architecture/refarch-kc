@@ -1,40 +1,61 @@
 
-- title: Overview
+- title: Business problem statement 
   pages:
     - title: Introduction
       path: introduction
-    - title: Pre-requisites
-      path: pre-requisites
-    - title: Security
-      path: security
-    - title: Contributing
-      path: contributing
-- title: Analysis
+    - title: Event storming analysis
+      path: analysis/readme
+- title: From Analysis to Microservice Specifications
   pages:
-    - path: analysis/readme
-- title: Avro
+    - path: design/readme
+- title: Architecture
   pages:
-    - path: avro/avro
+    - path: design/architecture
+
+- title: Development practices
+  pages:
+    - title: Order microservice with CQRS and Event Sourcing
+      path: https://ibm-cloud-architecture.github.io/refarch-kc-order-ms 
+    - title: Container microservice with Springboot - Spring Kafka and PostgreSQL
+      path: https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/springboot
+    - title: Adopting Schema Registry and Avro
+      path: avro/avro
+    - title: Saga applied to container solution
+      path: saga/saga
+    - title: Dead letter pattern for this solution
+      path: dlq/dlq
+    - title: Order rejection principle
+      path: rejection/rejection
+    - title:  Container anomaly
+      path: containerAnomaly/containerAnomaly
+- title: Related repositories
+  pages:
+  - path: deployments/reposlist
 - title: Deployments
   pages:
+    - title: Backing services
+      path: deployments/backing-services  
     - title: Application Components
       path: deployments/application-components
-    - title: Backing services
-      path: deployments/backing-services
     - title: Docker
       path: deployments/docker
     - title: Troubleshooting
       path: deployments/troubleshooting
-    - title: Repositories 
-      path: deployments/reposlist
-- title: Design
+- title: Security
   pages:
-    - title: Goals and outline
-      path: design/readme
-    - title: Architecture
-      path: design/architecture
+    - path: security
+
 - title: Integration tests
   pages:
-    - path: itg-tests/README
-
-
+    - title: Overview
+      path: itg-tests/itgtests
+    - title: Happy Path
+      path: itg-tests/happy-path/happy_path
+    - title: Saga Pattern
+      path: itg-tests/saga/saga
+    - title: Order rejection
+      path: itg-tests/order-rejected/order_rejected
+    - title: Dead Letter
+      path: itg-tests/dlq/dlq
+    - title: Container Anomaly
+      path: itg-tests/containerAnomaly/containerAnomaly
