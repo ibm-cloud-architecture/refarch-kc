@@ -59,3 +59,7 @@
       path: itg-tests/dlq/dlq
     - title: Container Anomaly
       path: itg-tests/containerAnomaly/containerAnomaly
+  
+- title: Demonstration script
+  pages:
+      - path: demo/readme
