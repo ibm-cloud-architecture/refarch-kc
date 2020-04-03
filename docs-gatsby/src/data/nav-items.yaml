@@ -1,5 +1,5 @@
 
-- title: Business problem statement 
+- title: Business problem statement
   pages:
     - title: Introduction
       path: introduction
@@ -14,10 +14,10 @@
 
 - title: Development practices
   pages:
-    - title: Order microservice with CQRS and Event Sourcing
-      path: https://ibm-cloud-architecture.github.io/refarch-kc-order-ms 
-    - title: Container microservice with Springboot - Spring Kafka and PostgreSQL
-      path: https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/springboot
+    #- title: Order microservice with CQRS and Event Sourcing
+    #  path: https://ibm-cloud-architecture.github.io/refarch-kc-order-ms
+    #- title: Container microservice with Springboot - Spring Kafka and PostgreSQL
+    #  path: https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/springboot
     - title: Adopting Schema Registry and Avro
       path: avro/avro
     - title: Saga applied to container solution
@@ -34,7 +34,7 @@
 - title: Deployments
   pages:
     - title: Backing services
-      path: deployments/backing-services  
+      path: deployments/backing-services
     - title: Application Components
       path: deployments/application-components
     - title: Docker
@@ -59,7 +59,7 @@
       path: itg-tests/dlq/dlq
     - title: Container Anomaly
       path: itg-tests/containerAnomaly/containerAnomaly
-  
+
 - title: Demonstration script
   pages:
       - path: demo/readme
