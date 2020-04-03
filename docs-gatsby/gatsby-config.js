@@ -1,10 +1,10 @@
 module.exports = {
   siteMetadata: {
-    title: 'Gatsby Theme Carbon',
-    description: 'A Gatsby theme for the carbon design system',
+    title: 'K-Container Reference Implementation for EDA',
+    description: 'A reference implementation solution for container shipment using Event-Driven Architecture principles and techniques by the IBM Garage for Cloud Solution Engineering Event-Driven Architecture squad.',
     keywords: 'gatsby,theme,carbon',
   },
-  pathPrefix: `/gtc`,
+  pathPrefix: `/refarch-kc`,
   plugins: [
     {
       resolve: 'gatsby-plugin-manifest',
@@ -20,11 +20,8 @@ module.exports = {
     {
       resolve: 'gatsby-theme-carbon',
       options: {
-        repository: {
-          baseUrl:
-            'https://github.com/carbon-design-system/gatsby-theme-carbon',
-          subDirectory: '/packages/example',
-        },
+        isSearchEnabled: true,
+        titleType: 'append'
       },
     },
   ],
