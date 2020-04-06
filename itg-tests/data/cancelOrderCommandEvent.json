@@ -25,6 +25,6 @@
       "voyageID": "101"
     },
     "timestampMillis": "",
-    "type": "RejectOrderCommand",
+    "type": "CancelOrderCommand",
     "version": "1"
   }

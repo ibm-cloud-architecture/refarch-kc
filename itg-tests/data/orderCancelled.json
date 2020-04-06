@@ -21,10 +21,10 @@
     "pickupDate": "2019-01-25T13:30Z",
     "productID": "Fish",
     "quantity": 100,
-    "status": "rejected",
+    "status": "cancelled",
     "voyageID": "101"
   },
   "timestampMillis": "",
-  "type": "OrderRejected",
+  "type": "OrderCancelled",
   "version": "1"
 }

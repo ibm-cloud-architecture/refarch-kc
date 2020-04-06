@@ -20,6 +20,6 @@
   "productID":"Fish",
   "quantity":100,
   "reeferID":"",
-  "status":"rejected",
+  "status":"cancelled",
   "voyageID":"101"
 }

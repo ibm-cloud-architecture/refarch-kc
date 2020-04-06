@@ -65,10 +65,10 @@ docker run  -v ${MAIN_DIR}:/refarch-kc \
                 python Saga_NoVoyage.py && source /tmp/SagaNoVoyage.properties && \
                 echo '******************************************' && \
                 echo '******************************************' && \
-                echo '**********   Order Rejected   ************' && \
+                echo '**********   Order Cancelled   ***********' && \
                 echo '******************************************' && \
                 echo '******************************************' && \
-                python OrderRejection.py && \
+                python OrderCancellation.py && \
                 echo '******************************************' && \
                 echo '******************************************' && \
                 echo '*********   Container Anomaly   **********' && \

@@ -88,7 +88,7 @@ results_file=None
 #####################
 ##### UNIT TEST #####
 #####################
-class OrderRejection(unittest.TestCase):
+class OrderCancellation(unittest.TestCase):
 
     ########################################## Reporting ############################################
     @classmethod
@@ -446,13 +446,13 @@ class OrderRejection(unittest.TestCase):
         print("Done\n")
 
 
-    def test5_orderRejected(self):
-        print('-------------------------------')
-        print('--- [TEST] : Order Rejected ---')
-        print('-------------------------------\n')
+    def test5_orderCancelled(self):
+        print('--------------------------------')
+        print('--- [TEST] : Order Cancalled ---')
+        print('--------------------------------\n')
 
-        print("1 - Reject order by POST to order microservice's API endpoint")
-        res = requests.post("http://" + ORDER_CMD_MS + "/orders/reject/" + ORDER_ID)
+        print("1 - Cancel order by POST to order microservice's API endpoint")
+        res = requests.post("http://" + ORDER_CMD_MS + "/orders/cancel/" + ORDER_ID)
         # Verify the post request has been successful
         self.assertEqual(res.status_code,200)
         print("Done\n")
@@ -460,7 +460,7 @@ class OrderRejection(unittest.TestCase):
         print("Sleeping for 5 secs\n")
         time.sleep(10)
 
-        print("2 - Make sure a new reject order command event was delivered into the order-commands topic")
+        print("2 - Make sure a new cancel order command event was delivered into the order-commands topic")
         # Create a KafkaConsumer object to interact with Kafka/Event Streams
         kc = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_APIKEY,ORDER_COMMANDS_TOPIC)
         # Verify we have a KafkaConsumer object
@@ -469,58 +469,58 @@ class OrderRejection(unittest.TestCase):
         # Verify the consumer has been created
         self.assertIsNotNone(kc.consumer)
         # Read next event in the topic by key
-        reject_order_command = kc.pollNextEventByKey(ORDER_ID)
+        cancel_order_command = kc.pollNextEventByKey(ORDER_ID)
         # Verify an order command event object is read
-        self.assertIsNotNone(reject_order_command)
+        self.assertIsNotNone(cancel_order_command)
         # Removing the timestamp from the comparison since we can't know what time exactly it was created at
-        reject_order_command['timestampMillis'] = ""
+        cancel_order_command['timestampMillis'] = ""
         print("This is the order command event read from the topic:")
-        print(json.dumps(reject_order_command, indent=4, sort_keys=True))
+        print(json.dumps(cancel_order_command, indent=4, sort_keys=True))
         # Close the Kafka/Event Streams consumer
         kc.close()
         print("Done\n")
 
-        print("3 - Load the expected reject order command event from json file")
+        print("3 - Load the expected cancel order command event from json file")
         # Open file to read
-        f = open('../data/rejectOrderCommandEvent.json','r')
+        f = open('../data/cancelOrderCommandEvent.json','r')
         # Load expected order command event
-        expected_reject_order_command = json.load(f)
+        expected_cancel_order_command = json.load(f)
         # Verify we have read a container
-        self.assertIsNotNone(expected_reject_order_command)
+        self.assertIsNotNone(expected_cancel_order_command)
         # Assign the orderID
-        expected_reject_order_command['payload']['orderID'] = ORDER_ID
-        expected_reject_order_command['payload']['reeferID'] = CONTAINER_ID
-        print("The expected reject order command event is:")
-        print(json.dumps(expected_reject_order_command, indent=4, sort_keys=True))
+        expected_cancel_order_command['payload']['orderID'] = ORDER_ID
+        expected_cancel_order_command['payload']['reeferID'] = CONTAINER_ID
+        print("The expected cancel order command event is:")
+        print(json.dumps(expected_cancel_order_command, indent=4, sort_keys=True))
         # Close the file
         f.close()
         print("Done\n")
 
         print("4 - Verify order command event")
         # Verify order command event read from the topic is as expected
-        self.assertEqual(sorted(expected_reject_order_command.items()),sorted(reject_order_command.items()))
+        self.assertEqual(sorted(expected_cancel_order_command.items()),sorted(cancel_order_command.items()))
         print("Done\n")
 
         print("Sleeping for 5 secs\n")
         time.sleep(10)
 
-        print("5 - Load the expected OrderRejected event on the orders topic from its json files")
+        print("5 - Load the expected OrderCancelled event on the orders topic from its json files")
         # Open file to read
-        f = open('../data/orderRejected.json','r')
-        # Load the expected OrderRejected
+        f = open('../data/orderCancelled.json','r')
+        # Load the expected OrderCancelled
         expected_order = json.load(f)
         # Verify we have read the files
         self.assertIsNotNone(expected_order)
-        # Prepare expected OrderRejected event with the orderID and containerID
+        # Prepare expected OrderCancelled event with the orderID and containerID
         expected_order['payload']['orderID'] = ORDER_ID
         expected_order['payload']['containerID'] = CONTAINER_ID
-        print("The expected OrderRejected event is:")
+        print("The expected OrderCancelled event is:")
         print(json.dumps(expected_order, indent=4, sort_keys=True))
         # Close the file
         f.close()
         print("Done\n")
 
-        print("6 - Read OrderRejected event from the orders topic")
+        print("6 - Read OrderCancelled event from the orders topic")
         # Create a KafkaConsumer object to interact with Kafka/Event Streams
         kc = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_APIKEY,ORDERS_TOPIC)
         # Verify we have a KafkaConsumer object
@@ -532,26 +532,26 @@ class OrderRejection(unittest.TestCase):
         order_event = kc.pollNextEventByKey(ORDER_ID)
         # Remove timestamp as it is not important for integration tests and would be hard to calculate
         order_event['timestampMillis'] = ""
-        print("This is the OrderRejected event read from the orders topic:")
+        print("This is the OrderCancelled event read from the orders topic:")
         print(json.dumps(order_event, indent=4, sort_keys=True))
         # Close the Kafka/Event Streams consumer
         kc.close()
         print("Done\n")
 
-        print("7 - Verify OrderRejected event")
+        print("7 - Verify OrderCancelled event")
         # Verify OrderRejected event read from the orders topic is as expected
         self.assertEqual(sorted(expected_order.items()),sorted(order_event.items()))
         print("Done\n")
 
 
-    def test6_orderRejectedREST(self):
-        print('------------------------------------')
-        print('--- [TEST] : Order Rejected REST ---')
-        print('------------------------------------\n')
+    def test6_orderCancelledREST(self):
+        print('-------------------------------------')
+        print('--- [TEST] : Order Cancelled REST ---')
+        print('-------------------------------------\n')
 
         print("1 - Load the expected resulting order from order command MS")
         # Open file to read
-        f_order_command = open('../data/orderRejectedRESTCommand.json','r')
+        f_order_command = open('../data/orderCancelledRESTCommand.json','r')
         # Load the expected order
         expected_order_command = json.load(f_order_command)
         # Verify we have read the file
@@ -582,7 +582,7 @@ class OrderRejection(unittest.TestCase):
 
         print("4 - Load the expected resulting order from order query MS")
         # Open file to read
-        f_order_query = open('../data/orderRejectedRESTQuery.json','r')
+        f_order_query = open('../data/orderCancelledRESTQuery.json','r')
         # Load the expected order
         expected_order_query = json.load(f_order_query)
         # Verify we have read the file
