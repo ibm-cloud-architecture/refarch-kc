@@ -24,8 +24,8 @@
       path: saga/saga
     - title: Dead letter pattern for this solution
       path: dlq/dlq
-    - title: Order rejection principle
-      path: rejection/rejection
+    - title: Order cancellation principle
+      path: cancellation/cancellation
     - title:  Container anomaly
       path: containerAnomaly/containerAnomaly
 - title: Related repositories
@@ -53,8 +53,8 @@
       path: itg-tests/happy-path/happy_path
     - title: Saga Pattern
       path: itg-tests/saga/saga
-    - title: Order rejection
-      path: itg-tests/order-rejected/order_rejected
+    - title: Order cancellation
+      path: itg-tests/order-cancelled/order_cancelled
     - title: Dead Letter
       path: itg-tests/dlq/dlq
     - title: Container Anomaly
