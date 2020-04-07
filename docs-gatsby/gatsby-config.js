@@ -3,6 +3,11 @@ module.exports = {
     title: 'K-Container Reference Implementation for EDA',
     description: 'A reference implementation solution for container shipment using Event-Driven Architecture principles and techniques by the IBM Garage for Cloud Solution Engineering Event-Driven Architecture squad.',
     keywords: 'gatsby,theme,carbon',
+    repository: {
+      baseUrl: 'https://github.com/ibm-cloud-architecture/refarch-kc',
+      subDirectory: '/docs-gatsby',
+      branch: 'master'
+    }
   },
   pathPrefix: `/refarch-kc`,
   plugins: [
@@ -24,5 +29,11 @@ module.exports = {
         titleType: 'append'
       },
     },
+    {
+      resolve: `gatsby-plugin-google-analytics`,
+      options: {
+        trackingId: "UA-149377589-3"
+      }
+    }
   ],
 };
