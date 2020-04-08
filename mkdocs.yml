@@ -16,7 +16,7 @@ nav:
     - Adopting Schema Registry and Avro: avro/avro.md
     - Saga applied to container solution: saga/saga.md
     - Dead letter pattern for this solution: dlq/dlq.md
-    - Order rejection principle: ./rejection/rejection.md
+    - Order cancellation principle: ./cancellation/cancellation.md
     - Container anomaly: containerAnomaly/containerAnomaly.md
   - Related repositories: ./deployments/reposlist.md
   - Deployments:
@@ -27,7 +27,7 @@ nav:
     - Overview: ./itg-tests/itgtests.md
     - Happy Path: ./itg-tests/happy-path/happy_path.md
     - Saga Pattern: ./itg-tests/saga/saga.md
-    - Order rejection: ./itg-tests/order-rejected/order_rejected.md
+    - Order cancellation: ./itg-tests/order-cancelled/order_cancelled.md
     - Dead letter: ./itg-tests/dlq/dlq.md
     - Container Anomaly: ./itg-tests/containerAnomaly/containerAnomaly.md
   - Demonstration script: ./demo/readme.md

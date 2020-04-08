@@ -6,7 +6,7 @@ So far we have the following integration test cases:
 
 - [Happy path](happy-path/happy_path.md) - End to end happy path test.
 - [SAGA pattern](saga/saga.md) - SAGA pattern for new order creation test.
-- [Order Rejection](order-rejected/order_rejected.md) - Order Rejection test.
+- [Order Cancellation](order-cancelled/order_cancelled.md) - Order Cancellation test.
 - [Container Anomaly](containerAnomaly/containerAnomaly.md) - Container anomaly and maintenance test.
 - [Dead Letter Queue](dlq/dlq.md) - Container Anomaly Dead Letter Queue Pattern test.
 
@@ -236,14 +236,14 @@ test8_exportValues...OK
 PASSED: 8
 FAILED: 0
 
-TEST CASE - OrderRejection
+TEST CASE - OrderCancellation
 -----------------------------------
 test1_createOrder...OK
 test2_containerAllocated...OK
 test3_voyageAssigned...OK
 test4_orderAssignedREST...OK
-test5_orderRejected...OK
-test6_orderRejectedREST...OK
+test5_orderCancelled...OK
+test6_orderCancelledREST...OK
 test7_containerUnassignedREST...OK
 test8_voyageCompensated...OK
 -----------------------------------
