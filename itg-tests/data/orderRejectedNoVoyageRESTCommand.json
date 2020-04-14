@@ -19,6 +19,6 @@
   "pickupDate": "2019-01-25T13:30Z",
   "productID": "Fish",
   "quantity": 50000,
-  "reeferID": "",
+  "containerID": "",
   "status": "rejected"
 }

@@ -280,7 +280,7 @@ class SpoilOrder(unittest.TestCase):
         self.assertIsNotNone(expected_order_command)
         # Prepare expected container allocated event with orderID and containerID
         expected_order_command['orderID'] = ORDER_ID
-        expected_order_command['reeferID'] = CONTAINER_ID
+        expected_order_command['containerID'] = CONTAINER_ID
         print("The expected resulting order is:")
         print(json.dumps(expected_order_command, indent=4, sort_keys=True))
         # Close the file

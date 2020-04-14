@@ -19,7 +19,7 @@
   "pickupDate":"2019-01-25T13:30Z",
   "productID":"Fish",
   "quantity":100,
-  "reeferID":"",
+  "containerID":"",
   "status":"cancelled",
   "voyageID":"101"
 }

@@ -392,7 +392,7 @@ class OrderCancellation(unittest.TestCase):
         self.assertIsNotNone(expected_order_command)
         # Prepare expected container allocated event with orderID and containerID
         expected_order_command['orderID'] = ORDER_ID
-        expected_order_command['reeferID'] = CONTAINER_ID
+        expected_order_command['containerID'] = CONTAINER_ID
         print("The expected resulting order is:")
         print(json.dumps(expected_order_command, indent=4, sort_keys=True))
         # Close the file
@@ -489,7 +489,6 @@ class OrderCancellation(unittest.TestCase):
         self.assertIsNotNone(expected_cancel_order_command)
         # Assign the orderID
         expected_cancel_order_command['payload']['orderID'] = ORDER_ID
-        expected_cancel_order_command['payload']['reeferID'] = CONTAINER_ID
         print("The expected cancel order command event is:")
         print(json.dumps(expected_cancel_order_command, indent=4, sort_keys=True))
         # Close the file
@@ -558,7 +557,7 @@ class OrderCancellation(unittest.TestCase):
         self.assertIsNotNone(expected_order_command)
         # Prepare expected order with orderID and containerID
         expected_order_command['orderID'] = ORDER_ID
-        expected_order_command['reeferID'] = CONTAINER_ID
+        expected_order_command['containerID'] = CONTAINER_ID
         print("The expected resulting order is:")
         print(json.dumps(expected_order_command, indent=4, sort_keys=True))
         # Close the file
