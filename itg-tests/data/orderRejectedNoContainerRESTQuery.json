@@ -19,7 +19,6 @@
   "pickupDate": "2019-01-25T13:30Z",
   "productID": "Fish",
   "quantity": 100,
-  "containerID": "",
-  "status": "spoilt",
-  "voyageID": "101"
+  "status": "rejected",
+  "reason":"A container could not be found for this order"
 }

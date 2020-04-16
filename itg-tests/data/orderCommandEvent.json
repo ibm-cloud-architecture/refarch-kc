@@ -20,7 +20,7 @@
       "zipcode": "95053"
     },
     "expectedDeliveryDate": "2019-03-31T13:30Z",
-    "status": "pending"
+    "status": "toBeCreated"
   },
   "timestampMillis": "",
   "type": "CreateOrderCommand",

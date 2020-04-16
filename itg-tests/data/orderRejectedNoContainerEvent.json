@@ -20,7 +20,8 @@
       "zipcode": "95053"
     },
     "expectedDeliveryDate": "2019-03-31T13:30Z",
-    "status": "rejected"
+    "status": "rejected",
+    "reason": "A container could not be found for this order"
   },
   "timestampMillis": "",
   "type": "OrderRejected",

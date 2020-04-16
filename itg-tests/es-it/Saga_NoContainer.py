@@ -339,7 +339,7 @@ class SagaNoContainer(unittest.TestCase):
 
         print("1 - Load the expected resulting order")
         # Open file to read
-        f_order = open('../data/orderRejectedNoContainerREST.json','r')
+        f_order = open('../data/orderRejectedNoContainerRESTCommand.json','r')
         # Load the expected order
         expected_order = json.load(f_order)
         # Verify we have read the file
@@ -375,6 +375,21 @@ class SagaNoContainer(unittest.TestCase):
         order_query = json.loads(response.text)
         print("This is the order from the order query microservice's API")
         print(json.dumps(order_query, indent=4, sort_keys=True))
+        print("Done\n")
+
+        print("5 - Load the expected resulting order")
+        # Open file to read
+        f_order = open('../data/orderRejectedNoContainerRESTQuery.json','r')
+        # Load the expected order
+        expected_order = json.load(f_order)
+        # Verify we have read the file
+        self.assertIsNotNone(expected_order)
+        # Prepare expected order with orderID
+        expected_order['orderID'] = ORDER_ID
+        print("The expected resulting order is:")
+        print(json.dumps(expected_order, indent=4, sort_keys=True))
+        # Close the file
+        f_order.close()
         print("Done\n")
 
         print("5 - Verify order")
