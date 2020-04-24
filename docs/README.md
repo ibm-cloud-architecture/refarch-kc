@@ -22,7 +22,7 @@ You’re also free to make your own components and use them in your MDX pages.
 
 This is your primary method for starting up your Gatsby site for development.
 
-1. `cd docs-gatsby`
+1. `cd docs`
 2. `npm install`
 3. `npm run dev`
 
@@ -30,7 +30,7 @@ This is your primary method for starting up your Gatsby site for development.
 
 This is what you’ll use to bundle your site for production. Gatsby will minimize your images and create a static, blazing fast site in your public directory. It is preferred to use the `:prefix` option, as this will append all of your links with a `pathPrefix` specified in your `gatsby-config.js` file.
 
-1. `cd docs-gatsby`
+1. `cd docs`
 2. `npm run build:prefix`
 3. `npm run serve:prefix`
 
