@@ -16,3 +16,5 @@ docker/kafka-connect/es-cert.jks
 *.pyc
 .DS_Store
 ~$*.pptx
+.cache
+node_modules
