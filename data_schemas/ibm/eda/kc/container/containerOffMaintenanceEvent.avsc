@@ -1,0 +1,31 @@
+{
+    "namespace": "ibm.eda.kc.container",
+    "name": "containerOffMaintenanceEvent",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "containerID",
+            "type" : "string"
+        },
+        {
+            "name" : "payload",
+            "type" : "ibm.eda.kc.container.containerPayload"
+        },
+        {
+            "name" : "timestampMillis",
+            "type" : "long"
+        },
+        {
+            "name" : "type",
+            "type" : {
+                "type" : "enum",
+                "name" : "containerAddedEventType",
+                "symbols" : [ "ContainerOffMaintenance" ]
+            }
+        },
+        {
+            "name" : "version",
+            "type" : ["null","string"]
+        }
+    ]
+ }

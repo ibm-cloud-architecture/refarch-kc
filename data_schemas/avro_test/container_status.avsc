@@ -1,0 +1,6 @@
+{
+    "namespace": "ibm.eda.kc.container",
+    "name": "status",
+    "type": "enum",
+    "symbols" : ["Loaded", "Empty", "Unassignable", "PartiallyLoaded"]
+ }

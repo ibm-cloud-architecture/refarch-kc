@@ -1,0 +1,27 @@
+{
+    "namespace": "ibm.eda.kc.order",
+    "name": "orderRejectEvent",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "payload",
+            "type" : "ibm.eda.kc.order.orderRejectPayload"
+        },
+        {
+            "name" : "timestampMillis",
+            "type" : "long"
+        },
+        {
+            "name" : "type",
+            "type" : {
+                "type" : "enum",
+                "name" : "orderRejectEventType",
+                "symbols" : [ "OrderRejected" ]
+            }
+        },
+        {
+            "name" : "version",
+            "type" : "string"
+        }
+    ]
+ }

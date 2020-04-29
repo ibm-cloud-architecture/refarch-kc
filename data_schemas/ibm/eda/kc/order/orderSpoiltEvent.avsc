@@ -1,0 +1,31 @@
+{
+    "namespace": "ibm.eda.kc.order",
+    "name": "orderSpoiltEvent",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "orderID",
+            "type" : "string"
+        },
+        {
+            "name" : "payload",
+            "type" : "ibm.eda.kc.order.orderSpoiltPayload"
+        },
+        {
+            "name" : "timestampMillis",
+            "type" : "long"
+        },
+        {
+            "name" : "type",
+            "type" : {
+                "type" : "enum",
+                "name" : "orderSpoiltEventType",
+                "symbols" : [ "OrderSpoilt" ]
+            }
+        },
+        {
+            "name" : "version",
+            "type" : ["null","string"]
+        }
+    ]
+ }

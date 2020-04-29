@@ -1,0 +1,23 @@
+{
+    "namespace": "ibm.eda.kc.container",
+    "name": "containerTelemetryEvent",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "containerID",
+            "type" : "string"
+        },
+        {
+            "name" : "payload",
+            "type" : "string"
+        },
+        {
+            "name" : "timestamp",
+            "type" : "string"
+        },
+        {
+            "name" : "type",
+            "type" : "string"
+        }
+    ]
+}

@@ -1,0 +1,31 @@
+{
+    "namespace": "ibm.eda.kc.container",
+    "name": "containerAnomalyEvent",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "containerID",
+            "type" : "string"
+        },
+        {
+            "name" : "payload",
+            "type" : "ibm.eda.kc.container.containerTelemetry"
+        },
+        {
+            "name" : "timestampMillis",
+            "type" : "long"
+        },
+        {
+            "name" : "type",
+            "type" : {
+                "type" : "enum",
+                "name" : "containerAnomalyEventType",
+                "symbols" : [ "ContainerAnomaly" ]
+            }
+        },
+        {
+            "name" : "version",
+            "type" : ["null","string"]
+        }
+    ]
+ }
