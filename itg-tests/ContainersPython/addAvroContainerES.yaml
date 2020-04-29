@@ -40,7 +40,7 @@ spec:
           value: "itg-tests/ContainersPython"
         # Location of the data schemas folder within the repository
         - name: DATA_SCHEMAS_LOCATION
-          value: data_schemas
+          value: data_schemas/avro_test
         # Container ID to be send
         - name: CONTAINER_ID
           value: "avroOCP_01"

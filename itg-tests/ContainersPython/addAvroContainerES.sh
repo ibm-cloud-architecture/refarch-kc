@@ -58,11 +58,11 @@ docker run  -e KAFKA_BROKERS=$KAFKA_BROKERS \
             -e KAFKA_APIKEY=$KAFKA_APIKEY \
             -e KAFKA_ENV=$KAFKA_ENV \
             -e SCHEMA_REGISTRY_URL=$FINAL_SCHEMA_REGISTRY_URL \
-            -e DATA_SCHEMAS="/refarch-kc/data_schemas" \
+            -e DATA_SCHEMAS="/refarch-kc/data_schemas/avro_test" \
             ${add_cert_to_container_command} \
             -v ${MAIN_DIR}:/refarch-kc \
             --rm \
             -ti ibmcase-python:test bash \
             -c "cd /refarch-kc/itg-tests/ContainersPython && \
-                export PYTHONPATH=\${PYTHONPATH}:/refarch-kc/itg-tests:/refarch-kc/data_schemas && \
+                export PYTHONPATH=\${PYTHONPATH}:/refarch-kc/itg-tests:/refarch-kc/data_schemas/avro_test && \
                 python ProduceAvroContainerES.py $cid $topic_name"
