@@ -1,0 +1,43 @@
+{
+    "namespace": "ibm.eda.kc.order",
+    "name": "orderUpdatedPayload",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "customerID",
+            "type" : "string"
+        },
+        {
+            "name": "destinationAddress",
+            "type": "ibm.eda.kc.order.address"
+        },
+        {
+            "name" : "expectedDeliveryDate",
+            "type" : "string"
+        },
+        {
+            "name" : "orderID",
+            "type" : "string"
+        },
+        {
+            "name" : "pickupAddress",
+            "type" : "ibm.eda.kc.order.address"
+        },
+        {
+            "name" : "pickupDate",
+            "type" : "string"
+        },
+        {
+            "name" : "productID",
+            "type" : "string"
+        },
+        {
+            "name" : "quantity",
+            "type" : "int"
+        },
+        {
+            "name" : "status",
+            "type" : "ibm.eda.kc.order.orderStatus"
+        }
+    ]
+ }

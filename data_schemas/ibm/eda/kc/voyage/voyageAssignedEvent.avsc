@@ -1,0 +1,27 @@
+{
+    "namespace": "ibm.eda.kc.voyage",
+    "name": "voyageAssignedEvent",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "payload",
+            "type" : "ibm.eda.kc.voyage.voyageAssignedPayload"
+        },
+        {
+            "name" : "timestampMillis",
+            "type" : "long"
+        },
+        {
+            "name" : "type",
+            "type" : {
+                "type" : "enum",
+                "name" : "voyageAssignedEventType",
+                "symbols" : [ "VoyageAssigned" ]
+            }
+        },
+        {
+            "name" : "version",
+            "type" : "string"
+        }
+    ]
+ }

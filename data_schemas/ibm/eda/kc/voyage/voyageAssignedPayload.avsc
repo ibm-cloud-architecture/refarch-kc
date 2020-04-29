@@ -1,0 +1,15 @@
+{
+    "namespace": "ibm.eda.kc.voyage",
+    "name": "voyageAssignedPayload",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "orderID",
+            "type" : "string"
+        },
+        {
+            "name" : "voyageID",
+            "type" : "string"
+        }
+    ]
+ }

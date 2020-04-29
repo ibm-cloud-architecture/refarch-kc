@@ -1,0 +1,27 @@
+{
+    "namespace": "ibm.eda.kc.order",
+    "name": "address",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "city",
+            "type" : "string"
+        },
+        {
+            "name" : "country",
+            "type" : "string"
+        },
+        {
+            "name" : "state",
+            "type" : "string"
+        },
+        {
+            "name" : "street",
+            "type" : "string"
+        },
+        {
+            "name" : "zipcode",
+            "type" : "string"
+        }
+    ]
+ }

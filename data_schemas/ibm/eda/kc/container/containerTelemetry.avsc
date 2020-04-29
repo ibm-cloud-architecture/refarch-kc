@@ -1,0 +1,71 @@
+{
+    "namespace": "ibm.eda.kc.container",
+    "name": "containerTelemetry",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "ambiant_temperature",
+            "type" : "double"
+        },
+        {
+            "name" : "carbon_dioxide_level",
+            "type" : "double"
+        },
+        {
+            "name" : "content_type",
+            "type" : "int"
+        },
+        {
+            "name" : "defrost_cycle",
+            "type" : "int"
+        },
+        {
+            "name" : "humidity_level",
+            "type" : "double"
+        },
+        {
+            "name" : "kilowatts",
+            "type" : "double"
+        },
+        {
+            "name" : "latitude",
+            "type" : "double"
+        },
+        {
+            "name" : "longitude",
+            "type" : "double"
+        },
+        {
+            "name" : "nitrogen_level",
+            "type" : "double"
+        },
+        {
+            "name" : "oxygen_level",
+            "type" : "double"
+        },
+        {
+            "name" : "target_temperature",
+            "type" : "double"
+        },
+        {
+            "name" : "temperature",
+            "type" : "double"
+        },
+        {
+            "name" : "time_door_open",
+            "type" : "double"
+        },
+        {
+            "name" : "vent_1",
+            "type" : "boolean"
+        },
+        {
+            "name" : "vent_2",
+            "type" : "boolean"
+        },
+        {
+            "name" : "vent_3",
+            "type" : "boolean"
+        }
+    ]
+}

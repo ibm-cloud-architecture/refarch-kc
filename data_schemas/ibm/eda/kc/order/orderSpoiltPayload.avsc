@@ -1,0 +1,15 @@
+{
+    "namespace": "ibm.eda.kc.order",
+    "name": "orderSpoiltPayload",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "containerID",
+            "type" : "string"
+        },
+        {
+            "name" : "orderID",
+            "type" : "string"
+        }
+    ]
+ }

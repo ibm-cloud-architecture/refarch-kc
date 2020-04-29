@@ -49,7 +49,7 @@ The integration tests for our Reefer Containers reference implementation can be 
 The particular integration test (still under development) where we have integrated the Apache Avro serialization system can be found under the `ContainersPython` folder. More precisely, these are the files and folders involved in our implementation:
 
 ```shell
-├── data_schemas
+├── data_schemas/avro_test
 │   ├── container_event.avsc
 │   ├── container_event_key.avsc
 │   ├── container_event_payload.avsc
@@ -151,7 +151,7 @@ As you can see, the status attribute of the payload is yet another data schema i
 }
 ```
 
-All the different data schemas for a Container Event can be found under the `data_schemas` folder.
+All the different data schemas for a Container Event can be found under the `data_schemas/avro_test` folder.
 
 In that folder we have also developed a util script (`avroEDAUtils.py`) to be able to construct the final Container Event data schema that is needed by our producer:
 
@@ -305,8 +305,8 @@ To use this class you need to do the following steps:
 ```python
 # load schema definitions for key and value
 from utils.avroEDAUtils import getContainerEventSchema, getContainerKeySchema
-container_event_value_schema = getContainerEventSchema("/data_schemas/")
-container_event_key_schema = getContainerKeySchema("/data_schemas/")
+container_event_value_schema = getContainerEventSchema("/data_schemas/avro_test/")
+container_event_key_schema = getContainerKeySchema("/data_schemas/avro_test/")
 # Create a producer with the schema registry URL end point
 kp = KafkaProducer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_APIKEY,SCHEMA_REGISTRY_URL)
 kp.prepareProducer("ContainerProducerPython",container_event_key_schema,container_event_value_schema)

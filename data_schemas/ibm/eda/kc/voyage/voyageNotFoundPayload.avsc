@@ -1,0 +1,15 @@
+{
+    "namespace": "ibm.eda.kc.voyage",
+    "name": "voyageNotFoundPayload",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "orderID",
+            "type" : "string"
+        },
+        {
+            "name" : "reason",
+            "type" : "string"
+        }
+    ]
+ }

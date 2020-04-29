@@ -1,0 +1,27 @@
+{
+    "namespace": "ibm.eda.kc.voyage",
+    "name": "voyageNotFoundEvent",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "payload",
+            "type" : "ibm.eda.kc.voyage.voyageNotFoundPayload"
+        },
+        {
+            "name" : "timestampMillis",
+            "type" : "long"
+        },
+        {
+            "name" : "type",
+            "type" : {
+                "type" : "enum",
+                "name" : "voyageNotFoundEventType",
+                "symbols" : [ "VoyageNotFound" ]
+            }
+        },
+        {
+            "name" : "version",
+            "type" : "string"
+        }
+    ]
+ }

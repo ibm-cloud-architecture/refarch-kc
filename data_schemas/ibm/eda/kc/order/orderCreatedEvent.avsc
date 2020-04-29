@@ -1,0 +1,27 @@
+{
+    "namespace": "ibm.eda.kc.order",
+    "name": "orderCreatedEvent",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "payload",
+            "type" : "ibm.eda.kc.order.orderCreatedPayload"
+        },
+        {
+            "name" : "timestampMillis",
+            "type" : "long"
+        },
+        {
+            "name" : "type",
+            "type" : {
+                "type" : "enum",
+                "name" : "orderCreatedEventType",
+                "symbols" : [ "OrderCreated" ]
+            }
+        },
+        {
+            "name" : "version",
+            "type" : "string"
+        }
+    ]
+ }

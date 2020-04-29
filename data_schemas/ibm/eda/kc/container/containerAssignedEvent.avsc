@@ -1,0 +1,31 @@
+{
+    "namespace": "ibm.eda.kc.container",
+    "name": "containerAssignedEvent",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "containerID",
+            "type" : "string"
+        },
+        {
+            "name" : "payload",
+            "type" : "ibm.eda.kc.container.containerAssignedAndAllocatedPayload"
+        },
+        {
+            "name" : "timestampMillis",
+            "type" : "long"
+        },
+        {
+            "name" : "type",
+            "type" : {
+                "type" : "enum",
+                "name" : "containerAssignedEventType",
+                "symbols" : [ "ContainerAssignedToOrder" ]
+            }
+        },
+        {
+            "name" : "version",
+            "type" : ["null","string"]
+        }
+    ]
+ }

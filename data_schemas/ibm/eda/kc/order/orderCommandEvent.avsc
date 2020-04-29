@@ -1,0 +1,23 @@
+{
+    "namespace": "ibm.eda.kc.order",
+    "name": "orderCommandEvent",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "payload",
+            "type" : "ibm.eda.kc.order.orderPayload"
+        },
+        {
+            "name" : "timestampMillis",
+            "type" : "long"
+        },
+        {
+            "name" : "type",
+            "type" : "ibm.eda.kc.order.orderCommandEventType"
+        },
+        {
+            "name" : "version",
+            "type" : "string"
+        }
+    ]
+ }

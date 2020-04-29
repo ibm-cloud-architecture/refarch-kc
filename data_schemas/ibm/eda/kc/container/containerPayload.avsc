@@ -1,0 +1,35 @@
+{
+    "namespace": "ibm.eda.kc.container",
+    "name": "containerPayload",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "brand",
+            "type" : "string"
+        },
+        {
+            "name" : "capacity",
+            "type" : "int"
+        },
+        {
+            "name" : "containerID",
+            "type" : "string"
+        },
+        {
+            "name" : "latitude",
+            "type" : "double"
+        },
+        {
+            "name" : "longitude",
+            "type" : "double"
+        },
+        {
+            "name" : "status",
+            "type" : "string"
+        },
+        {
+            "name" : "type",
+            "type" : "string"
+        }
+    ]
+ }

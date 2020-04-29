@@ -1,0 +1,31 @@
+{
+    "namespace": "ibm.eda.kc.order",
+    "name": "errorEvent",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "errorMessage",
+            "type" : "string"
+        },
+        {
+            "name" : "payload",
+            "type" : "ibm.eda.kc.order.orderPayload"
+        },
+        {
+            "name" : "timestampMillis",
+            "type" : "long"
+        },
+        {
+            "name" : "type",
+            "type" : {
+                "type" : "enum",
+                "name" : "errorEventType",
+                "symbols" : [ "Error" ]
+            }
+        },
+        {
+            "name" : "version",
+            "type" : "string"
+        }
+    ]
+ }

@@ -1,0 +1,15 @@
+{
+    "namespace": "ibm.eda.kc.container",
+    "name": "containerAssignedAndAllocatedPayload",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "containerID",
+            "type" : "string"
+        },
+        {
+            "name" : "orderID",
+            "type" : "string"
+        }
+    ]
+ }

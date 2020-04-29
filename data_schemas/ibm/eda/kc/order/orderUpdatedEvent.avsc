@@ -1,0 +1,27 @@
+{
+    "namespace": "ibm.eda.kc.order",
+    "name": "orderUpdatedEvent",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "payload",
+            "type" : "ibm.eda.kc.order.orderUpdatedPayload"
+        },
+        {
+            "name" : "timestampMillis",
+            "type" : "long"
+        },
+        {
+            "name" : "type",
+            "type" : {
+                "type" : "enum",
+                "name" : "orderUpdatedEventType",
+                "symbols" : [ "OrderUpdated" ]
+            }
+        },
+        {
+            "name" : "version",
+            "type" : "string"
+        }
+    ]
+ }

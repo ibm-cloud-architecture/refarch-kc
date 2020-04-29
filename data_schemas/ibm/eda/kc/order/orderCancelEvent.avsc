@@ -1,0 +1,27 @@
+{
+    "namespace": "ibm.eda.kc.order",
+    "name": "orderCancelEvent",
+    "type": "record",
+    "fields" : [
+        {
+            "name" : "payload",
+            "type" : "ibm.eda.kc.order.orderCancelPayload"
+        },
+        {
+            "name" : "timestampMillis",
+            "type" : "long"
+        },
+        {
+            "name" : "type",
+            "type" : {
+                "type" : "enum",
+                "name" : "orderCancelEventType",
+                "symbols" : [ "OderCancelled" ]
+            }
+        },
+        {
+            "name" : "version",
+            "type" : "string"
+        }
+    ]
+ }
