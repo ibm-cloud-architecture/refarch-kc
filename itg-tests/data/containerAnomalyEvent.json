@@ -14,9 +14,9 @@
         "humidity_level" : 60.3148,
         "latitude": 31.4,
         "longitude": 121.5,
-        "vent_1": "True",
-        "vent_2" : "True",
-        "vent_3" : "True",
+        "vent_1" : true,
+        "vent_2" : true,
+        "vent_3" : true,
         "time_door_open" : 0.822024,
         "defrost_cycle": 6
         }
