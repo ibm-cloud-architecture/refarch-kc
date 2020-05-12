@@ -1,0 +1,30 @@
+@startuml "kc-syst-context"
+!includeurl  https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_TOP_DOWN
+LAYOUT_WITH_LEGEND()
+
+Person_Ext(customer,"Customer")
+Person(clerk,"Shipping Inc Clerk")
+Person(maintainer,"Shipping Inc Maintainer")
+
+System_Boundary(kc,"KC_solution") {
+    System(orders_mgr,"Order Mgr")
+    System(reefers_mgr,"Order Mgr")
+    System(voyages_mgr,"Voyage Mgr")
+    System(reefers_mgr, "Reefer_Mgr")
+    System(anonaly_detection,"Anomaly Detection")
+    System(maintenance_process,"Maintenance Process")
+}
+
+Rel(customer,orders_mgr,"Uses","UI")
+Rel(clerk,orders_mgr,"Uses","UI")
+Rel(clerk,voyages_mgr,"Uses","UI")
+Rel(clerk,reefers_mgr,"Uses","UI")
+Rel(orders_mgr,reefers_mgr,"Depends","")
+Rel(orders_mgr,voyages_mgr,"Depends","")
+Rel(maintainer,maintenance_process,"Uses","UI")
+Rel(anonaly_detection,reefers_mgr,"Notifies","Events")
+Rel(reefers_mgr,maintenance_process,"Triggers","HTTPS")
+
+@enduml

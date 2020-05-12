@@ -1,0 +1,21 @@
+@startuml kc-usecases
+scale 2
+left to right direction
+skinparam PackageStyle rect
+actor Farmer
+actor ShippingClerk
+actor ReeferOperator
+rectangle kc-solution {
+    Farmer -- (order-entry)
+    (orders-mgr) -> (order-entry) 
+    (orders-mgr) -- (voyages-mgr)
+    (orders-mgr) -- (reefers-mgr)
+    (orders-mgr) -- ShippingClerk
+    (voyages-mgr) -- ShippingClerk
+    (reefers-mgr) -- ShippingClerk
+    (anonaly-detection) -- (reefers-mgr)
+    (anonaly-detection) --(maintenance-process)
+    (maintenance-process) -- ReeferOperator
+}
+@enduml
+
