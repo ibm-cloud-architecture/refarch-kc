@@ -345,7 +345,9 @@ class KafkaConsumer:
 
 ### Schema registry
 
-For now, we have used the [Confluent schema registry](https://hub.docker.com/r/confluentinc/cp-schema-registry/) for our work although our goal is to use [IBM Event Streams](https://ibm.github.io/event-streams/schemas/overview/).
+We have worked with the [Confluent schema registry](https://hub.docker.com/r/confluentinc/cp-schema-registry/) as well as the [IBM Event Streams Schema Registry](https://ibm.github.io/event-streams/schemas/overview/).
+
+#### Confluent
 
 The integration of the schema registry with your kafka broker is quite easy. In fact, all you need is to provide the schema registry with your zookeeper cluster url and give your schema registry a hostname: https://docs.confluent.io/current/installation/docker/config-reference.html#schema-registry-configuration
 
@@ -457,6 +459,137 @@ Let's assume we have created a new kafka topic called `avrotest` for testing our
     ]
   }
   ```
+
+#### Event Streams
+
+On the other hand, you don't need to do any setup process in order to use the Schema Registry that comes with IBM Event Streams. You simply need to provide your applications with the configuration that the IBM Event Streams provides you with
+
+##### UI
+
+Log into the IBM Event Streams UI and go to the topics section on the left hand side panel. Once there you will see a _Connect to this cluster_ option on the top right corner:
+
+![connect to this cluster](images/connect.png)
+
+It will display a card with the information you need in order to use IBM Event Streams as well as the Schema Registry it comes with. It also contains a _Sample Code_ section where you can get the sample code for how to configure a Java application:
+
+![config](images/config.png)
+
+Once you have configured your application with your IBM Event Streams and Schema Registry information to be able to use and access these, you simple produce and consume Avro encoded messages as you would with Confluent.
+
+You can see the Avro schemas your producers have got registered with IBM Event Streams by clicking on the _schema registry_ option on the right hand panel:
+
+![schema registry](images/schema-registry.png)
+
+You can click in each of them to actually see their definition and version:
+
+![schema definition](images/schema-definition.png)
+
+You can also use the IBM Event Streams UI to create new schemas.
+
+##### CLI
+
+We can also use the **cloudctl** CLI and its IBM Event Streams **es** plugin to access and manage our instance of IBM Event Streams. To install the CLI and plugin, log into your IBM Event Streams instance, click on _toolbox_:
+
+![toolbox](images/toolbox.png)
+
+then click on _IBM Event Streams command-line interface_ and follow the instructions in there:
+
+![cli install](images/cli-install.png)
+
+Once you have the CLI and plugin install, simply login to your OCP cluster and initialize your IBM Event Streams **es** plugin:
+
+```shell
+
+$ cloudctl login -a <ICP console endpoint> -u <user> -p <password>
+Authenticating...
+OK
+
+Targeted account mycluster Account
+
+Enter a namespace > eventstreams
+Targeted namespace eventstreams
+
+Configuring kubectl ...
+Property "clusters.mycluster" unset.
+Property "users.mycluster-user" unset.
+Property "contexts.mycluster-context" unset.
+Cluster "mycluster" set.
+User "mycluster-user" set.
+Context "mycluster-context" created.
+Switched to context "mycluster-context".
+OK
+
+Configuring helm: /Users/user/.helm
+OK
+
+$ cloudctl es init
+
+ICP endpoint:                             https://icp-console.apps.green.ocp.csplab.local   
+Namespace:                                eventstreams   
+Helm release:                             eventstream140   
+Event Streams API endpoint:               https://eventstream140-ibm-es-rest-route-eventstreams.apps.green.ocp.csplab.local   
+Event Streams API status:                 OK   
+Event Streams SSL client auth endpoint:   https://eventstream140-ibm-es-clientauth-route-eventstreams.apps.green.ocp.csplab.local   
+Event Streams UI address:                 https://eventstream140-ibm-es-ui-route-eventstreams.apps.green.ocp.csplab.local   
+Event Streams bootstrap address:          eventstream140-ibm-es-proxy-route-bootstrap-eventstreams.apps.green.ocp.csplab.local:443   
+OK
+```
+
+We can already see that once we get the IBM Event Streams **es** plugin initialized, we are provided with the endpoint information to interact with IBM Event Streams and its Schema Registry.
+
+We can now see the Avro schemas we have registered:
+
+```Shell
+$ cloudctl es schemas
+Schema                        State    Latest version   Latest version ID   Updated   
+avrocontainers-key-is6ghc     active   1                1                   Wed, 08 Jan 2020 11:16:39 UTC   
+avrocontainers-value-fwjwzc   active   1                1                   Wed, 08 Jan 2020 11:16:39 UTC   
+testing                       active   1.0.0            1                   Thu, 19 Dec 2019 15:06:27 UTC   
+OK
+
+$ cloudctl es schema avrocontainers-key-is6ghc
+
+Schema avrocontainers-key-is6ghc is active.
+
+Version   Version ID   Schema                      State    Updated                         Comment   
+1         1            avrocontainers-key-is6ghc   active   Wed, 08 Jan 2020 11:16:39 UTC      
+OK
+
+$ cloudctl es schema avrocontainers-key-is6ghc --json
+{
+  "id": "avrocontainers-key-is6ghc",
+  "name": "avrocontainers-key-is6ghc",
+  "state": {
+    "state": "active"
+  },
+  "enabled": true,
+  "versions": [
+    {
+      "id": 1,
+      "name": "1",
+      "date": "2020-01-08T11:16:39.962Z",
+      "state": {
+        "state": "active"
+      },
+      "enabled": true
+    }
+  ]
+}
+```
+
+Finally, explore all the options you have to interact with the IBM Event Streams Schema Registry:
+
+```Shell
+$ cloudctl es --help | grep schema
+   schema                       Display details of a schema.
+   schema-add                   Add a new schema or a new version of a schema to the registry.
+   schema-modify                Modify an entire schema or a specific schema version
+   schema-remove                Remove a schema or a version of a schema from the registry.
+   schema-verify                Verify a schema file.
+   schemas                      List the schemas in the registry.
+   schemas-export               Export the schemas in the registry to a zip file.
+   schemas-import               Import a set of schemas into the registry from a zip file.
+```
 
 ### Data evolution
 
