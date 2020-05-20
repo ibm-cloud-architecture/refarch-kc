@@ -37,23 +37,14 @@ For more information, see the [README for the scripts](./scripts/localk8s/README
 
 ### Building this booklet locally
 
-The content of this repository is written with markdown files, packaged with [MkDocs](https://www.mkdocs.org/) and can be built into a book-readable format by MkDocs build processes.
+The content of this repository is written with markdown files, built with Gatsby.  For more information, see the [README for the docs](./docs/README.md).
 
-1. Install MkDocs locally following the [official documentation instructions](https://www.mkdocs.org/#installation).
-1. Install Material plugin for mkdocs:  `pip install mkdocs-material` 
+1. Install NodeJS (https://nodejs.org/)
 2. `git clone https://github.com/ibm-cloud-architecture/refarch-kc.git` _(or your forked repository if you plan to edit)_
-3. `cd refarch-kc`
-4. `mkdocs serve`
-5. Go to `http://127.0.0.1:8000/` in your browser.
-
-### Building this booklet locally but with docker
-
-In some cases you might not want to alter your Python setup and rather go with a docker image instead. This requires docker is running locally on your computer though.
-
-* docker pull squidfunk/mkdocs-material
-* git clone https://github.com/ibm-cloud-architecture/refarch-eda.git (or your forked repository if you plan to edit)
-* docker run --rm -it -p 8000:8000 -v ${PWD}:/docs squidfunk/mkdocs-material
-* Go to http://127.0.0.1:8000/ in your browser.
+3. `cd refarch-kc/docs`
+4. `npm install`
+5. `npm run dev`
+6. Go to `http://127.0.0.1:8000/` in your browser.
 
 ### Pushing the book to GitHub Pages
 
