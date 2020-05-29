@@ -45,7 +45,7 @@ services:
             - "22080:9080"
             - "22443:9443"
         environment:
-            MOCKUP: ${MOCKUP:-no}
+            PREDICTIONS_ENABLED: ${PREDICTIONS_ENABLED:-false}
             CP4D_BASE_URL: ${CP4D_BASE_URL:-wrongBaseUrl}
             CP4D_PREDICTION_URL: ${CP4D_PREDICTION_URL:-wrongPredictionUrl}
             CP4D_USER: ${CP4D_USER:-wrongUser}
