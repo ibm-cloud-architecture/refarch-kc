@@ -61,6 +61,22 @@ kubectl describe configmap kafka-brokers -n <target k8s namespace / ocp project>
 
 The Event Streams Broker API Key is needed to connect any deployed consumers or producers to the service running in your cluster. To avoid sharing security keys, create a Kubernetes Secret in the target cluster you will deploy the application microservices to.  You can specify keys at the topic and consumer group levels or use a unique key for all topics and all consumer groups.
 
+<InlineNotification kind="warning">
+
+**IMPORTANT: The API Key must be created using the CLI** as it needs to grant certain transactional IDs for the Order Command component's producers to be able to transactionally produce messages to the topics it needs to.
+
+</InlineNotification>
+
+In order to create the API Key through the CLI, you must install the Command Line Interface (CLI) explained in the IBM Event Streams post-installation instructions [here](https://ibm.github.io/event-streams/installing/post-installation/). Once you have the **cloudctl** CLI and the Event Streams plugin for it, you can create the API key as follows:
+
+```shell
+cloudctl es iam-service-id-create <NAME> --role administrator --all-topics --all-groups --all-schemas --txnid "order-1,error-1" --description "<DESCRIPTION>"
+```
+
+where you can tweak the role, topics, groups, etc to be more restrictive but the **txnid** must be as described.
+
+Once you run the command above and the service credentials are created and the API key generated, provide the API key in the secret below:
+
 ```shell
 kubectl create secret generic eventstreams-apikey --from-literal=binding='<replace with api key>' -n <target k8s namespace / ocp project>
 kubectl describe secrets -n <target k8s namespace / ocp project>
