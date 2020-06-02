@@ -626,8 +626,11 @@ class OrderCancellation(unittest.TestCase):
         json_data = json.loads(response.text)
         # Verify we get at least one container back
         self.assertGreater(len(json_data['content']),0)
+        for json_container in json_data['content']:
+            if json_container['id'] == CONTAINER_ID:
+                break
         # Get the latest container
-        api_container = json_data['content'][len(json_data['content'])-1]
+        api_container = json_container
         # For simplicity, we will not work out timestamps
         api_container['createdAt'] = ""
         api_container['updatedAt'] = ""
