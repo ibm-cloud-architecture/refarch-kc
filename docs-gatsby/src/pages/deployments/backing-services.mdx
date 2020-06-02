@@ -52,6 +52,22 @@ The installation is documented in the [product documentation](https://ibm.github
 
 Regardless of specific deployment targets (OCP, IKS, k8s), the following prerequisite Kubernetes ConfigMap needs to be created to support the deployments of the application's microservices.  These artifacts need to be created once per unique deployment of the entire application and can be shared between application components in the same overall application deployment.
 
+<InlineNotification kind="warning">
+
+**IMPORTANT: The API Key must be created using the CLI** as it needs to grant certain transactional IDs for the Order Command component's producers to be able to transactionally produce messages to the topics it needs to.
+
+</InlineNotification>
+
+In order to create the API Key through the CLI, you must install the Command Line Interface (CLI) explained in the IBM Event Streams post-installation instructions [here](https://ibm.github.io/event-streams/installing/post-installation/). Once you have the **cloudctl** CLI and the Event Streams plugin for it, you can create the API key as follows:
+
+```shell
+cloudctl es iam-service-id-create <NAME> --role administrator --all-topics --all-groups --all-schemas --txnid "order-1,error-1" --description "<DESCRIPTION>"
+```
+
+where you can tweak the role, topics, groups, etc to be more restrictive but the **txnid** must be as described.
+
+Once you run the command above and the service credentials are created and the API key generated, provide the API key in the secret below:
+
 ```shell
 kubectl create configmap kafka-brokers --from-literal=brokers='<replace with comma-separated list of brokers>' -n <target k8s namespace / ocp project>
 kubectl describe configmap kafka-brokers -n <target k8s namespace / ocp project>
