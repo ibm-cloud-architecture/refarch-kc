@@ -52,5 +52,5 @@ Running the `run-integration-tests.sh` script will:
 
 The entire solution can be uninstalled by executing the `uninstall.sh` or `uninstall.bat` script. Similar to installation, this will invoke:
 - `uninstall-app.sh` to uninstall the Helm release for each microservice, and remove the config and `shipping` namespace,
-- `uninstall-infra.sh` to uninstall Kafka, Strimzi and Postgres and their respective namespaces.
+- `uninstall.sh` to uninstall Kafka, Strimzi and Postgres and their respective namespaces.
 
