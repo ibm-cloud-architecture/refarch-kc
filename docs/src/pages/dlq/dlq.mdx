@@ -3,13 +3,13 @@ title: Dead Letter Queue Pattern
 description: Dead Letter Queue Pattern
 ---
 
-In distributed systems, it is common to find mechanisms for retrying calls to other, potentially external, services and fail gracefully if that service is unavailable for any reason. Here we are going to talk about using non-blocking request reprocessing and dead letter queues (DLQ) to achieve decoupled, observable error-handling without disrupting real-time traffic in the context of the [Container Anomaly Use Case](../containerAnomaly/containerAnomaly.md) of our Reefer Container Reference Application.
+In distributed systems, it is common to find mechanisms for retrying calls to other, potentially external, services and fail gracefully if that service is unavailable for any reason. Here we are going to talk about using non-blocking request reprocessing and dead letter queues (DLQ) to achieve decoupled, observable error-handling without disrupting real-time traffic in the context of the [Container Anomaly Use Case](../containerAnomaly/containerAnomaly/) of our Reefer Container Reference Application.
 
 A brief description about the problem and how non-blocking reprocessing and dead letter queues can help us can be found [here](https://ibm-cloud-architecture.github.io/refarch-eda/design-patterns/ED-patterns/#event-reprocessing-with-dead-letter-pattern).
 
 ## Implementation
 
-As explained in the [Container Anomaly Use Case](../containerAnomaly/containerAnomaly.md) of our Reefer Container Reference Application, the Spring Containers component calls a BPM process in order to get a field engineer assigned to checking and fixing a potentially bad container based on the telemetry events being sent by it.
+As explained in the [Container Anomaly Use Case](../containerAnomaly/containerAnomaly/) of our Reefer Container Reference Application, the Spring Containers component calls a BPM process in order to get a field engineer assigned to checking and fixing a potentially bad container based on the telemetry events being sent by it.
 
 As said in the introduction above, this call to the BPM process might fail so we need to implement a mechanism whereby we use non-blocking request reprocessing and dead letter queues (DLQ) to achieve decoupled, observable error-handling without disrupting real-time traffic.
 
