@@ -23,7 +23,7 @@ kubectl rollout status -n shipping deployment springcontainerms-deployment
 kubectl rollout status -n shipping deployment fleetms-deployment
 kubectl rollout status -n shipping deployment kc-ui-deployment
 kubectl rollout status -n shipping deployment order-command-ms
-kubectl rollout status -n shipping deployment orderqueryms-deployment
+kubectl rollout status -n shipping deployment order-query-ms
 kubectl rollout status -n shipping deployment voyagesms-deployment
 
 # Deploy integration tests job
@@ -55,5 +55,5 @@ kubectl rollout status -n shipping deployment springcontainerms-deployment
 kubectl rollout status -n shipping deployment fleetms-deployment
 kubectl rollout status -n shipping deployment kc-ui-deployment
 kubectl rollout status -n shipping deployment order-command-ms
-kubectl rollout status -n shipping deployment orderqueryms-deployment
+kubectl rollout status -n shipping deployment order-query-ms
 kubectl rollout status -n shipping deployment voyagesms-deployment
