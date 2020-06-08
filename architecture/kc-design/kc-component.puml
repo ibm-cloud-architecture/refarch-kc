@@ -1,0 +1,10 @@
+@startuml
+!includeurl  https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+System_Boundary(kafka,"Event Streams") {
+Component(orders,Topic,"orders")
+Component(containers,Topic,"containers")
+Component(voyages,Topic,"voyages")
+Component(telemetries,Topic,"telemetries")
+}
+@enduml

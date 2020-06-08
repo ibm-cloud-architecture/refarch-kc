@@ -1,0 +1,20 @@
+@startuml kc-usecases
+scale 2
+left to right direction
+skinparam PackageStyle rect
+actor ManufacturerQA
+actor ManufacturerMgr
+actor ReeferOperator
+rectangle Vaccine-Monitoring {
+    ManufacturerQA -> (start-raw-material-tests)
+    ManufacturerQA -> (log-raw-material-test-results)
+    ManufacturerMgr -> (start-antigen-process)
+    ManufacturerMgr -> (start-Antigen-shipping)
+    (cold-chain-monitoring) -- (reefers-mgr)
+    (anonaly-detection) -- (reefers-mgr)
+    (reefers-mgr) --  (maintenance-process)
+    (maintenance-process) -- ReeferOperator
+    (reefers-mgr) -- ReeferOperator
+}
+@enduml
+

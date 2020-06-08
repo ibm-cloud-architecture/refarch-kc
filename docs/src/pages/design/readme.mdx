@@ -1,17 +1,17 @@
 ---
-title: Goals and outline of section 
-description: Goals and outline of section 
+title: Design considerations
+description: Design considerations
 ---
 
 This section describes how to apply the domain driven design principles with the event driven approach to design the reefer container shipment solution.
 
 For methodology discussion we recommend that you review our summary on combining DDD with event storming end event driven microservice design, in [this note.](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/ddd/)
 
-!!! note
+<InlineNotification kind="info">
         Since, we are delivering a demonstration application there will be some simulator / scaffolding / testing services mixed in with the required business processing.
         This is a common occurrence in agile development and it may be helpful to show how decision to scope and simplify a particular build and test step interacts with decisions relating strictly to microservices design.  
+</InlineNotification>
 
---- 
     
 ## Applying the DDD and event design approach to Reefer container shipment   
 
@@ -35,7 +35,7 @@ The Event Storming analysis of the shipment problem was end-to-end and involved 
 
 During the event storming analysis, we define the domain to be the Reefer container shipping domain. It groups a set of subdomains like orders, invoice, reefer container, shipping, voyage, inventory and external systems as the vessels monitoring, CRM, invoice, and weather data:
 
-![](images/domain-subdomains.png)
+![](./images/domain-subdomains.png)
 
 We have three core subdomains and the rest as support. Order can be delivered by an out of the shelf ordering system, but in our case we are implementing it as one or more microservices to support the demonstration of CQRS and event sourcing. The potential competitive advantage is to have a clear traceability of order -> cargo -> container -> itinerary.  
 
@@ -54,7 +54,7 @@ To start addressing clear separation of concerns and assign work to different de
 
 So we identified the Reefer container, that carries fresh product as Cargo. The order is about getting fresh product from origin to destination at a given target temperature and keep the cold chain. The container will be assigned to a voyage that groups legs the ship will follow. The following figure is based on the work from the chapter 7 of Eric Evans's book  with some slight differences to apply to our domain and to illustrate the above concepts:
 
-![](images/shipping-model.png)
+![](./images/shipping-model.png)
 
 Customer may have the role of emitter or receiver of the cargo. 
 
@@ -99,7 +99,7 @@ In Domain-driven design, an aggregate groups related object as a unique entity. 
 
 The Reefer and Order and Voyage seem to be an obvious aggregates.
 
-![](images/aggregates-boundaries.png)
+![](./images/aggregates-boundaries.png)
 
 Customer and Vessets are also aggregates, but we will not consider them as scope for the solution implementation.
 
@@ -165,8 +165,9 @@ It will be helpful for the voyage-command-ms to include a query service to looku
 
 For Reefer containers we will use an agent based implementation as the main container inventory is managed by an external system. The agent listen to new reefer container added to the main inventory, and keeps a view of this Reefer inventory internally. It adds different attributes to the basic reefer container and persists metrics.
 
-!!! Note
+<InlineNotification kind="info">
         The container inventory is in fact coded in a [separate project](https://ibm-cloud-architecture.github.io/refarch-container-inventory/) to proof the strangler pattern and data replication using MQ and kafka or change data capture and kafka.
+</InlineNotification>
 
 This service maintain a list of defined containerIDs and track the state of each container. A fixed set of valid container IDs will be initialized at demonstration start time. As noted previously we will assume this to be enough for all requested orders to be assigned a container without availability issues. Since the collection of containers is fixed the component will not need a command API.
 
@@ -197,7 +198,7 @@ Using the understanding of the event flow from the Event Storming session, the l
 
 The diagram below shows all command interactions from initial order creation through voyage start. 
 
-![interactions1](images/interactions1.png)
+![interactions1](./images/interactions1.png)
 
 The grey (shaded) columns of processing blocks are organized to show processing by the different command microservices.
 
@@ -243,7 +244,7 @@ Comments on steps in the command flow:
 
 The diagram below shows all command interactions from container on ship in voyage through shipment delivered and order completed. 
 
-![interactions2](interactions2.png)
+![interactions2](./images/interactions2.png)
 
 As in the previous interaction diagram, the columns with grey/shaded processing blocks show work by (1) orders-command-ms (2) voyages-command-ms (3) containers-command-ms and containers-streaming-ms (4) fleet/ships-simulator service respectively.
 
@@ -277,7 +278,7 @@ This diagram starts with containers on board a ship which is sailing on specific
 
 The diagram below shows all interactions with the shipment tracking microservice. This microservice subscribes to many events carrying required information and supports one or more query APIs for different flavors of order and shipment tracking 
 
-![interactions3](interactions3.png)
+![interactions3](./images/interactions3.png)
 
 There could be multiple flavors of order and shipment tracking query APIs supported:
 * Order confirmation query could address orders, bookings, rejections, modified orders etc 
@@ -296,5 +297,5 @@ From the interaction diagrams we can compile  a list of all event types which wi
 
 The diagram below lists the event types and topics, showing emitters ( publishers) and consumers ( subscribers) of each event type. 
 
-![topicsAndEvents](topicsAndEvents.png)
+![topicsAndEvents](./images/topicsAndEvents.png)
 

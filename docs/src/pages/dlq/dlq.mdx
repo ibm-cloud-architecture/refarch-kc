@@ -26,7 +26,7 @@ To illustrate this, we have decided that any failure in authenticating with BPM 
 
 ### Service Unavailable
 
-![retry](images/Slide1.png)
+![retry](./images/Slide1.png)
 
 As said above, there might be some times when the service we depend on and call (BPM in our case) is temporarily not available. Either because it is temporarily down or overloaded. If this happens, the Spring Container component will send the **ContainerAnomaly** event into the **container-anomaly-retry** topic.
 
@@ -142,7 +142,7 @@ where you can see we have added the **reason** so that if any operator or automa
 
 ### Errors
 
-![error](images/Slide2.png)
+![error](./images/Slide2.png)
 
 As said earlier, when implementing request retry and graceful failure mechanisms for a, potentially external, service, we want to retry only when the service is unreachable/unavailable and not when there is an error in the data we are calling the service with, an error with the service url or something on those lines so that we don't keep retrying calls we know they are bound to fail beforehand.
 

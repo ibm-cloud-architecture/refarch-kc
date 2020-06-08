@@ -31,4 +31,4 @@ As a result of the **OrderSpoilt** event sent into the orders topic, the Order C
 
 As we can see in the diagram and explanation above, the Spring Containers component calls a BPM process for a field engineer to get assigned to checking and fixing the potentially bad container. However, the fact that our Spring Containers component calls another, potentially external, service through an HTTP or RPC call introduces a dependency that could actually be troublesome if the call fails.
 
-What can we do in this case? We have a look at this usual scenario in distributed systems in the [Dead Letter Queue section](../dlq/dlq.md).
+What can we do in this case? We have a look at this usual scenario in distributed systems in the [Dead Letter Queue section](../dlq/dlq/).

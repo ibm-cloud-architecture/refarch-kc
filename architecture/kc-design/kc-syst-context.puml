@@ -1,0 +1,21 @@
+@startuml "kc-syst-context"
+!includeurl  https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_TOP_DOWN
+LAYOUT_WITH_LEGEND()
+
+title System Context Fresh Good Shipping Solution
+Person_Ext(customer,"Customer")
+Person(clerk,"Shipping Inc Clerk")
+Person(maintainer,"Shipping Inc Maintainer")
+
+System(kc,"KC_solution")
+System_Ext(email,"Email Server","Exchange e-mail system")
+System_Ext(vesselTracking,"Vessel Tracking", "Web service tracking Vessels movement")
+
+Rel(customer,kc,"Uses")
+Rel(clerk,kc,"Uses")
+Rel(maintainer,kc,"Uses")
+Rel(kc,email,"Sends emails to",)
+Rel(kc,vesselTracking,"Uses","HTTP")
+@enduml

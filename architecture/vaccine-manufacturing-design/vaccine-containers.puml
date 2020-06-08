@@ -1,0 +1,52 @@
+@startuml
+!includeurl  https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_LEFT_RIGHT
+title Components diagram for the Vaccine Monitoring solution
+
+
+Person(ManufacturerQA,Staff,"Manufacturer QA")
+Person(ManufacturerMgr,Staff,"Manufacturer Mgr")
+Person(ReeferOperator,Staff,"Reefer Operator")
+System_Ext(reefer,"Refrigerator Container")
+System_Boundary(vms,"Vaccine_Monitoring_Solution") {
+    Container(app, "Manufacturing Tracking Portal", "Javascript, Angular", "Allows customers to enter shipping order")
+  
+    Container(raw_material_mgr,"Raw Material Mgr","Java, Quarkus","Raw material mgt microservice") 
+    Container(antigen_mgr,"Antigen Mgr","Java, Quarkus","Antigen mgt microservice") 
+    ContainerDb(vaccineDB,"Vaccine DB","DB2","Persist Vaccine data and states")
+  
+    Container(reefers_mgr,"Reefer Mgr","Java, Springboot","Microservice to manage reefer container entities")
+    ContainerDb(reeferDB,"Reefer DB","DB2","Persist Reefer Containers data and states")
+  
+    Container(message_bus, "Message Bus", "Kafka", "Transport for business events")
+
+    Container(anonaly_detection,"Anomaly Detection","Agent, Kafka Stream","Process Telemetries in real time")
+    Container(maintenance_process,"Maintenance Process","BPM","Business process to track reefer container maintenance")
+
+    Container(vaccine_mgr,"Vaccine Mgr","Java,Quarkus","Microservice managing Vaccine entities")
+}
+Rel(ManufacturerQA,app,"Triggers QA validation","HTTPS")
+Rel(ManufacturerMgr,app,"Mamages vaccine process","HTTPS")
+Rel(ReeferOperator,maintenance_process,"Process refrigerator maintenance","HTTPS")
+Rel(app,raw_material_mgr,"Uses", "HTTPS")
+Rel(app,reefers_mgr,"Uses", "HTTPS")
+Rel(app,antigen_mgr,"Uses","HTTPS")
+Rel(app,vaccine_mgr,"Uses", "HTTPS")
+Rel_L(raw_material_mgr,vaccineDB,"Persists raw material data","JDBC")
+Rel_R(antigen_mgr,vaccineDB,"Persists Antigen data","JDBC")
+Rel(vaccine_mgr,vaccineDB,"Persists Vaccine data","JDBC")
+Rel(reefers_mgr,reeferDB,"Persists reefers to","JDBC")
+
+Rel(raw_material_mgr,message_bus,"Publishes raw material update events","Kafka")
+Rel(antigen_mgr,message_bus,"Publishrs antigen update events","Kafka")
+Rel(message_bus, vaccine_mgr, "Subscribes to raw material events","HTTPS,Kafka")
+Rel(vaccine_mgr,message_bus, "Publishes vaccine lot events","HTTPS,Kafka")
+Rel(message_bus, reefers_mgr, "Subscribes to vaccine events","HTTPS,Kafka")
+Rel(message_bus,anonaly_detection,"Subscribes telemetries","HTTPS,Kafka")
+Rel(anonaly_detection,reefers_mgr,"Notifies","Events")
+
+Rel(reefers_mgr,maintenance_process,"Triggers","HTTPS")
+Rel(reefer, message_bus,"Sends telemetries","HTTPS,Kafka")
+
+@enduml

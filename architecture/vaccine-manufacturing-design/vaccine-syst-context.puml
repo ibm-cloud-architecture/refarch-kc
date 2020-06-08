@@ -1,0 +1,24 @@
+@startuml "kc-syst-context"
+!includeurl  https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_TOP_DOWN
+
+title System Context Vaccine Manufacturion Solution
+
+Person(ManufacturerMgr,"Manufacturer Mgr")
+Person(ManufacturerQA,"Manufacturer QA")
+Person(ReeferOperator,"Reefer Operator")
+
+System(vms,"Vaccine Manufacturion Solution")
+System_Ext(email,"Email Server","Exchange e-mail system")
+System_Ext(vesselTracking,"Vessel Tracking", "Web service tracking Vessels movement")
+System_Ext(manufacturingProcessing,"Manufacturing Processing Tracking", "ERP App")
+
+Rel(ManufacturerMgr,vms,"Uses")
+Rel(ManufacturerQA,vms,"Uses")
+Rel(ReeferOperator,vms,"Uses")
+Rel(vms,email,"Sends emails to","SMTP")
+Rel(vms,vesselTracking,"Uses","HTTP")
+Rel(manufacturingProcessing,vms,"Reports", "Events")
+Rel(vms,manufacturingProcessing,"Delegates", "Remote Calls")
+@enduml
