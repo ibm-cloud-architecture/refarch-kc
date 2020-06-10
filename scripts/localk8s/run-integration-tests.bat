@@ -22,7 +22,7 @@ kubectl scale deployment --replicas=1 -n shipping --all
 kubectl rollout status -n shipping deployment springcontainerms-deployment
 kubectl rollout status -n shipping deployment fleetms-deployment
 kubectl rollout status -n shipping deployment kc-ui-deployment
-kubectl rollout status -n shipping deployment ordercommandms-deployment
+kubectl rollout status -n shipping deployment order-command-ms
 kubectl rollout status -n shipping deployment orderqueryms-deployment
 kubectl rollout status -n shipping deployment voyagesms-deployment
 
@@ -54,6 +54,6 @@ kubectl scale deployment --replicas=1 -n shipping --all
 kubectl rollout status -n shipping deployment springcontainerms-deployment
 kubectl rollout status -n shipping deployment fleetms-deployment
 kubectl rollout status -n shipping deployment kc-ui-deployment
-kubectl rollout status -n shipping deployment ordercommandms-deployment
+kubectl rollout status -n shipping deployment order-command-ms
 kubectl rollout status -n shipping deployment orderqueryms-deployment
 kubectl rollout status -n shipping deployment voyagesms-deployment
