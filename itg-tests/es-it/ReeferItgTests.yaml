@@ -164,7 +164,7 @@ spec:
           value: "order-command-ms:9080"
         # Order query microservice's service name
         - name: ORDER_QUERY_MS
-          value: "orderqueryms-service:9080"
+          value: "order-query-ms:9080"
         # Container microservice's service name
         - name: CONTAINER_SPRING_MS
           value: "springcontainerms-service:8080"
