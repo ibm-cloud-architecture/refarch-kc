@@ -1,65 +1,62 @@
-
-- title: Business problem statement
+- title: Business Scenario
   pages:
-    - title: Introduction
-      path: /introduction/
-    - title: Event storming analysis
-      path: /analysis/readme/
-- title: From Analysis to Microservice Specifications
+    - title: Scenario Overview
+      path: /business-scenario/scenario-overview/
+    - title: Architecture Overview
+      path: /business-scenario/architecture-overview/
+    - title: Microservices Overview
+      path: /business-scenario/microservices-overview/
+    - title: Repository Overview
+      path: /business-scenario/repository-overview/
+    - title: Quickstart Tutorial
+      path: /business-scenario/quickstart-tutorial/
+- title: Implementation Details
   pages:
-    - path: /design/readme/
-- title: Architecture
+    - title: Event Storming Analysis
+      path: /implementation/event-storming-analysis/
+    - title: Domain-Driven Design analysis
+      path: /implementation/domain-driven-design/
+    - title: Schema Registry and Avro
+      path: /implementation/schema-registry/
+    - title: Saga Patterns
+      path: /implementation/saga-patterns/
+    - title: Dead Letter Queue
+      path: /implementation/dead-letter-queue/
+    - title: Order Cancellation
+      path: /implementation/order-cancellation/
+    - title: Anomalous Container Tracking
+      path: /implementation/container-anomaly/
+- title: Microservices Details
   pages:
-    - path: /design/architecture/
-
-- title: Development practices
-  pages:
-    #- title: Order microservice with CQRS and Event Sourcing
-    #  path: https://ibm-cloud-architecture.github.io/refarch-kc-order-ms
-    #- title: Container microservice with Springboot - Spring Kafka and PostgreSQL
-    #  path: https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/springboot
-    - title: Adopting Schema Registry and Avro
-      path: /avro/avro/
-    - title: Saga applied to container solution
-      path: /saga/saga/
-    - title: Dead letter pattern for this solution
-      path: /dlq/dlq/
-    - title: Order cancellation principle
-      path: /cancellation/cancellation/
-    - title:  Container anomaly
-      path: /containerAnomaly/containerAnomaly/
-- title: Related repositories
-  pages:
-  - path: /deployments/reposlist/
-- title: Deployments
-  pages:
-    - title: Backing services
-      path: /deployments/backing-services/
-    - title: Application Components
-      path: /deployments/application-components/
-    - title: Docker
-      path: /deployments/docker/
-    - title: Troubleshooting
-      path: /deployments/troubleshooting/
-- title: Security
-  pages:
-    - path: /security/
-
-- title: Integration tests
+    - title: Prerequisites
+      path: /microservices/prereqs/
+    - title: Orders UI
+      path: /microservices/orders-ui/
+    - title: Order Command
+      path: /microservices/order-command/
+    - title: Order Query
+      path: /microservices/order-query/
+    - title: Container Management
+      path: /microservices/container-management/
+    - title: Vessel Simulator
+      path: /microservices/vessel-simulator/
+    - title: Anomalous Container Scoring
+      path: /microservices/scoring-mp/
+    - title: Fleet Management
+      path: /microservices/fleet/
+    - title: Voyage Management
+      path: /microservices/voyages/
+- title: Integration Tests
   pages:
     - title: Overview
-      path: /itg-tests/itgtests/
+      path: /integration-tests/overview/
     - title: Happy Path
-      path: /itg-tests/happy-path/happy_path/
+      path: /integration-tests/happy-path/
     - title: Saga Pattern
-      path: /itg-tests/saga/saga/
-    - title: Order cancellation
-      path: /itg-tests/order-cancelled/order_cancelled/
-    - title: Dead Letter
-      path: /itg-tests/dlq/dlq/
+      path: /integration-tests/saga-pattern/
+    - title: Order Cancellation
+      path: /integration-tests/order-cancellation/
+    - title: Dead Letter Queue
+      path: /integration-tests/dead-letter-queue/
     - title: Container Anomaly
-      path: /itg-tests/containerAnomaly/containerAnomaly/
-
-- title: Demonstration script
-  pages:
-      - path: /demo/readme/
+      path: /integration-tests/container-anomaly/

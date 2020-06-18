@@ -1,0 +1,49 @@
+---
+title: Shipping Container Management
+description: Deployment of application microservices
+---
+
+<InlineNotification kind="warning">UNDER CONSTRUCTION</InlineNotification>
+
+<AnchorLinks>
+  <AnchorLink>Overview</AnchorLink>
+  <AnchorLink>Build</AnchorLink>
+  <AnchorLink>Run</AnchorLink>
+  <AnchorLink>Integration Tests</AnchorLink>
+  <AnchorLink>Implementation Details</AnchorLink>
+</AnchorLinks>
+
+## Overview
+
+<PageDescription>
+This project is part of the container shipment implementation solution, and address the Reefer container management microservice implmentaiton. You can read more about the end to end solution [in this chapter.](https://ibm-cloud-architecture.github.io/refarch-kc/)
+</PageDescription>
+
+The source repository can be found at https://github.com/ibm-cloud-architecture/refarch-kc-container-ms.
+
+The goal of this Container management service is to support the reefer containers inventory management and to process all the events related to the container entity.
+
+We are demonstrating in this project how to transform an event storming analysis to an event-driven microservice implementation and how to address ['reversibility'](https://www.ibm.com/cloud/garage/practices/run/reversibility-in-the-cloud) between the different platform. The service is packaged via dockerfile, and helm release is defined to deploy to kubernetes.
+
+In distributed systems, it is common to find mechanisms for retrying calls to other, potentially external, services and fail gracefully if that service is unavailable for any reason.
+
+You can read more about using non-blocking request reprocessing and dead letter queues (DLQ) to achieve decoupled, observable error-handling without disrupting real-time traffic in the context of the [Container Anomaly Use Case](#container-anomaly) of our Reefer Container Reference Application [here](https://ibm-cloud-architecture.github.io/refarch-kc/dlq/dlq)
+
+
+## Build
+
+TBD Appsody
+
+## Run
+
+TBD Appsody
+
+## Integration Tests
+
+TBD Source from https://ibm-cloud-architecture.github.io/refarch-kc-container-ms/springboot/#the-integration-tests with what is up to date.
+
+## Implementation Details
+
+TBD Merge:
+- https://github.com/ibm-cloud-architecture/refarch-kc-container-ms/blob/master/docs/springboot/README.md
+- https://github.com/ibm-cloud-architecture/refarch-kc-container-ms/blob/master/docs/index.md

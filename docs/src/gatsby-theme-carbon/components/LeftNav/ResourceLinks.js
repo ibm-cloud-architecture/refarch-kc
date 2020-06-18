@@ -5,7 +5,7 @@ const links = [
   {
     title: 'Github',
     href: 'https://github.com/ibm-cloud-architecture/refarch-kc',
-  },
+  }
 ];
 
 // shouldOpenNewTabs: true if outbound links should open in a new tab

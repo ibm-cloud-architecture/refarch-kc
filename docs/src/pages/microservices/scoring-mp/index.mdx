@@ -1,0 +1,40 @@
+---
+title: Container Anomaly Scoring Microservice
+description: Deployment of application microservices
+---
+
+<InlineNotification kind="warning">UNDER CONSTRUCTION</InlineNotification>
+
+<AnchorLinks>
+  <AnchorLink>Overview</AnchorLink>
+  <AnchorLink>Build</AnchorLink>
+  <AnchorLink>Run</AnchorLink>
+  <AnchorLink>Integration Tests</AnchorLink>
+  <AnchorLink>Implementation Details</AnchorLink>
+</AnchorLinks>
+
+## Overview
+
+TBD To be sourced from https://github.com/ibm-cloud-architecture/refarch-reefer-ml/tree/master/scoring-mp
+
+Reactive Systems provide an architecture style to deliver responsive systems. By infusing asynchronous messaging passing at the core of the system, applications enforcing the reactive system’s characteristics are inherently resilient and become more elastic by scaling up and down the number of message consumers. Microservices as part of reactive systems interact using messages. The MicroProfile Reactive Messaging specification aims to deliver applications embracing the characteristics of reactive systems.
+
+You can read more about how we have implemented the [Telemetry](/refarch-kc/business-scenario/microservices-overview/#telemetry) component as a reactive system by using the MicroProfile Reactive Messaging feature [here](https://ibm-cloud-architecture.github.io/refarch-reefer-ml/infuse/dev-scoring/)
+
+Again, the Container Anomaly is more of a use case than a pattern itself. We have implemented a Container Anomaly use case whereby our [Reefer containers will send telemetry health status](#simulator), in terms of temperature, CO2 level, power level, etc, to a [Reefer Telemetry Agent](#telemetry), that we have built using the Reactive Messaging feature from the MicroProfile 3.0 specification onwards, through a [Reefer Telemetry Topic](#reefer-telemetry-topic). This [Reefer Telemetry Agent](#telemetry) will, in turn, call an Anomaly Detection Scoring service we have built following our Data and AI Reference Architecture that will determine whether there is an anomaly in a given containers based on the data sent by their IoT sensors. If an anomaly is predicted, a [Container Anomaly Event](#container-anomaly-event) will get dropped into the [Containers Topic](#containers-topic) the [container management component](#containers) of our Reefer Container Reference Application listens to. The [container management component](#containers) will call an IBM Business Process Management (BPM) process which will end up with a field engineer fixing the container.
+
+## Build
+
+TBD
+
+## Run
+
+TBD
+
+## Integration Tests
+
+TBD
+
+## Implementation Details
+
+TBD

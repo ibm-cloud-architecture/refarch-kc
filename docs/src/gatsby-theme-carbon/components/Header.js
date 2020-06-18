@@ -3,9 +3,8 @@ import Header from 'gatsby-theme-carbon/src/components/Header';
 
 const CustomHeader = props => (
   <Header {...props}>
-    Reefer Container Shipment solution - EDA reference implementation
+    <span>IBM Garage</span>&nbsp;Event-Driven Reference Architecture - Reefer Container Shipment reference implementation
   </Header>
 );
 
 export default CustomHeader;
-

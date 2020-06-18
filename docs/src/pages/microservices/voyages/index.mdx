@@ -1,0 +1,51 @@
+---
+title: Voyage Management
+description: Deployment of application microservices
+---
+
+<InlineNotification kind="warning">UNDER CONSTRUCTION</InlineNotification>
+
+<AnchorLinks>
+  <AnchorLink>Overview</AnchorLink>
+  <AnchorLink>Build</AnchorLink>
+  <AnchorLink>Run</AnchorLink>
+  <AnchorLink>Integration Tests</AnchorLink>
+  <AnchorLink>Implementation Details</AnchorLink>
+</AnchorLinks>
+
+### TBD
+
+To be sourced from
+
+## Overview
+
+<PageDescription>
+This service keeps track of each scheduled, current or completed voyage of container carreer vessels, being loaded with containers at a source port, sailing to a destination port and having onboard containers unloaded there.
+</PageDescription>
+
+The source repository can be found at https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/voyages-ms.
+
+## User stories
+This service keeps track of each of the container ships available for transporting containers. Each ship has a unique shipID. We limit the scope of a minimum viable product so the following user stories are implemented:
+
+* [x] The information about each ship is kept in a json file for a fleet. Ships are uniquely identified by their name (as shipID).
+* [x] The capacity of a ship is represented by a matrix, number of rows x number of columns to make it simpler. Therefore the total number of container is rows*columns.
+* [x] Support GPS lat/log position reports, as ship position event, of the position of the ship a different point in time. This is modeled as csv file with one row of (lat,log) pair, a row representing a time stamp. (1h?)
+* [ ] Generate ship event when leaving source port and when entering destination port, and when docked.
+* [ ] Define query of what happen to a ship from a given time to retrace its past voyages.
+
+## Build
+
+TBD Appsody
+
+## Run
+
+TBD Appsody
+
+## Integration Tests
+
+TBD Source from https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/docs/voyagesms.md
+
+## Implementation Details
+
+TBD Source from https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/docs/index.md

@@ -1,25 +1,25 @@
 {
-  "name": "example",
+  "name": "refarch-kc",
   "private": true,
   "version": "1.22.1",
   "license": "Apache 2.0",
   "scripts": {
     "dev": "gatsby develop -H 0.0.0.0",
-    "dev:clean": "yarn clean && yarn develop",
+    "dev:clean": "gatbsy clean && gatsby develop -H 0.0.0.0",
     "build": "gatsby build",
-    "build:clean": "yarn clean && gatsby build",
+    "build:clean": "gatsby clean && gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "build:analyze": "ANALYZE=true yarn build",
+    "build:analyze": "ANALYZE=true gatsby build",
     "build:prefix": "gatsby build --prefix-paths",
     "serve:prefix": "gatsby serve --prefix-paths",
-    "test:prefix": "yarn build:prefix && yarn serve:prefix"
+    "test:prefix": "gatsby build --prefix-paths && gatsby serve --prefix-paths"
   },
   "dependencies": {
-    "gatsby": "^2.22.17",
-    "gatsby-plugin-google-analytics": "^2.3.3",
-    "gatsby-theme-carbon": "^1.24.3",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "gatsby": "^2.22.3",
+    "gatsby-plugin-google-analytics": "^2.3.2",
+    "gatsby-theme-carbon": "^1.24.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   }
 }
