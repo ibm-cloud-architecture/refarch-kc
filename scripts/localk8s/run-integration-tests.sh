@@ -15,8 +15,8 @@ kubectl apply -f $SCRIPTLOC/itg-topics.yaml -n kafka
 kubectl apply -f $SCRIPTLOC/itg-bpm-configmap.yaml -n shipping
 
 # Restart services so that they are configured with the new topic names
-kubectl scale deployment --replicas=0 -n shipping --all
-kubectl scale deployment --replicas=1 -n shipping --all
+kubectl scale deployment --replicas=0 -n shipping -l app.kubernetes.io/part-of=refarch-kc
+kubectl scale deployment --replicas=1 -n shipping -l app.kubernetes.io/part-of=refarch-kc
 
 # Wait for services to restart
 kubectl rollout status -n shipping deployment spring-container-ms
@@ -47,8 +47,8 @@ kubectl apply -f $SCRIPTLOC/kafka-topics-configmap.yaml -n shipping
 kubectl apply -f $SCRIPTLOC/bpm-configmap.yaml -n shipping
 
 # Restart services so that they are configured with the new topic names
-kubectl scale deployment --replicas=0 -n shipping --all
-kubectl scale deployment --replicas=1 -n shipping --all
+kubectl scale deployment --replicas=0 -n shipping -l app.kubernetes.io/part-of=refarch-kc
+kubectl scale deployment --replicas=1 -n shipping -l app.kubernetes.io/part-of=refarch-kc
 
 # Wait for services to restart
 kubectl rollout status -n shipping deployment spring-container-ms
