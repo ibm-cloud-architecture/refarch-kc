@@ -19,12 +19,12 @@ kubectl scale deployment --replicas=0 -n shipping --all
 kubectl scale deployment --replicas=1 -n shipping --all
 
 :: Wait for services to restart
-kubectl rollout status -n shipping deployment springcontainerms-deployment
-kubectl rollout status -n shipping deployment fleetms-deployment
-kubectl rollout status -n shipping deployment kc-ui-deployment
+kubectl rollout status -n shipping deployment spring-container-ms
+kubectl rollout status -n shipping deployment fleet-ms
+kubectl rollout status -n shipping deployment kc-ui
 kubectl rollout status -n shipping deployment order-command-ms
 kubectl rollout status -n shipping deployment order-query-ms
-kubectl rollout status -n shipping deployment voyagesms-deployment
+kubectl rollout status -n shipping deployment voyages-ms
 
 :: Deploy integration tests job
 sed -e's#value: "IBMCLOUD#value: "LOCAL#' %SCRIPTLOC%\..\..\itg-tests\es-it\ReeferItgTests.yaml > %SCRIPTLOC%\..\..\itg-tests\es-it\ReeferItgTests.yaml.local
@@ -51,9 +51,9 @@ kubectl scale deployment --replicas=0 -n shipping --all
 kubectl scale deployment --replicas=1 -n shipping --all
 
 :: Wait for services to restart
-kubectl rollout status -n shipping deployment springcontainerms-deployment
-kubectl rollout status -n shipping deployment fleetms-deployment
-kubectl rollout status -n shipping deployment kc-ui-deployment
+kubectl rollout status -n shipping deployment spring-container-ms
+kubectl rollout status -n shipping deployment fleet-ms
+kubectl rollout status -n shipping deployment kc-ui
 kubectl rollout status -n shipping deployment order-command-ms
 kubectl rollout status -n shipping deployment order-query-ms
-kubectl rollout status -n shipping deployment voyagesms-deployment
+kubectl rollout status -n shipping deployment voyages-ms
