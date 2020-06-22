@@ -55,7 +55,7 @@ helm install order-query-ms %REPOBASE%\refarch-kc-order-ms/order-query-ms/chart/
 
 :: Install spring-container-ms using pre-built image
 :: note: uses postgres secrets defined above
-helm install spring-container-ms %REPOBASE%\refarch-kc-container-ms/SpringContainerMS/chart/springcontainerms -n shipping --set image.repository=ibmcase/kcontainer-spring-container-ms --set eventstreams.enabled=false --set eventstreams.truststoreRequired=false --set serviceAccountName=kcserviceaccount
+helm install spring-container-ms %REPOBASE%\refarch-kc-container-ms/chart/springcontainerms -n shipping --set image.repository=ibmcase/kcontainer-spring-container-ms --set eventstreams.enabled=false --set eventstreams.truststoreRequired=false --set serviceAccountName=kcserviceaccount
 
 :: Install voyages-ms using pre-built image
 helm install voyages-ms %REPOBASE%\refarch-kc-ms/voyages-ms/chart/voyagesms --set image.repository=ibmcase/kcontainer-voyages-ms -n shipping --set eventstreams.enabled=false --set serviceAccountName=kcserviceaccount
