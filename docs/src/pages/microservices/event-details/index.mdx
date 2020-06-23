@@ -1,0 +1,916 @@
+---
+title: Event Details
+description: Details of the Reefer Container Shipment solution's event types.
+---
+
+<PageDescription>
+This section details all of the events being used in the Reefer Container Shipment reference implementation and the relationship of each event to the application's microservices.
+</PageDescription>
+
+<AnchorLinks small>
+  <AnchorLink>Order Command Event</AnchorLink>
+  <AnchorLink>Order Created Event</AnchorLink>
+  <AnchorLink>Order Updated Event</AnchorLink>
+  <AnchorLink>Order Spoilt Event</AnchorLink>
+  <AnchorLink>Order Reject Event</AnchorLink>
+  <AnchorLink>Order Cancel Event</AnchorLink>
+  <AnchorLink>Error Event</AnchorLink>
+  <AnchorLink>Container Added Event</AnchorLink>
+  <AnchorLink>Container Assigned Event</AnchorLink>
+  <AnchorLink>Container Allocated Event</AnchorLink>
+  <AnchorLink>Container Not Found Event</AnchorLink>
+  <AnchorLink>Container Telemetry Event</AnchorLink>
+  <AnchorLink>Container Anomaly Event</AnchorLink>
+  <AnchorLink>Container Anomaly Retry Event</AnchorLink>
+  <AnchorLink>Container Anomaly Dead Event</AnchorLink>
+  <AnchorLink>Container On Maintenance Event</AnchorLink>
+  <AnchorLink>Container Off Maintenance Event</AnchorLink>
+  <AnchorLink>Voyage Assigned Event</AnchorLink>
+  <AnchorLink>Voyage Not Found Event</AnchorLink>
+</AnchorLinks>
+
+## Order Command Event
+
+Description: These events are produced as a result of user interaction through the [User Interface](#user-interface). These events will command the creation, update or cancellation of a shipping order. In EDA space, a command is an action demanded or triggered by an actor. These events are of important relevance in the [Consume-transform-produce loop](#consume-transform-produce-loop) pattern.
+
+Topic these events are produced to/consumed from:
+
+- [Order Commands Topic](#order-commands-topic)
+
+Components that produce these events:
+
+- [Order Command](#order-command)
+
+Components that react to these events:
+
+- [Order Command](#order-command)
+
+Patterns these events are relevant to:
+
+- [Consume-transform-produce loop](#consume-transform-produce-loop)
+
+Data Schema: [Order Command Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/order/orderCommandEvent.avsc)
+
+Example:
+
+```json
+{
+  "payload": {
+    "customerID": "FishFarm",
+    "destinationAddress": {
+      "city": "Oakland",
+      "country": "USA",
+      "state": "CA",
+      "street": "100 Main street",
+      "zipcode": "95053"
+    },
+    "expectedDeliveryDate": "2019-03-31T13:30Z",
+    "orderID": "85eb9236-ed11-4ba5-b4ec-055cb261ae6d",
+    "pickupAddress": {
+      "city": "Shanghai",
+      "country": "China",
+      "state": "NE",
+      "street": "1 a new street",
+      "zipcode": "090"
+    },
+    "pickupDate": "2019-01-25T13:30Z",
+    "productID": "Fish",
+    "quantity": 100,
+    "status": "toBeCreated"
+  },
+  "timestampMillis": 1588010525662,
+  "type": "CreateOrderCommand",
+  "version": "1"
+}
+```
+
+## Order Created Event
+
+Description: These events are produced as a result of a new shipping order being created. These events are emitted in order to inform any other component of the overall Reefer Container Shipment solution such as the [Containers](#containers) and [Voyage](#voyage) components, that are part of the [SAGA](#saga) pattern to find a container and a voyage to get allocated and assigned, or the [Order Query](#order-query) component, that will track the status of the orders and containers for the query part of the [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs)) pattern for the overall solution.
+
+Topic these events are produced to/consumed from:
+
+- [Order Topic](#orders-topic)
+
+Components that produce these events:
+
+- [Order Command](#order-command)
+
+Components that react to these events:
+
+- [Order Query](#order-query)
+- [Containers](#containers)
+- [Voyage](#voyage)
+
+Patterns these events are relevant to:
+
+- [SAGA](#saga)
+- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+
+Data Schema: [Order Created Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/order/orderCreatedEvent.avsc)
+
+Example:
+
+```json
+{
+  "payload": {
+    "customerID": "FishFarm",
+    "destinationAddress": {
+      "city": "Oakland",
+      "country": "USA",
+      "state": "CA",
+      "street": "100 Main street",
+      "zipcode": "95053"
+    },
+    "expectedDeliveryDate": "2019-03-31T13:30Z",
+    "orderID": "85eb9236-ed11-4ba5-b4ec-055cb261ae6d",
+    "pickupAddress": {
+      "city": "Shanghai",
+      "country": "China",
+      "state": "NE",
+      "street": "1 a new street",
+      "zipcode": "090"
+    },
+    "pickupDate": "2019-01-25T13:30Z",
+    "productID": "Fish",
+    "quantity": 100,
+    "status": "pending"
+  },
+  "timestampMillis": 1588010525896,
+  "type": "OrderCreated",
+  "version": "1"
+}
+```
+
+## Order Updated Event
+
+Description: These events are produced as a result of a shipping order being updated. These events are emitted in order to inform any other component of the overall Reefer Container Shipment solution such as the [Containers](#containers) and [Voyage](#voyage) components, that are part of the [SAGA](#saga) pattern to find a container and a voyage to get allocated and assigned, or the [Order Query](#order-query) component, that will track the status of the orders and containers for the query part of the [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs)) pattern for the overall solution.
+
+Topic these events are produced to/consumed from:
+
+- [Order Topic](#orders-topic)
+
+Components that produce these events:
+
+- [Order Command](#order-command)
+
+Components that react to these events:
+
+- [Order Query](#order-query)
+- [Containers](#containers)
+- [Voyage](#voyage)
+
+Patterns these events are relevant to:
+
+- [SAGA](#saga)
+- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+
+Data Schema: [Order Updated Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/order/orderUpdatedEvent.avsc)
+
+Example:
+
+```json
+{
+  "payload": {
+    "customerID": "FishFarm",
+    "destinationAddress": {
+      "city": "Oakland",
+      "country": "USA",
+      "state": "CA",
+      "street": "100 Main street",
+      "zipcode": "95053"
+    },
+    "expectedDeliveryDate": "2019-03-31T13:30Z",
+    "orderID": "85eb9236-ed11-4ba5-b4ec-055cb261ae6d",
+    "pickupAddress": {
+      "city": "Shanghai",
+      "country": "China",
+      "state": "NE",
+      "street": "1 a new street",
+      "zipcode": "090"
+    },
+    "pickupDate": "2019-01-25T13:30Z",
+    "productID": "Fish",
+    "quantity": 100,
+    "status": "pending"
+  },
+  "timestampMillis": 1588010525896,
+  "type": "OrderUpdated",
+  "version": "1"
+}
+```
+
+## Order Spoilt Event
+
+Description: These events denote that a container, which is carrying fresh goods from a source port to a destination port, has spoilt these fresh goods due to an anomaly detected by one or more of its IOT sensors.
+
+Topic these events are produced to/consumed from:
+
+- [Order Topic](#orders-topic)
+
+Components that produce these events:
+
+- [Containers](#containers)
+
+Components that react to these events:
+
+- [Order Command](#order-command)
+- [Order Query](#order-query)
+
+Patterns these events are relevant to:
+
+- [Container Anomaly](#container-anomaly)
+- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+
+Data Schema: [Order Spoilt Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/order/orderSpoiltEvent.avsc)
+
+Example:
+
+```json
+{
+  "orderID": "85eb9236-ed11-4ba5-b4ec-055cb261ae6d",
+  "payload": {
+    "containerID": "8919",
+    "orderID": "85eb9236-ed11-4ba5-b4ec-055cb261ae6d"
+  },
+  "timestamp": 1588010710172,
+  "type": "OrderSpoilt"
+}
+```
+
+## Order Reject Event
+
+Description: These events are produced as a result of receiving a [Container Not Found Event](#container-not-found-event) or [Voyage Not Found Event](#voyage-not-found-event) as part of the [SAGA](#saga) pattern and will trigger a compensation process for the components in that [SAGA](#saga) pattern.
+
+Topic these events are produced to/consumed from:
+
+- [Order Topic](#orders-topic)
+
+Components that produce these events:
+
+- [Order Command](#order-command)
+
+Components that react to these events:
+
+- [Containers](#containers)
+- [Voyages](#voyages)
+- [Order Query](#order-query)
+
+Patterns these events are relevant to:
+
+- [SAGA](#saga)
+- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+
+Data Schema: [Order Reject Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/order/orderRejectEvent.avsc)
+
+Example:
+
+```json
+{
+  "payload": {
+    "customerID": "FishFarm",
+    "destinationAddress": {
+      "city": "Oakland",
+      "country": "USA",
+      "state": "CA",
+      "street": "100 Main street",
+      "zipcode": "95053"
+    },
+    "expectedDeliveryDate": "2019-03-31T13:30Z",
+    "orderID": "b00a3d0f-c9f9-4cbd-a6ea-36b8b455c489",
+    "pickupAddress": {
+      "city": "Shanghai",
+      "country": "China",
+      "state": "NE",
+      "street": "1 a new street",
+      "zipcode": "090"
+    },
+    "pickupDate": "2019-01-25T13:30Z",
+    "productID": "Fish",
+    "quantity": 100,
+    "reason": "A container could not be found for this order",
+    "status": "rejected"
+  },
+  "timestampMillis": 1588010563056,
+  "type": "OrderRejected",
+  "version": "1"
+}
+```
+
+## Order Cancel Event
+
+Description: These events are produced as a result of a user/administrator demanding/requesting the cancellation of a shipping order. These events will trigger the process described in the [Order Cancellation](#order-cancellation) pattern.
+
+Topic these events are produced to/consumed from:
+
+- [Order Topic](#orders-topic)
+
+Components that produce these events:
+
+- [Order Command](#order-command)
+
+Components that react to these events:
+
+- [Containers](#containers)
+- [Voyages](#voyages)
+- [Order Query](#order-query)
+
+Patterns these events are relevant to:
+
+- [SAGA](#saga)
+- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+- [Order Cancellation](#order-cancellation)
+
+Data Schema: [Order Cancel Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/order/orderCancelEvent.avsc)
+
+Example:
+
+```json
+{
+  "payload": {
+    "containerID": "1392",
+    "customerID": "FishFarm",
+    "destinationAddress": {
+      "city": "Oakland",
+      "country": "USA",
+      "state": "CA",
+      "street": "100 Main street",
+      "zipcode": "95053"
+    },
+    "expectedDeliveryDate": "2019-03-31T13:30Z",
+    "orderID": "649fa8b2-9340-423d-b08c-7fcc633b3a49",
+    "pickupAddress": {
+      "city": "Shanghai",
+      "country": "China",
+      "state": "NE",
+      "street": "1 a new street",
+      "zipcode": "090"
+    },
+    "pickupDate": "2019-01-25T13:30Z",
+    "productID": "Fish",
+    "quantity": 100,
+    "reason": "Cancel order command received",
+    "status": "cancelled",
+    "voyageID": "101"
+  },
+  "timestampMillis": 1588010677588,
+  "type": "OrderCancelled",
+  "version": "1"
+}
+```
+
+## Error Event
+
+Description: These events are produced as a result of any error that occurs in the [Order Command](#order-command) component.
+
+Topic these events are produced to/consumed from:
+
+- [Errors Topic](#errors-topic)
+
+Components that produce these events:
+
+- [Order Command](#order-command)
+
+Components that react to these events: None
+
+Patterns these events are relevant to: None
+
+Data Schema: [Error Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/order/errorEvent.avsc)
+
+Example:
+
+```json
+{
+  "errorMessage" : "Repository access issue",
+  "payload": {
+    "containerID": "1392",
+    "customerID": "FishFarm",
+    "destinationAddress": {
+      "city": "Oakland",
+      "country": "USA",
+      "state": "CA",
+      "street": "100 Main street",
+      "zipcode": "95053"
+    },
+    "expectedDeliveryDate": "2019-03-31T13:30Z",
+    "orderID": "649fa8b2-9340-423d-b08c-7fcc633b3a49",
+    "pickupAddress": {
+      "city": "Shanghai",
+      "country": "China",
+      "state": "NE",
+      "street": "1 a new street",
+      "zipcode": "090"
+    },
+    "pickupDate": "2019-01-25T13:30Z",
+    "productID": "Fish",
+    "quantity": 100,
+    "reason": "Cancel order command received",
+    "status": "cancelled",
+    "voyageID": "101"
+  },
+  "timestampMillis": 1588010677588,
+  "type": "Error",
+  "version": "1"
+}
+```
+
+## Container Added Event
+
+Description: These events would make the [Containers](#containers) component to create a new container and add it to the container inventory it manages.
+
+Topic these events are produced to/consumed from:
+
+- [Containers Topic](#containers-topic)
+
+Components that produce these events:
+
+- [Containers](#containers)
+
+Components that react to these events:
+
+- [Containers](#containers)
+- [Order Query](#order-query)
+
+Patterns these events are relevant to:
+
+- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+
+Data Schema: [Container Added Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerAddedEvent.avsc)
+
+Example:
+
+```json
+{
+  "containerID": "8919",
+  "payload": {
+    "brand": "itgtests-brand",
+    "capacity": 100,
+    "containerID": "8919",
+    "latitude": 31.4,
+    "longitude": 121.5,
+    "status": "Empty",
+    "type": "Reefer"
+  },
+  "timestamp": 1588010515,
+  "type": "ContainerAdded"
+}
+```
+
+## Container Assigned Event
+
+Description: These messages denote that a container has been assigned to a shipping order as this container suited the quantity and source port of the shipping order.
+
+Topic these events are produced to/consumed from:
+
+- [Containers Topic](#containers-topic)
+
+Components that produce these events:
+
+- [Containers](#containers)
+
+Components that react to these events:
+
+- [Order Query](#order-query)
+
+Patterns these events are relevant to:
+
+- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+
+Data Schema: [Container Assigned Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerAssignedEvent.avsc)
+
+Example:
+
+```json
+{
+  "containerID": "8919",
+  "payload": {
+    "containerID": "8919",
+    "orderID": "85eb9236-ed11-4ba5-b4ec-055cb261ae6d"
+  },
+  "timestamp": 1588010526382,
+  "type": "ContainerAssignedToOrder"
+}
+```
+
+## Container Allocated Event
+
+Description: These events denote that a container, to carry the amount of fresh goods and from the source port specified in the shipping order, has been found and allocated to a shipping order, and viceversa, as part of the [SAGA](#saga) pattern for a long running transaction. These events are emitted by the [Containers](#containers) component.
+
+Topic these events are produced to/consumed from:
+
+- [Order Topic](#orders-topic)
+
+Components that produce these events:
+
+- [Containers](#containers)
+
+Components that react to these events:
+
+- [Order Command](#order-command)
+- [Order Query](#order-query)
+
+Patterns these events are relevant to:
+
+- [SAGA](#saga)
+- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+
+Data Schema: [Container Allocated Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerAllocatedEvent.avsc)
+
+Example:
+
+```json
+{
+  "orderID": "85eb9236-ed11-4ba5-b4ec-055cb261ae6d",
+  "payload": {
+    "containerID": "8919",
+    "orderID": "85eb9236-ed11-4ba5-b4ec-055cb261ae6d"
+  },
+  "timestamp": 1588010526294,
+  "type": "ContainerAllocated"
+}
+```
+
+## Container Not Found Event
+
+Description: These events denote that a container to carry the amount of fresh goods from the source port specified in a new shipping order could not be found. As a result, the new shipping order will become rejected.
+
+Topic these events are produced to/consumed from:
+
+- [Order Topic](#orders-topic)
+
+Components that produce these events:
+
+- [Containers](#containers)
+
+Components that react to these events:
+
+- [Order Command](#order-command)
+
+Patterns these events are relevant to:
+
+- [SAGA](#saga)
+
+Data Schema: [Container Not Found Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerNotFoundEvent.avsc)
+
+Example:
+
+```json
+{
+  "orderID": "b00a3d0f-c9f9-4cbd-a6ea-36b8b455c489",
+  "payload": {
+    "orderID": "b00a3d0f-c9f9-4cbd-a6ea-36b8b455c489",
+    "reason": "A container could not be found for this order"
+  },
+  "timestamp": 1588010563033,
+  "type": "ContainerNotFound"
+}
+```
+
+## Container Telemetry Event
+
+Description: These events are produced by the [Simulator](#simulator) to simulate the container's IOT sensor telemetries that are then consumed by the [#Telemetry] component for the [Container Anomaly](#container-anomaly) pattern.
+
+Topic these events are produced to/consumed from:
+
+- [Containers Topic](#containers-topic)
+
+Components that produce these events:
+
+- [Simulator](#simulator)
+
+Components that react to these events:
+
+- [Containers](#containers)
+
+Patterns these events are relevant to:
+
+- [Container Anomaly](#container-anomaly)
+
+Data Schema: [Container Telemetry Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerTelemetryEvent.avsc)
+
+Example:
+
+```json
+{
+  "containerID": "1111",
+  "payload": "(1111, 2020-01-15 17:59:45, P05, 5.02702153, 5., 20.52035697, 2.62176459, 0, 1, 5, 21.56977522, 75.97754859, 39.85714797, 110.74727473, True, True, True, 37.8226902168957, -122.324895, 0)",
+  "timestamp": "2020-01-15 17:59:45",
+  "type": "ReeferTelemetries"
+}
+```
+
+## Container Anomaly Event
+
+Description: These events denote an anomaly being predicted for a container based on the telemetry reported by the IOT sensors in the containers. These events will trigger the Business Process Manager (BPM) process whereby a field engineer will get the container assigned in order to repair it. These events are part of the [Container Anomaly](#container-anomaly), [Reactive Messaging](#reactive-messaging) and [Dead Letter Queue (DLQ)](#dead-letter-queue-(dlq)) patterns.
+
+Topic these events are produced to/consumed from:
+
+- [Containers Topic](#containers-topic)
+
+Components that produce these events:
+
+- [Telemetry](#telemetry)
+
+Components that react to these events:
+
+- [Containers](#containers)
+
+Patterns these events are relevant to:
+
+- [Container Anomaly](#container-anomaly)
+- [Dead Letter Queue (DLQ)](#dead-letter-queue-(dlq))
+- [Reactive Messaging](#reactive-messaging)
+
+Data Schema: [Container Anomaly Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerAnomalyEvent.avsc)
+
+Example:
+
+```json
+{
+  "containerID": "8919",
+  "payload": {
+    "ambiant_temperature": 19.8447,
+    "carbon_dioxide_level": 4.42579,
+    "content_type": 2,
+    "defrost_cycle": 6,
+    "humidity_level": 60.3148,
+    "kilowatts": 3.44686,
+    "latitude": 31.4,
+    "longitude": 121.5,
+    "nitrogen_level": 79.4046,
+    "oxygen_level": 20.4543,
+    "target_temperature": 6,
+    "temperature": 5.49647,
+    "time_door_open": 0.822024,
+    "vent_1": true,
+    "vent_2": true,
+    "vent_3": true
+  },
+  "timestamp": 1588010563033,
+  "type": "ContainerAnomaly"
+}
+```
+
+## Container Anomaly Retry Event
+
+Description: These events denote that the Business Process Manager (BPM) process was not called successfully and, as a result, another call attempt will be made. These events are part of the [Container Anomaly](#container-anomaly) and [Dead Letter Queue (DLQ)](#dead-letter-queue-(dlq)) patterns.
+
+Topic these events are produced to/consumed from:
+
+- [container Anomaly Retry Topic](#container-anomaly-retry-topic)
+
+Components that produce these events:
+
+- [Containers](#containers)
+
+Components that react to these events:
+
+- [Containers](#containers)
+
+Patterns these events are relevant to:
+
+- [Container Anomaly](#container-anomaly)
+- [Dead Letter Queue (DLQ)](#dead-letter-queue-(dlq))
+
+Data Schema: [Container Anomaly Retry Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerAnomalyRetryEvent.avsc)
+
+Example:
+
+```json
+{
+  "containerID": "5982",
+  "payload": {
+    "ambiant_temperature": 19.8447,
+    "carbon_dioxide_level": 4.42579,
+    "content_type": 2,
+    "defrost_cycle": 6,
+    "humidity_level": 60.3148,
+    "kilowatts": 3.44686,
+    "latitude": 31.4,
+    "longitude": 121.5,
+    "nitrogen_level": 79.4046,
+    "oxygen_level": 20.4543,
+    "target_temperature": 6,
+    "temperature": 5.49647,
+    "time_door_open": 0.822024,
+    "vent_1": true,
+    "vent_2": true,
+    "vent_3": true
+  },
+  "retries": 1,
+  "timestamp": 1588010563033,
+  "type": "ContainerAnomalyRetry"
+}
+```
+
+## Container Anomaly Dead Event
+
+Description: These events denote that the Business Process Manager (BPM) process was not called successfully either because the [Containers](#containers) component could not successfully authenticate against the Business Process Manager (BPM) or the call to the process did not succeed despite the retries. These events will keep the original container anomaly message's data and a reason for this message to happen for further analysis by system administrators. These events are part of the [Container Anomaly](#container-anomaly) and [Dead Letter Queue (DLQ)](#dead-letter-queue-(dlq)) patterns.
+
+Topic these events are produced to/consumed from:
+
+- [Container Anomaly Dead Topic](#container-anomaly-dead-topic)
+
+Components that produce these events:
+
+- [Containers](#containers)
+
+Components that react to these events: None
+
+Patterns these events are relevant to:
+
+- [Container Anomaly](#container-anomaly)
+- [Dead Letter Queue (DLQ)](#dead-letter-queue-(dlq))
+
+Data Schema: [Container Anomaly Dead Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerAnomalyDeadEvent.avsc)
+
+Example:
+
+```json
+{
+  "containerID": "5982",
+  "payload": {
+    "ambiant_temperature": 19.8447,
+    "carbon_dioxide_level": 4.42579,
+    "content_type": 2,
+    "defrost_cycle": 6,
+    "humidity_level": 60.3148,
+    "kilowatts": 3.44686,
+    "latitude": 31.4,
+    "longitude": 121.5,
+    "nitrogen_level": 79.4046,
+    "oxygen_level": 20.4543,
+    "target_temperature": 6,
+    "temperature": 5.49647,
+    "time_door_open": 0.822024,
+    "vent_1": true,
+    "vent_2": true,
+    "vent_3": true
+  },
+  "reason": "No more BPM process retries left",
+  "timestamp": 1588010563033,
+  "type": "ContainerAnomalyDead"
+}
+
+```
+
+## Container On Maintenance Event
+
+Description: These events denote that a container has been set into maintenance mode as a result of a field engineer getting the container assigned to be repaired due to an anomaly being reported for such container. These events are a consequence of the [Container Anomaly](#container-anomaly) pattern.
+
+Topic these events are produced to/consumed from:
+
+- [Containers Topic](#containers-topic)
+
+Components that produce these events:
+
+- [Containers](#containers)
+
+Components that react to these events:
+
+- [Containers](#containers)
+- [Order Query](#order-query)
+
+Patterns these events are relevant to:
+
+- [Container Anomaly](#container-anomaly) pattern.
+- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+
+Data Schema: [Container On Maintenance Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerOnMaintenanceEvent.avsc)
+
+Example:
+
+```json
+{
+  "containerID": "8919",
+  "payload": {
+    "brand": "itgtests-brand",
+    "capacity": 100,
+    "containerID": "8919",
+    "latitude": 31.4,
+    "longitude": 121.5,
+    "status": "Empty",
+    "type": "Reefer"
+  },
+  "timestamp": 1588010716374,
+  "type": "ContainerOnMaintenance"
+}
+```
+
+## Container Off Maintenance Event
+
+Description: These events denote that a container has been set out of maintenance mode as a result of a field engineer having repaired the container as a result of a container anomaly reported. These events are a consequence of the [Container Anomaly](#container-anomaly) pattern.
+
+Topic these events are produced to/consumed from:
+
+- [Containers](#containers)
+
+Components that produce these events:
+
+- [Containers](#containers)
+
+Components that react to these events:
+
+- [Containers](#containers)
+- [Order Query](#order-query)
+
+Patterns these events are relevant to:
+
+- [Container Anomaly](#container-anomaly) pattern.
+- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+
+Data Schema: [Container Off Maintenance Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerOffMaintenanceEvent.avsc)
+
+Example:
+
+```json
+{
+  "containerID": "8919",
+  "payload": {
+    "brand": "itgtests-brand",
+    "capacity": 100,
+    "containerID": "8919",
+    "latitude": 31.4,
+    "longitude": 121.5,
+    "status": "Empty",
+    "type": "Reefer"
+  },
+  "timestamp": 1588010721423,
+  "type": "ContainerOffMaintenance"
+}
+
+```
+
+## Voyage Assigned Event
+
+Description: These events denote that a voyage has been found and assigned to a shipping order, and viceversa, as part of the [SAGA](#saga) pattern for a long running transaction which is triggered as a result of a new shipping order being created. A voyage is a unique carriage of fresh goods by a ship from a source port to a destination port on a specific date.
+
+Topic these events are produced to/consumed from:
+
+- [Order Topic](#orders-topic)
+
+Components that produce these events:
+
+- [Voyages](#voyages)
+
+Components that react to these events:
+
+- [Order Command](#order-command)
+- [Order Query](#order-query)
+
+Patterns these events are relevant to:
+
+- [SAGA](#saga)
+- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+
+Data Schema: [Voyage Assigned Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/voyage/voyageAssignedEvent.avsc)
+
+Example:
+
+```json
+{
+  "payload": {
+    "orderID": "85eb9236-ed11-4ba5-b4ec-055cb261ae6d",
+    "voyageID": "101"
+  },
+  "timestamp": 1588010536409,
+  "type": "VoyageAssigned",
+  "version": "1"
+}
+```
+
+## Voyage Not Found Event
+
+Description: These events denote that a voyage for carrying the amount of fresh goods from the source port to the destination port on the specific date could not be found. As a result, the new shipping order will become rejected.
+
+Topic these events are produced to/consumed from:
+
+- [Order Topic](#orders-topic)
+
+Components that produce these events:
+
+- [Voyages](#voyages)
+
+Components that react to these events:
+
+- [Order Command](#order-command)
+
+Patterns these events are relevant to:
+
+- [SAGA](#saga)
+
+Data Schema: [Voyage Not Found Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/voyage/voyageNotFoundEvent.avsc)
+
+Example:
+
+```json
+{
+  "payload": {
+    "orderID": "564fa4ac-836a-4826-90f7-8ae50dd90790",
+    "reason": "Insufficient free capacity"
+  },
+  "timestamp": 1588010613958,
+  "type": "VoyageNotFound",
+  "version": "1"
+}
+```

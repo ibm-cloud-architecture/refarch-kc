@@ -1,9 +1,13 @@
 ---
 title: Orders User Interface
-description: Deployment of application microservices
+description: The user interface for our Reefer Container Shipment reference application is implemented as a single microservice using Node.js and Angular.js.
 ---
 
 <InlineNotification kind="warning">UNDER CONSTRUCTION</InlineNotification>
+
+<PageDescription>
+The user interface for our Reefer Container Shipment reference application is implemented as a single microservice using Node.js and Angular.js.
+</PageDescription>
 
 <AnchorLinks>
   <AnchorLink>Overview</AnchorLink>
@@ -15,11 +19,35 @@ description: Deployment of application microservices
 
 ## Overview
 
-<PageDescription>
-This microservice includes the user interface to support the demonstration of the end to end Reefer containe shipment process. It is done with Angular 8 with a Back end for front end server done in Nodejs. This is the only component of the solution that is not using publishing events. You will learn how to do test driven development with Angular, and the BFF pattern in action.
-</PageDescription>
+![User Interface diagram](images/kc-ui-overview.png)
 
-The source repository can be found at https://github.com/ibm-cloud-architecture/refarch-kc-ui.
+Description: The goal of this component is to serve a user interface for customers to:
+
+- Log in
+- Create an order
+- List all orders
+- List all containers
+- Initiate shipping simulation
+
+Github repository: [refarch-kc-ui](https://github.com/ibm-cloud-architecture/refarch-kc-ui)
+
+Kafka topics it subscribes to: None
+
+Kafka topics it produces to: None
+
+## Build
+
+TBD Appsody
+
+## Run
+
+TBD Appsody
+
+## Integration Tests
+
+TBD
+
+## Implementation Details
 
 ### User stories to support
 
@@ -45,19 +73,3 @@ There is no login page yet, but the home page displays a set of tiles to support
 For the BFF code the server code is under the `server` folder and uses the standard patterns for expressjs middleware. The [readme file](./server/README.md) goes into the details on this implementation.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.1. The user interface features are under the features folder. We are using a TDD approach as described in [this note.](https://github.com/ibm-cloud-architecture/refarch-caseportal-app/blob/master/docs/tdd.md) The tests run with `ng test`. We also encourage to read the [angular.io testing guide](https://angular.io/guide/testing)
-
-## Build
-
-TBD Appsody
-
-## Run
-
-TBD Appsody
-
-## Integration Tests
-
-TBD
-
-## Implementation Details
-
-TBD

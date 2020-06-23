@@ -10,7 +10,7 @@
       path: /business-scenario/repository-overview/
     - title: Quickstart Tutorial
       path: /business-scenario/quickstart-tutorial/
-- title: Implementation Details
+- title: Pattern Implementations
   pages:
     - title: Event Storming Analysis
       path: /implementation/event-storming-analysis/
@@ -34,6 +34,10 @@
   pages:
     - title: Prerequisites
       path: /microservices/prereqs/
+    - title: Topic Details
+      path: /microservices/topic-details/
+    - title: Event Details
+      path: /microservices/event-details/
     - title: Orders UI
       path: /microservices/orders-ui/
     - title: Order Command
