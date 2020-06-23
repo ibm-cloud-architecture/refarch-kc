@@ -17,11 +17,12 @@ description: Reefer Container Shipment solution's component, messages, and topic
   <AnchorLink>User Interface</AnchorLink>
   <AnchorLink>Order Command</AnchorLink>
   <AnchorLink>Order Query</AnchorLink>
+  <AnchorLink>Container Management</AnchorLink>
+  <AnchorLink>Vessel Simulator</AnchorLink>
+  <AnchorLink>Telemetry Simulator</AnchorLink>
+  <AnchorLink>Anomalous Container Scoring</AnchorLink>
   <AnchorLink>Fleet</AnchorLink>
   <AnchorLink>Voyages</AnchorLink>
-  <AnchorLink>Container Management</AnchorLink>
-  <AnchorLink>Telemetry</AnchorLink>
-  <AnchorLink>Simulator</AnchorLink>
 </AnchorLinks>
 
 ### User Interface
@@ -133,6 +134,137 @@ EDA Patterns that implements:
 
 - [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
 
+### Container Management
+
+![Containers diagram](images/Slide5.png)
+
+Description: This microservice manages the container inventory. That is, this microservice will be in charge of keeping an inventory of all the containers registered in the system along with their status, size and location. When a new order is created and received, the container microservice will be in charge of assigning a container to this new shipping order based if a container is available that suits the order's quantity and source port. Otherwise, will emit a ContainerNotFound event for the interested parties in the overall Reefer Container Shipment solution.
+
+This microservice will also manage any container anomaly during the shipping of goods. That is, this microservice will monitoring ContainerAnomaly Events received for any particular container and in the case that these are received, it will mark the container for maintenance, send a OrderSpoilt Event so that any other microservice in the overall solution is aware that the fresh goods this container was carrying are now spoilt and will call a Business Process Manager (BPM) process in to automatically trigger the assignment of a field engineer to repair the container when it reaches the destination port.
+
+This microservice is implemented with Spring Framework and runs on Tomcat.
+
+Github repository: [refarch-kc-container-ms](https://github.com/ibm-cloud-architecture/refarch-kc-container-ms)
+
+Kafka topics it subscribes to:
+
+- [Order Topic](#orders-topic)
+- [Containers Topic](#containers-topic)
+- [container Anomaly Retry Topic](#container-anomaly-retry-topic)
+
+Kafka topics it produces to:
+
+- [Order Topic](#orders-topic)
+- [Containers Topic](#containers-topic)
+- [container Anomaly Retry Topic](#container-anomaly-retry-topic)
+- [Container Anomaly Dead Topic](#container-anomaly-dead-topic)
+
+Events that listens (and reacts) to:
+
+- [Order Created Event](#order-created-event)
+- [Order Reject Event](#order-reject-event)
+- [Order Cancel Event](#order-cancel-event)
+- [Container Added Event](#container-added-event)
+- [Container Anomaly Event](#container-anomaly-event)
+- [Container Anomaly Retry Event](#container-anomaly-retry-event)
+- [Container On Maintenance Event](#container-on-maintenance-event)
+- [Container Off Maintenance Event](#container-off-maintenance-event)
+
+Events that produces:
+
+- [Order Spoilt Event](#order-spoilt-event)
+- [Container Allocated Event](#container-allocated-event)
+- [Container Not Found Event](#container-not-found-event)
+- [Container Assigned Event](#container-assigned-event)
+- [Container Anomaly Retry Event](#container-anomaly-retry-event)
+- [Container Anomaly Dead Event](#container-anomaly-dead-event)
+- [Container On Maintenance Event](#container-on-maintenance-event)
+- [Container Off Maintenance Event](#container-off-maintenance-event)
+
+EDA Patterns that implements:
+
+- [SAGA](#saga)
+- [Dead Letter Queue (DLQ)](#dead-letter-queue(dlq))
+- [Container Anomaly](#container-anomaly)
+
+### Vessel Simulator
+
+Description: This a simple vessel source events generatator taking into account the route from two harbors, the vessel characteristic and the geodetic curve shortest path.
+
+This microservice has been implemented using the Appsody Microprofile 3.2 OpenLiberty stack.
+
+Github repository: [refarch-kc-vessel-simulator](https://github.com/ibm-cloud-architecture/refarch-kc-vessel-simulator)
+
+Folder: `root`
+
+Kafka topics it subscribes to: TBD
+
+Kafka topics it produces to: TBD
+
+Events that listens (and reacts) to: TBD
+
+Events that produces: TBD
+
+EDA Patterns that implements: TBD
+
+### Telemetry Simulator
+
+![Simulator diagram](images/Slide7.png)
+
+Description: The Simulator webapp is a simple python (3.7) flask web app exposing a REST POST end point to control the type of simulation to run and to produce Reefer telemetry events to kafka reeferTelemetry topic.
+
+This microservice has been implemented using the Appsody python flask stack.
+
+Github repository: [refarch-reefer-ml](https://github.com/ibm-cloud-architecture/refarch-reefer-ml)
+
+Folder: [simulator](https://github.com/ibm-cloud-architecture/refarch-reefer-ml/simulator)
+
+Kafka topics it subscribes to: None
+
+Kafka topics it produces to:
+
+- [Reefer Telemetry Topic](#reefer-telemetry-topic)
+
+Events that listens (and reacts) to: None
+
+Events that produces:
+
+- [Container Telemetry Event](#container-telemetry-event)
+
+EDA Patterns that implements: None
+
+### Anomalous Container Scoring
+
+![Telemetry diagram](images/Slide6.png)
+
+Description: This microservice will be responsible for listening to the [Reefer Telemetry Topic](#reefer-telemetry-topic) topic where the IOT sensor devices of the Reefer Containers will be sending their telemetry data to. These telemetry events will be read and used to contact a container anomaly prediction service based on Watson Machine Learning hosted on the IBM Cloud. Depending on whether the prediction service predicts a container anomaly, this Telemetry microservice will send a [Container Anomaly Event](#container-anomaly-event) to the [Containers Topic](#containers-topic) for the [Containers microservice](#containers) to handle the shipping goods spoilage.
+
+This microservice has been implemented using the latest [Reactive Messaging](#reactive-messaging) feature of MicroProfile 3.0. running on the OpenLiberty server.
+
+Github repository: [refarch-reefer-ml](https://github.com/ibm-cloud-architecture/refarch-reefer-ml)
+
+Folder: [scoring-mp](https://github.com/ibm-cloud-architecture/refarch-reefer-ml/scoring-mp)
+
+Kafka topics it subscribes to:
+
+- [Reefer Telemetry Topic](#reefer-telemetry-topic)
+
+Kafka topics it produces to:
+
+- [Containers Topic](#containers-topic)
+
+Events that listens (and reacts) to:
+
+- [Container Telemetry Event](#container-telemetry-event)
+
+Events that produces:
+
+- [Container Anomaly Event](#container-anomaly-event)
+
+EDA Patterns that implements:
+
+- [Reactive Messaging](#reactive-messaging)
+
 ### Fleet
 
 Description: This microservice will manage the fleet of ships.
@@ -187,117 +319,6 @@ Events that produces:
 EDA Patterns that implements:
 
 - [SAGA](#saga)
-
-### Container Management
-
-![Containers diagram](images/Slide5.png)
-
-Description: This microservice manages the container inventory. That is, this microservice will be in charge of keeping an inventory of all the containers registered in the system along with their status, size and location. When a new order is created and received, the container microservice will be in charge of assigning a container to this new shipping order based if a container is available that suits the order's quantity and source port. Otherwise, will emit a ContainerNotFound event for the interested parties in the overall Reefer Container Shipment solution.
-
-This microservice will also manage any container anomaly during the shipping of goods. That is, this microservice will monitoring ContainerAnomaly Events received for any particular container and in the case that these are received, it will mark the container for maintenance, send a OrderSpoilt Event so that any other microservice in the overall solution is aware that the fresh goods this container was carrying are now spoilt and will call a Business Process Manager (BPM) process in to automatically trigger the assignment of a field engineer to repair the container when it reaches the destination port.
-
-This microservice is implemented with Spring Framework and runs on Tomcat.
-
-Github repository: [refarch-kc-container-ms](https://github.com/ibm-cloud-architecture/refarch-kc-container-ms)
-
-Kafka topics it subscribes to:
-
-- [Order Topic](#orders-topic)
-- [Containers Topic](#containers-topic)
-- [container Anomaly Retry Topic](#container-anomaly-retry-topic)
-
-Kafka topics it produces to:
-
-- [Order Topic](#orders-topic)
-- [Containers Topic](#containers-topic)
-- [container Anomaly Retry Topic](#container-anomaly-retry-topic)
-- [Container Anomaly Dead Topic](#container-anomaly-dead-topic)
-
-Events that listens (and reacts) to:
-
-- [Order Created Event](#order-created-event)
-- [Order Reject Event](#order-reject-event)
-- [Order Cancel Event](#order-cancel-event)
-- [Container Added Event](#container-added-event)
-- [Container Anomaly Event](#container-anomaly-event)
-- [Container Anomaly Retry Event](#container-anomaly-retry-event)
-- [Container On Maintenance Event](#container-on-maintenance-event)
-- [Container Off Maintenance Event](#container-off-maintenance-event)
-
-Events that produces:
-
-- [Order Spoilt Event](#order-spoilt-event)
-- [Container Allocated Event](#container-allocated-event)
-- [Container Not Found Event](#container-not-found-event)
-- [Container Assigned Event](#container-assigned-event)
-- [Container Anomaly Retry Event](#container-anomaly-retry-event)
-- [Container Anomaly Dead Event](#container-anomaly-dead-event)
-- [Container On Maintenance Event](#container-on-maintenance-event)
-- [Container Off Maintenance Event](#container-off-maintenance-event)
-
-EDA Patterns that implements:
-
-- [SAGA](#saga)
-- [Dead Letter Queue (DLQ)](#dead-letter-queue(dlq))
-- [Container Anomaly](#container-anomaly)
-
-### Telemetry
-
-![Telemetry diagram](images/Slide6.png)
-
-Description: This microservice will be responsible for listening to the [Reefer Telemetry Topic](#reefer-telemetry-topic) topic where the IOT sensor devices of the Reefer Containers will be sending their telemetry data to. These telemetry events will be read and used to contact a container anomaly prediction service based on Watson Machine Learning hosted on the IBM Cloud. Depending on whether the prediction service predicts a container anomaly, this Telemetry microservice will send a [Container Anomaly Event](#container-anomaly-event) to the [Containers Topic](#containers-topic) for the [Containers microservice](#containers) to handle the shipping goods spoilage.
-
-This microservice has been implemented using the latest [Reactive Messaging](#reactive-messaging) feature of MicroProfile 3.0. running on the OpenLiberty server.
-
-Github repository: [refarch-reefer-ml](https://github.com/ibm-cloud-architecture/refarch-reefer-ml)
-
-Folder: [scoring-mp](https://github.com/ibm-cloud-architecture/refarch-reefer-ml/scoring-mp)
-
-Kafka topics it subscribes to:
-
-- [Reefer Telemetry Topic](#reefer-telemetry-topic)
-
-Kafka topics it produces to:
-
-- [Containers Topic](#containers-topic)
-
-Events that listens (and reacts) to:
-
-- [Container Telemetry Event](#container-telemetry-event)
-
-Events that produces:
-
-- [Container Anomaly Event](#container-anomaly-event)
-
-EDA Patterns that implements:
-
-- [Reactive Messaging](#reactive-messaging)
-
-### Simulator
-
-![Simulator diagram](images/Slide7.png)
-
-Description: The Simulator webapp is a simple python (3.7) flask web app exposing a REST POST end point to control the type of simulation to run and to produce Reefer telemetry events to kafka reeferTelemetry topic.
-
-This microservice has been implemented using the Appsody python flask stack.
-
-Github repository: [refarch-reefer-ml](https://github.com/ibm-cloud-architecture/refarch-reefer-ml)
-
-Folder: [simulator](https://github.com/ibm-cloud-architecture/refarch-reefer-ml/simulator)
-
-Kafka topics it subscribes to: None
-
-Kafka topics it produces to:
-
-- [Reefer Telemetry Topic](#reefer-telemetry-topic)
-
-Events that listens (and reacts) to: None
-
-Events that produces:
-
-- [Container Telemetry Event](#container-telemetry-event)
-
-EDA Patterns that implements: None
 
 ## Events
 

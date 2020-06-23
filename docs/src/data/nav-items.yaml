@@ -26,6 +26,10 @@
       path: /implementation/order-cancellation/
     - title: Anomalous Container Tracking
       path: /implementation/container-anomaly/
+    - title: DevOps Pipelines
+      path: /implementation/devops/
+    - title: GitOps Deployments
+      path: /implementation/gitops/
 - title: Microservices Details
   pages:
     - title: Prerequisites
@@ -40,6 +44,8 @@
       path: /microservices/container-management/
     - title: Vessel Simulator
       path: /microservices/vessel-simulator/
+    - title: Telemetry Simulator
+      path: /microservices/telemetry-simulator/
     - title: Anomalous Container Scoring
       path: /microservices/scoring-mp/
     - title: Fleet Management
