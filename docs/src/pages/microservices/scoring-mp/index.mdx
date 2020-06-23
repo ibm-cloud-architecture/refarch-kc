@@ -1,9 +1,13 @@
 ---
 title: Anomalous Container Scoring Microservice
-description: TBD
+description: TBD Description
 ---
 
 <InlineNotification kind="warning">UNDER CONSTRUCTION</InlineNotification>
+
+<PageDescription>
+TODO
+</PageDescription>
 
 <AnchorLinks>
   <AnchorLink>Overview</AnchorLink>
@@ -15,13 +19,37 @@ description: TBD
 
 ## Overview
 
-TBD To be sourced from https://github.com/ibm-cloud-architecture/refarch-reefer-ml/tree/master/scoring-mp
+**Description:** This microservice is responsible for listening to the [Reefer Telemetry Topic](#reefer-telemetry-topic) topic where the IOT sensor devices of the Reefer Containers will be sending their telemetry data to. These telemetry events will be read and used to contact a container anomaly prediction service based on Watson Machine Learning hosted on the IBM Cloud. Depending on whether the prediction service predicts a container anomaly, this Telemetry microservice will send a [Container Anomaly Event](#container-anomaly-event) to the [Containers Topic](#containers-topic) for the [Containers microservice](#containers) to handle the shipping goods spoilage.
 
-Reactive Systems provide an architecture style to deliver responsive systems. By infusing asynchronous messaging passing at the core of the system, applications enforcing the reactive system’s characteristics are inherently resilient and become more elastic by scaling up and down the number of message consumers. Microservices as part of reactive systems interact using messages. The MicroProfile Reactive Messaging specification aims to deliver applications embracing the characteristics of reactive systems.
+This microservice has been implemented using the latest [Reactive Messaging](#reactive-messaging) feature of MicroProfile 3.0. running on the OpenLiberty server.
 
-You can read more about how we have implemented the [Telemetry](/refarch-kc/business-scenario/microservices-overview/#telemetry) component as a reactive system by using the MicroProfile Reactive Messaging feature [here](https://ibm-cloud-architecture.github.io/refarch-reefer-ml/infuse/dev-scoring/)
+![Telemetry diagram](images/microservice-overview-scoring-mp.png)
 
-Again, the Container Anomaly is more of a use case than a pattern itself. We have implemented a Container Anomaly use case whereby our [Reefer containers will send telemetry health status](#simulator), in terms of temperature, CO2 level, power level, etc, to a [Reefer Telemetry Agent](#telemetry), that we have built using the Reactive Messaging feature from the MicroProfile 3.0 specification onwards, through a [Reefer Telemetry Topic](#reefer-telemetry-topic). This [Reefer Telemetry Agent](#telemetry) will, in turn, call an Anomaly Detection Scoring service we have built following our Data and AI Reference Architecture that will determine whether there is an anomaly in a given containers based on the data sent by their IoT sensors. If an anomaly is predicted, a [Container Anomaly Event](#container-anomaly-event) will get dropped into the [Containers Topic](#containers-topic) the [container management component](#containers) of our Reefer Container Reference Application listens to. The [container management component](#containers) will call an IBM Business Process Management (BPM) process which will end up with a field engineer fixing the container.
+**Further details:** [Microservices Details > Anomalous Container Scoring](/microservices/scoring-mp)
+
+**Github repository:** [refarch-reefer-ml](https://github.com/ibm-cloud-architecture/refarch-reefer-ml)
+
+**Folder:** [scoring-mp](https://github.com/ibm-cloud-architecture/refarch-reefer-ml/tree/master/scoring-mp)
+
+**Kafka topics consumed from:**
+
+- [Reefer Telemetry Topic](#reefer-telemetry-topic)
+
+**Kafka topics produced to:**
+
+- [Containers Topic](#containers-topic)
+
+**Events reacted to:**
+
+- [Container Telemetry Event](#container-telemetry-event)
+
+**Events produced:**
+
+- [Container Anomaly Event](#container-anomaly-event)
+
+**EDA Patterns implemented:**
+
+- [Reactive Messaging](#reactive-messaging)
 
 ## Build
 
@@ -37,4 +65,10 @@ TBD
 
 ## Implementation Details
 
-TBD
+TBD To be sourced from https://github.com/ibm-cloud-architecture/refarch-reefer-ml/tree/master/scoring-mp
+
+Reactive Systems provide an architecture style to deliver responsive systems. By infusing asynchronous messaging passing at the core of the system, applications enforcing the reactive system’s characteristics are inherently resilient and become more elastic by scaling up and down the number of message consumers. Microservices as part of reactive systems interact using messages. The MicroProfile Reactive Messaging specification aims to deliver applications embracing the characteristics of reactive systems.
+
+You can read more about how we have implemented the [Telemetry](/refarch-kc/business-scenario/microservices-overview/#telemetry) component as a reactive system by using the MicroProfile Reactive Messaging feature [here](https://ibm-cloud-architecture.github.io/refarch-reefer-ml/infuse/dev-scoring/)
+
+Again, the Container Anomaly is more of a use case than a pattern itself. We have implemented a Container Anomaly use case whereby our [Reefer containers will send telemetry health status](#simulator), in terms of temperature, CO2 level, power level, etc, to a [Reefer Telemetry Agent](#telemetry), that we have built using the Reactive Messaging feature from the MicroProfile 3.0 specification onwards, through a [Reefer Telemetry Topic](#reefer-telemetry-topic). This [Reefer Telemetry Agent](#telemetry) will, in turn, call an Anomaly Detection Scoring service we have built following our Data and AI Reference Architecture that will determine whether there is an anomaly in a given containers based on the data sent by their IoT sensors. If an anomaly is predicted, a [Container Anomaly Event](#container-anomaly-event) will get dropped into the [Containers Topic](#containers-topic) the [container management component](#containers) of our Reefer Container Reference Application listens to. The [container management component](#containers) will call an IBM Business Process Management (BPM) process which will end up with a field engineer fixing the container.

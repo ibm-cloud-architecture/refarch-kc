@@ -21,28 +21,28 @@ This project is demonstrating, one of the possible implementation of the Command
 
 **Description:** Main goal of the Orders component is to manage the shipping orders. This component is made up of two microservices, one called Order Command and the other Order Query. The reason for this component to be split into two microservices is to implement the [**Command Query Responsibility Segregation (CQRS)**](#command-query-responsibility-segregation-(cqrs)) pattern.
 
-![Order Command diagram](images/Slide2.png)
+![Order Command diagram](images/microservice-overview-order-command.png)
 
 This microservice implements the write logic in the CQRS pattern. That is, will be in charge of managing the state of shipping orders.
 
 This microservice has been implemented using MicroProfile 3.0. and runs on OpenLiberty.
 
-Github repository: [refarch-kc-order-ms](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms)
+**Github repository:** [refarch-kc-order-ms](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms)
 
-Folder: [order-command-ms](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/order-command-ms)
+**Folder:** [order-command-ms](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/order-command-ms)
 
-Kafka topics read from:
+**Kafka topics consumed from:**
 
 - [Order Commands Topic](#order-commands-topic)
 - [Order Topic](#orders-topic)
 
-Kafka topics written to:
+**Kafka topics produced to:**
 
 - [Order Commands Topic](#order-commands-topic)
 - [Order Topic](#orders-topic)
 - [Errors Topic](#errors-topic)
 
-Events reacted to:
+**Events reacted to:**
 
 - [Order Command Event](#order-command-event)
 - [Container Allocated Event](#container-allocated-event)
@@ -51,7 +51,7 @@ Events reacted to:
 - [Voyage Not Found Event](#voyage-not-found-event)
 - [Order Spoilt Event](#order-spoilt-event)
 
-Events produced:
+**Events produced:**
 
 - [Order Command Event](#order-command-event)
 - [Order Created Event](#order-created-event)
@@ -60,7 +60,7 @@ Events produced:
 - [Order Cancel Event](#order-cancel-event)
 - [Error Event](#error-event)
 
-EDA Patterns that implements:
+**EDA Patterns implemented:**
 
 - [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
 - [SAGA](#saga)

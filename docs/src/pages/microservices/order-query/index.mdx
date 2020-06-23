@@ -21,24 +21,24 @@ This project is demonstrating, one of the possible implementation of the Command
 
 **Description:** Main goal of the Orders component is to manage the shipping orders. This component is made up of two microservices, one called Order Command and the other Order Query. The reason for this component to be split into two microservices is to implement the [**Command Query Responsibility Segregation (CQRS)**](#command-query-responsibility-segregation-(cqrs)) pattern.
 
-![Order Query diagram](images/Slide3.png)
+![Order Query diagram](images/microservice-overview-order-query.png)
 
 This microservice will implement the query logic in the CQRS pattern. That is, will be in charge of implementing any type of query that is needed based on building the necessary projections over the totality of the data. In order to build those projections, this microservice might well listen to several topics and events.
 
 This microservice has been implemented using MicroProfile 3.0. and runs on OpenLiberty.
 
-Github repository: [refarch-kc-order-ms](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms)
+**Github repository:** [refarch-kc-order-ms](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms)
 
-Folder: [order-query-ms](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/order-query-ms)
+**Folder:** [order-query-ms](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/order-query-ms)
 
-Kafka topics it subscribes to:
+**Kafka topics consumed from:**
 
 - [Order Topic](#orders-topic)
 - [Containers Topic](#containers-topic)
 
-Kafka topics it produces to: None
+**Kafka topics produced to:** None
 
-Events that listens (and reacts) to:
+**Events reacted to:**
 
 - [Order Created Event](#order-created-event)
 - [Order Updated Event](#order-updated-event)
@@ -52,9 +52,9 @@ Events that listens (and reacts) to:
 - [Container Off Maintenance Event](#container-off-maintenance-event)
 - [Container Assigned Event](#container-assigned-event)
 
-Events that produces: None
+**Events produced:** None
 
-EDA Patterns that implements:
+**EDA Patterns implemented:**
 
 - [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
 

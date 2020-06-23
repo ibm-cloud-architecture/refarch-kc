@@ -3,10 +3,13 @@ title: Microservices Overview
 description: An overview of the Reefer Container Shipment solution's component microservices.
 ---
 
-<InlineNotification kind="warning">UNDER CONSTRUCTION - This could potentially be split into three individual 'Overview' pages - Microservices, Events, and Topics.</InlineNotification>
+<InlineNotification kind="warning">UNDER CONSTRUCTION</InlineNotification>
+
+<PageDescription>
+An overview of the Reefer Container Shipment solution's component microservices.
+</PageDescription>
 
 <AnchorLinks>
-  <AnchorLink>Microservices Architecture</AnchorLink>
   <AnchorLink>User Interface</AnchorLink>
   <AnchorLink>Order Command</AnchorLink>
   <AnchorLink>Order Query</AnchorLink>
@@ -18,13 +21,9 @@ description: An overview of the Reefer Container Shipment solution's component m
   <AnchorLink>Voyages</AnchorLink>
 </AnchorLinks>
 
-## Microservices Architecture
-
-TBD MIGRATE
-
 ## User Interface
 
-![User Interface diagram](images/Slide1.png)
+![User Interface diagram](images/microservice-overview-user-interface.png)
 
 **Description:** The user interface for our Reefer Container Shipment reference application is implemented as a single microservice using Node.js and Angular.js. The goal of this component is to serve a user interface for customers to:
 
@@ -40,7 +39,7 @@ TBD MIGRATE
 
 **Description:** Main goal of the Orders component is to manage the shipping orders. This component is made up of two microservices, one called Order Command and the other Order Query. The reason for this component to be split into two microservices is to implement the [**Command Query Responsibility Segregation (CQRS)**](#command-query-responsibility-segregation-(cqrs)) pattern.
 
-![Order Command diagram](images/Slide2.png)
+![Order Command diagram](images/microservice-overview-order-command.png)
 
 **Further details:** [Microservices Details > Order Command](/microservices/order-command)
 
@@ -48,204 +47,64 @@ TBD MIGRATE
 
 **Description:** Main goal of the Orders component is to manage the shipping orders. This component is made up of two microservices, one called Order Command and the other Order Query. The reason for this component to be split into two microservices is to implement the [**Command Query Responsibility Segregation (CQRS)**](#command-query-responsibility-segregation-(cqrs)) pattern.
 
-![Order Query diagram](images/Slide3.png)
+![Order Query diagram](images/microservice-overview-order-query.png)
 
 **Further details:** [Microservices Details > Order Query](/microservices/order-query)
 
 ## Container Management
 
-TBD MIGRATE
+![Containers diagram](images/microservice-overview-container-management.png)
 
-![Containers diagram](images/Slide5.png)
-
-Description: This microservice manages the container inventory. That is, this microservice will be in charge of keeping an inventory of all the containers registered in the system along with their status, size and location. When a new order is created and received, the container microservice will be in charge of assigning a container to this new shipping order based if a container is available that suits the order's quantity and source port. Otherwise, will emit a ContainerNotFound event for the interested parties in the overall Reefer Container Shipment solution.
+**Description:** This microservice manages the container inventory. That is, this microservice will be in charge of keeping an inventory of all the containers registered in the system along with their status, size and location. When a new order is created and received, the container microservice will be in charge of assigning a container to this new shipping order based if a container is available that suits the order's quantity and source port. Otherwise, will emit a ContainerNotFound event for the interested parties in the overall Reefer Container Shipment solution.
 
 This microservice will also manage any container anomaly during the shipping of goods. That is, this microservice will monitoring ContainerAnomaly Events received for any particular container and in the case that these are received, it will mark the container for maintenance, send a OrderSpoilt Event so that any other microservice in the overall solution is aware that the fresh goods this container was carrying are now spoilt and will call a Business Process Manager (BPM) process in to automatically trigger the assignment of a field engineer to repair the container when it reaches the destination port.
 
 This microservice is implemented with Spring Framework and runs on Tomcat.
 
-Github repository: [refarch-kc-container-ms](https://github.com/ibm-cloud-architecture/refarch-kc-container-ms)
-
-Kafka topics it subscribes to:
-
-- [Order Topic](#orders-topic)
-- [Containers Topic](#containers-topic)
-- [container Anomaly Retry Topic](#container-anomaly-retry-topic)
-
-Kafka topics it produces to:
-
-- [Order Topic](#orders-topic)
-- [Containers Topic](#containers-topic)
-- [container Anomaly Retry Topic](#container-anomaly-retry-topic)
-- [Container Anomaly Dead Topic](#container-anomaly-dead-topic)
-
-Events that listens (and reacts) to:
-
-- [Order Created Event](#order-created-event)
-- [Order Reject Event](#order-reject-event)
-- [Order Cancel Event](#order-cancel-event)
-- [Container Added Event](#container-added-event)
-- [Container Anomaly Event](#container-anomaly-event)
-- [Container Anomaly Retry Event](#container-anomaly-retry-event)
-- [Container On Maintenance Event](#container-on-maintenance-event)
-- [Container Off Maintenance Event](#container-off-maintenance-event)
-
-Events that produces:
-
-- [Order Spoilt Event](#order-spoilt-event)
-- [Container Allocated Event](#container-allocated-event)
-- [Container Not Found Event](#container-not-found-event)
-- [Container Assigned Event](#container-assigned-event)
-- [Container Anomaly Retry Event](#container-anomaly-retry-event)
-- [Container Anomaly Dead Event](#container-anomaly-dead-event)
-- [Container On Maintenance Event](#container-on-maintenance-event)
-- [Container Off Maintenance Event](#container-off-maintenance-event)
-
-EDA Patterns that implements:
-
-- [SAGA](#saga)
-- [Dead Letter Queue (DLQ)](#dead-letter-queue(dlq))
-- [Container Anomaly](#container-anomaly)
+**Further details:** [Microservices Details > Container Management](/microservices/container-management)
 
 ## Vessel Simulator
 
-TBD MIGRATE
+_TBD Image needed_
 
-Description: This a simple vessel source events generatator taking into account the route from two harbors, the vessel characteristic and the geodetic curve shortest path.
+**Description:** This a simple vessel source events generatator taking into account the route from two harbors, the vessel characteristic and the geodetic curve shortest path.
 
-This microservice has been implemented using the Appsody Microprofile 3.2 OpenLiberty stack.
+This microservice has been implemented using the [Appsody Microprofile 3.2 OpenLiberty stack](https://github.com/appsody/stacks/tree/master/incubator/java-openliberty).
 
-Github repository: [refarch-kc-vessel-simulator](https://github.com/ibm-cloud-architecture/refarch-kc-vessel-simulator)
-
-Folder: `root`
-
-Kafka topics it subscribes to: TBD
-
-Kafka topics it produces to: TBD
-
-Events that listens (and reacts) to: TBD
-
-Events that produces: TBD
-
-EDA Patterns that implements: TBD
+**Further details:** [Microservices Details > Vessel Simulator](/microservices/vessel-simulator)
 
 ## Telemetry Simulator
 
-TBD MIGRATE
+![Simulator diagram](images/microservice-overview-telemetry-simulator.png)
 
-![Simulator diagram](images/Slide7.png)
+**Description:** The Simulator webapp is a simple Python (3.7) Flask web app exposing a REST POST endpoint to control the type of simulation to run and to produce Reefer telemetry events to kafka reeferTelemetry topic.
 
-Description: The Simulator webapp is a simple python (3.7) flask web app exposing a REST POST end point to control the type of simulation to run and to produce Reefer telemetry events to kafka reeferTelemetry topic.
+This microservice has been implemented using the [Appsody Python Flask stack](https://github.com/appsody/stacks/tree/master/incubator/python-flask).
 
-This microservice has been implemented using the Appsody python flask stack.
-
-Github repository: [refarch-reefer-ml](https://github.com/ibm-cloud-architecture/refarch-reefer-ml)
-
-Folder: [simulator](https://github.com/ibm-cloud-architecture/refarch-reefer-ml/simulator)
-
-Kafka topics it subscribes to: None
-
-Kafka topics it produces to:
-
-- [Reefer Telemetry Topic](#reefer-telemetry-topic)
-
-Events that listens (and reacts) to: None
-
-Events that produces:
-
-- [Container Telemetry Event](#container-telemetry-event)
-
-EDA Patterns that implements: None
+**Further details:** [Microservices Details > Telemetry Simulator](/microservices/telemetry-simulator)
 
 ## Anomalous Container Scoring
 
-TBD MIGRATE
+![Telemetry diagram](images/microservice-overview-scoring-mp.png)
 
-![Telemetry diagram](images/Slide6.png)
+**Description:** This microservice will be responsible for listening to the [Reefer Telemetry Topic](#reefer-telemetry-topic) topic where the IOT sensor devices of the Reefer Containers will be sending their telemetry data to. These telemetry events will be read and used to contact a container anomaly prediction service based on Watson Machine Learning hosted on the IBM Cloud. Depending on whether the prediction service predicts a container anomaly, this Telemetry microservice will send a [Container Anomaly Event](#container-anomaly-event) to the [Containers Topic](#containers-topic) for the [Containers microservice](#containers) to handle the shipping goods spoilage.
 
-Description: This microservice will be responsible for listening to the [Reefer Telemetry Topic](#reefer-telemetry-topic) topic where the IOT sensor devices of the Reefer Containers will be sending their telemetry data to. These telemetry events will be read and used to contact a container anomaly prediction service based on Watson Machine Learning hosted on the IBM Cloud. Depending on whether the prediction service predicts a container anomaly, this Telemetry microservice will send a [Container Anomaly Event](#container-anomaly-event) to the [Containers Topic](#containers-topic) for the [Containers microservice](#containers) to handle the shipping goods spoilage.
+This microservice has been implemented using the latest [Reactive Messaging](#reactive-messaging) feature of MicroProfile 3.0, running on the OpenLiberty server.
 
-This microservice has been implemented using the latest [Reactive Messaging](#reactive-messaging) feature of MicroProfile 3.0. running on the OpenLiberty server.
-
-Github repository: [refarch-reefer-ml](https://github.com/ibm-cloud-architecture/refarch-reefer-ml)
-
-Folder: [scoring-mp](https://github.com/ibm-cloud-architecture/refarch-reefer-ml/scoring-mp)
-
-Kafka topics it subscribes to:
-
-- [Reefer Telemetry Topic](#reefer-telemetry-topic)
-
-Kafka topics it produces to:
-
-- [Containers Topic](#containers-topic)
-
-Events that listens (and reacts) to:
-
-- [Container Telemetry Event](#container-telemetry-event)
-
-Events that produces:
-
-- [Container Anomaly Event](#container-anomaly-event)
-
-EDA Patterns that implements:
-
-- [Reactive Messaging](#reactive-messaging)
+**Further details:** [Microservices Details > Anomalous Container Scoring](/microservices/scoring-mp)
 
 ## Fleet
 
-TBD MIGRATE
+_TBD Image needed_
 
-Description: This microservice will manage the fleet of ships.
+**Description:** This microservice will manage the fleet of ships.
 
-Github repository: [refarch-kc-ms](https://github.com/ibm-cloud-architecture/refarch-kc-ms)
-
-Folder: [fleet-ms](https://github.com/ibm-cloud-architecture/refarch-kc-ms/fleet-ms)
-
-Kafka topics it subscribes to:
-
-Kafka topics it produces to:
-
-Events that listens (and reacts) to:
-
-Events that produces:
-
-EDA Patterns that implements:
+**Further details:** [Microservices Details > Fleet Management](/microservices/fleet)
 
 ## Voyages
 
-TBD MIGRATE
+![Voyages diagram](images/microservice-overview-voyages.png)
 
-![Voyages diagram](images/Slide4.png)
+**Description:** This microservice manages the voyages for each ship, written in NodeJS. A voyage consist of carrying a limited amount of goods from a source port to a destination port being the goods carried by a uniquely identified ship on a specific date. All those attributes make a voyage unique and these voyages are managed by this microservice. Voyages microservice will then be responsible to allocate a voyage to an order based on where this order needs to be carried from and to, the window time the goods need to be carried within and the amount of goods to be carried. This microservice assigns a voyage to an order (and manage the remaining capacity on the ship making such voyage) if any suitable voyage is found and emit the consequent VoyageAssigned Event or will otherwise emit a VoyageNotFound Event.
 
-Description: This microservice manages the voyages for each ship. A voyage consist of carrying a limited amount of goods from a source port to a destination port being the goods carried by a uniquely identified ship on a specific date. All those attributes make a voyage unique and these voyages are managed by this microservice. Voyages microservice will then be responsible to allocate a voyage to an order based on where this order needs to be carried from and to, the window time the goods need to be carried within and the amount of goods to be carried. So far, this microservice will assign a voyage to an order (and manage the remaining capacity on the ship making such voyage) if any suitable voyage is found and emit the consequent VoyageAssigned Event or will otherwise emit a VoyageNotFound Event.
-
-This microservice is written in NodeJS.
-
-Github repository: [refarch-kc-ms](https://github.com/ibm-cloud-architecture/refarch-kc-ms)
-
-Folder: [voyage-ms](https://github.com/ibm-cloud-architecture/refarch-kc-ms/voyage-ms)
-
-Kafka topics it subscribes to:
-
-- [Order Topic](#orders-topic)
-
-Kafka topics it produces to:
-
-- [Order Topic](#orders-topic)
-
-Events that listens (and reacts) to:
-
-- [Order Created Event](#order-created-event)
-- [Order Reject Event](#order-reject-event)
-- [Order Cancel Event](#order-cancel-event)
-- [Container Allocated Event](#container-allocated-event)
-- [Container Not Found Event](#container-not-found-event)
-
-Events that produces:
-
-- [Voyage Assigned Event](#voyage-assigned-event)
-- [Voyage Not Found Event](#voyage-not-found-event)
-
-EDA Patterns that implements:
-
-- [SAGA](#saga)
+**Further details:** [Microservices Details > Voyage Management](/microservices/voyages)
