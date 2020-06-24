@@ -1,33 +1,22 @@
 module.exports = {
   siteMetadata: {
-    title: 'K-Container Reference Implementation for EDA',
-    description: 'A reference implementation solution for container shipment using Event-Driven Architecture principles and techniques by the IBM Garage for Cloud Solution Engineering Event-Driven Architecture squad.',
-    keywords: 'gatsby,theme,carbon',
-    repository: {
-      baseUrl: 'https://github.com/ibm-cloud-architecture/refarch-kc',
-      subDirectory: '/docs-gatsby',
-      branch: 'master'
-    }
+    title: 'IBM Garage Event-Driven Reference Architecture - KContainer Reference Implementation',
+    description: 'This project represents the body of knowledge around event-driven architecture and can be considered as a live book, we are writing from our consulting engagements',
+    keywords: 'gatsby,theme,carbon'
   },
   pathPrefix: `/refarch-kc`,
   plugins: [
     {
-      resolve: 'gatsby-plugin-manifest',
-      options: {
-        name: 'Carbon Design Gatsby Theme',
-        short_name: 'Gatsby Theme Carbon',
-        start_url: '/',
-        background_color: '#ffffff',
-        theme_color: '#0062ff',
-        display: 'browser',
-      },
-    },
-    {
       resolve: 'gatsby-theme-carbon',
       options: {
         isSearchEnabled: true,
-        titleType: 'append'
-      },
+        titleType: 'append',
+        repository: {
+          baseUrl: 'https://github.com/ibm-cloud-architecture/refarch-kc',
+          subDirectory: '/docs',
+          branch: 'master'
+        }
+      }
     },
     {
       resolve: `gatsby-plugin-google-analytics`,

@@ -1,0 +1,119 @@
+---
+title: Order Management - Command
+description: TBD Deployment of application microservices
+---
+
+<InlineNotification kind="warning">UNDER CONSTRUCTION</InlineNotification>
+
+<PageDescription>
+This project is demonstrating, one of the possible implementation of the Command Query Responsibility Segregation and event sourcing patterns applied to Reefer shipment order subdomain. It is part of the Event Driven Architecture solution implementation. From a use case point of view, it implements the order management component, responsible to manage the full life cycle of a shipping order issued by a customer who wants to ship fresh goods overseas.
+</PageDescription>
+
+<AnchorLinks>
+  <AnchorLink>Overview</AnchorLink>
+  <AnchorLink>Build</AnchorLink>
+  <AnchorLink>Run</AnchorLink>
+  <AnchorLink>Integration Tests</AnchorLink>
+  <AnchorLink>Implementation Details</AnchorLink>
+</AnchorLinks>
+
+## Overview
+
+**Description:** Main goal of the Orders component is to manage the shipping orders. This component is made up of two microservices, one called Order Command and the other Order Query. The reason for this component to be split into two microservices is to implement the [**Command Query Responsibility Segregation (CQRS)**](#command-query-responsibility-segregation-(cqrs)) pattern.
+
+![Order Command diagram](images/microservice-overview-order-command.png)
+
+This microservice implements the write logic in the CQRS pattern. That is, will be in charge of managing the state of shipping orders.
+
+This microservice has been implemented using MicroProfile 3.0. and runs on OpenLiberty.
+
+**Github repository:** [refarch-kc-order-ms](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms)
+
+**Folder:** [order-command-ms](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/order-command-ms)
+
+**Kafka topics consumed from:**
+
+- [Order Commands Topic](#order-commands-topic)
+- [Order Topic](#orders-topic)
+
+**Kafka topics produced to:**
+
+- [Order Commands Topic](#order-commands-topic)
+- [Order Topic](#orders-topic)
+- [Errors Topic](#errors-topic)
+
+**Events reacted to:**
+
+- [Order Command Event](#order-command-event)
+- [Container Allocated Event](#container-allocated-event)
+- [Container Not Found Event](#container-not-found-event)
+- [Voyage Assigned Event](#voyage-assigned-event)
+- [Voyage Not Found Event](#voyage-not-found-event)
+- [Order Spoilt Event](#order-spoilt-event)
+
+**Events produced:**
+
+- [Order Command Event](#order-command-event)
+- [Order Created Event](#order-created-event)
+- [Order Updated Event](#order-updated-event)
+- [Order Reject Event](#order-reject-event)
+- [Order Cancel Event](#order-cancel-event)
+- [Error Event](#error-event)
+
+**EDA Patterns implemented:**
+
+- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+- [SAGA](#saga)
+- [Consume-transform-produce Loop](#consume-transform-produce-loop)
+- [Order Cancellation](#order-cancellation)
+
+## Build
+
+TBD Appsody
+
+## Run
+
+TBD Appsody
+
+## Integration Tests
+
+TBD
+
+## Implementation Details
+
+TBD Merge the following:
+- https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/master/docs/implementation-considerations.md
+- https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/master/docs/ddd-applied.md
+
+This project is demonstrating, one of the possible implementation of the Command Query Responsibility Segregation and event sourcing patterns applied to Reefer shipment order subdomain. It is part of the Event Driven Architecture solution implementation. From a use case point of view, it implements the order management component, responsible to manage the full life cycle of a shipping order issued by a customer who wants to ship fresh goods overseas. The business process is defined here and the event storming analysis in this note. We are also presenting one way of applying Domain Drive Design practice for this subdomain.
+
+This microservice is part of a set that demonstrates the consume-transform-produce pattern has been used along with the Event Sourcing pattern and the commands concept in Event Driven Architectures to ensure that any request (command) from users is eventually attended and processed by our system.
+
+The most critical part is the processing of those commands published in the Order Commands Topic of our event backbone that correspond to customer requests. We want to be able to successfully process all of them regardless of how many actions these entail, making sure these actions are all executed and we get confirmation of those. We want to process these actions in a transaction-like manner so that a request is not successfully marked as processed unless all actions were successfully executed.
+
+The key of this loop is that the produced event to the Orders Topic as the last action of the request (so that all previous actions have successfully been executed already) will be produced along with the offset commitment for the command read as a transaction. That is, either both the event to the Orders Topic is produced and the offset for the command read from the Order Commands Topic is committed or none of them happen.
+
+### What you will learn
+
+By studying this repository, you will be able to learn the following subjects:
+
+* How to apply domain driven design for a CQRS microservice
+* How to adopt CQRS pattern for the shipping order management
+* How to apply ubiquituous language in the code
+* Develop and deploy a microprofile 2.2 application, using open Liberty, on openshift or kubernetes
+
+### Requirements
+
+The key business requirements we need to support are:
+
+* Be able to book a fresh product shipment order, including the allocation of the voyage and the assignment of a reefer container to the expected cargo.
+* Be able to understand what happen to the order over time:
+    * How frequently does an order get cancelled after it is placed but before an empty container is delivered to pick up location or loaded ?
+    * Track key issue or step in the reefer shipment process
+    * How often does an order get cancelled after the order is confirmed, a container assigned and goods loaded into it?
+* Be able to support adhoc query on the order that span across subdomains of the shipment domain.
+    * What are all events for a particular order and associated container shipment?
+    * Has the cold chain been protected on this particular order?
+    * How long it takes to deliver a fresh food order from california to China?
+
+Those requirements force use to consider event sourcing (understanding facts about the order over time) and CQRS patterns to separate queries from command so our architecture will be more flexible and may address different scaling requirements.

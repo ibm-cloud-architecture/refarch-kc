@@ -1,0 +1,60 @@
+---
+title: Telemetry Simulator
+description: The telemetry simulator component is a Python-based application for generating anomalous data events for refrigerated shipping containers (also known as 'reefers').
+---
+
+<InlineNotification kind="warning">UNDER CONSTRUCTION</InlineNotification>
+
+<PageDescription>
+The telemetry simulator component is a Python-based application for generating anomalous data events for refrigerated shipping containers (also known as 'reefers').
+</PageDescription>
+
+<AnchorLinks>
+  <AnchorLink>Overview</AnchorLink>
+  <AnchorLink>Build</AnchorLink>
+  <AnchorLink>Run</AnchorLink>
+  <AnchorLink>Integration Tests</AnchorLink>
+  <AnchorLink>Implementation Details</AnchorLink>
+</AnchorLinks>
+
+## Overview
+
+**Description:** The Simulator webapp is a simple python (3.7) flask web app exposing a REST POST end point to control the type of simulation to run and to produce Reefer telemetry events to kafka reeferTelemetry topic.
+
+This microservice has been implemented using the [Appsody Python Flask stack](https://github.com/appsody/stacks/tree/master/incubator/python-flask).
+
+![Simulator diagram](images/microservice-overview-telemetry-simulator.png)
+
+**Github repository:** [refarch-reefer-ml](https://github.com/ibm-cloud-architecture/refarch-reefer-ml)
+
+**Folder:** [simulator](https://github.com/ibm-cloud-architecture/refarch-reefer-ml/tree/master/simulator)
+
+**Kafka topics consumed from:** None
+
+**Kafka topics produced to:**
+
+- [Reefer Telemetry Topic](#reefer-telemetry-topic)
+
+**Events reacted to:** None
+
+**Events produced:**
+
+- [Container Telemetry Event](#container-telemetry-event)
+
+**EDA Patterns implemented:** None
+
+## Build
+
+TBD Appsody
+
+## Run
+
+TBD Appsody
+
+## Integration Tests
+
+TBD
+
+## Implementation Details
+
+TBD
