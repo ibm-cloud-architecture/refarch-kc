@@ -167,10 +167,10 @@ spec:
           value: "order-query-ms:9080"
         # Container microservice's service name
         - name: CONTAINER_SPRING_MS
-          value: "springcontainerms-service:8080"
+          value: "spring-container-ms:8080"
         # Voyage microservice's service name
         - name: VOYAGE_MS
-          value: "voyagesms-service:3000"
+          value: "voyages-ms:3000"
         # Orders topic name
         - name: ITGTESTS_ORDERS_TOPIC
           value: "itg-orders"

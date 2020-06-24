@@ -42,7 +42,7 @@ kubectl apply -f $SCRIPTLOC/kafka-topics-configmap.yaml -n shipping
 kubectl apply -f $SCRIPTLOC/topics.yaml -n kafka
 
 # Install order-command-ms using pre-built image
-# note: --set eventstreams.enabled=false and --set eventstreams.truststoreRequired=false 
+# note: --set eventstreams.enabled=false and --set eventstreams.truststoreRequired=false
 # for connecting to Kafka rather than Event Streams
 helm install order-command-ms $REPOBASE/refarch-kc-order-ms/order-command-ms/chart/ordercommandms -n shipping --set image.repository=ibmcase/kcontainer-order-command-ms --set eventstreams.enabled=false --set eventstreams.truststoreRequired=false --set serviceAccountName=kcserviceaccount
 
@@ -51,7 +51,7 @@ helm install order-query-ms $REPOBASE/refarch-kc-order-ms/order-query-ms/chart/o
 
 # Install spring-container-ms using pre-built image
 # note: uses postgres secrets defined above
-helm install spring-container-ms $REPOBASE/refarch-kc-container-ms/SpringContainerMS/chart/springcontainerms -n shipping --set image.repository=ibmcase/kcontainer-spring-container-ms --set eventstreams.enabled=false --set eventstreams.truststoreRequired=false --set serviceAccountName=kcserviceaccount
+helm install spring-container-ms $REPOBASE/refarch-kc-container-ms/chart/springcontainerms -n shipping --set image.repository=ibmcase/kcontainer-spring-container-ms --set eventstreams.enabled=false --set eventstreams.truststoreRequired=false --set serviceAccountName=kcserviceaccount
 
 # Install voyages-ms using pre-built image
 helm install voyages-ms $REPOBASE/refarch-kc-ms/voyages-ms/chart/voyagesms --set image.repository=ibmcase/kcontainer-voyages-ms -n shipping --set eventstreams.enabled=false --set serviceAccountName=kcserviceaccount
@@ -63,11 +63,11 @@ helm install fleet-ms $REPOBASE/refarch-kc-ms/fleet-ms/chart/fleetms --set image
 helm install kc-ui $REPOBASE/refarch-kc-ui/chart/kc-ui --set image.repository=ibmcase/kcontainer-ui -n shipping --set eventstreams.enabled=false --set serviceAccountName=kcserviceaccount
 
 # Wait for all services to start
-kubectl rollout status -n shipping deployment springcontainerms-deployment
-kubectl rollout status -n shipping deployment fleetms-deployment
-kubectl rollout status -n shipping deployment kc-ui-deployment
-kubectl rollout status -n shipping deployment ordercommandms-deployment
-kubectl rollout status -n shipping deployment orderqueryms-deployment
-kubectl rollout status -n shipping deployment voyagesms-deployment
+kubectl rollout status -n shipping deployment spring-container-ms
+kubectl rollout status -n shipping deployment fleet-ms
+kubectl rollout status -n shipping deployment kc-ui
+kubectl rollout status -n shipping deployment order-command-ms
+kubectl rollout status -n shipping deployment order-query-ms
+kubectl rollout status -n shipping deployment voyages-ms
 
 # call $SCRIPTLOC/postinstall.sh
