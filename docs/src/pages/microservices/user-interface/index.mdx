@@ -1,5 +1,5 @@
 ---
-title: Orders User Interface
+title: User Interface
 description: The user interface for our Reefer Container Shipment reference application is implemented as a single microservice using Node.js and Angular.js.
 ---
 
@@ -79,3 +79,33 @@ There is no login page yet, but the home page displays a set of tiles to support
 For the BFF code the server code is under the `server` folder and uses the standard patterns for expressjs middleware. The [readme file](./server/README.md) goes into the details on this implementation.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.1. The user interface features are under the features folder. We are using a TDD approach as described in [this note.](https://github.com/ibm-cloud-architecture/refarch-caseportal-app/blob/master/docs/tdd.md) The tests run with `ng test`. We also encourage to read the [angular.io testing guide](https://angular.io/guide/testing)
+
+
+## Build and Run
+
+The `scripts` folder has two scripts to build the UI, and a docker image for the server and single page app, and run it locally. You should clone all the KC solution repositories and use each component one by one, or use our IBM public cloud deployment. To be able to run the UI locally, you need to have at least the following component up and running:
+
+* Kafka and zookeeper: Use the docker compose file in the root project:
+ ```
+ cd ../refarch-kc/docker
+ docker-compose -f backbone-compose.yml up
+ ```
+* Start the Fleet simulator.  For the fleet simulator [see instructions here](https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/fleet-ms#run) to run the simulator locally.
+
+* Make sure you have the angular cli installed via `npm install -g @angular/cli` and run an initial `npm install` inside the ui folder to pull all dependencies.
+
+* Build UI and server and a docker image with the command: `./scripts/build.sh`. The trace looks like:
+> .... chunk {main} main.js, main.js.map (main) 78.9 kB [initial] [rendered]
+chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 223 kB [initial] [rendered]
+chunk {runtime} runtime.js, runtime.js.map (runtime) 6.08 kB [entry] [rendered]
+chunk {styles} styles.js, styles.js.map (styles) 387 kB [initial] [rendered]
+chunk {vendor} vendor.js, vendor.js.map (vendor) 6.81 MB [initial] [rendered]
+...
+> kcbff@0.0.1 copy-deps /Users/jeromeboyer/Code/GreenCompute/refarch-kc-ui/server
+> cpx "../ui/dist/ui/*.*" ./dist/server/static && cpx "./config/config.json" ./dist/server/config
+Successfully built 0226a1748fd9
+Successfully tagged ibmcase/kcontainer-ui:latest
+
+* Start locally with `./script/run.sh` or with a docker `./script/runDocker.sh`.
+
+* Use your web browser at http://localhost:3000/#/home

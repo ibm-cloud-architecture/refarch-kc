@@ -22,6 +22,8 @@
       path: /implementation/saga-patterns/
     - title: Dead Letter Queue
       path: /implementation/dead-letter-queue/
+    - title: Consume Transform Produce
+      path: /implementation/consume-transform-produce/
     - title: Order Cancellation
       path: /implementation/order-cancellation/
     - title: Anomalous Container Tracking
@@ -38,8 +40,8 @@
       path: /microservices/topic-details/
     - title: Event Details
       path: /microservices/event-details/
-    - title: Orders UI
-      path: /microservices/orders-ui/
+    - title: User Interface
+      path: /microservices/user-interface/
     - title: Order Command
       path: /microservices/order-command/
     - title: Order Query
