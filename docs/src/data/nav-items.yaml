@@ -22,6 +22,8 @@
       path: /implementation/saga-patterns/
     - title: Dead Letter Queue
       path: /implementation/dead-letter-queue/
+    - title: Consume Transform Produce
+      path: /implementation/consume-transform-produce/
     - title: Order Cancellation
       path: /implementation/order-cancellation/
     - title: Anomalous Container Tracking
