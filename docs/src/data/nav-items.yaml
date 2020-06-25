@@ -40,8 +40,8 @@
       path: /microservices/topic-details/
     - title: Event Details
       path: /microservices/event-details/
-    - title: Orders UI
-      path: /microservices/orders-ui/
+    - title: User Interface
+      path: /microservices/user-interface/
     - title: Order Command
       path: /microservices/order-command/
     - title: Order Query
