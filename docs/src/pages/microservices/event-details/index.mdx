@@ -3,8 +3,6 @@ title: Event Details
 description: Details of the Reefer Container Shipment solution's event types.
 ---
 
-<InlineNotification kind="warning">UNDER CONSTRUCTION - Update links to referenced components</InlineNotification>
-
 <PageDescription>
 This section details all of the events being used in the Reefer Container Shipment reference implementation and the relationship of each event to the application's microservices.
 </PageDescription>
@@ -33,7 +31,7 @@ This section details all of the events being used in the Reefer Container Shipme
 
 ## Order Command Event
 
-Description: These events are produced as a result of user interaction through the [User Interface](#user-interface). These events will command the creation, update or cancellation of a shipping order. In EDA space, a command is an action demanded or triggered by an actor. These events are of important relevance in the [Consume-transform-produce loop](#consume-transform-produce-loop) pattern.
+Description: These events are produced as a result of user interaction through the [User Interface](/microservices/user-interface/). These events will command the creation, update or cancellation of a shipping order. In EDA space, a command is an action demanded or triggered by an actor. These events are of important relevance in the [Consume-transform-produce loop](/implementation/consume-transform-produce/) pattern.
 
 Topic these events are produced to/consumed from:
 
@@ -49,7 +47,7 @@ Components that react to these events:
 
 Patterns these events are relevant to:
 
-- [Consume-transform-produce loop](#consume-transform-produce-loop)
+- [Consume-transform-produce loop](/implementation/consume-transform-produce/)
 
 Data Schema: [Order Command Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/order/orderCommandEvent.avsc)
 
@@ -88,26 +86,26 @@ Example:
 
 ## Order Created Event
 
-Description: These events are produced as a result of a new shipping order being created. These events are emitted in order to inform any other component of the overall Reefer Container Shipment solution such as the [Containers](#containers) and [Voyage](#voyage) components, that are part of the [SAGA](#saga) pattern to find a container and a voyage to get allocated and assigned, or the [Order Query](#order-query) component, that will track the status of the orders and containers for the query part of the [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs)) pattern for the overall solution.
+Description: These events are produced as a result of a new shipping order being created. These events are emitted in order to inform any other component of the overall Reefer Container Shipment solution such as the [Containers](/microservices/container-management/) and [Voyage](/microservices/voyages/) components, that are part of the [Saga pattern](/implementation/saga-patterns/) pattern to find a container and a voyage to get allocated and assigned, or the [Order Query](/microservices/order-query/) component, that will track the status of the orders and containers for the query part of the Command Query Responsibility Segregation (CQRS) pattern for the overall solution.
 
 Topic these events are produced to/consumed from:
 
-- [Order Topic](#orders-topic)
+- [Order Topic](/microservices/topic-details/#orders-topic)
 
 Components that produce these events:
 
-- [Order Command](#order-command)
+- [Order Command](/microservices/order-command/)
 
 Components that react to these events:
 
-- [Order Query](#order-query)
-- [Containers](#containers)
-- [Voyage](#voyage)
+- [Order Query](/microservices/order-query/)
+- [Containers](/microservices/container-management/)
+- [Voyage](/microservices/voyages/)
 
 Patterns these events are relevant to:
 
-- [SAGA](#saga)
-- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+- [Saga pattern](/implementation/saga-patterns/)
+- Command Query Responsibility Segregation (CQRS)
 
 Data Schema: [Order Created Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/order/orderCreatedEvent.avsc)
 
@@ -146,26 +144,26 @@ Example:
 
 ## Order Updated Event
 
-Description: These events are produced as a result of a shipping order being updated. These events are emitted in order to inform any other component of the overall Reefer Container Shipment solution such as the [Containers](#containers) and [Voyage](#voyage) components, that are part of the [SAGA](#saga) pattern to find a container and a voyage to get allocated and assigned, or the [Order Query](#order-query) component, that will track the status of the orders and containers for the query part of the [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs)) pattern for the overall solution.
+Description: These events are produced as a result of a shipping order being updated. These events are emitted in order to inform any other component of the overall Reefer Container Shipment solution such as the [Containers](/microservices/container-management/) and [Voyage](/microservices/voyages/) components, that are part of the [Saga pattern](/implementation/saga-patterns/) pattern to find a container and a voyage to get allocated and assigned, or the [Order Query](/microservices/order-query/) component, that will track the status of the orders and containers for the query part of the Command Query Responsibility Segregation (CQRS) pattern for the overall solution.
 
 Topic these events are produced to/consumed from:
 
-- [Order Topic](#orders-topic)
+- [Order Topic](/microservices/topic-details/#orders-topic)
 
 Components that produce these events:
 
-- [Order Command](#order-command)
+- [Order Command](/microservices/order-command/)
 
 Components that react to these events:
 
-- [Order Query](#order-query)
-- [Containers](#containers)
-- [Voyage](#voyage)
+- [Order Query](/microservices/order-query/)
+- [Containers](/microservices/container-management/)
+- [Voyage](/microservices/voyages/)
 
 Patterns these events are relevant to:
 
-- [SAGA](#saga)
-- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+- [Saga pattern](/implementation/saga-patterns/)
+- Command Query Responsibility Segregation (CQRS)
 
 Data Schema: [Order Updated Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/order/orderUpdatedEvent.avsc)
 
@@ -208,21 +206,21 @@ Description: These events denote that a container, which is carrying fresh goods
 
 Topic these events are produced to/consumed from:
 
-- [Order Topic](#orders-topic)
+- [Order Topic](/microservices/topic-details/#orders-topic)
 
 Components that produce these events:
 
-- [Containers](#containers)
+- [Containers](/microservices/container-management/)
 
 Components that react to these events:
 
-- [Order Command](#order-command)
-- [Order Query](#order-query)
+- [Order Command](/microservices/order-command/)
+- [Order Query](/microservices/order-query/)
 
 Patterns these events are relevant to:
 
-- [Container Anomaly](#container-anomaly)
-- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+- [Anomalous Container Tracking](/implementation/container-anomaly/)
+- Command Query Responsibility Segregation (CQRS)
 
 Data Schema: [Order Spoilt Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/order/orderSpoiltEvent.avsc)
 
@@ -242,26 +240,26 @@ Example:
 
 ## Order Reject Event
 
-Description: These events are produced as a result of receiving a [Container Not Found Event](#container-not-found-event) or [Voyage Not Found Event](#voyage-not-found-event) as part of the [SAGA](#saga) pattern and will trigger a compensation process for the components in that [SAGA](#saga) pattern.
+Description: These events are produced as a result of receiving a [Container Not Found Event](/microservices/event-details/#container-not-found-event) or [Voyage Not Found Event](/microservices/event-details/#voyage-not-found-event) as part of the [Saga pattern](/implementation/saga-patterns/) pattern and will trigger a compensation process for the components in that [Saga pattern](/implementation/saga-patterns/) pattern.
 
 Topic these events are produced to/consumed from:
 
-- [Order Topic](#orders-topic)
+- [Order Topic](/microservices/topic-details/#orders-topic)
 
 Components that produce these events:
 
-- [Order Command](#order-command)
+- [Order Command](/microservices/order-command/)
 
 Components that react to these events:
 
-- [Containers](#containers)
-- [Voyages](#voyages)
-- [Order Query](#order-query)
+- [Containers](/microservices/container-management/)
+- [Voyages](/microservices/voyages/)
+- [Order Query](/microservices/order-query/)
 
 Patterns these events are relevant to:
 
-- [SAGA](#saga)
-- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+- [Saga pattern](/implementation/saga-patterns/)
+- Command Query Responsibility Segregation (CQRS)
 
 Data Schema: [Order Reject Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/order/orderRejectEvent.avsc)
 
@@ -301,27 +299,27 @@ Example:
 
 ## Order Cancel Event
 
-Description: These events are produced as a result of a user/administrator demanding/requesting the cancellation of a shipping order. These events will trigger the process described in the [Order Cancellation](#order-cancellation) pattern.
+Description: These events are produced as a result of a user/administrator demanding/requesting the cancellation of a shipping order. These events will trigger the process described in the [Order Cancellation](/implementation/order-cancellation/) pattern.
 
 Topic these events are produced to/consumed from:
 
-- [Order Topic](#orders-topic)
+- [Order Topic](/microservices/topic-details/#orders-topic)
 
 Components that produce these events:
 
-- [Order Command](#order-command)
+- [Order Command](/microservices/order-command/)
 
 Components that react to these events:
 
-- [Containers](#containers)
-- [Voyages](#voyages)
-- [Order Query](#order-query)
+- [Containers](/microservices/container-management/)
+- [Voyages](/microservices/voyages/)
+- [Order Query](/microservices/order-query/)
 
 Patterns these events are relevant to:
 
-- [SAGA](#saga)
-- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
-- [Order Cancellation](#order-cancellation)
+- [Saga pattern](/implementation/saga-patterns/)
+- Command Query Responsibility Segregation (CQRS)
+- [Order Cancellation](/implementation/order-cancellation/)
 
 Data Schema: [Order Cancel Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/order/orderCancelEvent.avsc)
 
@@ -363,15 +361,15 @@ Example:
 
 ## Error Event
 
-Description: These events are produced as a result of any error that occurs in the [Order Command](#order-command) component.
+Description: These events are produced as a result of any error that occurs in the [Order Command](/microservices/order-command/) component.
 
 Topic these events are produced to/consumed from:
 
-- [Errors Topic](#errors-topic)
+- [Errors Topic](/microservices/topic-details/#errors-topic)
 
 Components that produce these events:
 
-- [Order Command](#order-command)
+- [Order Command](/microservices/order-command/)
 
 Components that react to these events: None
 
@@ -418,24 +416,24 @@ Example:
 
 ## Container Added Event
 
-Description: These events would make the [Containers](#containers) component to create a new container and add it to the container inventory it manages.
+Description: These events would make the [Containers](/microservices/container-management/) component to create a new container and add it to the container inventory it manages.
 
 Topic these events are produced to/consumed from:
 
-- [Containers Topic](#containers-topic)
+- [Containers Topic](/microservices/topic-details/#containers-topic)
 
 Components that produce these events:
 
-- [Containers](#containers)
+- [Containers](/microservices/container-management/)
 
 Components that react to these events:
 
-- [Containers](#containers)
-- [Order Query](#order-query)
+- [Containers](/microservices/container-management/)
+- [Order Query](/microservices/order-query/)
 
 Patterns these events are relevant to:
 
-- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+- Command Query Responsibility Segregation (CQRS)
 
 Data Schema: [Container Added Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerAddedEvent.avsc)
 
@@ -464,19 +462,19 @@ Description: These messages denote that a container has been assigned to a shipp
 
 Topic these events are produced to/consumed from:
 
-- [Containers Topic](#containers-topic)
+- [Containers Topic](/microservices/topic-details/#containers-topic)
 
 Components that produce these events:
 
-- [Containers](#containers)
+- [Containers](/microservices/container-management/)
 
 Components that react to these events:
 
-- [Order Query](#order-query)
+- [Order Query](/microservices/order-query/)
 
 Patterns these events are relevant to:
 
-- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+- Command Query Responsibility Segregation (CQRS)
 
 Data Schema: [Container Assigned Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerAssignedEvent.avsc)
 
@@ -496,25 +494,25 @@ Example:
 
 ## Container Allocated Event
 
-Description: These events denote that a container, to carry the amount of fresh goods and from the source port specified in the shipping order, has been found and allocated to a shipping order, and viceversa, as part of the [SAGA](#saga) pattern for a long running transaction. These events are emitted by the [Containers](#containers) component.
+Description: These events denote that a container, to carry the amount of fresh goods and from the source port specified in the shipping order, has been found and allocated to a shipping order, and viceversa, as part of the [Saga pattern](/implementation/saga-patterns/) pattern for a long running transaction. These events are emitted by the [Containers](/microservices/container-management/) component.
 
 Topic these events are produced to/consumed from:
 
-- [Order Topic](#orders-topic)
+- [Order Topic](/microservices/topic-details/#orders-topic)
 
 Components that produce these events:
 
-- [Containers](#containers)
+- [Containers](/microservices/container-management/)
 
 Components that react to these events:
 
-- [Order Command](#order-command)
-- [Order Query](#order-query)
+- [Order Command](/microservices/order-command/)
+- [Order Query](/microservices/order-query/)
 
 Patterns these events are relevant to:
 
-- [SAGA](#saga)
-- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+- [Saga pattern](/implementation/saga-patterns/)
+- Command Query Responsibility Segregation (CQRS)
 
 Data Schema: [Container Allocated Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerAllocatedEvent.avsc)
 
@@ -538,19 +536,19 @@ Description: These events denote that a container to carry the amount of fresh g
 
 Topic these events are produced to/consumed from:
 
-- [Order Topic](#orders-topic)
+- [Order Topic](/microservices/topic-details/#orders-topic)
 
 Components that produce these events:
 
-- [Containers](#containers)
+- [Containers](/microservices/container-management/)
 
 Components that react to these events:
 
-- [Order Command](#order-command)
+- [Order Command](/microservices/order-command/)
 
 Patterns these events are relevant to:
 
-- [SAGA](#saga)
+- [Saga pattern](/implementation/saga-patterns/)
 
 Data Schema: [Container Not Found Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerNotFoundEvent.avsc)
 
@@ -570,23 +568,24 @@ Example:
 
 ## Container Telemetry Event
 
-Description: These events are produced by the [Simulator](#simulator) to simulate the container's IOT sensor telemetries that are then consumed by the [#Telemetry] component for the [Container Anomaly](#container-anomaly) pattern.
+Description: These events are produced by the [Telemetry Simulator](/microservices/telemetry-simulator/) to simulate the container's IOT sensor telemetries that are then consumed by the [Anomalous Container Scoring](/microservices/scoring-mp/) component for the [Container Anomaly](/implementation/container-anomaly/) pattern.
 
 Topic these events are produced to/consumed from:
 
-- [Containers Topic](#containers-topic)
+- [Containers Topic](/microservices/topic-details/#containers-topic)
 
 Components that produce these events:
 
-- [Simulator](#simulator)
+- [Telemetry Simulator](/microservices/telemetry-simulator/)
 
 Components that react to these events:
 
-- [Containers](#containers)
+- [Containers](/microservices/container-management/)
+- [Anomalous Container Scoring](/microservices/scoring-mp/)
 
 Patterns these events are relevant to:
 
-- [Container Anomaly](#container-anomaly)
+- [Anomalous Container Tracking](/implementation/container-anomaly/)
 
 Data Schema: [Container Telemetry Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerTelemetryEvent.avsc)
 
@@ -603,25 +602,25 @@ Example:
 
 ## Container Anomaly Event
 
-Description: These events denote an anomaly being predicted for a container based on the telemetry reported by the IOT sensors in the containers. These events will trigger the Business Process Manager (BPM) process whereby a field engineer will get the container assigned in order to repair it. These events are part of the [Container Anomaly](#container-anomaly), [Reactive Messaging](#reactive-messaging) and [Dead Letter Queue (DLQ)](#dead-letter-queue-(dlq)) patterns.
+Description: These events denote an anomaly being predicted for a container based on the telemetry reported by the IOT sensors in the containers. These events will trigger the Business Process Manager (BPM) process whereby a field engineer will get the container assigned in order to repair it. These events are part of the [Container Anomaly](/implementation/container-anomaly/)<!--,  [Reactive Messaging](#reactive-messaging)--> and [Dead Letter Queue (DLQ)](/implementation/dead-letter-queue/) patterns.
 
 Topic these events are produced to/consumed from:
 
-- [Containers Topic](#containers-topic)
+- [Containers Topic](/microservices/topic-details/#containers-topic)
 
 Components that produce these events:
 
-- [Telemetry](#telemetry)
+- [Anomalous Container Scoring](/microservices/scoring-mp/)
 
 Components that react to these events:
 
-- [Containers](#containers)
+- [Containers](/microservices/container-management/)
 
 Patterns these events are relevant to:
 
-- [Container Anomaly](#container-anomaly)
-- [Dead Letter Queue (DLQ)](#dead-letter-queue-(dlq))
-- [Reactive Messaging](#reactive-messaging)
+- [Anomalous Container Tracking](/implementation/container-anomaly/)
+- [Dead Letter Queue (DLQ)](/implementation/dead-letter-queue/)
+<!-- TBD - [Reactive Messaging](#reactive-messaging) -->
 
 Data Schema: [Container Anomaly Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerAnomalyEvent.avsc)
 
@@ -655,24 +654,24 @@ Example:
 
 ## Container Anomaly Retry Event
 
-Description: These events denote that the Business Process Manager (BPM) process was not called successfully and, as a result, another call attempt will be made. These events are part of the [Container Anomaly](#container-anomaly) and [Dead Letter Queue (DLQ)](#dead-letter-queue-(dlq)) patterns.
+Description: These events denote that the Business Process Manager (BPM) process was not called successfully and, as a result, another call attempt will be made. These events are part of the [Container Anomaly](/implementation/container-anomaly/) and [Dead Letter Queue (DLQ)](/implementation/dead-letter-queue/) patterns.
 
 Topic these events are produced to/consumed from:
 
-- [container Anomaly Retry Topic](#container-anomaly-retry-topic)
+- [Container Anomaly Retry Topic](/microservices/topic-details/#container-anomaly-retry-topic)
 
 Components that produce these events:
 
-- [Containers](#containers)
+- [Containers](/microservices/container-management/)
 
 Components that react to these events:
 
-- [Containers](#containers)
+- [Containers](/microservices/container-management/)
 
 Patterns these events are relevant to:
 
-- [Container Anomaly](#container-anomaly)
-- [Dead Letter Queue (DLQ)](#dead-letter-queue-(dlq))
+- [Anomalous Container Tracking](/implementation/container-anomaly/)
+- [Dead Letter Queue (DLQ)](/implementation/dead-letter-queue/)
 
 Data Schema: [Container Anomaly Retry Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerAnomalyRetryEvent.avsc)
 
@@ -707,22 +706,22 @@ Example:
 
 ## Container Anomaly Dead Event
 
-Description: These events denote that the Business Process Manager (BPM) process was not called successfully either because the [Containers](#containers) component could not successfully authenticate against the Business Process Manager (BPM) or the call to the process did not succeed despite the retries. These events will keep the original container anomaly message's data and a reason for this message to happen for further analysis by system administrators. These events are part of the [Container Anomaly](#container-anomaly) and [Dead Letter Queue (DLQ)](#dead-letter-queue-(dlq)) patterns.
+Description: These events denote that the Business Process Manager (BPM) process was not called successfully either because the [Containers](/microservices/container-management/) component could not successfully authenticate against the Business Process Manager (BPM) or the call to the process did not succeed despite the retries. These events will keep the original container anomaly message's data and a reason for this message to happen for further analysis by system administrators. These events are part of the [Container Anomaly](/implementation/container-anomaly/) and [Dead Letter Queue (DLQ)](/implementation/dead-letter-queue/) patterns.
 
 Topic these events are produced to/consumed from:
 
-- [Container Anomaly Dead Topic](#container-anomaly-dead-topic)
+- [Container Anomaly Dead Topic](/microservices/topic-details/#container-anomaly-dead-topic)
 
 Components that produce these events:
 
-- [Containers](#containers)
+- [Containers](/microservices/container-management/)
 
 Components that react to these events: None
 
 Patterns these events are relevant to:
 
-- [Container Anomaly](#container-anomaly)
-- [Dead Letter Queue (DLQ)](#dead-letter-queue-(dlq))
+- [Anomalous Container Tracking](/implementation/container-anomaly/)
+- [Dead Letter Queue (DLQ)](/implementation/dead-letter-queue/)
 
 Data Schema: [Container Anomaly Dead Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerAnomalyDeadEvent.avsc)
 
@@ -758,25 +757,25 @@ Example:
 
 ## Container On Maintenance Event
 
-Description: These events denote that a container has been set into maintenance mode as a result of a field engineer getting the container assigned to be repaired due to an anomaly being reported for such container. These events are a consequence of the [Container Anomaly](#container-anomaly) pattern.
+Description: These events denote that a container has been set into maintenance mode as a result of a field engineer getting the container assigned to be repaired due to an anomaly being reported for such container. These events are a consequence of the [Container Anomaly](/implementation/container-anomaly/) pattern.
 
 Topic these events are produced to/consumed from:
 
-- [Containers Topic](#containers-topic)
+- [Containers Topic](/microservices/topic-details/#containers-topic)
 
 Components that produce these events:
 
-- [Containers](#containers)
+- [Containers](/microservices/container-management/)
 
 Components that react to these events:
 
-- [Containers](#containers)
-- [Order Query](#order-query)
+- [Containers](/microservices/container-management/)
+- [Order Query](/microservices/order-query/)
 
 Patterns these events are relevant to:
 
-- [Container Anomaly](#container-anomaly) pattern.
-- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+- [Anomalous Container Tracking](/implementation/container-anomaly/)
+- Command Query Responsibility Segregation (CQRS)
 
 Data Schema: [Container On Maintenance Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerOnMaintenanceEvent.avsc)
 
@@ -801,25 +800,25 @@ Example:
 
 ## Container Off Maintenance Event
 
-Description: These events denote that a container has been set out of maintenance mode as a result of a field engineer having repaired the container as a result of a container anomaly reported. These events are a consequence of the [Container Anomaly](#container-anomaly) pattern.
+Description: These events denote that a container has been set out of maintenance mode as a result of a field engineer having repaired the container as a result of a container anomaly reported. These events are a consequence of the [Container Anomaly](/implementation/container-anomaly/) pattern.
 
 Topic these events are produced to/consumed from:
 
-- [Containers](#containers)
+- [Containers](/microservices/container-management/)
 
 Components that produce these events:
 
-- [Containers](#containers)
+- [Containers](/microservices/container-management/)
 
 Components that react to these events:
 
-- [Containers](#containers)
-- [Order Query](#order-query)
+- [Containers](/microservices/container-management/)
+- [Order Query](/microservices/order-query/)
 
 Patterns these events are relevant to:
 
-- [Container Anomaly](#container-anomaly) pattern.
-- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+- [Anomalous Container Tracking](/implementation/container-anomaly/)
+- Command Query Responsibility Segregation (CQRS)
 
 Data Schema: [Container Off Maintenance Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/container/containerOffMaintenanceEvent.avsc)
 
@@ -845,25 +844,25 @@ Example:
 
 ## Voyage Assigned Event
 
-Description: These events denote that a voyage has been found and assigned to a shipping order, and viceversa, as part of the [SAGA](#saga) pattern for a long running transaction which is triggered as a result of a new shipping order being created. A voyage is a unique carriage of fresh goods by a ship from a source port to a destination port on a specific date.
+Description: These events denote that a voyage has been found and assigned to a shipping order, and viceversa, as part of the [Saga pattern](/implementation/saga-patterns/) pattern for a long running transaction which is triggered as a result of a new shipping order being created. A voyage is a unique carriage of fresh goods by a ship from a source port to a destination port on a specific date.
 
 Topic these events are produced to/consumed from:
 
-- [Order Topic](#orders-topic)
+- [Order Topic](/microservices/topic-details/#orders-topic)
 
 Components that produce these events:
 
-- [Voyages](#voyages)
+- [Voyages](/microservices/voyages/)
 
 Components that react to these events:
 
-- [Order Command](#order-command)
-- [Order Query](#order-query)
+- [Order Command](/microservices/order-command/)
+- [Order Query](/microservices/order-query/)
 
 Patterns these events are relevant to:
 
-- [SAGA](#saga)
-- [Command Query Responsibility Segregation (CQRS)](#command-query-responsibility-segregation-(cqrs))
+- [Saga pattern](/implementation/saga-patterns/)
+- Command Query Responsibility Segregation (CQRS)
 
 Data Schema: [Voyage Assigned Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/voyage/voyageAssignedEvent.avsc)
 
@@ -887,19 +886,19 @@ Description: These events denote that a voyage for carrying the amount of fresh 
 
 Topic these events are produced to/consumed from:
 
-- [Order Topic](#orders-topic)
+- [Order Topic](/microservices/topic-details/#orders-topic)
 
 Components that produce these events:
 
-- [Voyages](#voyages)
+- [Voyages](/microservices/voyages/)
 
 Components that react to these events:
 
-- [Order Command](#order-command)
+- [Order Command](/microservices/order-command/)
 
 Patterns these events are relevant to:
 
-- [SAGA](#saga)
+- [Saga pattern](/implementation/saga-patterns/)
 
 Data Schema: [Voyage Not Found Event Schema](https://github.com/ibm-cloud-architecture/refarch-kc/data_schemas/ibm/eda/kc/voyage/voyageNotFoundEvent.avsc)
 
