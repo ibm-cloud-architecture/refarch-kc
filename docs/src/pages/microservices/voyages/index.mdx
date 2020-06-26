@@ -1,9 +1,7 @@
 ---
 title: Voyage Management
-description: TBD Deployment of application microservices
+description: In-depth description of the Voyages Management microservice component of the Reefer Container Shipment solution reference implementation.
 ---
-
-<InlineNotification kind="warning">UNDER CONSTRUCTION</InlineNotification>
 
 <PageDescription>
 This service keeps track of each scheduled, current or completed voyage of container carreer vessels, being loaded with containers at a source port, sailing to a destination port and having onboard containers unloaded there.
@@ -29,51 +27,86 @@ This service keeps track of each scheduled, current or completed voyage of conta
 
 **Kafka topics consumed from:**
 
-- [Order Topic](#orders-topic)
+- [Order Topic](/microservices/topic-details/#orders-topic)
 
 **Kafka topics produced to:**
 
-- [Order Topic](#orders-topic)
+- [Order Topic](/microservices/topic-details/#orders-topic)
 
 **Events reacted to:**
 
-- [Order Created Event](#order-created-event)
-- [Order Reject Event](#order-reject-event)
-- [Order Cancel Event](#order-cancel-event)
-- [Container Allocated Event](#container-allocated-event)
-- [Container Not Found Event](#container-not-found-event)
+- [Order Created Event](/microservices/event-details/#order-created-event)
+- [Order Reject Event](/microservices/event-details/#order-reject-event)
+- [Order Cancel Event](/microservices/event-details/#order-cancel-event)
+- [Container Allocated Event](/microservices/event-details/#container-allocated-event)
+- [Container Not Found Event](/microservices/event-details/#container-not-found-event)
 
 **Events produced:**
 
-- [Voyage Assigned Event](#voyage-assigned-event)
-- [Voyage Not Found Event](#voyage-not-found-event)
+- [Voyage Assigned Event](/microservices/event-details/#voyage-assigned-event)
+- [Voyage Not Found Event](/microservices/event-details/#voyage-not-found-event)
 
 **EDA Patterns implemented:**
 
-- [SAGA](#saga)
+- [Saga Patterns](/implementation/saga-patterns/)
 
 ## Build
 
-TBD Appsody
+This microservice is built using the [Appsody](https://appsody.dev/) development framework. The [Appsody CLI](https://appsody.dev/docs/installing/installing-appsody) is a required prerequisite for building the application locally.
+
+Appsody will build the application by pulling the contents of the Appsody Stack it is based on and then performing the local application build inside the containerized environment:
+
+`appsody build -t <yournamespace>/kcontainer-voayges-ms[:tag] [--push]`
+
+- You can optionally specify a container tag. If left blank, `latest` will be used.
+- You can optionally supply the `--push` flag to automatically push the built image to specified remote repository.
+
+Performing an Appsody build will update the `app-deploy.yaml` file in the same directory with current information for the application image, labels, and annotations fields.
 
 ## Run
 
-TBD Appsody
+### Deployment parameters
 
-## Integration Tests
+The following deployment parameters are defined in the `app-deploy.yaml` file:
 
-TBD Source from https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/docs/voyagesms.md
+| Name                                     | Required | Description                                                                                                            |
+|------------------------------------------|----------|------------------------------------------------------------------------------------------------------------------------|
+| KAFKA_BROKERS                            | YES      | Comma-separated list of Kafka brokers to connect to                                                                    |
+| KAFKA_APIKEY                             | NO       | API Key used to connect to SASL-secured Kafka brokers. This is required when connecting to IBM Event Streams clusters. |
+| CERTS_ENABLED                            | NO       | Required to be set to `true` when connecting to IBM Event Streams on the IBM Cloud Pak for Integration (CP4I).         |
+| CERTS_PATH                               | NO       | The local path to the required certifcate file when connecting to IBM Event Streams on CP4I. See [**Volume Mounts**](#volume-mounts) below.  |
+| ORDER_TOPIC                              | YES      | The topic name used for communication relating to the orders entity.                                                   |
 
-## Implementation Details
+### Volume Mounts
 
-TBD Source from https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/docs/index.md
+The Voyage Management microservice requires up to one file to be injected at runtime for proper operation. As noted in the `CERTS_PATH` parameter above, these files are SSL-based certificates which are required to verfiy the identity of the external service when calling it. These files are provided as `--docker-options "-v host-src:container-dest ..."` when running the microservice locally and as a Volume Mount when running the microservice on a Kubernetes cluster.
 
-### User stories
+The `CERTS_PATH` parameter is documented in the **Event Streams Certificates** section of the [Prerequisites](/microservices/prereqs/#ibm-event-streams-on-redhat-openshift-container-platform) page. The Appsody run command should include a parameter similar to `-v /Users/myuser/Downloads/es-cert.pem:/etc/ssl/certs/kcontainer/es-cert.pem` in its `--docker-options` string to run this microservice locally.
 
-This service keeps track of each of the container ships available for transporting containers. Each ship has a unique shipID. We limit the scope of a minimum viable product so the following user stories are implemented:
+**Example:** `appsody run --docker-options "-v /Users/myuser/Downloads/es-cert.pem:/etc/ssl/certs/kcontainer/es-cert.pem " ...`
 
-* [x] The information about each ship is kept in a json file for a fleet. Ships are uniquely identified by their name (as shipID).
-* [x] The capacity of a ship is represented by a matrix, number of rows x number of columns to make it simpler. Therefore the total number of container is rows*columns.
-* [x] Support GPS lat/log position reports, as ship position event, of the position of the ship a different point in time. This is modeled as csv file with one row of (lat,log) pair, a row representing a time stamp. (1h?)
-* [ ] Generate ship event when leaving source port and when entering destination port, and when docked.
-* [ ] Define query of what happen to a ship from a given time to retrace its past voyages.
+### Running the microservice locally
+
+When running the microservice locally, you must specify all the required [deployment parameters](#deployment-parameters) from above as environment variables via the `--docker-options` flag being passed in from the Appsody CLI command.
+
+**Example:** `appsody run --docker-options "-e KAFKA_BROKERS=remotebroker1:9092,remotebroker2:9092 -e ORDER_TOPIC=orders -v /Users/myuser/Downloads/es-cert.pem:/etc/ssl/certs/kcontainer/es-cert.jks" ...`
+
+For more details on running the microservice locally, consult the [Appsody run documentation](https://appsody.dev/docs/using-appsody/local-development#appsody-local-development) as well as the deployment information contained in the [`app-deploy.yaml`](https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/voyages-ms/app-deploy.yaml) file.
+
+### Running the microservice remotely
+
+The [Appsody Operator](https://appsody.dev/docs/reference/appsody-operator/) is a required prerequisite for deploying the microservice to a remote Kubernetes or OpenShift cluster.
+
+To deploy the microservice to a remote cluster:
+
+`appsody deploy <yournamespace>/kcontainer-voyages-ms[:tag] --no-build`
+
+- You can omit the `--no-build` flag to have Appsody perform a build before deploying the application.
+- _**Note:**_ Performing a build at deploy time requires specifying the absolute container reference path, as well as the `--push` flag.
+- The neccesary deployment parameter information will be read from the `app-deploy.yaml` file in the same directory.
+
+## Usage Details
+
+### REST APIs
+
+TBD REST APIs documenation...
