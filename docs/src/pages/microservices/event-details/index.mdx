@@ -27,6 +27,9 @@ This section details all of the events being used in the Reefer Container Shipme
   <AnchorLink>Container Off Maintenance Event</AnchorLink>
   <AnchorLink>Voyage Assigned Event</AnchorLink>
   <AnchorLink>Voyage Not Found Event</AnchorLink>
+  <AnchorLink>Container Metric Event</AnchorLink>
+  <AnchorLink>Ship Position Event</AnchorLink>
+  <AnchorLink>Bluewater Problem Event</AnchorLink>
 </AnchorLinks>
 
 ## Order Command Event
@@ -912,6 +915,124 @@ Example:
   },
   "timestamp": 1588010613958,
   "type": "VoyageNotFound",
+  "version": "1"
+}
+```
+
+## Container Metric Event
+
+Description: These events are produced by the [Fleet Management](/microservices/fleet/) microservice to simulate the container's IOT sensor telemetries that are then consumed by the [User Interface](/microservices/user-interface/) during simulation.
+
+Topic these events are produced to/consumed from:
+
+- [Bluewater Containers Topic](/microservices/topic-details/#bluewater-containers-topic)
+
+Components that produce these events:
+
+- [Fleet Management](/microservices/fleet/)
+
+Components that react to these events:
+
+- [User Interface](/microservices/user-interface/)
+
+Patterns these events are relevant to:
+
+- None
+
+Data Schema: **TODO** Define [`Container Metric Event`](https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/fleet-ms/src/main/java/ibm/labs/kc/event/model/ContainerMetric.java) schema
+
+Example:
+
+```json
+{
+  "payload": {
+    "shipID": "s01234",
+    "containerId": "c01234",
+    "tempC": "10",
+    "amp": "0",
+    "timestampMillis": 1588010613958
+  },
+  "timestamp": 1588010613958,
+  "type": "ContainerMetric",
+  "version": "1"
+}
+```
+
+## Ship Position Event
+
+Description: These events are produced by the [Fleet Management](/microservices/fleet/) microservice to simulate the ship's movement sensor telemetries that are then consumed by the [User Interface](/microservices/user-interface/) during simulation.
+
+Topic these events are produced to/consumed from:
+
+- [Bluewater Ships Topic](/microservices/topic-details/#bluewater-ships-topic)
+
+Components that produce these events:
+
+- [Fleet Management](/microservices/fleet/)
+
+Components that react to these events:
+
+- [User Interface](/microservices/user-interface/)
+
+Patterns these events are relevant to:
+
+- None
+
+Data Schema: **TODO** Define [`Ship Position Event`](https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/fleet-ms/src/main/java/ibm/labs/kc/event/model/ShipPosition.java) schema
+
+Example:
+
+```json
+{
+  "payload": {
+    "shipId": "s01234",
+    "latitude": "37.8044 N",
+    "longitdue": "122.2712 W",
+    "ts": 1588010613958
+  },
+  "timestamp": 1588010613958,
+  "type": "ShipPosition",
+  "version": "1"
+}
+```
+
+## Bluewater Problem Event
+
+Description: These events are produced by the [Fleet Management](/microservices/fleet/) microservice to alert issues during bluewater simulation runs and are consumed by the [User Interface](/microservices/user-interface/) microservice.
+
+Topic these events are produced to/consumed from:
+
+- [Bluewater Problems Topic](/microservices/topic-details/#bluewater-problems-topic)
+
+Components that produce these events:
+
+- [Fleet Management](/microservices/fleet/)
+
+Components that react to these events:
+
+- [User Interface](/microservices/user-interface/)
+
+Patterns these events are relevant to:
+
+- None
+
+Data Schema: **TODO** Define [`Bluewater Problem Event`](https://github.com/ibm-cloud-architecture/refarch-kc-ms/blob/master/fleet-ms/src/main/java/ibm/labs/kc/event/model/BluewaterProblem.java) schema
+
+Example:
+
+```json
+{
+  "payload": {
+    "shipId": "s01234",
+    "containerId": "c01234",
+    "status":"offline",
+    "issue": "co2sensor",
+    "latitude": "37.8044 N",
+    "longitdue": "122.2712 W",
+    "ts": 1588010613958
+  },
+  "timestamp": 1588010613958,
+  "type": "BluewaterProblem",
   "version": "1"
 }
 ```

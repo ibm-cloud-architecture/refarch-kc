@@ -17,13 +17,16 @@ This section details all of the topics being used in the Reefer Container Shipme
   <AnchorLink>Container Anomaly Retry Topic</AnchorLink>
   <AnchorLink>Container Anomaly Dead Topic</AnchorLink>
   <AnchorLink>Reefer Telemetry Topic</AnchorLink>
+  <AnchorLink>Bluewater Containers Topic</AnchorLink>
+  <AnchorLink>Bluewater Ships Topic</AnchorLink>
+  <AnchorLink>Bluewater Problems Topic</AnchorLink>
 </AnchorLinks>
 
 ### Order Commands Topic
 
 Topic name: **order-commands**
 
-Description: The purpose for this topic is not other than to store the commands requested from users for creating, updating and cancelling orders for the [Order Command](#order-command) component to process these later by implementing the [Consume-transform-produce Loop](#consume-transform-produce-loop) pattern.
+Description: The purpose for this topic is not other than to store the commands requested from users for creating, updating and cancelling orders for the [Order Command](/microservices/order-command/) component to process these later by implementing the [Consume-transform-produce Loop](#consume-transform-produce-loop) pattern.
 
 Components that produce events to this topic:
 
@@ -41,48 +44,48 @@ Messages that flow through:
 
 Topic name: **orders**
 
-Description: This is probably the busiest topic in the overall Reefer Container Shipment reference application. This topic would be the place for any event that has to do with shipping orders. From having events from the [Order Command](#order-command) to notify other components of the solution that orders have been created, updated, cancelled and rejected to having events from other components to notify that an order has got a container allocated, a voyage assigned or event that a container has spoilt the fresh goods it is carrying due to an anomaly in the container.
+Description: This is probably the busiest topic in the overall Reefer Container Shipment reference application. This topic would be the place for any event that has to do with shipping orders. From having events from the [Order Command](/microservices/order-command/) to notify other components of the solution that orders have been created, updated, cancelled and rejected to having events from other components to notify that an order has got a container allocated, a voyage assigned or event that a container has spoilt the fresh goods it is carrying due to an anomaly in the container.
 
 Components that produce events to this topic:
 
-- [Order Command](#order-command)
-- [Order Query](#order-query)
-- [Containers](#containers)
-- [Voyages](#voyages)
+- [Order Command](/microservices/order-command/)
+- [Order Query](/microservices/order-query/)
+- [Containers](/microservices/container-management/)
+- [Voyages](/microservices/voyages/)
 
 Components that consume events from this topic:
 
-- [Order Command](#order-command)
-- [Containers](#containers)
-- [Voyages](#voyages)
+- [Order Command](/microservices/order-command/)
+- [Containers](/microservices/container-management/)
+- [Voyages](/microservices/voyages/)
 
 Messages that flow through:
 
-- [Order Created Event](#order-created-event)
-- [Order Updated Event](#order-updated-event)
-- [Order Spoilt Event](#order-spoilt-event)
-- [Order Reject Event](#order-reject-event)
-- [Order Cancel Event](#order-cancel-event)
-- [Container Allocated Event](#container-allocated-event)
-- [Container Not Found Event](#container-not-found-event)
-- [Voyage Assigned Event](#voyage-assigned-event)
-- [Voyage Not Found Event](#voyage-not-found-event)
+- [Order Created Event](/microservices/event-details/#order-created-event)
+- [Order Updated Event](/microservices/event-details/#order-updated-event)
+- [Order Spoilt Event](/microservices/event-details/#order-spoilt-event)
+- [Order Reject Event](/microservices/event-details/#order-reject-event)
+- [Order Cancel Event](/microservices/event-details/#order-cancel-event)
+- [Container Allocated Event](/microservices/event-details/#container-allocated-event)
+- [Container Not Found Event](/microservices/event-details/#container-not-found-event)
+- [Voyage Assigned Event](/microservices/event-details/#voyage-assigned-event)
+- [Voyage Not Found Event](/microservices/event-details/#voyage-not-found-event)
 
 ### Errors Topic
 
 Topic name: **errors**
 
-Description: Messages in this topic will denote errors while processing user commands by the [Order Command](#order-command) component.
+Description: Messages in this topic will denote errors while processing user commands by the [Order Command](/microservices/order-command/) component.
 
 Components that produce events to this topic:
 
-- [Order Command](#order-command)
+- [Order Command](/microservices/order-command/)
 
 Components that consume events from this topic: None
 
 Messages that flow through:
 
-- [Error Event](#error-event)
+- [Error Event](/microservices/event-details/#error-event)
 
 ### Containers Topic
 
@@ -92,72 +95,129 @@ Description: This is the second busiest topic of the overall Reefer Container Sh
 
 Components that produce events to this topic:
 
-- [Containers](#containers)
-- [Telemetry](#telemetry)
+- [Containers](/microservices/container-management/)
+- [Telemetry Simulator](/microservices/telemetry-simulator/)
 
 Components that consume events from this topic:
 
-- [Containers](#containers)
-- [Order Query](#order-query)
+- [Containers](/microservices/container-management/)
+- [Order Query](/microservices/order-query/)
 
 Messages that flow through:
 
-- [Container Added Event](#container-added-event)
-- [Container Assigned Event](#container-assigned-event)
-- [Container Anomaly Event](#container-anomaly-event)
-- [Container On Maintenance Event](#container-on-maintenance-event)
-- [Container Off Maintenance Event](#container-off-maintenance-event)
+- [Container Added Event](/microservices/event-details/#container-added-event)
+- [Container Assigned Event](/microservices/event-details/#container-assigned-event)
+- [Container Anomaly Event](/microservices/event-details/#container-anomaly-event)
+- [Container On Maintenance Event](/microservices/event-details/#container-on-maintenance-event)
+- [Container Off Maintenance Event](/microservices/event-details/#container-off-maintenance-event)
 
 ### Container Anomaly Retry Topic
 
 Topic name: **container-anomaly-retry**
 
-Description: This topic will only contain [Container Anomaly Retry Events](#container-anomaly-retry-event) as part of the [Dead Letter Queue (DLQ)](#dead-letter-queue-(dlq)) pattern implementation.
+Description: This topic will only contain [Container Anomaly Retry Events](/microservices/event-details/#container-anomaly-retry-event) as part of the [Dead Letter Queue (DLQ)](#dead-letter-queue-(dlq) pattern implementation.
 
 Components that produce events to this topic:
 
-- [Containers](#containers)
+- [Containers](/microservices/container-management/)
 
 Components that consume events from this topic:
 
-- [Containers](#containers)
+- [Containers](/microservices/container-management/)
 
 Messages that flow through:
 
-- [Container Anomaly Retry Event](#container-anomaly-retry-event)
+- [Container Anomaly Retry Event](/microservices/event-details/#container-anomaly-retry-event)
 
 ### Container Anomaly Dead Topic
 
 Topic name: **container-anomaly-dead**
 
-Description: This topic will only contain [Container Anomaly Dead Events](#container-anomaly-dead-event) as part of the [Dead Letter Queue (DLQ)](#dead-letter-queue-(dlq)) pattern implementation.
+Description: This topic will only contain [Container Anomaly Dead Events](/microservices/event-details/#container-anomaly-dead-event) as part of the [Dead Letter Queue (DLQ)](#dead-letter-queue-(dlq) pattern implementation.
 
 Components that produce events to this topic:
 
-- [Containers](#containers)
+- [Containers](/microservices/container-management/)
 
 Components that consume events from this topic:
 
-- [Containers](#containers)
+- [Containers](/microservices/container-management/)
 
 Messages that flow through:
 
-- [Container Anomaly Dead Event](#container-anomaly-dead-event)
+- [Container Anomaly Dead Event](/microservices/event-details/#container-anomaly-dead-event)
 
 ### Reefer Telemetry Topic
 
 Topic name: **reefer-telemetry**
 
-Description: This topic will only hold [Container Telemetry Events](#container-telemetry-event) as part of the [Container Anomaly](#container-anomaly) and [Reactive Messaging](#reactive-messaging) patterns. These events are simply the sensor telemetries reported back from the containers.
+Description: This topic will only hold [Container Telemetry Events](/microservices/event-details/#container-telemetry-event) as part of the [Anomalous Container Tracking](/implementation/container-anomaly/) and Reactive Messaging patterns. These events are simply the sensor telemetries reported back from the containers.
 
 Components that produce events to this topic:
 
-- [Simulator](#simulator)
+- [Telemetry Simulator](/microservices/telemetry-simulator/)
 
 Components that consume events from this topic:
 
-- [Telemetry](#telemetry)
+- [Anomalous Container Scoring](/microservices/scoring-mp/)
 
 Messages that flow through:
 
-- [Container Telemetry Event](#container-telemetry-event)
+- [Container Telemetry Event](/microservices/event-details/#container-telemetry-event)
+
+### Bluewater Containers Topic
+
+Topic name: **bluewater-container**
+
+Description: This topic will only hold [Container Metric Events](/microservices/event-details/#container-metric-event), with coordination between the [Fleet Management](/microservices/fleet/) and [User Interface](/microservices/user-interface/) microservices during simulations.
+
+Components that produce events to this topic:
+
+- [Fleet Management](/microservices/fleet/)
+
+Components that consume events from this topic:
+
+- [Fleet Management](/microservices/fleet/)
+- [User Interface](/microservices/user-interface/)
+
+Messages that flow through:
+
+- [Container Metric Events](/microservices/event-details/#container-metric-event)
+
+### Bluewater Ships Topic
+
+Topic name: **bluewater-ship**
+
+Description: This topic will only hold [Ship Position Events](/microservices/event-details/#ship-position-event), with coordination between the [Fleet Management](/microservices/fleet/) and [User Interface](/microservices/user-interface/) microservices during simulations.
+
+Components that produce events to this topic:
+
+- [Fleet Management](/microservices/fleet/)
+
+Components that consume events from this topic:
+
+- [Fleet Management](/microservices/fleet/)
+- [User Interface](/microservices/user-interface/)
+
+Messages that flow through:
+
+- [Ship Position Events](/microservices/event-details/#ship-position-event)
+
+### Bluewater Problems Topic
+
+Topic name: **bluewater-problem**
+
+Description: This topic will only hold [Bluewater Problem Events](/microservices/event-details/#bluewater-problem-event) while processing simulations on the "bluewater ship" entities, with coordination between the [Fleet Management](/microservices/fleet/) and [User Interface](/microservices/user-interface/) microservices during simulations.
+
+Components that produce events to this topic:
+
+- [Fleet Management](/microservices/fleet/)
+
+Components that consume events from this topic:
+
+- [Fleet Management](/microservices/fleet/)
+- [User Interface](/microservices/user-interface/)
+
+Messages that flow through:
+
+- [Bluewater Problem Events](/microservices/event-details/#bluewater-problem-event)
