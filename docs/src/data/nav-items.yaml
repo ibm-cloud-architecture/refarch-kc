@@ -72,3 +72,6 @@
       path: /integration-tests/dead-letter-queue/
     - title: Container Anomaly
       path: /integration-tests/container-anomaly/
+- title: Contribute to this Site
+  pages:
+    - path: /contribute/
