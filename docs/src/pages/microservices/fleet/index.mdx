@@ -1,9 +1,9 @@
 ---
 title: Shipping Fleet Management
-description: TBD Deployment of application microservices
+description: In-depth description of the Fleet Management microservice component of the Reefer Container Shipment solution reference implementation.
 ---
 
-<InlineNotification kind="warning">UNDER CONSTRUCTION - Needs Topic & Event Specifics</InlineNotification>
+<InlineNotification kind="warning">UNDER CONSTRUCTION - TBD Needs Topic & Event Specifics</InlineNotification>
 
 <PageDescription>
 This microservice is responsible to support simulation of fleet of container carrier vessels. It used for demonstration purpose, but it is still using an event-driven microservice implementation approach. It supports the event, actors, and commands discovered during the event storming workshop and illustrated by the following figure for the "ship actor".
@@ -60,9 +60,9 @@ The following deployment parameters are defined in the `app-deploy.yaml` file:
 | TRUSTSTORE_ENABLED                       | NO       | Required to be set to `true` when connecting to IBM Event Streams on the IBM Cloud Pak for Integration (CP4I).         |
 | TRUSTSTORE_PATH                          | NO       | The local path to the required truststore file when connecting to IBM Event Streams on CP4I. See [**Volume Mounts**](#volume-mounts) below.  |
 | TRUSTSTORE_PWD                           | NO       | The password for the truststore file used for IBM Event Streams server verification.                                   |
-| KAFKA_SHIP_TOPIC_NAME                    | YES      | The topic name used for communication relating to the ship  entity.                                                                                                                       |
-| KAFKA_CONTAINER_TOPIC_NAME               | YES      | The topic name used for communication relating to the containers entity.                                                                                                                       |
-| KAFKA_BW_PROBLEM_TOPIC_NAME              | YES      | The topic name used for communication relating to the bluewater problem  actions.                                                                                                                       |
+| KAFKA_SHIP_TOPIC_NAME                    | YES      | The topic name used for communication relating to the ship  entity.                                                    |
+| KAFKA_CONTAINER_TOPIC_NAME               | YES      | The topic name used for communication relating to the containers entity.                                               |
+| KAFKA_BW_PROBLEM_TOPIC_NAME              | YES      | The topic name used for communication relating to the bluewater problems domain.                                      |
 
 ### Volume Mounts
 

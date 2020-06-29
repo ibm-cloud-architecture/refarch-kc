@@ -1,11 +1,9 @@
 ---
-title: SAGA Pattern
-description: SAGA Pattern
+title: Saga Pattern
+description: TBD Saga Pattern Description
 ---
 
-<InlineNotification kind="warning">
-UNDER CONSTRUCTION
-</InlineNotification>
+<InlineNotification kind="warning">UNDER CONSTRUCTION</InlineNotification>
 
 The SAGA pattern helps to support a **long running transaction** that can be broken down into a collection of sub transactions that can be interleaved any way with other transactions. With microservices, each transaction updates data within a single service, each subsequent steps may be triggered by previous completion. The SAGA pattern supports two types of implementation: Choreography and Orchestration. However, the SAGA pattern comes withe the tradeoff that if any of the sub transactions fails, a compensation process must be implemented and executed.
 
