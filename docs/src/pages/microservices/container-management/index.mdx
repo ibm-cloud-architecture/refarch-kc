@@ -93,20 +93,20 @@ The following deployment parameters are defined in the `app-deploy.yaml` file:
 | TRUSTSTORE_ENABLED                       | NO       | Required to be set to `true` when connecting to IBM Event Streams on the IBM Cloud Pak for Integration (CP4I).         |
 | TRUSTSTORE_PATH                          | NO       | The local path to the required truststore file when connecting to IBM Event Streams on CP4I. See [**Volume Mounts**](#volume-mounts) below.  |
 | TRUSTSTORE_PWD                           | NO       | The password for the truststore file used for IBM Event Streams server verification.                                   |
-| KCSOLUTION_CONTAINERS_TOPIC              | YES      | The topic name used for communication relating to the containers entity.                                                                                                                       |
-| KCSOLUTION_ORDERS_TOPIC                  | YES      | The topic name used for communication relating to the orders entity.                                                                                                                       |
-| KCSOLUTION_CONTAINER_ANOMALY_RETRY_TOPIC | YES      | The topic name used for communication relating to the container anomaly retry actions.                                                                                                                       |
-| KCSOLUTION_CONTAINER_ANOMALY_DEAD_TOPIC  | YES      | The topic name used for communication relating to the container anomaly dead letter actions.                                                                                                                      |
+| KCSOLUTION_CONTAINERS_TOPIC              | YES      | The topic name used for communication relating to the containers entity.                                               |
+| KCSOLUTION_ORDERS_TOPIC                  | YES      | The topic name used for communication relating to the orders entity.                                                   |
+| KCSOLUTION_CONTAINER_ANOMALY_RETRY_TOPIC | YES      | The topic name used for communication relating to the container anomaly retry actions.                                 |
+| KCSOLUTION_CONTAINER_ANOMALY_DEAD_TOPIC  | YES      | The topic name used for communication relating to the container anomaly dead letter actions.                           |
 | POSTGRESQL_URL                           | YES      | The URL of the PostgreSQL database instance in the form of `jdbc:postgresql://<hostname>:<port>/<database-name>?sslmode=verify-full&sslfactory=org.postgresql.ssl.NonValidatingFactory`.   |
-| POSTGRESQL_USER                          | YES      | The username of the PostgreSQL database instance.                                                                                                                       |
-| POSTGRESQL_PWD                           | YES      | The password of the PostgreSQL database instance.                                                                                                                       |
+| POSTGRESQL_USER                          | YES      | The username of the PostgreSQL database instance.                                                                      |
+| POSTGRESQL_PWD                           | YES      | The password of the PostgreSQL database instance.                                                                      |
 | POSTGRESQL_CA_PEM                        | NO       | Required when connecting to PostgreSQL instances that require SSL-based server verification, such as [Databases for PostgreSQL](https://cloud.ibm.com/catalog/services/databases-for-postgresql) on IBM Cloud. See [**Volume Mounts**](#volume-mounts) below.  |
-| ANOMALY_THRESHOLD                        | NO       | TBD                                                               |
-| BPM_ANOMALY                              | NO       | TBD                                                               |
-| BPM_ANOMALY_LOGIN                        | NO       | TBD                                                               |
-| BPM_EXPIRATION                           | NO       | TBD                                                               |
-| BPM_ANOMALY_USER                         | NO       | TBD                                                               |
-| BPM_ANOMALY_PASSWORD                     | NO       | TBD                                                               |
+| ANOMALY_THRESHOLD                        | NO       | The required number of container anomaly events a specific container must accrue before requiring maintenance.         |
+| BPM_ANOMALY                              | NO       | Business process URL for the IBM BPM external system, which hosts the Container Anomaly business process.              |
+| BPM_ANOMALY_LOGIN                        | NO       | Login URL for the IBM BPM external system, which hosts the Container Anomaly business process.                         |
+| BPM_EXPIRATION                           | NO       | Requested lifetime of the login token of the IBM BPM external system.                                                  |
+| BPM_ANOMALY_USER                         | NO       | Username for the IBM BPM external system, which hosts the Container Anomaly business process.                          |
+| BPM_ANOMALY_PASSWORD                     | NO       | Password for the IBM BPM external system, which hosts the Container Anomaly business process.                          |
 
 ### Volume Mounts
 
@@ -142,4 +142,4 @@ To deploy the microservice to a remote cluster:
 
 ### REST APIs
 
-TBD REST APIs documenation...
+<InlineNotification kind="info"><strong>TODO</strong> REST APIs documentation via Swagger</InlineNotification>

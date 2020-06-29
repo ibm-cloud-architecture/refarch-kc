@@ -92,7 +92,7 @@ The Order Query microservice requires up to one file to be injected at runtime f
 
 The `TRUSTSTORE_PATH` parameter is documented in the **Event Streams Certificates** section of the [Prerequisites](/microservices/prereqs/#ibm-event-streams-on-redhat-openshift-container-platform) page. The Appsody run command should include a parameter similar to `-v /Users/myuser/Downloads/es-cert.jks:/config/resources/security/es-ssl/es-cert.jks` in its `--docker-options` string to run this microservice locally.
 
-**Example:** `appsody run --docker-options "-v /Users/myuser/Downloads/es-cert.jks:/config/resources/security/es-ssl/es-cert.jks " ...`
+**Example:** `appsody run --docker-options "-v /Users/myuser/Downloads/es-cert.jks:/config/resources/security/es-ssl/es-cert.jks" ...`
 
 ### Running the microservice locally
 
@@ -118,4 +118,4 @@ To deploy the microservice to a remote cluster:
 
 ### REST APIs
 
-TBD REST APIs docuementation
+<InlineNotification kind="info"><strong>TODO</strong> REST APIs documentation via Swagger</InlineNotification>

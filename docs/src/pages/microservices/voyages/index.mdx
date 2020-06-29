@@ -11,8 +11,7 @@ This service keeps track of each scheduled, current or completed voyage of conta
   <AnchorLink>Overview</AnchorLink>
   <AnchorLink>Build</AnchorLink>
   <AnchorLink>Run</AnchorLink>
-  <AnchorLink>Integration Tests</AnchorLink>
-  <AnchorLink>Implementation Details</AnchorLink>
+  <AnchorLink>Usage Details</AnchorLink>
 </AnchorLinks>
 
 ## Overview
@@ -56,7 +55,7 @@ This microservice is built using the [Appsody](https://appsody.dev/) development
 
 Appsody will build the application by pulling the contents of the Appsody Stack it is based on and then performing the local application build inside the containerized environment:
 
-`appsody build -t <yournamespace>/kcontainer-voayges-ms[:tag] [--push]`
+`appsody build -t <yournamespace>/kcontainer-voyages-ms[:tag] [--push]`
 
 - You can optionally specify a container tag. If left blank, `latest` will be used.
 - You can optionally supply the `--push` flag to automatically push the built image to specified remote repository.
@@ -109,4 +108,4 @@ To deploy the microservice to a remote cluster:
 
 ### REST APIs
 
-TBD REST APIs documenation...
+<InlineNotification kind="info"><strong>TODO</strong> REST APIs documentation via Swagger</InlineNotification>

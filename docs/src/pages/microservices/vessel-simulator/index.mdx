@@ -1,25 +1,24 @@
 ---
 title: Vessel Simulator
-description: TBD Deployment of application microservices
+description: In-depth description of the vessel simulation microservice component of the Reefer Container Shipment solution reference implementation.
 ---
 
-<InlineNotification kind="warning">UNDER CONSTRUCTION</InlineNotification>
+<InlineNotification kind="warning"><strong>TODO</strong> UNDER CONSTRUCTION</InlineNotification>
 
 <PageDescription>
-This a simple vessel source events generatator taking into account the route from two harbors, the vessel characteristic and the geodetic curve shortest path.
+This a simple vessel source events generator taking into account the route from two harbors, the vessel characteristic and the geodetic curve shortest path.
 </PageDescription>
 
 <AnchorLinks>
   <AnchorLink>Overview</AnchorLink>
   <AnchorLink>Build</AnchorLink>
   <AnchorLink>Run</AnchorLink>
-  <AnchorLink>Integration Tests</AnchorLink>
-  <AnchorLink>Implementation Details</AnchorLink>
+  <AnchorLink>Usage Details</AnchorLink>
 </AnchorLinks>
 
 ## Overview
 
-TBD Sourced from https://github.com/ibm-cloud-architecture/refarch-kc-vessel-simulator
+<InlineNotification kind="info"><strong>TODO</strong> source vessel-simulator overview details from https://github.com/ibm-cloud-architecture/refarch-kc-vessel-simulator</InlineNotification>
 
 **Description:** This microservice has been implemented using the Appsody Microprofile 3.2 OpenLiberty stack.
 
@@ -37,16 +36,54 @@ TBD Sourced from https://github.com/ibm-cloud-architecture/refarch-kc-vessel-sim
 
 ## Build
 
-TBD Appsody
+This microservice is built using the [Appsody](https://appsody.dev/) development framework. The [Appsody CLI](https://appsody.dev/docs/installing/installing-appsody) is a required prerequisite for building the application locally.
+
+Appsody will build the application by pulling the contents of the Appsody Stack it is based on and then performing the local application build inside the containerized environment:
+
+`appsody build -t <yournamespace>/kcontainer-vessel-simulator[:tag] [--push]`
+
+- You can optionally specify a container tag. If left blank, `latest` will be used.
+- You can optionally supply the `--push` flag to automatically push the built image to specified remote repository.
+
+Performing an Appsody build will update the `app-deploy.yaml` file in the same directory with current information for the application image, labels, and annotations fields.
 
 ## Run
 
-TBD Appsody
+### Deployment parameters
 
-## Integration Tests
+<InlineNotification kind="info"><strong>TODO</strong> source updated deployment parameters</InlineNotification>
 
-TBD
+The following deployment parameters are defined in the `app-deploy.yaml` file:
 
-## Implementation Details
+| Name                                     | Required | Description                                                                                                            |
+|------------------------------------------|----------|------------------------------------------------------------------------------------------------------------------------|
+| KAFKA_BROKERS                            | YES      | Comma-separated list of Kafka brokers to connect to                                                                    |
+| KAFKA_APIKEY                             | NO       | API Key used to connect to SASL-secured Kafka brokers. This is required when connecting to IBM Event Streams clusters. |
+| TRUSTSTORE_PATH                          | NO       | The local path to the required truststore file when connecting to IBM Event Streams on CP4I. See [**Volume Mounts**](#volume-mounts) below.  |
+| CONTAINER_TOPIC                          | YES      | The topic name used for communication relating to the containers entity.                                                   |
 
-TBD
+### Running the microservice locally
+
+The Vessel Simulator microservice requires up to one file to be injected at runtime for proper operation. As noted in the `TRUSTSTORE_PATH` parameter above, these files are SSL-based certificates which are required to verfiy the identity of the external service when calling it. These files are provided as `--docker-options "-v host-src:container-dest ..."` when running the microservice locally and as a Volume Mount when running the microservice on a Kubernetes cluster.
+
+The `TRUSTSTORE_PATH` parameter is documented in the **Event Streams Certificates** section of the [Prerequisites](/microservices/prereqs/#ibm-event-streams-on-redhat-openshift-container-platform) page. The Appsody run command should include a parameter similar to `-v /Users/myuser/Downloads/es-cert.pem:/config/resources/security/es-ssl/es-cert.jks` in its `--docker-options` string to run this microservice locally.
+
+**Example:** `appsody run --docker-options "-v /Users/myuser/Downloads/es-cert.pem:/config/resources/security/es-ssl/es-cert.jks" ...`
+
+### Running the microservice remotely
+
+The [Appsody Operator](https://appsody.dev/docs/reference/appsody-operator/) is a required prerequisite for deploying the microservice to a remote Kubernetes or OpenShift cluster.
+
+To deploy the microservice to a remote cluster:
+
+`appsody deploy <yournamespace>/kcontainer-vessel-simulator[:tag] --no-build`
+
+- You can omit the `--no-build` flag to have Appsody perform a build before deploying the application.
+- _**Note:**_ Performing a build at deploy time requires specifying the absolute container reference path, as well as the `--push` flag.
+- The neccesary deployment parameter information will be read from the `app-deploy.yaml` file in the same directory.
+
+## Usage Details
+
+### REST APIs
+
+<InlineNotification kind="info"><strong>TODO</strong> REST APIs documentation via Swagger</InlineNotification>

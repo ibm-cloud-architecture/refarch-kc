@@ -3,8 +3,6 @@ title: Shipping Fleet Management
 description: In-depth description of the Fleet Management microservice component of the Reefer Container Shipment solution reference implementation.
 ---
 
-<InlineNotification kind="warning">UNDER CONSTRUCTION - TBD Needs Topic & Event Specifics</InlineNotification>
-
 <PageDescription>
 This microservice is responsible to support simulation of fleet of container carrier vessels. It used for demonstration purpose, but it is still using an event-driven microservice implementation approach. It supports the event, actors, and commands discovered during the event storming workshop and illustrated by the following figure for the "ship actor".
 </PageDescription>
@@ -24,15 +22,32 @@ This microservice is responsible to support simulation of fleet of container car
 
 **Folder:** [fleet-ms](https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/fleet-ms)
 
-**Kafka topics consumed from:** TBD
+**Kafka topics consumed from:**
 
-**Kafka topics produced to:** TBD
+- [Bluewater Container](/microservices/topic-details/#bluewater-container-topic)
+- [Bluewater Ship](/microservices/topic-details/#bluewater-ship-topic)
+- [Bluewater Problem](/microservices/topic-details/#bluewater-problem-topic)
 
-**Events reacted to:** TBD
+**Kafka topics produced to:**
 
-**Events produced:** TBD
+- [Bluewater Container](/microservices/topic-details/#bluewater-container-topic)
+- [Bluewater Ship](/microservices/topic-details/#bluewater-ship-topic)
+- [Bluewater Problem](/microservices/topic-details/#bluewater-problem-topic)
 
-**EDA Patterns implemented:** TBD
+**Events reacted to:**
+
+- [Container Metric Event](/microservices/event-details/#container-metric-event)
+- [Ship Position Event](/microservices/event-details/#ship-position-event)
+- [Bluewater Problem Event](/microservices/event-details/#bluewater-problem-event)
+
+**Events produced:**
+
+- [Container Metric Event](/microservices/event-details/#container-metric-event)
+- [Ship Position Event](/microservices/event-details/#ship-position-event)
+
+**EDA Patterns implemented:**
+
+- [Consume-transform-produce Loop](/implementation/consume-transform-produce/)
 
 ## Build
 
@@ -96,7 +111,7 @@ To deploy the microservice to a remote cluster:
 
 ### REST APIs
 
-TBD REST APIs documenation...
+<InlineNotification kind="info"><strong>TODO</strong> REST APIs documentation via Swagger</InlineNotification>
 
 <!--
 

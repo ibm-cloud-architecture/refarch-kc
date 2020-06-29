@@ -51,7 +51,6 @@ public void onMessage(ConsumerRecord<Integer, String> message) {
         try {
             Thread.sleep(time_to_wait * 1000);
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         bpmAgent.callBPM(caer,false);
