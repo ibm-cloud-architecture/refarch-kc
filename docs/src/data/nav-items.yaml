@@ -14,7 +14,7 @@
   pages:
     - title: Event Storming Analysis
       path: /implementation/event-storming-analysis/
-    - title: Domain-Driven Design analysis
+    - title: Domain-Driven Design
       path: /implementation/domain-driven-design/
     - title: Schema Registry and Avro
       path: /implementation/schema-registry/
@@ -72,3 +72,6 @@
       path: /integration-tests/dead-letter-queue/
     - title: Container Anomaly
       path: /integration-tests/container-anomaly/
+- title: Contribute to this Site
+  pages:
+    - path: /contribute/
