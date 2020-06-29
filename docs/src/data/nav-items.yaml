@@ -14,7 +14,7 @@
   pages:
     - title: Event Storming Analysis
       path: /implementation/event-storming-analysis/
-    - title: Domain-Driven Design analysis
+    - title: Domain-Driven Design
       path: /implementation/domain-driven-design/
     - title: Schema Registry and Avro
       path: /implementation/schema-registry/
