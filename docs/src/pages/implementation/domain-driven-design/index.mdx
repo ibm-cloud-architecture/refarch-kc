@@ -1,28 +1,21 @@
 ---
-title: Design considerations
-description: Design considerations
+title: Domain-Driven Design
+description: Domain-Driven Design considerations, experiences, and implementation details
 ---
 
-<InlineNotification kind="warning">
-UNDER CONSTRUCTION
-</InlineNotification>
+# Applying the DDD and event design approach to Reefer Container Shipment
 
-This section describes how to apply the domain driven design principles with the event driven approach to design the reefer container shipment solution.
-
-For methodology discussion we recommend that you review our summary on combining DDD with event storming end event driven microservice design, in [this note.](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/ddd/)
+<PageDescription>
+This section describes how to apply the domain-driven design principles with the event driven approach to design the reefer container shipment solution.
+For a high-level methodology discussion, we recommend that you review our summary on combining Domain-Driven Design with Event Storming and event-driven microservice design in our <a href="https://ibm-cloud-architecture.github.io/refarch-eda/methodology/domain-driven-design/" target="_blank">Event-Driven Reference Architecture</a> gitbook.
+</PageDescription>
 
 <InlineNotification kind="info">
-        Since, we are delivering a demonstration application there will be some simulator / scaffolding / testing services mixed in with the required business processing.
-        This is a common occurrence in agile development and it may be helpful to show how decision to scope and simplify a particular build and test step interacts with decisions relating strictly to microservices design.
+Since, we are delivering a demonstration application, there will be some simulator and testing services mixed in with the required business processing.
+This is a common occurrence in agile development and it is helpful to show decisions to scope and simplify a particular build and test step interacts with decisions relating strictly to microservices design.
 </InlineNotification>
 
-
-## Applying the DDD and event design approach to Reefer container shipment
-
-In this section we discuss how the generic steps introduced in previous section can be applied for the Container shipping example:
-
-
-### Context and scope for demonstration build
+## Context and scope for demonstration build
 
 An initial scoping decision is that the demonstration will address shipment orders and shipment progress initiated by the "manufacturer" of the fresh goods with the shipment company. In the context of the example there is also discussion of manufacturer and retailer reaching some agreement on the goods to be delivered but this is not part of the demonstrated capabilities.
 
@@ -35,7 +28,9 @@ The Event Storming analysis of the shipment problem was end-to-end and involved 
 * It will provide a query for a user to track an order and the current location and state of the associated shipment
 * It will include a real time analytic solution to assess problems happening within containers
 
-### 1 - Domain and subdomains
+---
+
+## 1 - Domain and subdomains
 
 During the event storming analysis, we define the domain to be the Reefer container shipping domain. It groups a set of subdomains like orders, invoice, reefer container, shipping, voyage, inventory and external systems as the vessels monitoring, CRM, invoice, and weather data:
 
@@ -47,12 +42,16 @@ The order subdomain interacts with the contract subdomain via the acceptance of 
 
 When the contract is accepted, the order needs to be shipped, but to do so the shipping subdomain needs to interact with the voyage subsystem to get the available vessel itineraries. Voyage is an entity grouping the information about the origin harbor close to the pickup address, to a destination harbor the closest to the shipping address. Finally, the shipping subdomain needs to interact with the container inventory service to get matching Reefer containers, present at the source harbor.
 
-### 2 -  Applications
+---
+
+## 2 -  Applications
 
 To start addressing clear separation of concerns and assign work to different development team, we can identify some user centric applications:
 
 * Booking application: customers enters the shipping order information, and review delivery tracking.
 * Tracking query application: The Shipping clark uses the application to address some complex queries related to reefer, orders, and voyages statistics.
+
+---
 
 ## 3 - Ubiquitous language
 
@@ -117,7 +116,6 @@ Each of those aggregates has its own repository. But in fact we can also foresee
 * Vessel movement
 * Voyage
 
-
 ### 3.4 - Events
 
 The event backbone will be configured with a topic for each of the above aggregated. We expect to see multiple event types on each topic, but subscriptions and sequencing of events will be within these high level topics.
@@ -142,15 +140,17 @@ Additional APIs will be need:
 * To initiate the overall demonstration
 * To manage and view specific simulation component - container simulation and analytics and ship simulation and analytics.
 
-### 4- Modules
+---
+
+## 4- Modules
 
 This is where this implementation differ from Eric Evans's proposed list of modules, as we apply a microservices approach, meaning basically that each aggregate with its repository are excellent candidate to be separate microservice.
 
-#### Order microservice
+### Order microservice
 
 For this one, we can see from the business requirements that we need to have complex tracking queries that enforce doing join between data from Voyage, Reefer, and Order, so we propose to implement CQRS for this order microservice, which means we will have at least two standalone, deployable microservices: the orders-command-ms to support the "write model" and the orders-query-ms for queries. We are detailing the design in [the repository itself](https://ibm-cloud-architecture.github.io/refarch-kc-order-ms/).
 
-#### Voyages microservice
+### Voyages microservice
 
 For Voyages we will need a voyages-command-ms which will maintain a list of all voyages and their current state. In any given run of the demonstration we will work with a fixed set of voyages - effectively the schedule for the container fleet - so there is no need for an API to create additional voyages. The voyage definition will be read from file when the build is initializing. We expect this voyage data to be well formed:
 
@@ -165,12 +165,12 @@ The states of a voyage are:
 
 It will be helpful for the voyage-command-ms to include a query service to lookup voyages with a particular source port and destination port in a particular time windaw. This will help process booking request event but does not need to be an external API hence there is no strong argument for realizing this as a separate CQRS query service.
 
-#### Reefer Containers microservice
+### Reefer Containers microservice
 
 For Reefer containers we will use an agent based implementation as the main container inventory is managed by an external system. The agent listen to new reefer container added to the main inventory, and keeps a view of this Reefer inventory internally. It adds different attributes to the basic reefer container and persists metrics.
 
 <InlineNotification kind="info">
-        The container inventory is in fact coded in a [separate project](https://ibm-cloud-architecture.github.io/refarch-container-inventory/) to proof the strangler pattern and data replication using MQ and kafka or change data capture and kafka.
+The container inventory is coded in a <a href="https://ibm-cloud-architecture.github.io/refarch-container-inventory/">separate project</a> to prove the Strangler Pattern and data replication using MQ and Kafka or Change Data Capture (CDC) and Kafka.
 </InlineNotification>
 
 This service maintain a list of defined containerIDs and track the state of each container. A fixed set of valid container IDs will be initialized at demonstration start time. As noted previously we will assume this to be enough for all requested orders to be assigned a container without availability issues. Since the collection of containers is fixed the component will not need a command API.
@@ -183,7 +183,7 @@ The reefer container current state maintained in container-ms is:
 We will be modelling and performing streaming analytics on temperature inside a (refrigerated) container.
 Conceptually, while a container is ALLOCATED to a shipment order with `state = CONTAINER_ON_SHIP`, its internal temperature, and all its sensors will be generated as event streams and process by an real time analytics component.
 
-#### Fleet/Ships Simulator
+### Fleet/Ships Simulator
 
 For Ships we will have a monolithic fleet simulation service providing continuous simulation of ship position for each ship and modelling of ship events.
 This service will include a UI to enable viewing the positions and states of the ships.
@@ -191,14 +191,15 @@ It may have a separate UI to control the overall demonstration.
 There is no requirement for any separate microservice maintining additional information on ship state.
 
 ---
+<InlineNotification kind="info">
+The following section was captured during the initial implementation of the reference solution. It has since evolved in interaction patterns, but the information below was left as-is for a reference as to how the analysis, design, and development of the initial system was performed.
+</InlineNotification>
 
-TODO rework next sections
-
-### 6 - Microservice interactions
+## 5 - Microservice interactions
 
 Using the understanding of the event flow from the Event Storming session, the list of microservices and data within each microservices developed in the steps above, we can write out in a complete interaction flow. This flow illustrates how the microservices are linked together via the Event backbone using event interactions for all non API interactions between distinct microservices.
 
-#### Command microservice interactions - order create through voyage start with container on board
+### Command microservice interactions - order create through voyage start with container on board
 
 The diagram below shows all command interactions from initial order creation through voyage start.
 
@@ -244,7 +245,7 @@ Comments on steps in the command flow:
 * The Voyages-command-ms receives this event and for each order/container in the manifest emits an *Orders: ContainerOnShip* event
 * The orders-command-ms will subscribe to *Orders: ContainerOnShip* events and update the current state of each identified order with this information.
 
-#### Command microservice interaction - container on ship at sea through shipment complete
+### Command microservice interaction - container on ship at sea through shipment complete
 
 The diagram below shows all command interactions from container on ship in voyage through shipment delivered and order completed.
 
@@ -277,8 +278,7 @@ This diagram starts with containers on board a ship which is sailing on specific
 * The fleet/ships-simulator-ms will continue at this point to start the next voyage in its planned itenerary and interact with voyages-command-ms to do this
 *  this is a cycled repetition of start of voyage interaction discussed previously
 
-
-#### Query microservice service  - CQRS Order and  Shipment tracking microservices
+### Query microservice service  - CQRS Order and  Shipment tracking microservices
 
 The diagram below shows all interactions with the shipment tracking microservice. This microservice subscribes to many events carrying required information and supports one or more query APIs for different flavors of order and shipment tracking
 
@@ -295,7 +295,7 @@ The design of these different flavors query services is essentially the same.  T
 
 The inteaction diagram 3 above illustrates this organization. For any order and shipment tracking query service there are synchronous APIs offered at one side and subscribed events received at the other to gather required state information from the vent backbone.
 
-#### Topics, event types and the event emit and consumption lists
+### Topics, event types and the event emit and consumption lists
 
 From the interaction diagrams we can compile  a list of all event types which will occur in the build and check that they are organized into topics in a way which preserves all essential event sequencing.
 
