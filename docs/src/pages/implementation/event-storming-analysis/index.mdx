@@ -36,7 +36,7 @@ The challenges listed in the persona table above identify a possible set of MVP 
 
 At the high level the shipment process flow is suggested and illustrated in the diagram below.
 
-![shipment-bp1](./shipment-bp1.png)
+![shipment-bp1](images/shipment-bp1.png)
 
 For the purposes of showing how to design a reference EDA solution we select on a simple subcase of all actual and possible variations of the global container flow. Very high level steps in this flow are as follows:
 
@@ -75,7 +75,7 @@ For the global shipment example described at a very high level above we came up 
 
 #### Container shipping event timeline section 1
 
-![ship-dom-evt1](./ship-dom-evt1.png)
+![ship-dom-evt1](images/ship-dom-evt1.png)
 
 This section of the event time line deals with initial contracts to ship container and startup actions - specifically:
 
@@ -95,7 +95,7 @@ The red sticky note is a comment.
 #### Container shipping event timeline section 2
 
 
-![ship-dom-evt2](./ship-dom-evt2.png)
+![ship-dom-evt2](images/ship-dom-evt2.png)
 
 This section continues event time line development with a swim lane now focussing on loading and pickup of a specific container at the Manufacturer's location and its delivery to the source port dockside.
 
@@ -108,7 +108,7 @@ When the container arrives at source port dockside it may or may not be intime f
 
 #### Container shipping event timeline section 3
 
-![ship-dom-evt3](./ship-dom-evt3.png)
+![ship-dom-evt3](images/ship-dom-evt3.png)
 
 
 This section continues the event timelines with swim lanes relating to a specific container shipment and also to the movement of a ship potentially carrying hundreds of containers.
@@ -130,7 +130,7 @@ It introduces two new critical events:
 
 #### Container shipping event timeline section 4
 
-![ship-dom-evt4](./ship-dom-evt4.png)
+![ship-dom-evt4](images/ship-dom-evt4.png)
 
 This segment of the event timeline deals with a single swim lane for the ship while it is moored in a dock facility at the source port, is having arriving containers destined for this port unloaded and new containers being loaded at his port. The port dock facility operator is coordinating many events in the yard to perform load unload operations. These steps - as noted in a red discussion "sticky" in the event storming timeline are repeated for many containers. The time line presented here captures representative high level events. It is straightforward to extend the analysis to open up additional layers of detail touching on operational optimizations and coordination at the cost of addiional complexity not essential to our reference example here.
 
@@ -138,7 +138,7 @@ Some of the events in this phase are now specialized to address needs of particu
 
 #### Container shipping event timeline section 5
 
-![ship-dom-evt5](./ship-dom-evt5.png)
+![ship-dom-evt5](images/ship-dom-evt5.png)
 
 This segment of the event timeline captures events which occure in the blue water phase of the shipping, after the container ship has left the source port and is travelling owards but has not yet reached the destination port.
 
@@ -156,14 +156,14 @@ The upper swim lane capture events which are specific to a particular container.
 
 #### Container shipping event timeline sections 6 and 7
 
-![ship-dom-evt6](./ship-dom-evt6.png)
+![ship-dom-evt6](images/ship-dom-evt6.png)
 
 The remining event time line segments 6 and 7 deal with arrival at the destination port unload of the container and delivery to the Retailer's location. At the level of simplification in the reference architecture example, the steps for unloading a container at the destination port, clearing Customs and delivering it to are Retailer location are the symmetric image of the steps to pick up the container from the Manufacture location, clear it through export permissions and load onto the ship.
 
 For these reason we just provide event timeline digrams for these steps withou going into further explanatory detail.
 
 
-![ship-dom-evt7](./ship-dom-evt7.png)
+![ship-dom-evt7](images/ship-dom-evt7.png)
 
 
 ### Step 2: Identify commands and event linkages
@@ -188,7 +188,7 @@ In the following subsections we show the results of command and event linkage an
 
 #### Container shipping Commands for order placement and land transport setup
 
-![ship-dom-cmd1](./ship-dom-cmd1.png)
+![ship-dom-cmd1](images/ship-dom-cmd1.png)
 
 
 This diagram shows the command, agent issuing events and policies triggering events for the order placement and land transport set up (at manufacturer location) sections of the event timeline generated in step 1
@@ -196,14 +196,14 @@ This diagram shows the command, agent issuing events and policies triggering eve
 #### Container shipping  event linkages for order placement setup
 
 
-![ship-dom-cmd1.2](./ship-dom-cmd1.2.png)
+![ship-dom-cmd1.2](images/ship-dom-cmd1.2.png)
 
 The above diagram adds event linkages showing the causality chaining of events and business rules.
 
 #### Container shipping commands for pickup at Manufacturer's location
 
 
-![ship-dom-cmd2](./ship-dom-cmd2.png)
+![ship-dom-cmd2](images/ship-dom-cmd2.png)
 
 The above diagram is generated for the command and policies associated with pick up of a loaded container from the Manufacturer's location and delivery to the source port dockside.
 
@@ -211,7 +211,7 @@ The above diagram is generated for the command and policies associated with pick
 
 The diagram is self explanatory.
 
-![ship-dom-cmd3](./ship-dom-cmd3.png)
+![ship-dom-cmd3](images/ship-dom-cmd3.png)
 
 ### Step 3: Decision data, predictive insights and insight storming:
 
@@ -239,7 +239,7 @@ The shipping example includes the case where continuous sensor measurement data 
 
 A diagram for this flow generated from Insight storming is shown below.
 
-![ship-dom-insight1](./ship-dom-insight1.png)
+![ship-dom-insight1](images/ship-dom-insight1.png)
 
 In this diagram it is made clear the delivery of measured temperature, probably GPS position, and power consumption of the refrigeration unit for that container is a recurring "continuous" event stream. Each container might report once a minute; this ensures that an auditable record of container temperature is available from the event backbone or event sourcing.
 
@@ -271,7 +271,7 @@ We assume that possible corrective action includes resetting the thermostatic co
 
 An insight storming diagram which could be generated from discussion of these potentially useful insights and predictions is shown in the diagram below.
 
-![ship-dom-insight2](./ship-dom-insight2.png)
+![ship-dom-insight2](images/ship-dom-insight2.png)
 
 We have added an additional insight - namely that it may be possible to predict from the temperature observed in a container and the trend of power consumption of that refrigeration unit, that the unit is in danger of failing and should be inspected and possibly services as soon as possible.
 
@@ -279,7 +279,7 @@ Insights about predicted risk of temperature based spoilage, and prediction of r
 
 #### Event stream processing for insights relating to the ship
 
-![ship-dom-insight3](./ship-dom-insight3.png)
+![ship-dom-insight3](images/ship-dom-insight3.png)
 
 
 ### Step 4: Commands, linkages, data and context for order placement
@@ -290,9 +290,9 @@ In particular, we look at identifying bounded contexts and identifying aggregate
 
 We drill down on understanding the order placement process when a container shipment is booked as the MVP context focus in which to explore our design at the next level of detail. We will focus the implementation on at least two aggregates: the shipment order, and container transportation.
 
-![ship-aggr-shipment](./ship-aggr-shipment.png)
+![ship-aggr-shipment](images/ship-aggr-shipment.png)
 
 An actor will create a shipment order from a user interface (a manufacturer staff) that will call a command for creating the order. The shipment order context will be mapped to a microservice. The implementation will generate a set of events.
 
 Same for container transportation.
-![ship-aggr-transp](./ship-aggr-transp.png)
+![ship-aggr-transp](images/ship-aggr-transp.png)
