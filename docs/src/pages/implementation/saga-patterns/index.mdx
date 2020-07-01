@@ -3,13 +3,11 @@ title: Saga Pattern
 description: TBD Saga Pattern Description
 ---
 
-<InlineNotification kind="warning">UNDER CONSTRUCTION</InlineNotification>
-
 The SAGA pattern helps to support a **long running transaction** that can be broken down into a collection of sub transactions that can be interleaved any way with other transactions. With microservices, each transaction updates data within a single service, each subsequent steps may be triggered by previous completion. The SAGA pattern supports two types of implementation: Choreography and Orchestration. However, the SAGA pattern comes withe the tradeoff that if any of the sub transactions fails, a compensation process must be implemented and executed.
 
-For more information about the SAGA pattern, read our specific section on it [here](https://ibm-cloud-architecture.github.io/refarch-eda/design-patterns/saga/).
+For more information about the SAGA pattern, read our specific section on it [here](https://ibm-cloud-architecture.github.io/refarch-eda/patterns/saga/).
 
-In this readme, we are going to focus on the SAGA pattern implementation details for our [Reefer Container Shipment Reference Application](https://ibm-cloud-architecture.github.io/refarch-kc/).
+In this readme, we are going to focus on the SAGA pattern implementation details for our [Reefer Container Shipment Reference Application](../../).
 
 ## Implementation
 
@@ -21,7 +19,7 @@ In this scenario, we have a long running transaction that spans across the Order
 
 As you can see in the diagram above, the transaction does not finish until a container has been allocated and a voyage assigned to the order and, as a result, the order stays in pending state until all the sub transactions have successfully finished.
 
-As to the **Transaction** section in the diagram above for the actual create order request from a customer, we explain the reason of it to be a transaction using a command bus for data consistency in the Command Query Responsibility Segregation section [here](https://ibm-cloud-architecture.github.io/refarch-eda/design-patterns/cqrs/).
+As to the **Transaction** section in the diagram above for the actual create order request from a customer, we explain the reason of it to be a transaction using a command bus for data consistency in the Command Query Responsibility Segregation section [here](https://ibm-cloud-architecture.github.io/refarch-eda/patterns/cqrs/).
 
 ## Compensation
 
