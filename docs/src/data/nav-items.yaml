@@ -16,8 +16,6 @@
       path: /implementation/event-storming-analysis/
     - title: Domain-Driven Design
       path: /implementation/domain-driven-design/
-    - title: Schema Registry and Avro
-      path: /implementation/schema-registry/
     - title: Saga Patterns
       path: /implementation/saga-patterns/
     - title: Dead Letter Queue
