@@ -49,7 +49,7 @@ For this example, we will reference the [User Interface](/microservices/user-int
 
 The final job, **[gitops-repo-webhook](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/master/.github/workflows/dockerbuild.yaml#L115-L123)**, is a linkage to our general [continuous deployment process](#continuous-deployment), which is GitOps-based and available via [ibm-cloud-architecture/refarch-kc-gitops](https://github.com/ibm-cloud-architecture/refarch-kc-gitops). This step performs a webhook call to our GitOps repository to notify it that a component microservices CI build has completed and it should scan for the latest version of all the known container images and update the associated environment deployment files. The repository action dispatcher triggers the remote [GitHub Actions workflow](https://github.com/ibm-cloud-architecture/refarch-kc-gitops/blob/master/.github/workflows/update-gitops-deployments-(eda-integration).yaml) in the GitOps repository, so all corresponding YAML files can be updated.
 
-_For details on how the GitOps process is applied,_ including how to create the necessary source files that the continuous deployment process requires, reference the [GitOps chapter](/infrastructure/gitops/) of this manual.
+_For details on how the GitOps process is applied,_ including how to create the necessary source files that the continuous deployment process requires, reference the [GitOps chapter](/infrastructure/devops/) of this manual.
 
 _For implementation details on how the GitHub Actions automation works to update the GitOps components to the latest versions,_ reference the [github.com/ibm-cloud-architecture/actions-update-gitops](https://github.com/ibm-cloud-architecture/actions-update-gitops) repository to understand the update workflow
 
@@ -61,7 +61,7 @@ One of the main tools used in this space is a GitOps-focused continuous deployme
 
 Another DevOps tool which provides the opportunity to deployment applications via the GitOps methodology is [Tekton](https://tekton.dev/). The Tekton Pipelines project provides a declarative language for defining and executing both CI and CD-style pipelines, all defined with common Kubernetes-like nomenclature. It even has the capability to kick off pipeline runs based off of GitHub webhooks.
 
-We have documented our general GitOps strategy & methodology for generation of deployment source configuration files in the [GitOps chapter](/infrastructure/gitops/) of this manual, while the details of our ArgoCD-based deployments are covered in the [ArgoCD deployments](#argocd-deployments) section below and the details of our Tekton-based deployments are covered in the [Tekton deployments](#tekton-deployments) section below.
+We have documented our general GitOps strategy & methodology for generation of deployment source configuration files in the [GitOps chapter](/infrastructure/devops/) of this manual, while the details of our ArgoCD-based deployments are covered in the [ArgoCD deployments](#argocd-deployments) section below and the details of our Tekton-based deployments are covered in the [Tekton deployments](#tekton-deployments) section below.
 
 ## ArgoCD deployments
 

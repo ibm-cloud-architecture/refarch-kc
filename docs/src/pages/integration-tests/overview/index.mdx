@@ -7,11 +7,11 @@ The Reefer container shipment solution comes with a set of integration test case
 
 So far we have the following integration test cases:
 
-- [Happy path](../happy-path/) - End to end happy path test.
-- [SAGA pattern](../saga-pattern/) - SAGA pattern for new order creation test.
-- [Order Cancellation](../order-cancellation/) - Order Cancellation test.
-- [Container Anomaly](../container-anomaly/) - Container anomaly and maintenance test.
-- [Dead Letter Queue](../dead-letter-queue/) - Container Anomaly Dead Letter Queue Pattern test.
+- [Happy path](/integration-tests/happy-path/) - End to end happy path test.
+- [SAGA pattern](/integration-tests/saga-pattern/) - SAGA pattern for new order creation test.
+- [Order Cancellation](/integration-tests/order-cancellation/) - Order Cancellation test.
+- [Container Anomaly](/integration-tests/container-anomaly/) - Container anomaly and maintenance test.
+- [Dead Letter Queue](/integration-tests/dead-letter-queue/) - Container Anomaly Dead Letter Queue Pattern test.
 
 New integration test cases will be added in order to test other parts of the application as well as use cases and other Event Driven Patterns.
 
@@ -21,8 +21,8 @@ New integration test cases will be added in order to test other parts of the app
 
 In order to run the integration tests against the Reefer container shipment solution you first need to have this solution deployed on an Openshift or Kubernetes cluster. The solution is made up of:
 
-1. Backing services such as IBM Event Streams and PostgreSQL - Instructions [here](../../microservices/prereqs/).
-2. The Reefer container shipment solution components - Instructions [here](../../implementation/gitops/).
+1. Backing services such as IBM Event Streams and PostgreSQL - Instructions [here](/infrastructure/required-services/).
+2. The Reefer container shipment solution components - Instructions [here](/business-scenario/quickstart-tutorial/).
 
 Once you have the solution deployed into your cluster, apart from an instance of IBM Event Streams and PostgreSQL either on premises or in IBM Cloud, you should have the following components at the very least for the integration tests to run:
 
@@ -58,7 +58,7 @@ Other required variables for the integration tests need to be defined within the
   1. Uncomment the bottom part of the integration tests kubernetes job yaml file.
   2. Make sure you created the **eventstreams-pem-file** secret that will hold your IBM Event Streams PEM certificate, in step #1 of this pre-requisites section.
 
-**IMPORTANT:** For the integration test suite to work fine, more precisely to get the test case for testing [the Dead Letter Queue pattern](../dlq/dlq.md)) to succeed, we **must** mockup the BPM integration which we have developed some internal endpoints for. To use the BPM mockup endpoints, you will need to make sure the **bpm-anomaly** configMap you created for the Spring Container microservice component of the Reefer container shipment solution holds the following values for the url and login attributes:
+**IMPORTANT:** For the integration test suite to work fine, more precisely to get the test case for testing [the Dead Letter Queue pattern](/implementation/dead-letter-queue/)) to succeed, we **must** mockup the BPM integration which we have developed some internal endpoints for. To use the BPM mockup endpoints, you will need to make sure the **bpm-anomaly** configMap you created for the Spring Container microservice component of the Reefer container shipment solution holds the following values for the url and login attributes:
 
 ```bash
 login: 'http://localhost:8080/bpm_mockup/login'

@@ -24,7 +24,7 @@ The order creation process consists of:
 
 1. **Create** an _Order_ object that holds the order information provided by the user/customer (that is, customer id, product id, origin Port, destination port, quantity, etc) along with a unique identifier for the order
 2. **Save** the order in a database which will serve to hold the current status for the orders.
-3. As in any Event Driven application, we want to **publish** a new order created event so that any other interested parties in your overall solution get notified on this change to system. For instance, in our reference application, this will trigger a long running transaction for finding a container and a voyage to allocate an assign for the proper delivery of the customer's fresh goods. You can read more about this long running transaction process and the [SAGA pattern](https://ibm-cloud-architecture.github.io/refarch-eda/design-patterns/saga/) implementation of it [here](../saga-patterns/)
+3. As in any Event Driven application, we want to **publish** a new order created event so that any other interested parties in your overall solution get notified on this change to system. For instance, in our reference application, this will trigger a long running transaction for finding a container and a voyage to allocate an assign for the proper delivery of the customer's fresh goods. You can read more about this long running transaction process and the [SAGA pattern](https://ibm-cloud-architecture.github.io/refarch-eda/design-patterns/saga/) implementation of it [here](/implementation/saga-patterns/)
 
 ![objective](images/Slide1.png)
 
@@ -53,7 +53,7 @@ Once we understand the above, we still need to dive a bit deeper into Kafka and 
 
 We have designed our Reefer Container Shipment reference application by combining some elements of the [design thinking](https://www.ibm.com/garage/method/practices/think/enterprise-design-thinking) methodology with the [Event Storming](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/event-storming/) and [Domain Driven Design](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/domain-driven-design/).
 
-Thanks to the Event Storming work we specifically did for our Reefer Container Shipment business domain (see it [here](../event-storming-analysis/), we were able to identify things like the **events and commands** that will flow through our system as well as the domains, subdomains, contexts, etc that will help us identify what microservices/components we should build.
+Thanks to the Event Storming work we specifically did for our Reefer Container Shipment business domain (see it [here](/implementation/event-storming-analysis/), we were able to identify things like the **events and commands** that will flow through our system as well as the domains, subdomains, contexts, etc that will help us identify what microservices/components we should build.
 
 We also wanted to implement one of the most common Event Driven patterns called [Event Sourcing](https://ibm-cloud-architecture.github.io/refarch-eda/patterns/event-sourcing/) which dictates to **capture all changes to an application state as a sequence of events**.
 
@@ -69,7 +69,7 @@ From Martin Fowler's Event Sourcing:
 >
 >You should also look at the contrast between [Command Message](https://www.enterpriseintegrationpatterns.com/patterns/messaging/CommandMessage.html) and [Event Message](https://www.enterpriseintegrationpatterns.com/patterns/messaging/EventMessage.html).
 
-![eventStorming](../event-storming-analysis/images/ship-dom-cmd1.2.png)
+![eventStorming](/implementation/event-storming-analysis/images/ship-dom-cmd1.2.png)
 
 ### Order Commands
 

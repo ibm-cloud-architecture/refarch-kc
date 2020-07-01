@@ -3,10 +3,6 @@ title: Container Anomaly Use Case
 description: Container Anomaly Use Case
 ---
 
-<InlineNotification kind="warning">
-UNDER CONSTRUCTION
-</InlineNotification>
-
 This test case will test the use whereby a container suffers some anomaly. As a result, ContainerAnomaly events are sent to set the container for maintenance mode. A BPM process will take care of setting a container into inMaintenance mode, assigning a technician to repair the container and finally setting that container back to being empty and available. This test case will also ensure the order the container with the anomaly was carrying is marked spoilt. The following diagram depics roughly this path on a flow base fashion where the blue square rectangles, purple rounded rectangles and orange rectangles represent actions taken by the test case, events produced to the event backbone (either Kafka or IBM Event Streams) and object statuses respectively.
 
 ![flow](container_anomaly_images/Slide1.png)

@@ -26,14 +26,16 @@
       path: /implementation/order-cancellation/
     - title: Anomalous Container Tracking
       path: /implementation/container-anomaly/
+- title: Infrastructure Details
+  pages:
+    - title: Required Services
+      path: /infrastructure/required-services/
     - title: DevOps Pipelines
-      path: /implementation/devops/
+      path: /infrastructure/devops/
     - title: GitOps Deployments
-      path: /implementation/gitops/
+      path: /infrastructure/gitops/
 - title: Microservices Details
   pages:
-    - title: Prerequisites
-      path: /microservices/prereqs/
     - title: Topic Details
       path: /microservices/topic-details/
     - title: Event Details

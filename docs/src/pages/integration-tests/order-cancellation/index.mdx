@@ -3,10 +3,6 @@ title: Order Cancelled integration test case
 description: Order Cancelled integration test case
 ---
 
-<InlineNotification kind="warning">
-UNDER CONSTRUCTION
-</InlineNotification>
-
 Here you can find the order cancellation integration test for the Reefer Containers EDA reference implementation. This test case tests the compensation process that must happen once an order is cancelled. That is, if an order is cancelled, the container allocated to such order must become empty and available again as well as the voyage assigned to them that will now reflect the space the container was taking from the voyage as free to be used. The following diagram depics roughly this path on a flow base fashion where the blue square rectangles, purple rounded rectangles and orange rectangles represent actions taken by the test case, events produced to the event backbone (either Kafka or IBM Event Streams) and object statuses respectively.
 
 ![flow](images/Slide1.png)
