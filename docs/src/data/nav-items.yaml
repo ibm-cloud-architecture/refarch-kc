@@ -16,6 +16,8 @@
       path: /implementation/event-storming-analysis/
     - title: Domain-Driven Design
       path: /implementation/domain-driven-design/
+    - title: Reactive Messaging
+      path: /implementation/reactive-messaging/
     - title: Saga Patterns
       path: /implementation/saga-patterns/
     - title: Dead Letter Queue

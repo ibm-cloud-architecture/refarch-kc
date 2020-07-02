@@ -3,10 +3,6 @@ title: Container Shipment Analysis
 description: Container Shipment Analysis
 ---
 
-<InlineNotification kind="warning">
-UNDER CONSTRUCTION
-</InlineNotification>
-
 This section defines the overall steps in the methodology to analyse a specific global shipping example and derive the event driven solution. We combined some elements of the [design thinking](https://www.ibm.com/cloud/garage/content/think/practice_design_thinking/) methodology with the [event storming](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/event-storming/) and [domain driven design](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/domain-driven-design/) to extract the following analysis of the business domain.
 
 ## Output from Domain Driven Design workshop
@@ -62,7 +58,9 @@ Steps in an eight hours event storming analysis workshop of the container shippi
 
 ### Step 1: Capture the Domain Event Timeline, swim lanes and key phases
 
-(This section of the example description covers activities identified as event storming workshop steps 1,2,3 in the generic description of the [event storming method](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/event-storming/).
+<InlineNotification kind="info">
+This section covers activities identified as EventStorming Workshop steps 1, 2, & 3 in the generic description of the <a href="https://ibm-cloud-architecture.github.io/refarch-eda/methodology/event-storming/" target="_blank">event storming method</a>.
+</InlineNotification>
 
 The initial step in event storming analysis is to capture all events, things which have happened at a point in time, and organize them into a timeline:
 
@@ -94,7 +92,6 @@ The red sticky note is a comment.
 
 #### Container shipping event timeline section 2
 
-
 ![ship-dom-evt2](images/ship-dom-evt2.png)
 
 This section continues event time line development with a swim lane now focussing on loading and pickup of a specific container at the Manufacturer's location and its delivery to the source port dockside.
@@ -109,7 +106,6 @@ When the container arrives at source port dockside it may or may not be intime f
 #### Container shipping event timeline section 3
 
 ![ship-dom-evt3](images/ship-dom-evt3.png)
-
 
 This section continues the event timelines with swim lanes relating to a specific container shipment and also to the movement of a ship potentially carrying hundreds of containers.
 
@@ -153,7 +149,6 @@ The upper swim lane capture events which are specific to a particular container.
 * container sensors reporting on geolocation.
 * refrigerated container sensors reporting on humidity, carbon dioxide,  temperature in the container and power consumption of the refrigeration unit.
 
-
 #### Container shipping event timeline sections 6 and 7
 
 ![ship-dom-evt6](images/ship-dom-evt6.png)
@@ -162,14 +157,13 @@ The remining event time line segments 6 and 7 deal with arrival at the destinati
 
 For these reason we just provide event timeline digrams for these steps withou going into further explanatory detail.
 
-
 ![ship-dom-evt7](images/ship-dom-evt7.png)
-
 
 ### Step 2: Identify commands and event linkages
 
-
-> This section of the example description covers activities identified as event storming workshop steps 4,5) in the generic description of the [event storming method](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/event-storming/).
+<InlineNotification kind="info">
+This section covers activities identified as EventStorming Workshop steps 4 & 5 in the generic description of the <a href="https://ibm-cloud-architecture.github.io/refarch-eda/methodology/event-storming/" target="_blank">event storming method</a>.
+</InlineNotification>
 
 After capturing all events for the scenario and organizing them in a time line, the next step in event storming analysis is to identify the triggers for events and causal linkages between events.
 
@@ -190,11 +184,9 @@ In the following subsections we show the results of command and event linkage an
 
 ![ship-dom-cmd1](images/ship-dom-cmd1.png)
 
-
 This diagram shows the command, agent issuing events and policies triggering events for the order placement and land transport set up (at manufacturer location) sections of the event timeline generated in step 1
 
 #### Container shipping  event linkages for order placement setup
-
 
 ![ship-dom-cmd1.2](images/ship-dom-cmd1.2.png)
 
@@ -215,8 +207,9 @@ The diagram is self explanatory.
 
 ### Step 3: Decision data, predictive insights and insight storming:
 
-
-> This section of the example description covers activities identified as event storming workshop step 8 in the generic description of the [event storming method](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/event-storming/).
+<InlineNotification kind="info">
+This section covers activities identified as EventStorming Workshop step 8 in the generic description of the <a href="https://ibm-cloud-architecture.github.io/refarch-eda/methodology/event-storming/" target="_blank">event storming method</a>.
+</InlineNotification>
 
 Insight storming is extending the event storming workshop to identify and capture insightful predictive analytics, and it is introduced and described in [workshop execution Step 8 - Insight](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/event-storming/).
 
@@ -281,10 +274,11 @@ Insights about predicted risk of temperature based spoilage, and prediction of r
 
 ![ship-dom-insight3](images/ship-dom-insight3.png)
 
-
 ### Step 4: Commands, linkages, data and context for order placement
 
-> This section covers activities identified as EventStorming Workshop steps 6,7 in the generic description of the [event storming method](https://ibm-cloud-architecture.github.io/refarch-eda/methodology/event-storming/).
+<InlineNotification kind="info">
+This section covers activities identified as EventStorming Workshop steps 6 & 7 in the generic description of the <a href="https://ibm-cloud-architecture.github.io/refarch-eda/methodology/event-storming/" target="_blank">event storming method</a>.
+</InlineNotification>
 
 In particular, we look at identifying bounded contexts and identifying aggregates which will lead to a loosely coupled collection of microservices providing an agile event-driven design.
 

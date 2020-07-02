@@ -17,7 +17,7 @@ Deploying the different components using event-driven and microservice patterns,
 
 ![High level component view](./images/kc-hl-comp-view.png)
 
-* Top left represents the [user interface](https://github.com/ibm-cloud-architecture/refarch-kc-ui) to support the demonstration of the Reefer Container Shipment solution, with a set of widgets to present the ships movements, the container tracking / monitoring and the event dashboards.
+* Top left represents the [user interface](/microservices/user-interface/) to support the demonstration of the Reefer Container Shipment solution, with a set of widgets to present the ships movements, the container tracking / monitoring and the event dashboards.
 * The event backbone is used to define a set of topics used in the solution and as event sourcing for microservice to microservice data eventual consistency support.
 * Each service supports the top-level process with a context boundary defining the microservice scope.
 * Streaming analytics is used to process aggregates and analytics on containers and ship movement data ingested in real-time.
@@ -55,7 +55,7 @@ _**NOTE:**_ The details below are the initial outputs from the original [event s
     * **Implementation:** [github.com/ibm-cloud-architecture/refarch-kc-order-ms](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms)
 * **Container Service**:
     * **Information model:** Container Id, Container temperature, container position, container condition ( maintenance goods), current associated order
-    * **Events:** TBD
+    * **Events:** order created, order assigned, container added, container anomaly, container maintenance, ...
     * **Operations:** CRUD on container
     * **Implementation:** [github.com/ibm-cloud-architecture/refarch-kc-container-ms](https://github.com/ibm-cloud-architecture/refarch-kc-container-ms)
 * Customs and Export Service (not yet implemented)

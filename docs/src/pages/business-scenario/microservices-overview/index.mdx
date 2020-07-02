@@ -63,7 +63,7 @@ This microservice is implemented with Spring Framework and runs on Tomcat.
 
 ## Vessel Simulator
 
-_TODO Vessel Simulator microservice image needed_
+<InlineNotification kind="warning"><strong>TODO</strong> - Vessel Simulator microservice image needed </InlineNotification>
 
 **Description:** This a simple vessel source events generatator taking into account the route from two harbors, the vessel characteristic and the geodetic curve shortest path.
 
@@ -87,13 +87,13 @@ This microservice has been implemented using the [Appsody Python Flask stack](ht
 
 **Description:** This microservice will be responsible for listening to the [Reefer Telemetry Topic](#reefer-telemetry-topic) topic where the IOT sensor devices of the Reefer Containers will be sending their telemetry data to. These telemetry events will be read and used to contact a container anomaly prediction service based on Watson Machine Learning hosted on the IBM Cloud. Depending on whether the prediction service predicts a container anomaly, this Telemetry microservice will send a [Container Anomaly Event](#container-anomaly-event) to the [Containers Topic](#containers-topic) for the [Containers microservice](#containers) to handle the shipping goods spoilage.
 
-This microservice has been implemented using the latest [Reactive Messaging](#reactive-messaging) feature of MicroProfile 3.0, running on the OpenLiberty server.
+This microservice has been implemented using the latest [Reactive Messaging](/implementation/reactive-messaging) feature of MicroProfile 3.0, running on the OpenLiberty server.
 
 **Further details:** [Microservices Details > Anomalous Container Scoring](/microservices/scoring-mp)
 
 ## Fleet
 
-_TODO Fleet microservice image needed_
+<InlineNotification kind="warning"><strong>TODO</strong> - Fleet microservice image needed</InlineNotification>
 
 **Description:** This microservice will manage the fleet of ships.
 

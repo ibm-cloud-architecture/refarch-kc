@@ -63,7 +63,7 @@ Another DevOps tool which provides the opportunity to deployment applications vi
 
 We have documented our general GitOps strategy & methodology for generation of deployment source configuration files in the [GitOps chapter](/infrastructure/devops/) of this manual, while the details of our ArgoCD-based deployments are covered in the [ArgoCD deployments](#argocd-deployments) section below and the details of our Tekton-based deployments are covered in the [Tekton deployments](#tekton-deployments) section below.
 
-## ArgoCD deployments
+### ArgoCD deployments
 
 Our main continuous deployment pattern operates on the same principle of _"zero-infrastructure overhead"_ as our [continuous integration](#continuous-integration) implementations. This allows us to be agile, adaptable, and efficient in what we deploy where.  ArgoCD is a perfect companion to this principle, as we do not need additional long-running CD infrastructure to monitor either a source environment or a target deployment environment. Our CI process sits with our code (on the same hosted infrastructure), while our CD process sits with the target deployment environment (on the same Kubernetes-based cluster).
 
@@ -81,7 +81,7 @@ ArgoCD then handles automatically (or manually) syncing the deployments in the t
 
 Defined in the [.github/workflows/update-gitops-deployments-(eda-integration).yaml](https://github.com/ibm-cloud-architecture/refarch-kc-gitops/blob/master/.github/workflows/update-gitops-deployments-(eda-integration).yaml) workflow file, the workflow will scan the repository for all templated use of container images in Kubernetes Deployment files (and recently updated to be extensible to any YAML-based file!), search Docker Hub for the latest version of that container image, update the YAML file in-place, and check in the YAML updates back to the same repository and branch. This process is kicked off by the webhook Jobs mentioned in our CI process, as well as on a regularly-scheduled cron-like timer.
 
-### Deploying a microservice with ArgoCD
+#### Deploying a microservice with ArgoCD
 
 You can deploy both the `simulator` and the `scoring-mp` microservices using ArgoCD in this reference implementation. The process is the same for either microservice, with minor parameter configuration being the only difference between the two.
 
@@ -125,7 +125,7 @@ kubectl get Pods
 
 ArgoCD provides a command-line interface as well, however we are not covering that in this reference implementation. Once you are satisfied with the ArgoCD dashboard-based deployment pattern, you can reference the [ArgoCD Getting Started docs](https://argoproj.github.io/argo-cd/getting_started/) for further details on using the [ArgoCD CLI](https://argoproj.github.io/argo-cd/cli_installation/) and CRD YAMLs for programmatic interaction.
 
-## Tekton deployments
+### Tekton deployments
 
 We have also implemented some facets of the project deployment workflows using the [Tekton Pipelines](https://tekton.dev/) project and its inherent ease of support of the [Appsody](https://appsody.dev/) open-source developer experience project through the standard integration between the two built into the [Kabanero](https://kabanero.io/) open-source project, or more formally, the [IBM Cloud Pak for Applications](https://www.ibm.com/cloud/cloud-pak-for-applications).
 
@@ -141,7 +141,7 @@ We then make use of the [Appsody Operator](https://appsody.dev/docs/using-appsod
 
 ![Tekton CD - PipelineRun Logs](images/tekton-pr-logs.png)
 
-### Deploying the simulator microservice with Tekton & Appsody
+#### Deploying the simulator microservice with Tekton & Appsody
 
 #### Prerequisites
 
