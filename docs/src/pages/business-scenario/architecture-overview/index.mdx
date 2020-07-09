@@ -17,7 +17,7 @@ Deploying the different components using event-driven and microservice patterns,
 
 ![High level component view](./images/kc-hl-comp-view.png)
 
-* Top left represents the [user interface](/microservices/user-interface/) to support the demonstration of the Reefer Container Shipment solution, with a set of widgets to present the ships movements, the container tracking / monitoring and the event dashboards.
+* Top left represents the [user interface](https://ibm-cloud-architecture.github.io/refarch-kc/microservices/user-interface/) to support the demonstration of the Reefer Container Shipment solution, with a set of widgets to present the ships movements, the container tracking / monitoring and the event dashboards.
 * The event backbone is used to define a set of topics used in the solution and as event sourcing for microservice to microservice data eventual consistency support.
 * Each service supports the top-level process with a context boundary defining the microservice scope.
 * Streaming analytics is used to process aggregates and analytics on containers and ship movement data ingested in real-time.
@@ -34,21 +34,21 @@ Which can also be represented in a deployment view as the figure below:
 
 We are using a set of event-driven design patterns to develop the overall solution. One of them is the **[sub domain decomposition](https://www.ibm.com/cloud/architecture/architectures/eventDrivenArchitecture/patterns#decomposebysubdomain)**. From the analysis output, we have the aggregates, actors and data that are helping us to extract a set of subdomains.
 
-_**NOTE:**_ The details below are the initial outputs from the original [event storming analysis](/implementation/event-storming-analysis/) and [domain-driven design](/implementation/domain-driven-design/) activities. However, the application model has evolved to keep up with the use case and the details for the currently implemented use case can be found on the [Topics](/microservices/topic-details/) and [Events](/microservices/event-details/) pages.
+_**NOTE:**_ The details below are the initial outputs from the original [event storming analysis](https://ibm-cloud-architecture.github.io/refarch-kc/implementation/event-storming-analysis/) and [domain-driven design](https://ibm-cloud-architecture.github.io/refarch-kc/implementation/domain-driven-design/) activities. However, the application model has evolved to keep up with the use case and the details for the currently implemented use case can be found on the [Topics](https://ibm-cloud-architecture.github.io/refarch-kc/microservices/topic-details/) and [Events](https://ibm-cloud-architecture.github.io/refarch-kc/microservices/event-details/) pages.
 
 * **Fleet Service**: responsible for managing the fleet of ships (container carriers), per major ocean.
     * **Information model:**
-         * Fleet has multiple ships,
+         * Fleet has multiple ships.
          * Ship has unique identifier (we will use its name), a container capacity (represented as a matrix to make it simple), current position, status, voyage identifier for the voyage it is doing.
     * **Events:** Ship commission, ship position, load container event, unload container event, start itinerary X, arrive at port, docked,...
     * **Operations:** CRUD operations for Fleet and Ship management and the relationship between the two entities.
     * **Implementation:** [github.com/ibm-cloud-architecture/refarch-kc-ms](https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/fleet-ms)
-* **Voyages Service**: define a set of voyage schedules supported by the shipping company
+* **Voyages Service**: define a set of voyage schedules supported by the shipping company.
     * **Information model:** voyageID, shipID, src_Port, planned_departure_date, dest_port, planned_arrival_dates, free_space_this_leg
     * **Events:** add itinerary route, OrderAssigned
     * **Operations:** CRUD on itinerary routes, query on capacity availability, assign slot to order, free slot for order.
     * **Implementation:** [github.com/ibm-cloud-architecture/refarch-kc-ms](https://github.com/ibm-cloud-architecture/refarch-kc-ms/tree/master/voyages-ms)
-* **Order Service**: manage the shipment order
+* **Order Service**: manage the shipment order.
     * **Information model:** Booking id , customer, pickup location, pickup after date, deliver location, expected deliver date, order status, assigned container
     * **Events:** order placed, order assigned to voyage (sets VoyageID, ship ID), container assigned to order (sets container ID), Landorder, Transport associated with pickup container, Order status event, Order billing/accounting event
     * **Operations:** CRUD on order, update order status
@@ -58,5 +58,3 @@ _**NOTE:**_ The details below are the initial outputs from the original [event s
     * **Events:** order created, order assigned, container added, container anomaly, container maintenance, ...
     * **Operations:** CRUD on container
     * **Implementation:** [github.com/ibm-cloud-architecture/refarch-kc-container-ms](https://github.com/ibm-cloud-architecture/refarch-kc-container-ms)
-* Customs and Export Service (not yet implemented)
-* Land Transport Service: (not yet implemented)
