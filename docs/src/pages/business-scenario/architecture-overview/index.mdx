@@ -7,7 +7,7 @@ description: Architectural overview of the Reefer Container Shipment reference i
 
 ### System Context
 
-When dealing with a microservices architecture, we want to start with a high-level understanding and drill down into more detailed view. The system context view for the solution can be seen in the diagram below:
+There are six main microservices implemented in this reference architecture. They each serve to fulfil the various parts of the Reefer Shipment Solution as outlined further below. When dealing with a microservices architecture, it is common to start with a high-level overview of the system and the entities that compose it, before drilling down into a more detailed view. The system context view for the solution can be seen in the diagram below:
 
 ![System Context](./images/kc-syst-ctx.png)
 
@@ -17,7 +17,7 @@ Deploying the different components using event-driven and microservice patterns,
 
 ![High level component view](./images/kc-hl-comp-view.png)
 
-* Top left represents the [user interface](https://ibm-cloud-architecture.github.io/refarch-kc/microservices/user-interface/) to support the demonstration of the Reefer Container Shipment solution, with a set of widgets to present the ships movements, the container tracking / monitoring and the event dashboards.
+* Top left represents the [user interface](https://ibm-cloud-architecture.github.io/refarch-kc/microservices/user-interface/), implemented to support driving the Reefer Container Shipment solution. It includes a set of widgets to visualise the ships movements, the container tracking / monitoring and the event dashboards.
 * The event backbone is used to define a set of topics used in the solution and as event sourcing for microservice to microservice data eventual consistency support.
 * Each service supports the top-level process with a context boundary defining the microservice scope.
 * Streaming analytics is used to process aggregates and analytics on containers and ship movement data ingested in real-time.
