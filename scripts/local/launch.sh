@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 
 # Script we are executing
-echo -e " \e[32m@@@ Excuting script: \e[1;33mlaunch.sh \e[0m"
+echo -e "---------------------------------------------"
+echo -e "--  Executing script: \e[1;33mlaunch.sh \e[0m"
+echo -e "---------------------------------------------"
 
 # Get the absolute path for this file
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 # Get the absolute path for the refarch-kc project
 MAIN_DIR=`echo ${SCRIPTPATH} | sed 's/\(.*refarch-kc\).*/\1/g'`
 
+# Get the environment configuration file
 SETENV="${MAIN_DIR}/scripts/setenv.sh"
 
 # Checking if the setenv.sh file exist for reading environment variables
@@ -19,30 +22,31 @@ fi
 
 # Get what option the user wants to launch
 if [[ $# -eq 0 ]];then
-    echo -e "\e[31m [ERROR] - Specify which option to launch: launch.sh [ BACKEND | SOLUTION | ITGTESTS | TELEMETRY ]\e[0m"
+    echo -e "\e[31m [ERROR] - Specify which option to launch: launch.sh [ BACKEND | DEV | TELEMETRY ]\e[0m"
     exit 1
 else
     # Read the option to launch
     toLaunch=$1
 
     # Validate the option to launch
-    if [[ "${toLaunch}" != "BACKEND" ]] && [[ "${toLaunch}" != "SOLUTION" ]] && [[ "${toLaunch}" != "DEV" ]] && [[ "${toLaunch}" != "TELEMETRY" ]]
+    if [[ "${toLaunch}" != "BACKEND" ]] && [[ "${toLaunch}" != "DEV" ]] && [[ "${toLaunch}" != "TELEMETRY" ]]
     then
-        echo -e "\e[31m [ERROR] - Specify an appropriate option to launch: launch.sh [ BACKEND | SOLUTION | DEV | TELEMETRY ]\e[0m"
+        echo -e "\e[31m [ERROR] - Specify an appropriate option to launch: launch.sh [ BACKEND | DEV | TELEMETRY ]\e[0m"
         exit 1
     fi
 
-    # Read environment variables for LOCAL
-    source $SETENV LOCAL
+    # Read environment variables
+    source $SETENV
 
     case ${toLaunch} in
     BACKEND)
         # Launch backend components
         kafka=$(docker-compose -f ${MAIN_DIR}/docker/backbone-compose.yml ps | grep kafka | grep Up | awk '{ print $1}')
-        if [[ $kafka != "docker_kafka1_1" ]]
+        if [[ $kafka != "docker_kafka_1" ]]
         then
-            echo -e " \e[32m@@@ Start back end\e[39m"
-            rm -r kafka1 zookeeper1
+            echo -e "\e[32mStarting backend components\e[39m"
+            # Removing previous kafka and zookeeper data
+            rm -rf ${MAIN_DIR}/docker/kafka-data ${MAIN_DIR}/docker/zookeeper-data
             # Launching the backbone components in detached mode so that the output is cleaner
             # To see the logs execute either:
             # 1. docker-compose -f ${MAIN_DIR}/docker/backbone-compose.yml logs
@@ -51,38 +55,33 @@ else
             sleep 15
             ${MAIN_DIR}/scripts/createTopics.sh LOCAL
         else
-            echo -e "\e[32m@@@ Back end services are running. These are the kafka topics: \e[39m"
-            docker exec -ti docker_kafka1_1 /bin/bash -c "/opt/kafka/bin/kafka-topics.sh --list --zookeeper zookeeper1:2181"
-        fi
-        ;;
-    SOLUTION)
-        # Launch solution
-        solution=$(docker-compose -f kc-solution-compose.yml ps | grep simulator | grep Up | awk '{ print $1}')
-        if [[ $solution != "docker_simulator_1" ]]
-        then
-            echo -e "\e[32m@@@ Start all solution microservices\e[39m"
-            # Launching the solution components in detached mode so that the output is cleaner
-            # To see the logs execute either:
-            # 1. docker-compose -f ${MAIN_DIR}/docker/kc-solution-compose.yml logs
-            # 2. docker logs <docker_container_id>
-            docker-compose -f ${MAIN_DIR}/docker/kc-solution-compose.yml up -d
-        else
-            echo -e "\e[32m@@@ all solution microservices are running\e[39m"
+            echo -e "\e[32mBackend services are already running.\e[39m These are the kafka topics:"
+            docker exec -ti docker_kafka_1 /bin/bash -c "/opt/kafka/bin/kafka-topics.sh --list --zookeeper zookeeper:2181"
         fi
         ;;
     DEV)
         # Launch itgtests components
-        echo -e " \e[32m@@@ Start itgtests components\e[39m"
+        echo -e "\e[32mStarting development components\e[39m"
         MICROSERVICES="kcontainer-ui
-            kcontainer-fleet-ms
             kcontainer-order-command-ms
             kcontainer-order-query-ms
             kcontainer-voyages-ms
             kcontainer-spring-container-ms"
+            # Not yet refactored
+            #kcontainer-fleet-ms"
+
+        # Check Appsody is installed
+        echo "This is the path for appsody binaries: "
+        which appsody
+        if [ $? -eq 1 ]; then
+            echo -e "\e[31m [ERROR] - Appsody binaries could not be found. Please, install appsody first.\e[0m" 
+            exit 1
+        fi
+
         # Check if we already have the docker images built
         for microservice in ${MICROSERVICES}
         do
-            echo -e "Building the ${microservice}:test docker image..."
+            echo -e "\e[1;33mBuilding the ${microservice}:test docker image...\e[39m"
             case ${microservice} in
             kcontainer-ui)
                 if [ ! -d "${MAIN_DIR}/../refarch-kc-ui" ]; then
@@ -90,6 +89,11 @@ else
                     echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
                     exit 1
                 fi
+                # Not an Appsody application yet
+                # pushd ${MAIN_DIR}/../refarch-kc-ui/
+                # appsody build -t ibmcase/${microservice}:test
+                # popd
+                # echo -e "Done"
                 docker build -f ${MAIN_DIR}/../refarch-kc-ui/Dockerfile -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-ui/
                 if [[ $? -ne 0 ]]
                 then 
@@ -105,6 +109,11 @@ else
                     echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
                     exit 1
                 fi
+                # Not an Appsody application yet
+                # pushd ${MAIN_DIR}/../refarch-kc-ms/fleet-ms/
+                # appsody build -t ibmcase/${microservice}:test
+                # popd
+                # echo -e "Done"
                 docker build -f ${MAIN_DIR}/../refarch-kc-ms/fleet-ms/Dockerfile.multistage -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-ms/fleet-ms/
                 if [[ $? -ne 0 ]]
                 then 
@@ -120,12 +129,14 @@ else
                     echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
                     exit 1
                 fi
-                docker build -f ${MAIN_DIR}/../refarch-kc-order-ms/order-command-ms/Dockerfile.multistage -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-order-ms/order-command-ms/
+                pushd ${MAIN_DIR}/../refarch-kc-order-ms/order-command-ms/
+                appsody build -t ibmcase/${microservice}:test
                 if [[ $? -ne 0 ]]
                 then 
-                    echo -e "\e[31m[ERROR] - A problem occurred building the Docker image for ${microservice}\e[0m"
+                    echo -e "\e[31m[ERROR] - A problem occurred building the docker image for ${microservice}\e[0m"
                     exit 1
                 else
+                    popd
                     echo -e "Done"
                 fi
                 ;;
@@ -135,12 +146,14 @@ else
                     echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
                     exit 1
                 fi
-                docker build -f ${MAIN_DIR}/../refarch-kc-order-ms/order-query-ms/Dockerfile.multistage -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-order-ms/order-query-ms/
+                pushd ${MAIN_DIR}/../refarch-kc-order-ms/order-query-ms/
+                appsody build -t ibmcase/${microservice}:test
                 if [[ $? -ne 0 ]]
                 then 
-                    echo -e "\e[31m[ERROR] - A problem occurred building the Docker image for ${microservice}\e[0m"
+                    echo -e "\e[31m[ERROR] - A problem occurred building the docker image for ${microservice}\e[0m"
                     exit 1
                 else
+                    popd
                     echo -e "Done"
                 fi
                 ;;
@@ -150,12 +163,14 @@ else
                     echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
                     exit 1
                 fi
-                docker build -f ${MAIN_DIR}/../refarch-kc-ms/voyages-ms/Dockerfile -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-ms/voyages-ms/
+                pushd ${MAIN_DIR}/../refarch-kc-ms/voyages-ms/
+                appsody build -t ibmcase/${microservice}:test
                 if [[ $? -ne 0 ]]
                 then 
-                    echo -e "\e[31m[ERROR] - A problem occurred building the Docker image for ${microservice}\e[0m"
+                    echo -e "\e[31m[ERROR] - A problem occurred building the docker image for ${microservice}\e[0m"
                     exit 1
                 else
+                    popd
                     echo -e "Done"
                 fi
                 ;;
@@ -165,12 +180,14 @@ else
                     echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
                     exit 1
                 fi
-                docker build -f ${MAIN_DIR}/../refarch-kc-container-ms/SpringContainerMS/Dockerfile-local -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-container-ms/SpringContainerMS/
+                pushd ${MAIN_DIR}/../refarch-kc-container-ms/
+                appsody build -t ibmcase/${microservice}:test
                 if [[ $? -ne 0 ]]
                 then 
-                    echo -e "\e[31m[ERROR] - A problem occurred building the Docker image for ${microservice}\e[0m"
+                    echo -e "\e[31m[ERROR] - A problem occurred building the docker image for ${microservice}\e[0m"
                     exit 1
                 else
+                    popd
                     echo -e "Done"
                 fi
                 ;;
@@ -181,23 +198,24 @@ else
             esac
         done
 
-        echo -e "\e[32m@@@ Start all solution microservices\e[39m"
+        echo -e "\e[32mStarting all solution microservices\e[39m"
         # Launching the solution components in detached mode so that the output is cleaner
         # To see the logs execute either:
         # 1. docker-compose -f ${MAIN_DIR}/docker/kc-solution-compose.yml logs
         # 2. docker logs <docker_container_id>
         docker-compose -f ${MAIN_DIR}/docker/kc-development-compose.yml up -d
-        echo -e "\e[32m@@@ all itgtest components are running\e[39m"
         ;;
     TELEMETRY)
         # Launch anomaly detection from telemetries use case's components
+        # Check that appsody is installed
         echo "This is the path for appsody binaries: "
         which appsody
         if [ $? -eq 1 ]; then
             echo -e "\e[31m [ERROR] - Appsody binaries could not be found. Please, install appsody first.\e[0m" 
             exit 1
         fi
-        echo -e " \e[32m@@@ Start anomaly detection components\e[39m"
+
+        echo -e "\e[32mBuilding all telemetry components\e[39m"
         MICROSERVICES="kcontainer-spring-container-ms
             kcontainer-reefer-ml"
         # Check if we already have the docker images built
@@ -205,47 +223,54 @@ else
         do
             case ${microservice} in
             kcontainer-spring-container-ms)
-                echo -e "Building the ${microservice}:test docker image..."
+                echo -e "\e[1;33mBuilding the ${microservice}:test docker image...\e[0m"
                 if [ ! -d "${MAIN_DIR}/../refarch-kc-container-ms" ]; then
                     echo -e "\e[31m[ERROR] - The repository ${MAIN_DIR}/../refarch-kc-container-ms for ${microservice} does not exist.\e[0m"
                     echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
                     exit 1
                 fi
-                docker build -f ${MAIN_DIR}/../refarch-kc-container-ms/SpringContainerMS/Dockerfile-local -t ibmcase/${microservice}:test ${MAIN_DIR}/../refarch-kc-container-ms/SpringContainerMS/
+                pushd ${MAIN_DIR}/../refarch-kc-container-ms/
+                appsody build -t ibmcase/${microservice}:test
                 if [[ $? -ne 0 ]]
                 then 
-                    echo -e "\e[31m[ERROR] - A problem occurred building the Docker image for ${microservice}\e[0m"
+                    echo -e "\e[31m[ERROR] - A problem occurred building the docker image for ${microservice}\e[0m"
                     exit 1
                 else
+                    popd
                     echo -e "Done"
                 fi
                 ;;
             kcontainer-reefer-ml)
-                echo -e "Building the ${microservice}-scoringmp:test docker image..."
+                echo -e "\e[1;33mBuilding the ${microservice}-scoringmp:test docker image...\e[0m"
                 if [ ! -d "${MAIN_DIR}/../refarch-reefer-ml" ]; then
                     echo -e "\e[31m[ERROR] - The repository ${MAIN_DIR}/../refarch-reefer-ml for ${microservice} does not exist.\e[0m"
                     echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
                     exit 1
                 fi
-                docker build -f ${MAIN_DIR}/../refarch-reefer-ml/scoring-mp/Dockerfile.multistage -t ibmcase/${microservice}-scoringmp:test ${MAIN_DIR}/../refarch-reefer-ml/scoring-mp/
+
+                pushd ${MAIN_DIR}/../refarch-reefer-ml/scoring-mp/
+                appsody build -t ibmcase/${microservice}-scoringmp:test
                 if [[ $? -ne 0 ]]
                 then 
-                    echo -e "\e[31m[ERROR] - A problem occurred building the Docker image for ${microservice}\e[0m"
+                    echo -e "\e[31m[ERROR] - A problem occurred building the docker image for ${microservice}-scoringmp\e[0m"
                     exit 1
                 else
+                    popd
                     echo -e "Done"
                 fi
 
-                echo -e "Building the ${microservice}-flask-simulator:test docker image..."
-                if [ ! -d "${MAIN_DIR}/../refarch-reefer-ml" ]; then
-                    echo -e "\e[31m[ERROR] - The repository ${MAIN_DIR}/../refarch-reefer-ml for ${microservice} does not exist.\e[0m"
-                    echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
-                    exit 1
-                fi
+                echo -e "\e[1;33mBuilding the ${microservice}-flask-simulator:test docker image...\e[0m"
+
                 pushd ${MAIN_DIR}/../refarch-reefer-ml/simulator
                 appsody build -t ibmcase/${microservice}-flask-simulator:test
-                popd
-                echo -e "Done"
+                if [[ $? -ne 0 ]]
+                then 
+                    echo -e "\e[31m[ERROR] - A problem occurred building the docker image for ${microservice}-flask-simulator\e[0m"
+                    exit 1
+                else
+                    popd
+                    echo -e "Done"
+                fi
                 ;;
             *)
                 echo -e "\e[31m[ERROR] - ${microservice} is incorrect.\e[0m"
@@ -254,20 +279,22 @@ else
             esac
         done
 
-        echo -e "\e[32m@@@ Start all anomaly detection microservices\e[39m"
+        echo -e "\e[32mStarting all telemetry microservices\e[39m"
         # Launching the solution components in detached mode so that the output is cleaner
         # To see the logs execute either:
         # 1. docker-compose -f ${MAIN_DIR}/docker/kc-solution-compose.yml logs
         # 2. docker logs <docker_container_id>
         docker-compose -f ${MAIN_DIR}/docker/kc-development-compose-anomaly.yml up -d
-        echo -e "\e[32m@@@ all anomaly detection components are running\e[39m"
+        echo -e "\e[32mAll telemetry components are running\e[39m"
         ;;
     *)
-        echo -e "\e[31m [ERROR] - Specify an appropriate option to launch: launch.sh [ BACKEND | SOLUTION | DEV | TELEMETRY ]\e[0m"
+        echo -e "\e[31m [ERROR] - Specify an appropriate option to launch: launch.sh [ BACKEND | DEV | TELEMETRY ]\e[0m"
         exit 1
         ;;
     esac
 fi
 
 # Script we are executing
-echo -e " \e[32m@@@ End script: \e[1;33mlaunch.sh \e[0m"
+echo -e "---------------------------------------------"
+echo -e "--  End script: \e[1;33mlaunch.sh \e[0m"
+echo -e "---------------------------------------------"

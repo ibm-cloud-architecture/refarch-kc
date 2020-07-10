@@ -1,146 +1,109 @@
-if [[ $# -eq 0 ]];then
-  kcenv="LOCAL"
-else
-  kcenv=$1
-fi
+#!/usr/bin/env bash
 
-case "$kcenv" in
-   IBMCLOUD)
-        export KAFKA_BROKERS=kafka03-prod02.messagehub.services.us-south.bluemix.net:9093,kafka01-prod02.messagehub.services.us-south.bluemix.net:9093,kafka02-prod02.messagehub.services.us-south.bluemix.net:9093,kafka04-prod02.messagehub.services.us-south.bluemix.net:9093,kafka05-prod02.messagehub.services.us-south.bluemix.net:9093
-        export KAFKA_APIKEY="<>"
-        export KAFKA_ADMIN_URL= "https://kafka-admin-prod02.messagehub.services.us-south.bluemix.net:443"
-        export KAFKA_ENV="IBMCLOUD"
-        export CA_LOCATION="./Certificates.pem"
-        export POSTGRESQL_URL="jdbc:postgresql://<>.databases.appdomain.cloud:<>/ibmclouddb?sslmode=verify-full&sslfactory=org.postgresql.ssl.NonValidatingFactory"
-        export POSTGRESQL_USER="ibm_cloud_<>"
-        export POSTGRESQL_PWD="<>"
-        export POSTGRESQL_CA_PEM="$(cat ./postgresql.crt)"
-        export IC_POSTGRES_SERV="Green-DB-PostgreSQL"
-        export WEBAPP="<>.containers.appdomain.cloud:31010"
-        export FLEET_MS="<>.containers.appdomain.cloud:31300"
-        export ORDER_CMD_MS="<>.containers.appdomain.cloud:31200"
-        export ORDER_QUERY_MS="<>.containers.appdomain.cloud:31100"
-        export VOYAGE_MS="<>.containers.appdomain.cloud:31000"
-        export CONTAINER_MS="<>.containers.appdomain.cloud:32302"
-        export IKS_CLUSTER_NAME=""
-        export IKS_ZONES=""
-        export IKS_NAMESPACE="greencompute"
-        export IKS_REGION="us-east"
-        export IBMCLOUD_USER=""
-        export IBMCLOUD_PWD=""
-        export IBMCLOUD_ACCOUNT=""
-        ;;
-   OCP)
-        # Event Streams bootstrap server
-        export KAFKA_BROKERS="<>"
-        # Event Streams bootstrap server too
-        export SCHEMA_REGISTRY_URL="<>"
-        export KAFKA_ENV="OCP"
-        export KAFKA_APIKEY="<>"
-        # Location for your PEM file
-        export CA_LOCATION=""
-        # PEM file name
-        export PEM_FILE=""
-        # Order command microservice url
-        export ORDER_CMD_MS=""
-        # Order Query microservice url
-        export ORDER_QUERY_MS=""
-        # Container microservice url
-        export CONTAINER_SPRING_MS=""
-        # Voyage microservice url
-        export VOYAGE_MS=""
-        # Name of the orders, orderCommand and containers topics
-        export ITGTESTS_ORDERS_TOPIC="orders"
-        export ITGTESTS_ORDER_COMMANDS_TOPIC="order-commands"
-        export ITGTESTS_CONTAINERS_TOPIC="itgtests"
-        # BPM service for the container anomalies
-        export BPM_ANOMALY=""
-        # BPM service login endpoint for the container anomalies
-        export BPM_ANOMALY_LOGIN=""
-        # BPM service user for the container anomalies
-        export BPM_ANOMALY_USER=""
-        # BPM service password for the container anomalies
-        export BPM_ANOMALY_PASSWORD=""
-        
-    ;;
-   LOCAL)
-        export KAFKA_BROKERS="kafka1:9092"
-        export KAFKA_ENV="LOCAL"
-        export WEBAPP="kcsolution:3010"
-        export FLEET_MS="fleetms:9080"
-        export ORDER_CMD_MS="ordercmd:9080"
-        export ORDER_QUERY_MS="orderquery:9080"
-        export CONTAINER_SPRING_MS="springcontainerms:8080"
-        export VOYAGE_MS="voyages:3000"
-        export POSTGRESQL_URL="jdbc:postgresql1://postgres:5432/postgres"
-        export POSTGRESQL_USER="postgres"
-        export POSTGRESQL_PWD="supersecret"
-        export POSTGRESQL_CA_PEM=""
-        export SCHEMA_REGISTRY_URL="http://schemaregistry1:8081"
-        export ITGTESTS_ORDERS_TOPIC="orders"
-        export ITGTESTS_ORDER_COMMANDS_TOPIC="order-commands"
-        export ITGTESTS_CONTAINERS_TOPIC="containers"
-        export ITGTESTS_CONTAINER_ANOMALY_RETRY_TOPIC="container-anomaly-retry"
-        export ITGTESTS_CONTAINER_ANOMALY_DEAD_TOPIC="container-anomaly-dead"
-        # BPM service for the container anomalies
-        export BPM_ANOMALY=""
-        # BPM service login endpoint for the container anomalies
-        export BPM_ANOMALY_LOGIN=""
-        # BPM service user for the container anomalies
-        export BPM_ANOMALY_USER=""
-        # BPM service password for the container anomalies
-        export BPM_ANOMALY_PASSWORD=""
-        # BPM authentication token time expiration
-        export BPM_EXPIRATION=60
-        # Threshold for number of anomaly events before calling BPM
-        export ANOMALY_THRESHOLD=3
-        # Logging levels for the Container MS component. Defaults to INFO
-        export LOGGING_CONTAINER_MS_ROOT="INFO"
-        export LOGGING_CONTAINER_MS_CONSUMER_CONFIG="ERROR"
-        export LOGGING_CONTAINER_MS_PRODUCER_CONFIG="ERROR"
-        # Mockup the call to the anomaly detection prediction service
-        export PREDICTIONS_ENABLED="true"
-        # Url composition for the anomaly detection prediction service
-        export CP4D_BASE_URL=""
-        export CP4D_PREDICTION_URL=""
-        # Credentials for the anomaly detection prediction service
-        export CP4D_USER=""
-        export CP4D_PWD=""
-        # Topics the anomaly scoring will read and produce messages from and to.
-        export TELEMETRY_TOPIC="reefer-telemetry"
-        # Topic for the container events
-        export KCSOLUTION_CONTAINERS_TOPIC="containers"
-        # Topic for the container anomaly retry events
-        export KCSOLUTION_CONTAINER_ANOMALY_RETRY_TOPIC="container-anomaly-retry"
-        # Topic for the container anomaly dead events
-        export KCSOLUTION_CONTAINER_ANOMALY_DEAD_TOPIC="container-anomaly-dead"
-        # Topic for the orders events
-        export KCSOLUTION_ORDERS_TOPIC="orders"
+# Script we are executing
+echo -e "---------------------------------------------"
+echo -e "--  Executing script: \e[1;33msetenv.sh \e[0m"
+echo -e "---------------------------------------------"
 
-   ;;
-   MINIKUBE)
-        export KAFKA_BROKERS="kafkabitmani:9092"
-        export KAFKA_APIKEY="nokey"
-        export KAFKA_ENV="MINIKUBE"
-        export POSTGRESQL_URL="jdbc:postgresql://postgresql-db:5432/postgres"
-        export POSTGRESQL_USER="postgres"
-        export POSTGRESQL_PWD="supersecret"
-        export WEBAPP="<>.containers.appdomain.cloud:31010"
-        export FLEET_MS="<>.containers.appdomain.cloud:31300"
-        export ORDER_CMD_MS="<>.containers.appdomain.cloud:31200"
-        export ORDER_QUERY_MS="<>.containers.appdomain.cloud:31100"
-        export VOYAGE_MS="<>.containers.appdomain.cloud:31000"
-        export CONTAINER_MS="<>.containers.appdomain.cloud:32302"
-        export POSTGRESQL_CA_PEM=""
-   ;;
-esac
+######################################################## 
+# Kafka
+########################################################
+echo
+echo -e "\t Kafka Properties"
+echo -e "\t ----------------"
+export KAFKA_BROKERS="kafka:9092"                                               && echo -e "\t KAFKA_BROKERS=${KAFKA_BROKERS}"
+# Needed if using IBM Event Streams
+export KAFKA_APIKEY=""                                                          && echo -e "\t KAFKA_APIKEY=${KAFKA_APIKEY}"
+export SCHEMA_REGISTRY_URL="http://schemaregistry:8081"                         && echo -e "\t SCHEMA_REGISTRY_URL=${SCHEMA_REGISTRY_URL}"
+# Needed if using IBM Event Streams On-Premises (Pre operator based where SSL + Certs was enforced)
+# Both the truststore and the pem certificate would need to be present within the container.
+# For that, we either build them in or mount them in docker-compose
+# export TRUSTSTORE_ENABLED="true"                                              && echo -e "\t TRUSTSTORE_ENABLED=${TRUSTSTORE_ENABLED}"
+# export TRUSTSTORE_PATH=""                                                     && echo -e "\t TRUSTSTORE_PATH=${TRUSTSTORE_PATH}"
+# export TRUSTSTORE_PWD=""                                                      && echo -e "\t TRUSTSTORE_PWD=${TRUSTSTORE_PWD}"
+# export CERTS_ENABLED="true"                                                   && echo -e "\t CERTS_ENABLED=${CERTS_ENABLED}"
+# Pem certificate
+# export CERTS_PATH=""                                                          && echo -e "\t CERTS_PATH=${CERTS_PATH}"
 
-export TRUSTSTORE_PWD="changeit"
-export JKS_LOCATION="$JAVA_HOME/jre/lib/security/cacerts"
-export KAFKA_INTERNAL_PATH="/opt/bitnami/kafka/"
-export NB_TOPICS=10
-# or /opt/kafka/
+######################################################## 
+# Postgres
+########################################################
+echo
+echo -e "\t Postgres Properties"
+echo -e "\t -------------------"
+export POSTGRESQL_URL="jdbc:postgresql://postgresql:5432/postgres"              && echo -e "\t POSTGRESQL_URL=${POSTGRESQL_URL}"
+export POSTGRESQL_USER="postgres"                                               && echo -e "\t POSTGRESQL_USER=${POSTGRESQL_USER}"
+export POSTGRESQL_PWD="supersecret"                                             && echo -e "\t POSTGRESQL_PWD=${POSTGRESQL_PWD}"
+# Postgresql instance on IBM Cloud
+# export POSTGRESQL_CA_PEM=""
 
-echo $KAFKA_ENV
-echo $KAFKA_BROKERS
-echo $POSTGRESQL_URL
+######################################################## 
+# BPM
+########################################################
+echo
+echo -e "\t BPM Properties"
+echo -e "\t --------------"
+export BPM_ANOMALY="http://localhost:8080/bpm_mockup/bpm_process_404"           && echo -e "\t BPM_ANOMALY=${BPM_ANOMALY}"
+export BPM_ANOMALY_LOGIN="http://localhost:8080/bpm_mockup/login"               && echo -e "\t BPM_ANOMALY_LOGIN=${BPM_ANOMALY_LOGIN}"
+export BPM_ANOMALY_USER="blabla"                                                && echo -e "\t BPM_ANOMALY_USER=${BPM_ANOMALY_USER}"
+export BPM_ANOMALY_PASSWORD="whatever"                                          && echo -e "\t BPM_ANOMALY_PASSWORD=${BPM_ANOMALY_PASSWORD}"
+# BPM authentication token time expiration
+export BPM_EXPIRATION=5                                                         && echo -e "\t BPM_EXPIRATION=${BPM_EXPIRATION}"
+# Threshold for number of anomaly events before calling BPM
+export ANOMALY_THRESHOLD=3                                                      && echo -e "\t ANOMALY_THRESHOLD=${ANOMALY_THRESHOLD}"
+
+
+######################################################## 
+# Telemetry
+########################################################
+echo
+echo -e "\t Telemetry Properties"
+echo -e "\t --------------------"
+# Mockup the call to the anomaly detection prediction service
+export PREDICTIONS_ENABLED="false"                                              && echo -e "\t PREDICTIONS_ENABLED=${PREDICTIONS_ENABLED}"
+# Url composition for the anomaly detection prediction service
+export CP4D_BASE_URL=""                                                         && echo -e "\t CP4D_BASE_URL=${CP4D_BASE_URL}"
+export CP4D_PREDICTION_URL=""                                                   && echo -e "\t CP4D_PREDICTION_URL=${CP4D_PREDICTION_URL}"
+# Credentials for the anomaly detection prediction service
+export CP4D_USER=""                                                             && echo -e "\t CP4D_USER=${CP4D_USER}"
+export CP4D_PWD=""                                                              && echo -e "\t CP4D_PWD=${CP4D_PWD}"
+
+######################################################## 
+# Topics
+########################################################
+echo
+echo -e "\t Topics Properties"
+echo -e "\t -------------------"
+export KCSOLUTION_ORDERCOMMANDS_TOPIC="order-commands"                     && echo -e "\t KCSOLUTION_ORDERCOMMANDS_TOPIC=${KCSOLUTION_ORDERCOMMANDS_TOPIC}"
+export KCSOLUTION_ORDERS_TOPIC="orders"                                    && echo -e "\t KCSOLUTION_ORDERS_TOPIC=${KCSOLUTION_ORDERS_TOPIC}"
+export KCSOLUTION_CONTAINERS_TOPIC="containers"                            && echo -e "\t KCSOLUTION_CONTAINERS_TOPIC=${KCSOLUTION_CONTAINERS_TOPIC}"
+export KCSOLUTION_CONTAINER_ANOMALY_RETRY_TOPIC="container-anomaly-retry"  && echo -e "\t KCSOLUTION_CONTAINER_ANOMALY_RETRY_TOPIC=${KCSOLUTION_CONTAINER_ANOMALY_RETRY_TOPIC}"
+export KCSOLUTION_CONTAINER_ANOMALY_DEAD_TOPIC="container-anomaly-dead"    && echo -e "\t KCSOLUTION_CONTAINER_ANOMALY_DEAD_TOPIC=${KCSOLUTION_CONTAINER_ANOMALY_DEAD_TOPIC}"
+export KCSOLUTION_ERRORS_TOPIC="errors"                                    && echo -e "\t KCSOLUTION_ERRORS_TOPIC=${KCSOLUTION_ERRORS_TOPIC}"
+# Topics the anomaly scoring will read and produce messages from and to.
+export MP_MESSAGING_INCOMING_REEFER_TELEMETRY_TOPIC="reefer-telemetry"     && echo -e "\t MP_MESSAGING_INCOMING_REEFER_TELEMETRY_TOPIC=${MP_MESSAGING_INCOMING_REEFER_TELEMETRY_TOPIC}"
+export MP_MESSAGING_OUTGOING_CONTAINERS_TOPIC="containers"                 && echo -e "\t MP_MESSAGING_OUTGOING_CONTAINERS_TOPIC=${MP_MESSAGING_OUTGOING_CONTAINERS_TOPIC}"
+
+######################################################## 
+# Integration Tests Topics
+########################################################
+export ITGTESTS_ORDERS_TOPIC="orders"
+export ITGTESTS_ORDER_COMMANDS_TOPIC="order-commands"
+export ITGTESTS_CONTAINERS_TOPIC="containers"
+export ITGTESTS_CONTAINER_ANOMALY_RETRY_TOPIC="container-anomaly-retry"
+export ITGTESTS_CONTAINER_ANOMALY_DEAD_TOPIC="container-anomaly-dead"
+
+export ORDER_CMD_MS="ordercmd:9080"
+export ORDER_QUERY_MS="orderquery:9080"
+export CONTAINER_SPRING_MS="springcontainerms:8080"
+export VOYAGE_MS="voyages:3000"
+
+# Logging levels for the Container MS component. Defaults to INFO
+# export LOGGING_CONTAINER_MS_ROOT="INFO"
+# export LOGGING_CONTAINER_MS_CONSUMER_CONFIG="ERROR"
+# export LOGGING_CONTAINER_MS_PRODUCER_CONFIG="ERROR"
+
+# Script we are executing
+echo -e "---------------------------------------------"
+echo -e "--  End script: \e[1;33msetenv.sh \e[0m"
+echo -e "---------------------------------------------"

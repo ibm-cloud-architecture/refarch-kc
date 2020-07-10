@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 # Script we are executing
-echo -e "\e[32m@@@ Excuting script: \e[1;33mCreateTopics.sh \e[0m"
+echo -e "---------------------------------------------"
+echo -e "--  Excuting script: \e[1;33mCreateTopics.sh \e[0m"
+echo -e "---------------------------------------------"
 
 # Help
 if [[ $# -ne 1 ]];then
@@ -14,12 +16,7 @@ fi
 createTopic(){
     if [ ! -z "$1" ]
     then
-        if [[ $KAFKA_ENV == "LOCAL"  ]]
-        then
-            docker exec -ti docker_kafka1_1  /bin/bash -c "$KAFKA_INTERNAL_PATH/bin/kafka-topics.sh --create  --zookeeper zookeeper1:2181 --replication-factor 1 --partitions 1 --topic $1"
-        else
-            kubectl exec  -ti $POD_NAME  -n $KC_NAMESPACE -- kafka-topics.sh --create  --zookeeper kafkabitmani-zookeeper:2181 --replication-factor 1 --partitions 1 --topic $1
-        fi
+        docker exec -ti docker_kafka_1  /bin/bash -c "$KAFKA_INTERNAL_PATH/bin/kafka-topics.sh --create  --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic $1"
     else
         echo -e "\e[31m[ERROR] - Topic $1 is incorrect.\e[0m"
     fi
@@ -27,8 +24,7 @@ createTopic(){
 
 ### Variables
 
-ALL="allocated-orders
-bluewater-container
+ALL="bluewater-container
 bluewater-problem
 bluewater-ship
 containers
@@ -37,8 +33,9 @@ container-anomaly-retry
 container-anomaly-dead
 errors
 orders
-reefer-telemetry
-rejected-orders"
+reefer-telemetry"
+
+KAFKA_INTERNAL_PATH="/opt/bitnami/kafka/"
 
 ### Script
 
@@ -57,23 +54,14 @@ then
     exit 1
 fi
 
-# get current topics
-if [[ $KAFKA_ENV == "LOCAL"  ]]
-then
-    # The kafka-topics.sh --list command returns a list of the Kafka topics already created. However, this list comes with an ASCII Control Code carriage return (^M, ctrl+v or '\r')
-    # which, despite being a non-printable character, is taken into account by the uniq command to remove duplicates later on.
-    # This character can be removed by executing the dos2unix command. However, this utility might not be available in every laptop.
-    # Therefore we are going to use tr -d '\r' instead
-    ALREADY_CREATED=$(docker exec  -ti $kafka /bin/bash -c "$KAFKA_INTERNAL_PATH/bin/kafka-topics.sh --list --zookeeper zookeeper1:2181" | tr -d '\r')
-    # There are other alternative such as sed. Using sed 's/.$//g' we are removing the last character of every line which should be that carriage return character.
-    # However, if for any reason there is no such character we would have a bug.
-    # Other option, that I could not get to work, is the one described here: https://www.cyberciti.biz/faq/unix-linux-sed-ascii-control-codes-nonprintable/
-
-else
-    export POD_NAME=$(kubectl get pods --namespace $KC_NAMESPACE -l "app.kubernetes.io/name=kafka,app.kubernetes.io/instance=kafkabitmani,app.kubernetes.io/component=kafka" -o jsonpath="{.items[0].metadata.name}")
-    # The sed 's/'$(echo "\015")'//g' is to emulate the dos2unix command in order to remove the ^M character returned at the end of each line by the kafka-topics.sh script
-    ALREADY_CREATED=$(kubectl exec  -ti $POD_NAME  -n $KC_NAMESPACE -- kafka-topics.sh --list --zookeeper kafkabitmani-zookeeper:2181 | tr -d '\r')
-fi
+# The kafka-topics.sh --list command returns a list of the Kafka topics already created. However, this list comes with an ASCII Control Code carriage return (^M, ctrl+v or '\r')
+# which, despite being a non-printable character, is taken into account by the uniq command to remove duplicates later on.
+# This character can be removed by executing the dos2unix command. However, this utility might not be available in every laptop.
+# Therefore we are going to use tr -d '\r' instead
+ALREADY_CREATED=$(docker exec  -ti $kafka /bin/bash -c "$KAFKA_INTERNAL_PATH/bin/kafka-topics.sh --list --zookeeper zookeeper:2181" | tr -d '\r')
+# There are other alternative such as sed. Using sed 's/.$//g' we are removing the last character of every line which should be that carriage return character.
+# However, if for any reason there is no such character we would have a bug.
+# Other option, that I could not get to work, is the one described here: https://www.cyberciti.biz/faq/unix-linux-sed-ascii-control-codes-nonprintable/
 
 echo "These are the topics already created:"
 echo "${ALREADY_CREATED}"
@@ -104,4 +92,6 @@ else
 fi
 
 # Script we are executing
-echo -e " \e[32m@@@ End script: \e[1;33mCreateTopics.sh \e[0m"
+echo -e "---------------------------------------------"
+echo -e "--  End script: \e[1;33mCreateTopics.sh \e[0m"
+echo -e "---------------------------------------------"
