@@ -9,35 +9,33 @@ services:
         ports:
             - "8080:8080"
         environment:
-            KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka1:9092}
-            TELEMETRY_TOPIC: ${TELEMETRY_TOPIC:-reefer-telemetry}
-            CONTAINER_TOPIC: ${KCSOLUTION_CONTAINERS_TOPIC:-containers}
+            KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka:9092}
+            TELEMETRY_TOPIC: ${MP_MESSAGING_INCOMING_REEFER_TELEMETRY_TOPIC:-reefer-telemetry}
     springcontainerms:
         image: ibmcase/kcontainer-spring-container-ms:test
         hostname: springcontainerms
         ports:
             - "12081:8080"
         environment:
+            KAFKA_APIKEY: ${KAFKA_APIKEY}
+            KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka:9092}
             BPM_ANOMALY: ${BPM_ANOMALY:-https://postman-echo.com/status/404}
             BPM_ANOMALY_LOGIN: ${BPM_ANOMALY_LOGIN:-https://postman-echo.com/status/404}
             BPM_ANOMALY_USER: ${BPM_ANOMALY_USER:-user}
             BPM_ANOMALY_PASSWORD: ${BPM_ANOMALY_PASSWORD:-password}
             BPM_EXPIRATION: ${BPM_EXPIRATION:-60}
             ANOMALY_THRESHOLD: ${ANOMALY_THRESHOLD:-3}
-            KAFKA_APIKEY: ${KAFKA_APIKEY}
-            KAFKA_ENV: ${KAFKA_ENV:-LOCAL}
-            KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka1:9092}
-            POSTGRESQL_URL: ${POSTGRESQL_URL:-jdbc:postgresql://postgresql1:5432/postgres}
+            POSTGRESQL_URL: ${POSTGRESQL_URL:-jdbc:postgresql://postgresql:5432/postgres}
             POSTGRESQL_USER: ${POSTGRESQL_USER:-postgres}
             POSTGRESQL_PWD: ${POSTGRESQL_PWD:-supersecret}
             POSTGRESQL_CA_PEM: ${POSTGRESQL_CA_PEM}
-            LOGGING_CONTAINER_MS_ROOT: ${LOGGING_CONTAINER_MS_ROOT:-INFO}
-            LOGGING_CONTAINER_MS_CONSUMER_CONFIG: ${LOGGING_CONTAINER_MS_CONSUMER_CONFIG:-ERROR}
-            LOGGING_CONTAINER_MS_PRODUCER_CONFIG: ${LOGGING_CONTAINER_MS_PRODUCER_CONFIG:-ERROR}
-            KCSOLUTION_CONTAINERS_TOPIC: ${KCSOLUTION_CONTAINERS_TOPIC:-containers}
+            KCSOLUTION_CONTAINERS_TOPIC: ${MP_MESSAGING_OUTGOING_CONTAINERS_TOPIC:-containers}
             KCSOLUTION_CONTAINER_ANOMALY_RETRY_TOPIC: ${KCSOLUTION_CONTAINER_ANOMALY_RETRY_TOPIC:-container-anomaly-retry}
             KCSOLUTION_CONTAINER_ANOMALY_DEAD_TOPIC: ${KCSOLUTION_CONTAINER_ANOMALY_DEAD_TOPIC:-container-anomaly-dead}
             KCSOLUTION_ORDERS_TOPIC: ${KCSOLUTION_ORDERS_TOPIC:-orders}
+            # LOGGING_CONTAINER_MS_ROOT: ${LOGGING_CONTAINER_MS_ROOT:-INFO}
+            # LOGGING_CONTAINER_MS_CONSUMER_CONFIG: ${LOGGING_CONTAINER_MS_CONSUMER_CONFIG:-ERROR}
+            # LOGGING_CONTAINER_MS_PRODUCER_CONFIG: ${LOGGING_CONTAINER_MS_PRODUCER_CONFIG:-ERROR}
     scoringmp:
         image: ibmcase/kcontainer-reefer-ml-scoringmp:test
         hostname: scoringmp
@@ -50,6 +48,6 @@ services:
             CP4D_PREDICTION_URL: ${CP4D_PREDICTION_URL:-wrongPredictionUrl}
             CP4D_USER: ${CP4D_USER:-wrongUser}
             CP4D_PWD: ${CP4D_PWD:-wrongPassword}
-            MP_MESSAGING_INCOMING_REEFERTELEMETRY_TOPIC: ${TELEMETRY_TOPIC:-reefer-telemetry}
-            MP_MESSAGING_OUTGOING_CONTAINERS_TOPIC: ${KCSOLUTION_CONTAINERS_TOPIC:-containers}
-            MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BROKERS:-kafka1:9092}
+            MP_MESSAGING_INCOMING_REEFER_TELEMETRY_TOPIC: ${MP_MESSAGING_INCOMING_REEFER_TELEMETRY_TOPIC:-reefer-telemetry}
+            MP_MESSAGING_OUTGOING_CONTAINERS_TOPIC: ${MP_MESSAGING_OUTGOING_CONTAINERS_TOPIC:-containers}
+            MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BROKERS:-kafka:9092}

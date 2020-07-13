@@ -3,30 +3,27 @@
 
 version: '3'
 services:
-    simulator:
-        image: ibmcase/kcontainer-fleet-ms:test
-        hostname: fleetms
-        ports:
-            - "9080:9080"
-            - "9443:9443"
-        environment:
-            KAFKA_ENV: ${KAFKA_ENV:-LOCAL}
-            KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka1:9092}
-            KAFKA_APIKEY: ${KAFKA_APIKEY}
+    # Undergoing refactoring
+    # simulator:
+    #     image: ibmcase/kcontainer-fleet-ms:test
+    #     hostname: fleetms
+    #     ports:
+    #         - "9080:9080"
+    #         - "9443:9443"
+    #     environment:
+    #         KAFKA_ENV: ${KAFKA_ENV:-LOCAL}
+    #         KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka:9092}
+    #         KAFKA_APIKEY: ${KAFKA_APIKEY}
     web:
         image: ibmcase/kcontainer-ui:test
         hostname: kcsolution
         ports:
             - "3010:3010"
         environment:
-            KAFKA_ENV: ${KAFKA_ENV:-LOCAL}
-            KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka1:9092}
+            KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka:9092}
             KAFKA_APIKEY: ${KAFKA_APIKEY}
-            FLEET_MS_URL: http://simulator:9080/fleetms
-            ORDER_MS_URL: http://ordercmd:9080/orders
-            ORDER_QUERY_MS_URL: http://orderquery:9080/orders
         depends_on:
-            - simulator
+            # - simulator
             - ordercmd
             - orderquery
             - voyages
@@ -36,9 +33,11 @@ services:
         ports:
             - "10080:9080"
         environment:
-            KAFKA_ENV: ${KAFKA_ENV}
-            KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka1:9092}
+            KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka:9092}
             KAFKA_APIKEY: ${KAFKA_APIKEY}
+            KCSOLUTION_ORDERCOMMANDS_TOPIC: ${KCSOLUTION_ORDERCOMMANDS_TOPIC:-order-commands}
+            KCSOLUTION_ORDERS_TOPIC: ${KCSOLUTION_ORDERS_TOPIC:-orders}
+            KCSOLUTION_ERRORS_TOPIC: ${KCSOLUTION_ERRORS_TOPIC:-errors}
     orderquery:
         image: ibmcase/kcontainer-order-query-ms:test
         hostname: orderquery
@@ -46,8 +45,10 @@ services:
             - "11080:9080"
         environment:
             KAFKA_APIKEY: ${KAFKA_APIKEY}
-            KAFKA_ENV: ${KAFKA_ENV:-LOCAL}
             KAFKA_BROKERS: ${KAFKA_BROKERS}
+            KCSOLUTION_ORDERCOMMANDS_TOPIC: ${KCSOLUTION_ORDERCOMMANDS_TOPIC:-order-commands}
+            KCSOLUTION_ORDERS_TOPIC: ${KCSOLUTION_ORDERS_TOPIC:-orders}
+            KCSOLUTION_CONTAINERS_TOPIC: ${KCSOLUTION_CONTAINERS_TOPIC:-containers}
     voyages:
         image: ibmcase/kcontainer-voyages-ms:test
         hostname: voyages
@@ -55,32 +56,31 @@ services:
             - "3100:3000"
         environment:
             KAFKA_APIKEY: ${KAFKA_APIKEY}
-            KAFKA_ENV: ${KAFKA_ENV:-LOCAL}
-            KAFKA_BROKERS: ${KAFKA_BROKERS}
+            KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka:9092}
+            KCSOLUTION_ORDERS_TOPIC: ${KCSOLUTION_ORDERS_TOPIC:-orders}
     springcontainerms:
         image: ibmcase/kcontainer-spring-container-ms:test
         hostname: springcontainerms
         ports:
             - "12081:8080"
         environment:
+            KAFKA_APIKEY: ${KAFKA_APIKEY}
+            KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka:9092}
+            POSTGRESQL_URL: ${POSTGRESQL_URL:-jdbc:postgresql://postgresql:5432/postgres}
+            POSTGRESQL_USER: ${POSTGRESQL_USER:-postgres}
+            POSTGRESQL_PWD: ${POSTGRESQL_PWD:-supersecret}
+            POSTGRESQL_CA_PEM: ${POSTGRESQL_CA_PEM}
             BPM_ANOMALY: ${BPM_ANOMALY:-https://postman-echo.com/status/404}
             BPM_ANOMALY_LOGIN: ${BPM_ANOMALY_LOGIN:-https://postman-echo.com/status/404}
             BPM_ANOMALY_USER: ${BPM_ANOMALY_USER:-user}
             BPM_ANOMALY_PASSWORD: ${BPM_ANOMALY_PASSWORD:-password}
             BPM_EXPIRATION: ${BPM_EXPIRATION:-60}
             ANOMALY_THRESHOLD: ${ANOMALY_THRESHOLD:-3}
-            KAFKA_APIKEY: ${KAFKA_APIKEY}
-            KAFKA_ENV: ${KAFKA_ENV:-LOCAL}
-            KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka1:9092}
-            POSTGRESQL_URL: ${POSTGRESQL_URL:-jdbc:postgresql://postgresql1:5432/postgres}
-            POSTGRESQL_USER: ${POSTGRESQL_USER:-postgres}
-            POSTGRESQL_PWD: ${POSTGRESQL_PWD:-supersecret}
-            POSTGRESQL_CA_PEM: ${POSTGRESQL_CA_PEM}
-            LOGGING_CONTAINER_MS_ROOT: ${LOGGING_CONTAINER_MS_ROOT:-INFO}
-            LOGGING_CONTAINER_MS_CONSUMER_CONFIG: ${LOGGING_CONTAINER_MS_CONSUMER_CONFIG:-ERROR}
-            LOGGING_CONTAINER_MS_PRODUCER_CONFIG: ${LOGGING_CONTAINER_MS_PRODUCER_CONFIG:-ERROR}
             KCSOLUTION_CONTAINERS_TOPIC: ${KCSOLUTION_CONTAINERS_TOPIC:-containers}
             KCSOLUTION_CONTAINER_ANOMALY_RETRY_TOPIC: ${KCSOLUTION_CONTAINER_ANOMALY_RETRY_TOPIC:-container-anomaly-retry}
             KCSOLUTION_CONTAINER_ANOMALY_DEAD_TOPIC: ${KCSOLUTION_CONTAINER_ANOMALY_DEAD_TOPIC:-container-anomaly-dead}
             KCSOLUTION_ORDERS_TOPIC: ${KCSOLUTION_ORDERS_TOPIC:-orders}
+            # LOGGING_CONTAINER_MS_ROOT: ${LOGGING_CONTAINER_MS_ROOT:-INFO}
+            # LOGGING_CONTAINER_MS_CONSUMER_CONFIG: ${LOGGING_CONTAINER_MS_CONSUMER_CONFIG:-ERROR}
+            # LOGGING_CONTAINER_MS_PRODUCER_CONFIG: ${LOGGING_CONTAINER_MS_PRODUCER_CONFIG:-ERROR}
 

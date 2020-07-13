@@ -1,17 +1,6 @@
 apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaTopic
 metadata:
-  name: itg-allocated-orders
-  namespace: kafka
-  labels:
-    strimzi.io/cluster: my-cluster
-spec:
-  partitions: 1
-  replicas: 1
----
-apiVersion: kafka.strimzi.io/v1beta1
-kind: KafkaTopic
-metadata:
   name: itg-bluewater-container
   namespace: kafka
   labels:
@@ -112,17 +101,6 @@ apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaTopic
 metadata:
   name: itg-reefer-telemetry
-  namespace: kafka
-  labels:
-    strimzi.io/cluster: my-cluster
-spec:
-  partitions: 1
-  replicas: 1
----
-apiVersion: kafka.strimzi.io/v1beta1
-kind: KafkaTopic
-metadata:
-  name: itg-rejected-orders
   namespace: kafka
   labels:
     strimzi.io/cluster: my-cluster
