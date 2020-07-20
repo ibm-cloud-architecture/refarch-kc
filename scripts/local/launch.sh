@@ -248,15 +248,18 @@ else
                     exit 1
                 fi
 
-                pushd ${MAIN_DIR}/../refarch-reefer-ml/scoring-mp/
-                appsody build -t ibmcase/${microservice}-scoringmp:test
+                docker build -f ${MAIN_DIR}/../refarch-reefer-ml/scoring-mp/Dockerfile.multistage -t ibmcase/${microservice}-scoringmp:test ${MAIN_DIR}/../refarch-reefer-ml/scoring-mp/
+                
+                # Scoring-mp has not yet been appsodyfied
+                # pushd ${MAIN_DIR}/../refarch-reefer-ml/scoring-mp/
+                # appsody build -t ibmcase/${microservice}-scoringmp:test
                 if [[ $? -ne 0 ]]
                 then 
                     echo -e "\e[31m[ERROR] - A problem occurred building the docker image for ${microservice}-scoringmp\e[0m"
                     exit 1
-                else
-                    popd
-                    echo -e "Done"
+                # else
+                #     popd
+                #     echo -e "Done"
                 fi
 
                 echo -e "\e[1;33mBuilding the ${microservice}-flask-simulator:test docker image...\e[0m"
