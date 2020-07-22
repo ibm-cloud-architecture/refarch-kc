@@ -175,35 +175,35 @@ spec:
         - name: ITGTESTS_ORDERS_TOPIC
           #value: "itg-orders"
           valueFrom:
-            configMap:
+            configMapKeyRef:
               name: kafka-topics
               value: ordersTopic
         # Order Command topic name
         - name: ITGTESTS_ORDER_COMMANDS_TOPIC
           #value: "itg-order-commands"
           valueFrom:
-            configMap:
+            configMapKeyRef:
               name: kafka-topics
               value: orderCommandsTopic
         # Containers topic name
         - name: ITGTESTS_CONTAINERS_TOPIC
           #value: "itg-containers"
           valueFrom:
-            configMap:
+            configMapKeyRef:
               name: kafka-topics
               value: containersTopic
         # Container anomaly retry topic name
         - name: ITGTESTS_CONTAINER_ANOMALY_RETRY_TOPIC
           #value: "itg-container-anomaly-retry"
           valueFrom:
-            configMap:
+            configMapKeyRef:
               name: kafka-topics
               value: containerAnomalyRetryTopic
         # Container anomaly dead topic name
         - name: ITGTESTS_CONTAINER_ANOMALY_DEAD_TOPIC
           #value: "itg-container-anomaly-dead"
           valueFrom:
-            configMap:
+            configMapKeyRef:
               name: kafka-topics
               value: containerAnomalyDeadTopic
         # Location of your Event Streams pem certificate for ssl connections. You MUST download it in advance.
