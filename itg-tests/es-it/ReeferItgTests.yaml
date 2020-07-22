@@ -161,31 +161,51 @@ spec:
           value: "IBMCLOUD"
         # Order command microservice's service name
         - name: ORDER_CMD_MS
-          value: "order-command-ms:9080"
+          value: "ordercommandms-service:9080"
         # Order query microservice's service name
         - name: ORDER_QUERY_MS
-          value: "order-query-ms:9080"
+          value: "orderqueryms-service:9080"
         # Container microservice's service name
         - name: CONTAINER_SPRING_MS
-          value: "spring-container-ms:8080"
+          value: "springcontainerms-service:8080"
         # Voyage microservice's service name
         - name: VOYAGE_MS
-          value: "voyages-ms:3000"
+          value: "voyagesms-service:3000"
         # Orders topic name
         - name: ITGTESTS_ORDERS_TOPIC
-          value: "itg-orders"
+          #value: "itg-orders"
+          valueFrom:
+            configMap:
+              name: kafka-topics
+              value: ordersTopic
         # Order Command topic name
         - name: ITGTESTS_ORDER_COMMANDS_TOPIC
-          value: "itg-order-commands"
+          #value: "itg-order-commands"
+          valueFrom:
+            configMap:
+              name: kafka-topics
+              value: orderCommandsTopic
         # Containers topic name
         - name: ITGTESTS_CONTAINERS_TOPIC
-          value: "itg-containers"
+          #value: "itg-containers"
+          valueFrom:
+            configMap:
+              name: kafka-topics
+              value: containersTopic
         # Container anomaly retry topic name
         - name: ITGTESTS_CONTAINER_ANOMALY_RETRY_TOPIC
-          value: "itg-container-anomaly-retry"
+          #value: "itg-container-anomaly-retry"
+          valueFrom:
+            configMap:
+              name: kafka-topics
+              value: containerAnomalyRetryTopic
         # Container anomaly dead topic name
         - name: ITGTESTS_CONTAINER_ANOMALY_DEAD_TOPIC
-          value: "itg-container-anomaly-dead"
+          #value: "itg-container-anomaly-dead"
+          valueFrom:
+            configMap:
+              name: kafka-topics
+              value: containerAnomalyDeadTopic
         # Location of your Event Streams pem certificate for ssl connections. You MUST download it in advance.
         # This can be downloaded from the Event Streams UI.
         - name: PEM_CERT
