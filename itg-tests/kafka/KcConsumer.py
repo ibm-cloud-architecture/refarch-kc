@@ -4,10 +4,11 @@ from confluent_kafka import Consumer, KafkaError
 
 class KafkaConsumer:
 
-    def __init__(self, kafka_env = 'LOCAL', kafka_brokers = "", kafka_apikey = "", topic_name = "",autocommit = True):
+    def __init__(self, kafka_env = 'LOCAL', kafka_brokers = "", kafka_user = "", kafka_password = "", topic_name = "",autocommit = True):
         self.kafka_env = kafka_env
         self.kafka_brokers = kafka_brokers
-        self.kafka_apikey = kafka_apikey
+        self.kafka_user = kafka_user
+        self.kafka_password = kafka_password
         self.topic_name = topic_name
         self.kafka_auto_commit = autocommit
 
@@ -23,9 +24,10 @@ class KafkaConsumer:
         if (self.kafka_env != 'LOCAL'):
             options['security.protocol'] = 'SASL_SSL'
             options['sasl.mechanisms'] = 'PLAIN'
-            options['sasl.username'] = 'token'
-            options['sasl.password'] = self.kafka_apikey
+            options['sasl.username'] = self.kafka_user
+            options['sasl.password'] = self.kafka_password
         if (self.kafka_env == 'OCP'):
+            options['sasl.mechanisms'] = 'SCRAM-SHA-512'
             options['ssl.ca.location'] = os.environ['PEM_CERT']
         print("[KafkaConsumer] - This is the configuration for the consumer:")
         print('[KafkaConsumer] - {}'.format(options))
