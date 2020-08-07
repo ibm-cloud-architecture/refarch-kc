@@ -66,9 +66,8 @@ else
             kcontainer-order-command-ms
             kcontainer-order-query-ms
             kcontainer-voyages-ms
-            kcontainer-spring-container-ms"
-            # Not yet refactored
-            #kcontainer-fleet-ms"
+            kcontainer-spring-container-ms
+            kcontainer-fleet-ms"
 
         # Check Appsody is installed
         echo "This is the path for appsody binaries: "
@@ -89,12 +88,11 @@ else
                     echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
                     exit 1
                 fi
-                # Not an Appsody application yet
-                # pushd ${MAIN_DIR}/../refarch-kc-ui/
-                # appsody build -t ibmcase/${microservice}:latest
-                # popd
-                # echo -e "Done"
-                docker build -f ${MAIN_DIR}/../refarch-kc-ui/Dockerfile -t ibmcase/${microservice}:latest ${MAIN_DIR}/../refarch-kc-ui/
+                pushd ${MAIN_DIR}/../refarch-kc-ui/
+                appsody build -t ibmcase/${microservice}:latest
+                popd
+                echo -e "Done"
+                # docker build -f ${MAIN_DIR}/../refarch-kc-ui/Dockerfile -t ibmcase/${microservice}:latest ${MAIN_DIR}/../refarch-kc-ui/
                 if [[ $? -ne 0 ]]
                 then 
                     echo -e "\e[31m[ERROR] - A problem occurred building the Docker image for ${microservice}\e[0m"
@@ -109,12 +107,11 @@ else
                     echo -e "\e[31m[ERROR] - Please, clone that repository first.\e[0m"
                     exit 1
                 fi
-                # Not an Appsody application yet
-                # pushd ${MAIN_DIR}/../refarch-kc-ms/fleet-ms/
-                # appsody build -t ibmcase/${microservice}:latest
-                # popd
-                # echo -e "Done"
-                docker build -f ${MAIN_DIR}/../refarch-kc-ms/fleet-ms/Dockerfile.multistage -t ibmcase/${microservice}:latest ${MAIN_DIR}/../refarch-kc-ms/fleet-ms/
+                pushd ${MAIN_DIR}/../refarch-kc-ms/fleet-ms/
+                appsody build -t ibmcase/${microservice}:latest
+                popd
+                echo -e "Done"
+                # docker build -f ${MAIN_DIR}/../refarch-kc-ms/fleet-ms/Dockerfile.multistage -t ibmcase/${microservice}:latest ${MAIN_DIR}/../refarch-kc-ms/fleet-ms/
                 if [[ $? -ne 0 ]]
                 then 
                     echo -e "\e[31m[ERROR] - A problem occurred building the Docker image for ${microservice}\e[0m"

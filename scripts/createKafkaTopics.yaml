@@ -37,18 +37,31 @@ spec:
 
               KAFKA_CONFIG_FILE="/tmp/kafka-endpoint.config"
               cat <<EOT >> ${KAFKA_CONFIG_FILE}
-              sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="token" password="${KAFKA_APIKEY}";
               security.protocol=SASL_SSL
-              sasl.mechanism=PLAIN
               ssl.protocol=TLSv1.2
               ssl.enabled.protocols=TLSv1.2
               ssl.endpoint.identification.algorithm=HTTPS
               EOT
+              
+              if [[ "${KAFKA_USER}" == "token" ]]; then 
+                echo "sasl.mechanism=PLAIN" >> ${KAFKA_CONFIG_FILE}
+                echo "sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username=\"${KAFKA_USER}\" password=\"${KAFKA_PASSWORD}\";" >> ${KAFKA_CONFIG_FILE}
+              else
+                echo "ssl.truststore.type=PKCS12" >> ${KAFKA_CONFIG_FILE}
+                echo "sasl.mechanism=SCRAM-SHA-512" >> ${KAFKA_CONFIG_FILE}
+                echo "sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username\=\"${KAFKA_USER}\" password\=\"${KAFKA_PASSWORD}\";" >> ${KAFKA_CONFIG_FILE}
+              fi
 
               if [[ -f "${TRUSTSTORE_PATH}" ]]; then
                 echo "ssl.truststore.location=${TRUSTSTORE_PATH}" >> ${KAFKA_CONFIG_FILE}
                 echo "ssl.truststore.password=${TRUSTSTORE_PWD}" >> ${KAFKA_CONFIG_FILE}
               fi
+              
+              echo "------------------------------------------"
+              echo "-- Connection Properties --"
+              echo "------------------------------------------"
+              cat ${KAFKA_CONFIG_FILE}
+              echo
 
               cd /opt/bitnami/kafka/bin
 
@@ -91,14 +104,19 @@ spec:
               name: "kafka-brokers"
               key: brokers
         # Available from IBM Event Streams console under the "Connect to this service" button.
-        # For IBM Event Streams hosted on IBM Cloud, follow https://ibm-cloud-architecture.github.io/refarch-kc/deployments/backing-services/#event-streams-api-key
-        # For IBM Event Streams hosted on-premises via OpenShift, follow https://ibm-cloud-architecture.github.io/refarch-kc/deployments/backing-services/#event-streams-api-key_1
-        # kubectl create secret generic eventstreams-apikey --from-literal=binding='<replace with api key>'
-        - name: KAFKA_APIKEY
+        # For IBM Event Streams hosted on IBM Cloud, follow https://cloud.ibm.com/docs/EventStreams?topic=EventStreams-connecting
+        # For IBM Event Streams hosted on-premises via OpenShift, follow https://ibm.github.io/event-streams/security/managing-access/#creating-a-kafkauser-in-the-ibm-event-streams-ui
+        # kubectl create secret generic eventstreams-cred --from-literal=username='<replace with kafka username>' --from-literal=password='<replace with kafka password>'
+        - name: KAFKA_USER
           valueFrom:
             secretKeyRef:
-              name: "eventstreams-apikey"
-              key: binding
+              name: "eventstreams-cred"
+              key: username
+        - name: KAFKA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: "eventstreams-cred"
+              key: password
         # If you would prefer to the delete existing topics with the same name before attempting to create new topics,
         # set this value to 'true'. This is useful in clearing out old data when recreating an environment.
         - name: DELETE_EXISTING_TOPICS
@@ -113,10 +131,13 @@ spec:
         # For IBM Event Streams hosted on IBM Cloud, this is not currently required.
         # For IBM Event Streams hosted on-premises via OpenShift, this is 'password' by default.
         - name: TRUSTSTORE_PWD
-          value: "password"
+          valueFrom:
+            secretKeyRef:
+              name: "eventstreams-truststore-pwd"
+              key: password
         # Path inside the running container which the SSL certificate will be mounted to when required. This does not normally need to be modified.
         - name: TRUSTSTORE_PATH
-          value: "/tmp/eventstreams-ssl/es-cert.jks"
+          value: "/tmp/eventstreams-ssl/es-cert.p12"
         volumeMounts:
           - mountPath: "/tmp/eventstreams-ssl"
             name: eventstreams-truststore
@@ -126,7 +147,7 @@ spec:
           secret:
             # For IBM Event Streams hosted on IBM Cloud, this is not currently required.
             # For IBM Event Streams hosted on-premises via OpenShift, follow https://ibm-cloud-architecture.github.io/refarch-kc/deployments/backing-services/#event-streams-certificates
-            secretName: "eventstreams-truststore-jks"
+            secretName: "eventstreams-truststore"
             items:
             # When creating the required secret from the downloaded truststore file directly (ie '--from-file'),
             # the internal key of the Kubernetes Secret will be the filename of the downloaded file. If the downloaded
@@ -134,8 +155,8 @@ spec:
             # below to match name of the file downloaded to your system.
             # The correct value can be verified by using kubectl and jq via the following command:
             # kubectl get secret eventstreams-truststore-jks -o json | jq -r ".data | keys[0]"
-            - key: es-cert.jks
-              path: es-cert.jks
+            - key: es-cert.p12
+              path: es-cert.p12
             optional: true
       restartPolicy: Never
   backoffLimit: 0
