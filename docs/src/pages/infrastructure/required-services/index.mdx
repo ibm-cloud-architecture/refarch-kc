@@ -84,13 +84,13 @@ kubectl create configmap kafka-brokers --from-literal=brokers='<replace with com
 kubectl describe configmap kafka-brokers -n <target k8s namespace / ocp project>
 ```
 
-#### Event Streams API Key
+#### Event Streams User Credentials
 
-The Event Streams Broker API Key is needed to connect any deployed consumers or producers to the service in IBM Cloud. To avoid sharing security keys, create a Kubernetes Secret in the target cluster you will deploy the application microservices to.  This is available from the Service Credentials information you just created above.
+The Event Streams User Credentials are needed in order for any deployed consumers or producers to work with the IBM Event Streams service in IBM Cloud. To avoid sharing security keys, create a Kubernetes Secret in the target cluster you will deploy the application microservices to. This is available from the Service Credentials information you just created above.
 
 ```shell
-kubectl create secret generic eventstreams-apikey --from-literal=binding='<replace with api key>' -n <target k8s namespace / ocp project>
-kubectl describe secret eventstreams-apikey -n <target k8s namespace / ocp project>
+kubectl create secret generic eventstreams-cred --from-literal=username='token' --from-literal=password='<replace with api key>' -n <target k8s namespace / ocp project>
+kubectl describe secret eventstreams-cred -n <target k8s namespace / ocp project>
 ```
 
 ### IBM Event Streams on RedHat OpenShift Container Platform
@@ -108,40 +108,38 @@ kubectl create configmap kafka-brokers --from-literal=brokers='<replace with com
 kubectl describe configmap kafka-brokers -n <target k8s namespace / ocp project>
 ```
 
-#### Event Streams API Key
+#### Event Streams User Credentials
 
-The Event Streams Broker API Key is needed to connect any deployed consumers or producers to the service running in your cluster. To avoid sharing security keys, create a Kubernetes Secret in the target cluster you will deploy the application microservices to.  You can specify keys at the topic and consumer group levels or use a unique key for all topics and all consumer groups.
+The Event Streams Scram User Credentials are needed in order for any deployed consumers or producers to work with the IBM Event Streams instance running in your cluster. These SCRAM credentials are associated to the KafkaUser object that is being created behind the scenes. In order to create that KafkaUser object and obtain the SCRAM credentials for it, follow the instructions at <https://ibm.github.io/event-streams/security/managing-access/#creating-a-kafkauser-in-the-ibm-event-streams-ui>
 
-<InlineNotification kind="warning">
-**IMPORTANT: The API Key must be created using the CLI** as it needs to grant certain transactional IDs for the Order Command component's producers to be able to transactionally produce messages to the topics it needs to.
-</InlineNotification>
-
-In order to create the API Key through the CLI, you must install the Command Line Interface (CLI) explained in the IBM Event Streams post-installation instructions [here](https://ibm.github.io/event-streams/installing/post-installation/). Once you have the **cloudctl** CLI and the Event Streams plugin for it, you can create the API key as follows:
+To avoid sharing security keys, create a Kubernetes Secret in the target cluster you will deploy the application microservices to:
 
 ```shell
-cloudctl es iam-service-id-create <NAME> --role administrator --all-topics --all-groups --all-schemas --txnid "order-1,error-1" --description "<DESCRIPTION>"
+kubectl create secret generic eventstreams-cred --from-literal=username='<replace with scram username>' --from-literal=password='<replace with scram password>' -n <target k8s namespace / ocp project>
+kubectl describe secrets -n <target k8s namespace / ocp project>
 ```
 
-where you can tweak the role, topics, groups, etc to be more restrictive but the **txnid** must be as described.
+**IMPORTANT:** Our reference application uses idempotent producers which our KafkaUser needs a special set of permissions for. In, order to add these, edit the KafkaUser created when you generatted the SCRAM credentials following the link above in this section and add the following set of permissions in the `acls` list:
 
-Once you run the command above and the service credentials are created and the API key generated, provide the API key in the secret below:
-
-```shell
-kubectl create secret generic eventstreams-apikey --from-literal=binding='<replace with api key>' -n <target k8s namespace / ocp project>
-kubectl describe secrets -n <target k8s namespace / ocp project>
+```yaml
+- host: '*'
+  operation: IdempotentWrite
+  resource:
+    name: '*'
+    patternType: literal
+    type: cluster
 ```
 
 #### Event Streams Certificates
 
 If you are using Event Streams as your Kafka broker provider and it is deployed via the IBM Cloud Pak for Integration (ICP4I), you will need to create an additional Secret to store the generated Certificates & Truststores to connect securely between your application components and the Kafka brokers.  These artifacts need to be created once per unique deployment of the entire application and can be shared between application components in the same overall application deployment.
 
-- From the **Connect to this cluster** tab on the landing page of your Event Streams installation, download both the **Java truststore** and the **PEM certificate**.
-- Create the Java truststore Secret:
-  - Command: `oc create secret generic <secret-name> --from-file=/path/to/downloaded/file.jks`
-  - Example: `oc create secret generic es-truststore-jks --from-file=/Users/osowski/Downloads/es-cert.jks`
-- Create the PEM certificate Secret:
-  - Command: `oc create secret generic <secret-name> --from-file=/path/to/downloaded/file.pem`
-  - Example: `oc create secret generic es-ca-pemfile --from-file=/Users/osowski/Downloads/es-cert.pem`
+From the **Connect to this cluster** tab on the landing page of your Event Streams installation, download both the **PKCS12** and the **PEM** certificates. After you have downloaded these, we are going to make them available to our producer and consumers by storing them in Kubernetes Secrets:
+
+```shell
+oc create secret generic eventstreams-truststore --from-file=<path to downloaded es-cert.p12>
+oc create secret generic eventstreams-cert-pem --from-file=<path to downloaded es-cert.pem>
+```
 
 ### Apache Kafka via Strimzi Operator
 
