@@ -57,11 +57,12 @@ spec:
                 echo "ssl.truststore.password=${TRUSTSTORE_PWD}" >> ${KAFKA_CONFIG_FILE}
               fi
               
-              echo "------------------------------------------"
-              echo "-- Connection Properties --"
-              echo "------------------------------------------"
-              cat ${KAFKA_CONFIG_FILE}
-              echo
+              # Uncomment only for debugging purposes
+              # echo "------------------------------------------"
+              # echo "-- Connection Properties --"
+              # echo "------------------------------------------"
+              # cat ${KAFKA_CONFIG_FILE}
+              # echo
 
               cd /opt/bitnami/kafka/bin
 

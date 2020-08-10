@@ -27,6 +27,15 @@ spec:
               # Export KAFKA_ENV since it is used by the test cases
               export KAFKA_ENV=${KAFKA_ENV}
 
+              # Obfuscate KAFKA_PASSWORD
+              if [ "`echo -n ${KAFKA_PASSWORD} | wc -c`" -gt 3 ]; then
+                FIRST_CH=${KAFKA_PASSWORD:0:1}
+                LAST_CH=${KAFKA_PASSWORD: -1}
+                OBFUSCATED_PASSWORD="${FIRST_CH}*****${LAST_CH}"
+              else
+                OBFUSCATED_PASSWORD="*******"
+              fi
+
               echo "-----------------------------------------------------------------"
               echo "-- Reefer Container Shipment EDA application Integration Tests --"
               echo "-----------------------------------------------------------------"
@@ -34,7 +43,7 @@ spec:
               echo "Executing integrations tests from branch $BRANCH of $GITHUB_REPO"
               echo "Kafka Brokers: $KAFKA_BROKERS"
               echo "Kafka user: $KAFKA_USER"
-              echo "Kafka password: $KAFKA_PASSWORD"
+              echo "Kafka password: $OBFUSCATED_PASSWORD"
               echo "Kafka Env: $KAFKA_ENV"
               echo "Orders topic name: $ITGTESTS_ORDERS_TOPIC"
               echo "Order Command topic name: $ITGTESTS_ORDER_COMMANDS_TOPIC"
