@@ -15,13 +15,35 @@ spec:
         - /bin/bash
         - -c
         - |
+              # Understand what environment we are executing against
+              if [ -z "$KAFKA_USER" ]; then
+                KAFKA_ENV="LOCAL"
+              elif [ "$KAFKA_USER" == "token" ]; then
+                KAFKA_ENV="IBMCLOUD"
+              else
+                KAFKA_ENV="OCP"
+              fi
+
+              # Export KAFKA_ENV since it is used by the test cases
+              export KAFKA_ENV=${KAFKA_ENV}
+
+              # Obfuscate KAFKA_PASSWORD
+              if [ "`echo -n ${KAFKA_PASSWORD} | wc -c`" -gt 3 ]; then
+                FIRST_CH=${KAFKA_PASSWORD:0:1}
+                LAST_CH=${KAFKA_PASSWORD: -1}
+                OBFUSCATED_PASSWORD="${FIRST_CH}*****${LAST_CH}"
+              else
+                OBFUSCATED_PASSWORD="*******"
+              fi
+
               echo "-----------------------------------------------------------------"
               echo "-- Reefer Container Shipment EDA application Integration Tests --"
               echo "-----------------------------------------------------------------"
               echo
               echo "Executing integrations tests from branch $BRANCH of $GITHUB_REPO"
               echo "Kafka Brokers: $KAFKA_BROKERS"
-              echo "Kafka API Key: $KAFKA_APIKEY"
+              echo "Kafka user: $KAFKA_USER"
+              echo "Kafka password: $OBFUSCATED_PASSWORD"
               echo "Kafka Env: $KAFKA_ENV"
               echo "Orders topic name: $ITGTESTS_ORDERS_TOPIC"
               echo "Order Command topic name: $ITGTESTS_ORDER_COMMANDS_TOPIC"
@@ -34,12 +56,9 @@ spec:
                 echo "[ERROR] - KAFKA_BROKERS environment variable must be set."
                 exit 1
               fi
-              if [ "$KAFKA_ENV" != "IBMCLOUD" -a "$KAFKA_ENV" != "OCP" -a "$KAFKA_ENV" != "LOCAL" ]; then
-                echo "[ERROR] - KAFKA_ENV environment variable must be one of 'IBMCLOUD', 'OCP' or 'LOCAL'."
-                exit 1
-              fi
-              if [ "$KAFKA_ENV" != "LOCAL" -a -z "$KAFKA_APIKEY" ]; then
-                echo "[ERROR] - KAFKA_APIKEY environment variable must be set."
+
+              if [ "$KAFKA_ENV" != "LOCAL" -a -z "$KAFKA_PASSWORD" ]; then
+                echo "[ERROR] - KAFKA_PASSWORD environment variable must be set."
                 exit 1
               fi
 
@@ -147,18 +166,21 @@ spec:
             configMapKeyRef:
               name: "kafka-brokers"
               key: brokers
-        # Your Event Streams API Key. You can find it in the Event Streams UI on the connect to this cluster link
-        # You MUST create this secret in advance with the Event Streams API key:
-        # oc create secret generic eventstreams-apikey --from-literal=binding='<replace with api key>' -n <namespace>
-        - name: KAFKA_APIKEY
+        # Your Event Streams credentials. You can find it in the Event Streams UI on the connect to this cluster link
+        # You MUST create this secret in advance with the Event Streams username and password:
+        # kubectl create secret generic eventstreams-cred --from-literal=username='<replace with kafka username>' --from-literal=password='<replace with kafka password>'
+        - name: KAFKA_USER
           valueFrom:
             secretKeyRef:
-              name: "eventstreams-apikey"
-              key: binding
+              name: "eventstreams-cred"
+              key: username
               optional: true
-        # Based on this parameter we add the appropriate certificates for when Event Streams is hosted either on ICP or OCP
-        - name: KAFKA_ENV
-          value: "IBMCLOUD"
+        - name: KAFKA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: "eventstreams-cred"
+              key: password
+              optional: true
         # Order command microservice's service name
         - name: ORDER_CMD_MS
           value: "ordercommandms-service:9080"
@@ -216,10 +238,10 @@ spec:
           name: eventstreams-pem-file
       volumes:
          # You MUST create this secret with the Event Streams pem certificate in advance. First, download the Event Streams pem certificate.
-         # Then create the secret: oc create secret generic eventstreams-pem-file --from-file=es-cert.pem=<LOCATION_OF_YOUR_EVENT_STREAMS_PEM_CERTIFICATE> -n <namespace>
+         # Then create the secret: oc create secret generic eventstreams-cert-pem --from-file=es-cert.pem=<LOCATION_OF_YOUR_EVENT_STREAMS_PEM_CERTIFICATE> -n <namespace>
          - name: eventstreams-pem-file
            secret:
-             secretName: "eventstreams-pem-file"
+             secretName: "eventstreams-cert-pem"
              optional: true
       restartPolicy: Never
   backoffLimit: 0
