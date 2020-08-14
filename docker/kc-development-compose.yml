@@ -3,19 +3,18 @@
 
 version: '3'
 services:
-    # Undergoing refactoring
-    # simulator:
-    #     image: ibmcase/kcontainer-fleet-ms:test
-    #     hostname: fleetms
-    #     ports:
-    #         - "9080:9080"
-    #         - "9443:9443"
-    #     environment:
-    #         KAFKA_ENV: ${KAFKA_ENV:-LOCAL}
-    #         KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka:9092}
-    #         KAFKA_APIKEY: ${KAFKA_APIKEY}
+    simulator:
+        image: ibmcase/kcontainer-fleet-ms:latest
+        hostname: fleetms
+        ports:
+            - "9080:9080"
+            - "9443:9443"
+        environment:
+            KAFKA_ENV: ${KAFKA_ENV:-LOCAL}
+            KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka:9092}
+            KAFKA_APIKEY: ${KAFKA_APIKEY}
     web:
-        image: ibmcase/kcontainer-ui:test
+        image: ibmcase/kcontainer-ui:latest
         hostname: kcsolution
         ports:
             - "3010:3010"
@@ -23,12 +22,12 @@ services:
             KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka:9092}
             KAFKA_APIKEY: ${KAFKA_APIKEY}
         depends_on:
-            # - simulator
+            - simulator
             - ordercmd
             - orderquery
             - voyages
     ordercmd:
-        image: ibmcase/kcontainer-order-command-ms:test
+        image: ibmcase/kcontainer-order-command-ms:latest
         hostname: ordercmd
         ports:
             - "10080:9080"
@@ -39,7 +38,7 @@ services:
             KCSOLUTION_ORDERS_TOPIC: ${KCSOLUTION_ORDERS_TOPIC:-orders}
             KCSOLUTION_ERRORS_TOPIC: ${KCSOLUTION_ERRORS_TOPIC:-errors}
     orderquery:
-        image: ibmcase/kcontainer-order-query-ms:test
+        image: ibmcase/kcontainer-order-query-ms:latest
         hostname: orderquery
         ports:
             - "11080:9080"
@@ -50,7 +49,7 @@ services:
             KCSOLUTION_ORDERS_TOPIC: ${KCSOLUTION_ORDERS_TOPIC:-orders}
             KCSOLUTION_CONTAINERS_TOPIC: ${KCSOLUTION_CONTAINERS_TOPIC:-containers}
     voyages:
-        image: ibmcase/kcontainer-voyages-ms:test
+        image: ibmcase/kcontainer-voyages-ms:latest
         hostname: voyages
         ports:
             - "3100:3000"
@@ -59,7 +58,7 @@ services:
             KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka:9092}
             KCSOLUTION_ORDERS_TOPIC: ${KCSOLUTION_ORDERS_TOPIC:-orders}
     springcontainerms:
-        image: ibmcase/kcontainer-spring-container-ms:test
+        image: ibmcase/kcontainer-spring-container-ms:latest
         hostname: springcontainerms
         ports:
             - "12081:8080"
