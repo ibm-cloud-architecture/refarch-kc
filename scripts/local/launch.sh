@@ -245,18 +245,15 @@ else
                     exit 1
                 fi
 
-                docker build -f ${MAIN_DIR}/../refarch-reefer-ml/scoring-mp/Dockerfile.multistage -t ibmcase/${microservice}-scoringmp:latest ${MAIN_DIR}/../refarch-reefer-ml/scoring-mp/
-                
-                # Scoring-mp has not yet been appsodyfied
-                # pushd ${MAIN_DIR}/../refarch-reefer-ml/scoring-mp/
-                # appsody build -t ibmcase/${microservice}-scoringmp:latest
+                pushd ${MAIN_DIR}/../refarch-reefer-ml/scoring-mp/
+                appsody build -t ibmcase/${microservice}-scoringmp:latest
                 if [[ $? -ne 0 ]]
                 then 
                     echo -e "\e[31m[ERROR] - A problem occurred building the docker image for ${microservice}-scoringmp\e[0m"
                     exit 1
-                # else
-                #     popd
-                #     echo -e "Done"
+                else
+                    popd
+                    echo -e "Done"
                 fi
 
                 echo -e "\e[1;33mBuilding the ${microservice}-flask-simulator:latest docker image...\e[0m"
@@ -280,6 +277,9 @@ else
         done
 
         echo -e "\e[32mStarting all telemetry microservices\e[39m"
+        # Export the location for the bootstrap.properties file needed as a result of a bug in OpenLiberty
+        # where it does not pick up environment variables
+        export BOOTSTRAP_PROPERTIES_PATH=${MAIN_DIR}/../refarch-reefer-ml/scoring-mp/src/main/liberty/config
         # Launching the solution components in detached mode so that the output is cleaner
         # To see the logs execute either:
         # 1. docker-compose -f ${MAIN_DIR}/docker/kc-solution-compose.yml logs

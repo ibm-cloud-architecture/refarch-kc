@@ -4,7 +4,7 @@
 version: '3'
 services:
     simulator:
-        image: ibmcase/kcontainer-reefer-ml-flask-simulator:test
+        image: ibmcase/kcontainer-reefer-ml-flask-simulator:latest
         hostname: fleetms
         ports:
             - "8080:8080"
@@ -12,7 +12,7 @@ services:
             KAFKA_BROKERS: ${KAFKA_BROKERS:-kafka:9092}
             TELEMETRY_TOPIC: ${MP_MESSAGING_INCOMING_REEFER_TELEMETRY_TOPIC:-reefer-telemetry}
     springcontainerms:
-        image: ibmcase/kcontainer-spring-container-ms:test
+        image: ibmcase/kcontainer-spring-container-ms:latest
         hostname: springcontainerms
         ports:
             - "12081:8080"
@@ -37,7 +37,7 @@ services:
             # LOGGING_CONTAINER_MS_CONSUMER_CONFIG: ${LOGGING_CONTAINER_MS_CONSUMER_CONFIG:-ERROR}
             # LOGGING_CONTAINER_MS_PRODUCER_CONFIG: ${LOGGING_CONTAINER_MS_PRODUCER_CONFIG:-ERROR}
     scoringmp:
-        image: ibmcase/kcontainer-reefer-ml-scoringmp:test
+        image: ibmcase/kcontainer-reefer-ml-scoringmp:latest
         hostname: scoringmp
         ports:
             - "22080:9080"
@@ -51,3 +51,5 @@ services:
             MP_MESSAGING_INCOMING_REEFER_TELEMETRY_TOPIC: ${MP_MESSAGING_INCOMING_REEFER_TELEMETRY_TOPIC:-reefer-telemetry}
             MP_MESSAGING_OUTGOING_CONTAINERS_TOPIC: ${MP_MESSAGING_OUTGOING_CONTAINERS_TOPIC:-containers}
             MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BROKERS:-kafka:9092}
+        volumes:
+            - ${BOOTSTRAP_PROPERTIES_PATH}/bootstrap.properties:/config/bootstrap.properties
