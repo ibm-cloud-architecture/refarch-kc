@@ -32,15 +32,21 @@ We have provided a few sample environments to get started.
 
 * [**`dev`** environment](https://github.com/ibm-cloud-architecture/refarch-kc-gitops/tree/master/environments/dev): This environment is deployable to any Kubernetes or OCP cluster and provides its own dedicated backing services.
 
-* [**`example-credentials`** environment](https://github.com/ibm-cloud-architecture/refarch-kc-gitops/tree/master/environments/example-credentials): This example configures the microservices to connect to a Postgres database with SSL verification enabled and to Event Streams using an API key - utilizing both of these backing services through off-cluster service providers.
+* [**`example-credentials`** environment](https://github.com/ibm-cloud-architecture/refarch-kc-gitops/tree/master/environments/example-credentials): This example configures the microservices to connect to a **Postgres database**, using the necessary credentials & the Postgres service's self-signed certificate, and to **Event Streams**, using only an API key and no additional certificates _(as the remote service utilizes a certificate that is signed by a public CA)_.  Both of these backing services are consumed from off-cluster service providers.
 
-* [**`example-es-truststore`** environment](https://github.com/ibm-cloud-architecture/refarch-kc-gitops/tree/master/environments/example-es-truststore): This example configures the microservices to connect to a Postgres database and to Event Streams using an API key, with both services having SSL verification enabled. The Event Streams certificate is provided as a Java truststore to the Java-based microservices and a PEM file to the non-Java-based microservices.
+* [**`example-es-truststore`** environment](https://github.com/ibm-cloud-architecture/refarch-kc-gitops/tree/master/environments/example-es-truststore): This example configures the microservices to connect to a **Postgres database**, using the necessary credentials & the Postgres service's self-signed certificate, and to **Event Streams**, using an API key and the Event Streams server's self-signed certificate. The Event Streams certificate is provided as a Java truststore to the Java-based microservices and a PEM file to the non-Java-based microservices.
 
 * [**`eda-integration-XXXX.YY`** environment](https://github.com/ibm-cloud-architecture/refarch-kc-gitops/tree/master/environments/eda-integration-2020.08): This environment is our squad's integration environment for a fully-automated end-to-end build pipeline, with the target environment being a [Red Hat OpenShift Container Platform cluster running on IBM Cloud](https://cloud.ibm.com/kubernetes/catalog/create?platformType=openshift).
 
 ## Environment overview
 
-The GitOps environments are defined in the `environments` sub-directory, allowing for multiple environments (phases, stages, teams, etc) to be deployed from a single GitHub repository. This is a streamlined implementation from our previous environment-per-branch approach as it is a bit simpler to maintain for our team. Your team may have success with either structure.
+The GitOps environments are defined in the `environments` sub-directory, allowing for multiple environments (phases, stages, teams, etc) to be deployed from a single GitHub repository. This approach is the simplest for a single team to maintain.
+
+There are several approaches to maintaining multiple GitOps environments, which offer tradeoffs between simplicity and access control:
+
+- **Single GitOps repository, single branch, one subdirectory per environment:** This is our chosen approach and is simple to manage. All collaborators have the same level of control over each environment.
+- **Single GitOps repository, one branch per environment:** In this approach, the `environments/` directory in each branch contains a single environment. This allows some level of access control to be set per environment, for example via branch protection rules.
+- **Multiple GitOps repositories:** In this approach, each repository represents a single environment. This allows access control per environment at the repository level, for example to protect a production environment from accidental modification.
 
 Each environment has the following default directory structure:
 
@@ -105,7 +111,7 @@ environments
 
   This optional subdirectory provides the ability to create a Kubernetes Namespace / OpenShift Project and any necessary backing services ahead of application microservice deployment. This is only used in the `dev` environment, as a way to demonstrate the ability to create a fully-managed environment from scratch.
 
-  <InlineNotification kind="warning">When you create your environment via <code>kubectl apply -k environments/dev</code> with a <strong>Namespace</strong> definition in the <em>infrastructure</em> subdirectory, running <code>kubectl delete -k environments/dev</code> will delete the Namespace!</InlineNotification>
+  <InlineNotification kind="warning">When you create your environment via <code>kubectl apply -k environments/dev/infrastructure</code> with a <strong>Namespace</strong> definition in the <em>infrastructure</em> subdirectory, running <code>kubectl delete -k environments/dev/infrastructure</code> will delete the Namespace!</InlineNotification>
 
 ---
 
@@ -146,7 +152,7 @@ To create a new environment, you will want to use one of the environments descri
 1. Fork this repository.
 2. Copy the desired environment to a new subdirectory in the `/environments` directory.
 3. Update the necessary `overlays/kustomization.yaml` files and referenced files to suit your environment, removing unneccessary modifications and adding in any new requirements.
-4. Manually validate the environment via a `kubectl apply --dry-run -k environments/___your-new-environment___`
+4. Manually validate the environment via a `kubectl kustomize environments/__your-new-environment__`
 5. Commit and push your changes to your forked repository
 6. Follow along with our [Continuous Delivery](/infrastructure/devops-continuous-delivery/) chapter to configure ArgoCD to deploy the environment.
 
