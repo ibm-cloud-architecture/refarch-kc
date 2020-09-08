@@ -32,10 +32,12 @@
   pages:
     - title: Required Services
       path: /infrastructure/required-services/
-    - title: DevOps Pipelines
-      path: /infrastructure/devops/
-    - title: GitOps Deployments
-      path: /infrastructure/gitops/
+    - title: Continuous Integration
+      path: /infrastructure/devops-continuous-integration/
+    - title: GitOps Environments
+      path: /infrastructure/devops-gitops/
+    - title: Continuous Delivery
+      path: /infrastructure/devops-continuous-delivery/
 - title: Microservices Details
   pages:
     - title: Topic Details
