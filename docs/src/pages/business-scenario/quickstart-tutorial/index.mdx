@@ -5,8 +5,6 @@ description: Simple end-to-end deployment scenario for the reference implementat
 
 <InlineNotification kind="warning"><strong>TODO</strong> - UNDER CONSTRUCTION</InlineNotification>
 
-This quickstart tutorial uses the localhost deployment with a mapping of the host name kcsolution to localhost defined in the `/etc/hosts` file. For IBM Cloud change the hostname accordingly.
-
 In this tutorial, we will show you how to:
 
 - Create an order via the UI.
@@ -17,23 +15,25 @@ Each of these business processes will be executed step by step using the demonst
 
 ## Pre-requisites
 
-Set the following IP address - hostname mapping:
+- This quickstart tutorial assumes you have deployed the microservices as per the (local Kubernetes deployment)[https://github.com/ibm-cloud-architecture/refarch-kc/tree/master/scripts/localk8s].
 
-* Hostname `kcsolution` to map to localhost when running on local computer
 
 ## Step 1: Create an order
 
 Orders are created via the manufacturer. For a reminder of the different personas please see the [Scenario Overview](https://ibm-cloud-architecture.github.io/refarch-kc/business-scenario/scenario-overview/). 
 
-* Go to the http://kcsolution:3110 URL to access the UI home page:
+* Go to the http://localhost:3110 URL to access the UI home page:
 
 ![kc-home](kc-home.png)
 
-To log in to the home page, you will need a username and password. 
+To log in to the home page, you will need a user email and password:
+
+- Email: eddie@email.com
+- Password: Eddie
 
 The initial UI homepage shows an illustrated version of the business process. There are five tiles that can be used to simulate different parts of the outlined business process. Tiles that are grey are not implemented at this time. 
 
-From the `Initiate Orders - Manufacturer` create a new 'fresh product' order to ship overseas, simulating the activity that would usually be carried out by the manufacturer in our scenario.
+* From the `Initiate Orders - Manufacturer` create a new 'fresh product' order to ship overseas. This simulates the activity that would usually be carried out by the manufacturer in our scenario.
 
 To represent different manufacturers, the first select box has been designed to support multiple scenarios in the future. For the purposes of this quickstart tutorial, select 'GoodManuf'.
 
@@ -52,7 +52,7 @@ Below is an example of how to use the createOrder script to add a 'GoodManuf's' 
 > There is a lot happening here. The Angular is getting orders using the [orders.service.ts](https://github.com/ibm-cloud-architecture/refarch-kc-ui/blob/master/ui/src/app/features/orders/orders.service.ts) service within the BFF component at the address: `http://localhost:3010/api/orders`.
 The BFF is calling the [Order Query Microservice](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/tree/master/order-query-ms) via a javascript client code: [getOrders(manuf) function.](https://github.com/ibm-cloud-architecture/refarch-kc-ui/blob/4b9d7d1241eaeeaee7fc01247a35b696f0b6d5b2/server/routes/OrderClient.ts#L12-L25). The Order Query microservice URL is defined in environment variable or defaulted in the config file. It is mapped to the deployed Order service. (e.g. http://ordercmd:9080/orders)
 
-Select one order using the `Arrow` icon. This will allow you to view the order details:
+* Select one order using the `Arrow` icon. This will allow you to view the order details:
 
 ![](kc-order.png)
 
@@ -61,7 +61,11 @@ As illustrated in the CQRS diagram:
 The creation of the order goes to the [order command microservice](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/tree/master/order-command-ms) which publishes a `OrderCreated` event to the `orders` topic and then consumes it to persist the data to its database. See [source code here](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/6de424c443c05262ae013620f5f11b4a1b2e6f90/order-command-ms/src/main/java/ibm/labs/kc/order/command/service/OrderCRUDService.java#L51-L74)
 
 
-If you plug in an 'orders topic' consumer you can see the following trace with the status of the order being `pending` and the type of event being `OrderCreated`.
+We can create a consumer to take messages from the 'orders topic' by running the following command:
+
+```bin/kafka-console-consumer.sh --bootstrap-server $BROKERS --topic orders --from-beginning```
+
+After running this, you should be able to see the following trace with the status of the order being `pending` and the type of event being `OrderCreated`.
 
 ```json
 {"payload":{
@@ -105,9 +109,9 @@ or at the `orders` topic:
 
 ```
 
-## Step3: Simulate the ship in Blue Water
+## Step3: Simulate the ship at sea
 
-Note: *The term Blue Water refers to the open ocean.*
+Note: *The term 'Blue Water' referred to here means at sea.*
 
 From the home page, select the `Simulate Blue Water` tile. Select one of the available fleet. As of now, only the North Pacific has fleet data:
 
