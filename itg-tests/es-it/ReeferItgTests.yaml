@@ -183,16 +183,16 @@ spec:
               optional: true
         # Order command microservice's service name
         - name: ORDER_CMD_MS
-          value: "ordercommandms-service:9080"
+          value: "order-command-ms:9080"
         # Order query microservice's service name
         - name: ORDER_QUERY_MS
-          value: "orderqueryms-service:9080"
+          value: "order-query-ms:9080"
         # Container microservice's service name
         - name: CONTAINER_SPRING_MS
-          value: "springcontainerms-service:8080"
+          value: "spring-container-ms:8080"
         # Voyage microservice's service name
         - name: VOYAGE_MS
-          value: "voyagesms-service:3000"
+          value: "voyages-ms:3000"
         # Orders topic name
         - name: ITGTESTS_ORDERS_TOPIC
           #value: "itg-orders"
