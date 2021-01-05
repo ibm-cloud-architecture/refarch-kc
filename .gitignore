@@ -1,5 +1,4 @@
-docker/kafka1/
-docker/zookeeper1/
+docker/data/
 docker/api-secret.yml
 certs/
 scripts/localToICP

@@ -1,8 +1,13 @@
 #!/bin/bash
 
-if [[ ! -d "postgres-data" ]]
+if [[ ! -d "data" ]]
 then
-   mkdir postgres-data
+   mkdir data
+   mkdir data/postgres-data
+fi
+if [[ ! -d "data/postgres-data" ]]
+then
+   mkdir data/postgres-data
 fi
 
 docker-compose -f backbone-compose.yml up 2>&1 1>backend.logs &
