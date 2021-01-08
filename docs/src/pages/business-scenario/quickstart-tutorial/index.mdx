@@ -1,28 +1,50 @@
 ---
 title: Quickstart Tutorial
-description: Simple end-to-end deployment scenario for the reference implementation
+description: Simple end-to-end deployment scenario for the KContainer Shipping Container Reference Implementation.
 ---
 
-<InlineNotification kind="warning"><strong>TODO</strong> - UNDER CONSTRUCTION</InlineNotification>
+In this tutorial, you will:
 
-In this tutorial, you will learn how to:
-
+- Deploy the reference implementation to a standalone OpenShift cluster.
 - Create an order via the UI.
 - Check on existing orders.
 - View information about the Fleet.
 
-Each of these business processes will be executed step by step using the demonstration APIs and some scripts.
+Each of these business processes will be executed step-by-step using the demonstration APIs and some scripts.
 
 ## Pre-requisites
 
-- This quickstart tutorial assumes you have deployed the microservices as per the [local Kubernetes deployment](https://github.com/ibm-cloud-architecture/refarch-kc/tree/master/scripts/localk8s).
+- **Red Hat OpenShift Container Platform** - this quickstart utilizes [learn.openshift.com](https://learn.openshift.com/playgrounds/openshift45/) Playgrounds.
+- ... and that's it!!! Everything else is provided for you via OpenShift Operators or through existing GitHub repositories.
+- Additional self-paced learning can be done to integrate the deployed reference implementation with additional Kafka offerings, such as _IBM Event Streams_, _Red Hat AMQ Streams_, or _Confluent Platform_.
 
+## Step 1: Deploy the reference implementation
 
-## Step 1: Create an order
+- Go to [`https://learn.openshift.com/playgrounds/openshift45/`](https://learn.openshift.com/playgrounds/openshift45/) in a browser and click **Start Scenario**.
 
-Orders are created via the manufacturer. For a reminder of the different personas please see the [Scenario Overview](https://ibm-cloud-architecture.github.io/refarch-kc/business-scenario/scenario-overview/). 
+- From a terminal that has access to your OpenShift cluster, download the [kcontainer-quickstart-ocp.sh](https://github.com/ibm-cloud-architecture/refarch-kc/tree/master/scripts/kcontainer-quickstart-ocp.sh) file:
+  ```
+  curl -o kcontainer-quickstart-ocp.sh https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-kc/master/scripts/kcontainer-quickstart-ocp.sh
+  chmod +x kcontainer-quickstart-ocp.sh
+  ```
+   - The quickstart script is written for the most basic of OpenShift environments provided via [learn.openshift.com](https://learn.openshift.com/playgrounds/openshift45/).
+   - To override the default username and password used in the quickstart script for use in a different OpenShift environment, set environment variables with names of `OCP_ADMIN_USER` and `OCP_ADMIN_PASSWORD` to the appropriate values before executing the script.
 
-* Navigate to http://localhost:3110 to access the UI home page:
+- Execute the quickstart deployment script with the following command:
+  ```
+  ./kcontainer-quickstart-ocp.sh
+  ```
+
+- Wait for the deployment to be active and ready when you are prompted with `Press any key to continue once an order has been submitted...`.
+
+- When accessing the user interface in the following steps, you should use the Route that exposes `kc-ui` microservice, which should be output in the terminal directly above the prompt.
+   - This will be referred to as `kc-ui-shipping.cluster.local` in the steps below.
+
+## Step 2: KContainer Manufacturer creating an order
+
+Orders are created via the manufacturer. For a reminder of the different personas, view the [Scenario Overview](/business-scenario/scenario-overview/).
+
+* Navigate to `http://kc-ui-shipping.cluster.local` (replacing the actual URL of the `kc-ui` microservice with the value output while running the quickstart script or available via `oc get route kc-ui`) to access the UI home page:
 
 ![kc-home](kc-home.png)
 
@@ -31,21 +53,17 @@ To log in to the home page, you will need the following user email and password:
 - Email: eddie@email.com
 - Password: Eddie
 
-The initial UI homepage shows an illustrated version of the business process. There are five tiles that can be used to simulate different parts of the outlined business process. Tiles that are grey are not implemented at this time. 
+The initial UI homepage shows an illustrated version of the business process. There are four tiles that can be used to simulate different parts of the outlined business process.
 
 * From the `Initiate Orders - Manufacturer` create a new 'fresh product' order to ship overseas. This simulates the activity that would usually be carried out by the manufacturer in our scenario.
+
+<InlineNotification kind="warning">Do we need to have specific input here for containers to match/be found?</InlineNotification>
 
 To represent different manufacturers, the first select box has been designed to support multiple scenarios in the future. For the purposes of this quickstart tutorial, select 'GoodManuf'.
 
 ![](kc-manuf-select.png)
 
-Once the manufacturer is selected, a list of existing orders will be displayed. You can add an order through the UI, but you can also use a [script](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/master/order-command-ms/scripts/createOrder.sh), which is available in the [order command microservice project](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms).
-
-Below is an example of how to use the createOrder script to add a 'GoodManuf's' order to book a voyage from Oakland to Shanghai for a fresh product:
-```
-./createOrder.sh localhost:10080 ./orderOacklandToChinaCreate.json
-
-```
+Once the manufacturer is selected, a list of existing orders will be displayed.
 
 ![](kc-orders.png)
 
@@ -55,12 +73,11 @@ Below is an example of how to use the createOrder script to add a 'GoodManuf's' 
 
 As illustrated in the CQRS diagram:
 
-The creation of the order goes to the [order command microservice](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/tree/master/order-command-ms) which publishes a `OrderCreated` event to the `orders` topic and then consumes it to persist the data to its database. See [source code here](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/6de424c443c05262ae013620f5f11b4a1b2e6f90/order-command-ms/src/main/java/ibm/labs/kc/order/command/service/OrderCRUDService.java#L51-L74).
+The creation of the order goes to the [Order Command microservice](/microservices/order-command/) which publishes an `OrderCreated` event to the `orders` topic and then consumes it to persist the data to its database. See the [source code here](https://github.com/ibm-cloud-architecture/refarch-kc-order-ms/blob/master/order-command-ms/src/main/java/ibm/gse/orderms/domain/service/ShippingOrderService.java#L39-L47).
 
+* We can create a consumer to take messages from the `orders` topic by running the following command from the same terminal the quickstart deployment script was run from:
 
-* We can create a consumer to take messages from the 'orders topic' by running the following command:
-
-```bin/kafka-console-consumer.sh --bootstrap-server $BROKERS --topic orders --from-beginning```
+```oc rsh my-cluster-kafka-0 bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --timeout-ms 10000 --topic orders```
 
 After running this, you should be able to see the following order with the status of `pending` and the type of event being `OrderCreated`.
 
@@ -84,7 +101,7 @@ After running this, you should be able to see the following order with the statu
 
 ![](shipment-inc.png)
 
-The home page lists the order that the shipment company received in the previous step. 
+The home page lists the order that the shipment company received in the previous step.
 
 ![](kc-shipment-home.png)
 
@@ -108,6 +125,8 @@ or on the `orders` topic:
 
 ## Step3: View Fleet information
 
+<InlineNotification kind="warning"><strong>UNDER CONSTRUCTION</strong></InlineNotification>
+
 Note: *The term 'Blue Water' referred to here means at sea (including ports and coastal waters).*
 
 * From the home page, select the `Simulate Blue Water` tile. Select one of the available fleet. As of now, only the North Pacific has fleet data:
@@ -122,12 +141,12 @@ The fleet panel lists the ships, their location and status and a map:
 
 ![](kc-ship-detail.png)
 
-This view contains information about the ship itself, it's position at sea and the load. There is also an option to simulate a number of disaster scenarios that could play out at sea, however this functionality is not yet implemented. 
+This view contains information about the ship itself, it's position at sea and the load. There is also an option to simulate a number of disaster scenarios that could play out at sea, however this functionality is not yet implemented.
 
 There are currently three pre-defined scenarios, which will be implemented in the future:
 
 * Fire affecting some containers
 * Reefer down
-* Ship experiencing conditions that cause reefers to exceed desired temperature. 
+* Ship experiencing conditions that cause reefers to exceed desired temperature.
 
-This quickstart guide will be updated as the project evolves and new capability is added. If you have any issues or queries with this quickstart guide, please [raise an issue](https://github.com/ibm-cloud-architecture/refarch-kc/issues) in the github repo. 
+This quickstart guide will be updated as the project evolves and new capability is added. If you have any issues or queries with this quickstart guide, please [raise an issue](https://github.com/ibm-cloud-architecture/refarch-kc/issues) in the github repo.
