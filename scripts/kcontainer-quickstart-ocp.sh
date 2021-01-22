@@ -7,8 +7,13 @@
 # Username and Password for an OpenShift user with cluster-admin privileges.
 # cluster-admin privileges are required as this script deploys operators to
 # watch all namespaces.
-export QS_OCP_ADMIN_USER=${OCP_ADMIN_USER:-admin}
-export QS_OCP_ADMIN_PASSWORD=${OCP_ADMIN_PASSWORD:-admin}
+OCP_ADMIN_USER=${OCP_ADMIN_USER:=admin}
+OCP_ADMIN_PASSWORD=${OCP_ADMIN_PASSWORD:=admin}
+
+# Strimzi operator version stability appears to be not so stable, so this will
+# specify the latest verified operator version instead of just the "stable"
+# stream.
+STRIMZI_OPERATOR_VERSION="strimzi-0.20.x"
 
 ###################################
 ### DO NOT EDIT BELOW THIS LINE ###
@@ -48,7 +53,7 @@ EOF
 ### MAIN ###
 ############
 
-oc login -u ${QS_OCP_ADMIN_USER} -p ${QS_OCP_ADMIN_PASSWORD}
+oc login -u ${OCP_ADMIN_USER} -p ${OCP_ADMIN_PASSWORD}
 
 ##TODO## Add error check to validate login
 
@@ -58,7 +63,7 @@ cd refarch-kc-gitops/environments
 
 ### INSTALL Strimzi OPERATOR
 ### More info available via `oc describe packagemanifests strimzi-kafka-operator -n openshift-marketplace`
-install_operator "strimzi-kafka-operator" "stable" "community-operators"
+install_operator "strimzi-kafka-operator" "${STRIMZI_OPERATOR_VERSION}" "community-operators"
 
 ### INSTALL Appsody OPERATOR
 ### More info available via `oc describe packagemanifests appsody-operator-certified -n openshift-marketplace`
