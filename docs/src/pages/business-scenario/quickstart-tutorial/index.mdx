@@ -25,6 +25,7 @@ Each of these business processes will be executed step-by-step using the demonst
 - From a terminal that has access to your OpenShift cluster, download the [kcontainer-quickstart-ocp.sh](https://github.com/ibm-cloud-architecture/refarch-kc/tree/master/scripts/kcontainer-quickstart-ocp.sh) file:
   ```
   curl -o kcontainer-quickstart-ocp.sh https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-kc/master/scripts/kcontainer-quickstart-ocp.sh
+  chmod +x kcontainer-quickstart-ocp.sh
   ```
    - The quickstart script is written for the most basic of OpenShift environments provided via [learn.openshift.com](https://learn.openshift.com/playgrounds/openshift45/).
    - To override the default username and password used in the quickstart script for use in a different OpenShift environment, set environment variables with names of `OCP_ADMIN_USER` and `OCP_ADMIN_PASSWORD` to the appropriate values before executing the script.
