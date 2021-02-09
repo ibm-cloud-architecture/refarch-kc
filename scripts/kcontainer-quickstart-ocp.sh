@@ -10,11 +10,6 @@
 OCP_ADMIN_USER=${OCP_ADMIN_USER:=admin}
 OCP_ADMIN_PASSWORD=${OCP_ADMIN_PASSWORD:=admin}
 
-# Strimzi operator version stability appears to be not so stable, so this will
-# specify the latest verified operator version instead of just the "stable"
-# stream.
-STRIMZI_OPERATOR_VERSION="strimzi-0.20.x"
-
 ###################################
 ### DO NOT EDIT BELOW THIS LINE ###
 ###################################
@@ -63,6 +58,27 @@ cd refarch-kc-gitops/environments
 
 ### INSTALL Strimzi OPERATOR
 ### More info available via `oc describe packagemanifests strimzi-kafka-operator -n openshift-marketplace`
+
+### Strimzi operator version stability appears to be not so stable, so this will
+### specify the latest manually verified operator version for a given OCP version 
+### instead of just the default "stable" stream.
+STRIMZI_OPERATOR_VERSION="strimzi-0.20.x"
+OCP_VERSION=$(oc version -o json | jq -r ".openshiftVersion")
+
+case ${OCP_VERSION} in
+  4.4.*)
+    echo "OpenShift v4.4.X detected. Installing 'strimzi-0.19.x'..."
+    STRIMZI_OPERATOR_VERSION="strimzi-0.19.x"
+    ;;
+  4.5.*)
+    echo "OpenShift v4.5.X detected. Installing 'strimzi-0.20.x'..."
+    STRIMZI_OPERATOR_VERSION="strimzi-0.20.x"
+    ;;
+  *)
+    STRIMZI_OPERATOR_VERSION="stable"
+    ;;
+esac
+
 install_operator "strimzi-kafka-operator" "${STRIMZI_OPERATOR_VERSION}" "community-operators"
 
 ### INSTALL Appsody OPERATOR
