@@ -14,31 +14,105 @@ Each of these business processes will be executed step-by-step using the demonst
 
 ## Pre-requisites
 
-- **Red Hat OpenShift Container Platform** - this quickstart utilizes [learn.openshift.com](https://learn.openshift.com/playgrounds/openshift45/) Playgrounds.
+- **Red Hat OpenShift Container Platform** - this quickstart utilizes either the [OpenShift Playgrounds](https://learn.openshift.com/playgrounds/openshift45/) or the [IBM OpenLabs](https://developer.ibm.com/openlabs/openshift).
 - ... and that's it!!! Everything else is provided for you via OpenShift Operators or through existing GitHub repositories.
 - Additional self-paced learning can be done to integrate the deployed reference implementation with additional Kafka offerings, such as _IBM Event Streams_, _Red Hat AMQ Streams_, or _Confluent Platform_.
 
 ## Step 1: Deploy the reference implementation
 
-- Go to [`https://learn.openshift.com/playgrounds/openshift45/`](https://learn.openshift.com/playgrounds/openshift45/) in a browser and click **Start Scenario**.
+In this section, we are going to see how to deploy the KContainer Shipping Container Reference Implementation both in the OpenShift Playgrounds and the IBM OpenLabs.
 
-- From a terminal that has access to your OpenShift cluster, download the [kcontainer-quickstart-ocp.sh](https://github.com/ibm-cloud-architecture/refarch-kc/tree/master/scripts/kcontainer-quickstart-ocp.sh) file:
+### OpenShift Playgrounds
+
+1. Go to [`https://learn.openshift.com/playgrounds/openshift45/`](https://learn.openshift.com/playgrounds/openshift45/) in a browser and click **Start Scenario**.
+
+  ![OpenShift Playground](images/openshift_playground.png)
+
+1. From a terminal that has access to your OpenShift cluster, download the [kcontainer-quickstart-ocp.sh](https://github.com/ibm-cloud-architecture/refarch-kc/tree/master/scripts/kcontainer-quickstart-ocp.sh) file:
   ```
   curl -o kcontainer-quickstart-ocp.sh https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-kc/master/scripts/kcontainer-quickstart-ocp.sh
   chmod +x kcontainer-quickstart-ocp.sh
   ```
-   - The quickstart script is written for the most basic of OpenShift environments provided via [learn.openshift.com](https://learn.openshift.com/playgrounds/openshift45/).
-   - To override the default username and password used in the quickstart script for use in a different OpenShift environment, set environment variables with names of `OCP_ADMIN_USER` and `OCP_ADMIN_PASSWORD` to the appropriate values before executing the script.
+  ![OpenShift Playground 2](images/openshift_playground2.png)
+   
+   _(\*) To override the default username and password used in the quickstart script for use in a different OpenShift environment, set environment variables with names of_ `OCP_ADMIN_USER` _and_ `OCP_ADMIN_PASSWORD` _to the appropriate values before executing the script._
 
-- Execute the quickstart deployment script with the following command:
+1. Execute the quickstart deployment script with the following command:
   ```
   ./kcontainer-quickstart-ocp.sh
   ```
 
-- Wait for the deployment to be active and ready when you are prompted with `Press any key to continue once an order has been submitted...`.
+1. Wait for the deployment to be active and ready when you are prompted with `Press any key to continue once an order has been submitted...`.
 
-- When accessing the user interface in the following steps, you should use the Route that exposes `kc-ui` microservice, which should be output in the terminal directly above the prompt.
-   - This will be referred to as `kc-ui-shipping.cluster.local` in the steps below.
+  ![OpenShift Playground 3](images/openshift_playground3.png)
+
+1. Grab the User Interface Microservice url and credentials and open it up in your web browser.
+
+  ![OpenShift Playground 4](images/openshift_playground4.png)
+
+   _(\*) This will be referred to as_ `kc-ui-shipping.cluster.local` _in the step 2 of this quickstart._
+
+1. You can also check all the resources created by the `kcontainer-quickstart-ocp.sh` script in the RedHat OpenShift console by clicking on the console tab and using the appropriate credentials displayed on the instructions section to log in.
+
+  ![OpenShift Playground 5](images/openshift_playground5.png)
+
+### IBM OpenLabs
+
+1. Go to [IBM OpenLabs](https://developer.ibm.com/openlabs/openshift) in a browser and click on `Launch Lab` button for **Lab 1**.
+
+  ![OpenLabs1](images/openLabs1.png)
+
+1. Sign in with your IBM Cloud account or register for an IBM Cloud account.
+
+  ![OpenLabs2](images/openLabs2.png)
+
+1. You will be presented with a dialog asking you whether you have an **Opportunity Id** or not. If you don't have it or don't no, just select **No** and click on **Launch Lab**.
+
+1. You should now see your IBM OpenLabs environment.
+
+  ![OpenLabs4](images/openLabs4.png)
+
+1. On the left hand side navigation menu, click on **Excercise 3** to expand that section and then click on **Using the command line interface (CLI)** section. Now, click on the the first **oc** command displayed on the instructions section that would allow you to get logged into your RedHat OpenShift cluster from the terminal section on the right hand side of the screen.
+
+  ![OpenLabs8](images/openLabs8.png)
+
+1. From a terminal section, download the [kcontainer-quickstart-ocp.sh](https://github.com/ibm-cloud-architecture/refarch-kc/tree/master/scripts/kcontainer-quickstart-ocp.sh) file:
+
+  ```
+  curl -o kcontainer-quickstart-ocp.sh https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-kc/master/scripts/kcontainer-quickstart-ocp.sh
+  chmod +x kcontainer-quickstart-ocp.sh
+  ```
+
+  ![OpenLabs9](images/openLabs9.png)
+
+1. Execute the quickstart deployment script with the following command:
+
+  ```
+  ./kcontainer-quickstart-ocp.sh --skip-login
+  ```
+  **IMPORTANT:** do not forget the **- -skip-login** flag since we have already logged into the RedHat OpenShift cluster above.
+
+1. Wait for the deployment to be active and ready when you are prompted with `Press any key to continue once an order has been submitted...`.
+
+  ![OpenLabs10](images/openLabs10.png)
+
+1. Grab the User Interface Microservice url and credentials and open it up in your web browser.
+
+  ![OpenLabs11](images/openLabs11.png)
+
+   _(\*) This will be referred to as_ `kc-ui-shipping.cluster.local` _in the step 2 of this quickstart._
+
+1. You can also check all the resources created by the `kcontainer-quickstart-ocp.sh` script in the RedHat OpenShift console by clicking on the left hand side navigation menu, then clicking on **Exercise 1** to expand that section and then clicking on **RedHat OpenShift on IBM Cloud Basics**. You should now see on the instructions section the url for your **IBM Cloud portal**. Click on that link.
+
+  ![OpenLabs5](images/openLabs5.png)
+
+1. You should now be on your RedHat OpenShift on IBM Cloud cluster dashboard.
+
+  ![OpenLabs6](images/openLabs6.png)
+
+1. Click on the **OpenShfit web console** button that is presented on the top right corner of your RedHat OpenShift of IBM Cloud cluster dashboard page. This, should open up your RedHat OpenShift dashboard.
+
+  ![OpenLabs7](images/openLabs7.png)
 
 ## Step 2: KContainer Manufacturer creating an order
 
@@ -46,7 +120,7 @@ Orders are created via the manufacturer. For a reminder of the different persona
 
 * Navigate to `http://kc-ui-shipping.cluster.local` (replacing the actual URL of the `kc-ui` microservice with the value output while running the quickstart script or available via `oc get route kc-ui`) to access the UI home page:
 
-![kc-home](kc-home.png)
+![kc-home](images/kc-home.png)
 
 To log in to the home page, you will need the following user email and password:
 
@@ -61,15 +135,15 @@ The initial UI homepage shows an illustrated version of the business process. Th
 
 To represent different manufacturers, the first select box has been designed to support multiple scenarios in the future. For the purposes of this quickstart tutorial, select 'GoodManuf'.
 
-![](kc-manuf-select.png)
+![](images/kc-manuf-select.png)
 
 Once the manufacturer is selected, a list of existing orders will be displayed.
 
-![](kc-orders.png)
+![](images/kc-orders.png)
 
 * Select one order using the `Arrow` icon. This will allow you to view the order details:
 
-![](kc-order.png)
+![](images/kc-order.png)
 
 As illustrated in the CQRS diagram:
 
@@ -99,15 +173,15 @@ After running this, you should be able to see the following order with the statu
 
 * From the home page, click on the Shipment Manager - Shipping Inc tile:
 
-![](shipment-inc.png)
+![](images/shipment-inc.png)
 
 The home page lists the order that the shipment company received in the previous step.
 
-![](kc-shipment-home.png)
+![](images/kc-shipment-home.png)
 
 The status of events will be modified over time while the order is processed down stream by the voyage and container services. The following sequence diagram illustrates the flow:
 
-![](kc-order-seq-diag.png)
+![](images/kc-order-seq-diag.png)
 
 Looking at the events in the voyage service
 ```
@@ -131,15 +205,15 @@ Note: *The term 'Blue Water' referred to here means at sea (including ports and 
 
 * From the home page, select the `Simulate Blue Water` tile. Select one of the available fleet. As of now, only the North Pacific has fleet data:
 
-![](kc-fleet-select.png)
+![](images/kc-fleet-select.png)
 
 The fleet panel lists the ships, their location and status and a map:
 
-![](kc-fleet-home.png)
+![](images/kc-fleet-home.png)
 
 * Select one ship with the edit button. You will see the ship detail view:
 
-![](kc-ship-detail.png)
+![](images/kc-ship-detail.png)
 
 This view contains information about the ship itself, it's position at sea and the load. There is also an option to simulate a number of disaster scenarios that could play out at sea, however this functionality is not yet implemented.
 
