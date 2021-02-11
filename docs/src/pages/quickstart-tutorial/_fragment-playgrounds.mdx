@@ -1,0 +1,35 @@
+### OpenShift Playgrounds
+
+In this section, we are going to see how to deploy the KContainer Shipping Container Reference Implementation on the [OpenShift Playgrounds](https://learn.openshift.com/playgrounds/openshift45/) hosted environment.
+
+1. Go to [`https://learn.openshift.com/playgrounds/openshift45/`](https://learn.openshift.com/playgrounds/openshift45/) in a browser and click **Start Scenario**.
+
+  ![OpenShift Playground](images/openshift_playground.png)
+
+1. From a terminal that has access to your OpenShift cluster, download the [kcontainer-quickstart-ocp.sh](https://github.com/ibm-cloud-architecture/refarch-kc/tree/master/scripts/kcontainer-quickstart-ocp.sh) file:
+  ```
+  curl -o kcontainer-quickstart-ocp.sh https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-kc/master/scripts/kcontainer-quickstart-ocp.sh
+  chmod +x kcontainer-quickstart-ocp.sh
+  ```
+  ![OpenShift Playground 2](images/openshift_playground2.png)
+
+   _(\*) To override the default username and password used in the quickstart script for use in a different OpenShift environment, set environment variables with names of_ `OCP_ADMIN_USER` _and_ `OCP_ADMIN_PASSWORD` _to the appropriate values before executing the script._
+
+1. Execute the quickstart deployment script with the following command:
+  ```
+  ./kcontainer-quickstart-ocp.sh
+  ```
+
+1. Wait for the deployment to be active and ready when you are prompted with `Press any key to continue once an order has been submitted...`.
+
+  ![OpenShift Playground 3](images/openshift_playground3.png)
+
+1. Grab the User Interface Microservice url and credentials and open it up in your web browser.
+
+  ![OpenShift Playground 4](images/openshift_playground4.png)
+
+   _(\*) This will be referred to as_ `kc-ui-shipping.cluster.local` _in the step 2 of this quickstart._
+
+1. You can also check all the resources created by the `kcontainer-quickstart-ocp.sh` script in the RedHat OpenShift console by clicking on the console tab and using the appropriate credentials displayed on the instructions section to log in.
+
+  ![OpenShift Playground 5](images/openshift_playground5.png)
