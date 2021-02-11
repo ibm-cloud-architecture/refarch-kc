@@ -4,15 +4,22 @@
   "version": "1.22.1",
   "license": "Apache 2.0",
   "scripts": {
+    "predev": "./scripts/prebuild.sh",
     "dev": "gatsby develop -H 0.0.0.0",
+    "predev:clean": "./scripts/prebuild.sh",
     "dev:clean": "gatsby clean && gatsby develop -H 0.0.0.0",
+    "prebuild": "./scripts/prebuild.sh",
     "build": "gatsby build",
+    "prebuild:clean": "./scripts/prebuild.sh",
     "build:clean": "gatsby clean && gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
+    "prebuild:analyze": "./scripts/prebuild.sh",
     "build:analyze": "ANALYZE=true gatsby build",
+    "prebuild:prefix": "./scripts/prebuild.sh",
     "build:prefix": "gatsby build --prefix-paths",
     "serve:prefix": "gatsby serve --prefix-paths",
+    "pretest:prefix": "./scripts/prebuild.sh",
     "test:prefix": "gatsby build --prefix-paths && gatsby serve --prefix-paths"
   },
   "dependencies": {

@@ -1,3 +1,9 @@
+- title: Quickstart Tutorial
+  pages:
+    - title: Deploy on IBM OpenLabs
+      path: /quickstart-tutorial/deploy-on-ibm-openlabs/
+    - title: Deploy on OpenShift Playgrounds
+      path: /quickstart-tutorial/deploy-on-openshift-playgrounds/
 - title: Business Scenario
   pages:
     - title: Scenario Overview
@@ -8,8 +14,6 @@
       path: /business-scenario/microservices-overview/
     - title: Repository Overview
       path: /business-scenario/repository-overview/
-    - title: Quickstart Tutorial
-      path: /business-scenario/quickstart-tutorial/
 - title: Pattern Implementations
   pages:
     - title: Event Storming Analysis
