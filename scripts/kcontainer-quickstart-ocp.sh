@@ -89,7 +89,7 @@ cd refarch-kc-gitops/environments
 ### More info available via `oc describe packagemanifests strimzi-kafka-operator -n openshift-marketplace`
 
 ### Strimzi operator version stability appears to be not so stable, so this will
-### specify the latest manually verified operator version for a given OCP version 
+### specify the latest manually verified operator version for a given OCP version
 ### instead of just the default "stable" stream.
 STRIMZI_OPERATOR_VERSION="strimzi-0.20.x"
 OCP_VERSION=$(oc version -o json | jq -r ".openshiftVersion")
@@ -139,7 +139,7 @@ oc project shipping
 oc adm policy add-scc-to-user anyuid -z kcontainer-runtime -n shipping
 
 echo Waiting for Kafka cluster to be available...
-oc wait --for=condition=ready kafka my-cluster --timeout 300s -n shipping
+oc wait --for=condition=ready kafka my-cluster --timeout "-1s" -n shipping
 
 ### DEPLOY APPLICATION MICROSERVICES
 oc apply -k dev/
@@ -147,7 +147,7 @@ oc apply -k dev/
 ### WAIT FOR MICROSERVICE DEPLOYMENTS TO BECOME AVAILABLE
 echo Waiting for application microservices to be available...
 sleep 10
-oc wait --for=condition=available deploy -l app.kubernetes.io/part-of=refarch-kc --timeout 300s -n shipping
+oc wait --for=condition=available deploy -l app.kubernetes.io/part-of=refarch-kc --timeout "-1s" -n shipping
 
 ### GET ROUTE FOR USER INTERFACE MICROSERVICE
 echo "User Interface Microservice is available via http://$(oc get route kc-ui -o jsonpath='{.status.ingress[0].host}')"
