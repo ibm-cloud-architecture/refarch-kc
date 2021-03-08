@@ -154,11 +154,11 @@ echo "User Interface Microservice is available via http://$(oc get route kc-ui -
 
 ### MANUAL STEP ### Send order event via browser
 echo Login to the browser UI with \"eddie@email.com\" / \"Eddie\" and submit an order via the \"Initiate Orders\" tab
-read -rsp $'Press any key to continue once an order has been submitted...\n' -n1 key
+# read -rsp $'Press any key to continue once an order has been submitted...\n' -n1 key
 
 ### Track kafka record via kafka-console-consumer and `oc rsh`
-echo "Checking ORDER-COMMANDS topic for Kafka records produced by the order-command microservice..."
-oc rsh my-cluster-kafka-0 bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --timeout-ms 10000 --topic order-commands
+# echo "Checking ORDER-COMMANDS topic for Kafka records produced by the order-command microservice..."
+# oc rsh my-cluster-kafka-0 bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --timeout-ms 10000 --topic order-commands
 
-echo "Checking ORDERS topic for Kafka records produced by the order-command microservice..."
-oc rsh my-cluster-kafka-0 bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --timeout-ms 10000 --topic orders
+# echo "Checking ORDERS topic for Kafka records produced by the order-command microservice..."
+# oc rsh my-cluster-kafka-0 bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --timeout-ms 10000 --topic orders
