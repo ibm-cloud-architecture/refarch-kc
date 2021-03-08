@@ -23,7 +23,7 @@
     "test:prefix": "gatsby build --prefix-paths && gatsby serve --prefix-paths"
   },
   "dependencies": {
-    "gatsby": "^2.32.3",
+    "gatsby": "^2.32.9",
     "gatsby-plugin-google-analytics": "^2.11.0",
     "gatsby-theme-carbon": "^1.27.3",
     "react": "^16.14.0",
