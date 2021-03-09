@@ -15,7 +15,7 @@ We have created the following `get_state.sh` script that will grab the route for
 To grab the script and make it executable, run the following in your terminal:
 
 ```shell
-curl -o kcontainer-quickstart-ocp.sh https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-kc/master/scripts/quickstart/get_state.sh
+curl -o get_state.sh https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-kc/master/scripts/quickstart/get_state.sh
 chmod +x get_state.sh
 ```
 
@@ -94,7 +94,7 @@ We can see that the initial state of our KContainer application does not count w
 As a result, the first thing we need to do before creating an order is to add a new container at the source port into our system. For that, the Container Management component exposes and API which the following `create_container.sh` script will make use of. On a new terminal tab, download the script and make it executable:
 
 ```shell
-curl -o kcontainer-quickstart-ocp.sh https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-kc/master/scripts/quickstart/create_container.sh
+curl -o create_container.sh https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-kc/master/scripts/quickstart/create_container.sh
 chmod +x create_container.sh
 ```
 
