@@ -10,31 +10,6 @@ from kafka.KcConsumer import KafkaConsumer
 ##############################
 ##### READ ENV VARIABLES #####
 ##############################
-try:
-    KAFKA_BROKERS = os.environ['KAFKA_BROKERS']
-except KeyError:
-    print("The KAFKA_BROKERS environment variable needs to be set.")
-    exit(1)
-
-# Try to read the Kafka environment from the environment variables
-try:
-    KAFKA_ENV = os.environ['KAFKA_ENV']
-except KeyError:
-    KAFKA_ENV='LOCAL'
-
-# Try to read the Kafka user from the environment variables
-try:
-    KAFKA_USER = os.environ['KAFKA_USER']
-except KeyError:
-    print("The KAFKA_USER environment variable not set... assume local deployment")
-    KAFKA_USER=''
-
-# Try to read the Kafka password from the environment variables
-try:
-    KAFKA_PASSWORD = os.environ['KAFKA_PASSWORD']
-except KeyError:
-    print("The KAFKA_PASSWORD environment variable not set... assume local deployment")
-    KAFKA_PASSWORD=''
 
 # Try to read the container microservice url
 try:
@@ -162,7 +137,7 @@ class SagaNoVoyage(unittest.TestCase):
 
         print("2 - Post container event into the containers topic")
         # Create a KafkaProducer object to interact with Kafka/Event Streams
-        kp = KafkaProducer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_USER,KAFKA_PASSWORD)
+        kp = KafkaProducer()
         # Verify we have a KafkaProducer object
         self.assertIsNotNone(kp)
         kp.prepareProducer("ProduceContainerPython")
@@ -177,7 +152,7 @@ class SagaNoVoyage(unittest.TestCase):
 
         print("3 - Read container event from the containers topic")
         # Create a KafkaConsumer object to interact with Kafka/Event Streams
-        kc = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_USER,KAFKA_PASSWORD,CONTAINERS_TOPIC)
+        kc = KafkaConsumer(CONTAINERS_TOPIC)
         # Verify we have a KafkaConsumer object
         self.assertIsNotNone(kc)
         kc.prepareConsumer()
@@ -278,7 +253,7 @@ class SagaNoVoyage(unittest.TestCase):
 
         print("3 - Make sure a new order command event was delivered into the order-commands topic")
         # Create a KafkaConsumer object to interact with Kafka/Event Streams
-        kc = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_USER,KAFKA_PASSWORD,ORDER_COMMANDS_TOPIC)
+        kc = KafkaConsumer(ORDER_COMMANDS_TOPIC)
         # Verify we have a KafkaConsumer object
         self.assertIsNotNone(kc)
         kc.prepareConsumer()
@@ -323,7 +298,7 @@ class SagaNoVoyage(unittest.TestCase):
 
         print("6 - Make sure a new order event was delivered into the orders topic")
         # Create a KafkaConsumer object to interact with Kafka/Event Streams
-        kc = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_USER,KAFKA_PASSWORD,ORDERS_TOPIC)
+        kc = KafkaConsumer(ORDERS_TOPIC)
         # Verify we have a KafkaConsumer object
         self.assertIsNotNone(kc)
         kc.prepareConsumer()
@@ -387,7 +362,7 @@ class SagaNoVoyage(unittest.TestCase):
 
         print("2 - Read container assigned to order event from the containers topic")
         # Create a KafkaConsumer object to interact with Kafka/Event Streams
-        kc = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_USER,KAFKA_PASSWORD,CONTAINERS_TOPIC)
+        kc = KafkaConsumer(CONTAINERS_TOPIC)
         # Verify we have a KafkaConsumer object
         self.assertIsNotNone(kc)
         kc.prepareConsumer()
@@ -427,7 +402,7 @@ class SagaNoVoyage(unittest.TestCase):
 
         print("5 - Read container allocated event from the oder topic")
         # Create a KafkaConsumer object to interact with Kafka/Event Streams
-        kc = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_USER,KAFKA_PASSWORD,ORDERS_TOPIC)
+        kc = KafkaConsumer(ORDERS_TOPIC)
         # Verify we have a KafkaConsumer object
         self.assertIsNotNone(kc)
         kc.prepareConsumer()
@@ -471,7 +446,7 @@ class SagaNoVoyage(unittest.TestCase):
 
         print("2 - Read the VoyageNotFound event from the orders topic")
         # Create a KafkaConsumer object to interact with Kafka/Event Streams
-        kc = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_USER,KAFKA_PASSWORD,ORDERS_TOPIC)
+        kc = KafkaConsumer(ORDERS_TOPIC)
         # Verify we have a KafkaConsumer object
         self.assertIsNotNone(kc)
         kc.prepareConsumer()
@@ -516,7 +491,7 @@ class SagaNoVoyage(unittest.TestCase):
 
         print("2 - Read OrderRejected event from the orders topic")
         # Create a KafkaConsumer object to interact with Kafka/Event Streams
-        kc = KafkaConsumer(KAFKA_ENV,KAFKA_BROKERS,KAFKA_USER,KAFKA_PASSWORD,ORDERS_TOPIC)
+        kc = KafkaConsumer(ORDERS_TOPIC)
         # Verify we have a KafkaConsumer object
         self.assertIsNotNone(kc)
         kc.prepareConsumer()

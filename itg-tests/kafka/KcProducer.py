@@ -3,44 +3,42 @@ from confluent_kafka import KafkaError, Producer
 
 class KafkaProducer:
 
-    def __init__(self,kafka_env = 'LOCAL',kafka_brokers = "",kafka_user = "", kafka_password = ""):
-        self.kafka_env = kafka_env
-        self.kafka_brokers = kafka_brokers
-        self.kafka_user = kafka_user
-        self.kafka_password = kafka_password
+    def __init__(self):
+        self.kafka_brokers = os.environ['KAFKA_BROKERS']
+        self.kafka_user = os.environ['KAFKA_USER']
+        self.kafka_password = os.environ['KAFKA_PASSWORD']
+        self.security_protocol = os.environ['SECURITY_PROTOCOL']
 
     def prepareProducer(self,groupID = "pythonproducers"):
         options ={
                 'bootstrap.servers':  self.kafka_brokers,
-                'group.id': groupID
+                'group.id': groupID,
+                'security.protocol': self.security_protocol
         }
-        # We need this test as local kafka does not expect SSL protocol.
-        if (self.kafka_env != 'LOCAL'):
-            options['security.protocol'] = 'SASL_SSL'
-            options['sasl.mechanisms'] = 'PLAIN'
+        if ( self.security_protocol == 'SASL_PLAINTEXT' or self.security_protocol == 'SASL_SSL'):
             options['sasl.username'] = self.kafka_user
             options['sasl.password'] = self.kafka_password
-        if (self.kafka_env == 'OCP'):
-            options['sasl.mechanisms'] = 'SCRAM-SHA-512'
+            options['sasl.mechanisms'] = os.environ['SASL_MECHANISM']
+        if (os.environ['PEM_CERT']!=""):
             options['ssl.ca.location'] = os.environ['PEM_CERT']
-        
-        # Printing out producer config for debugging purposes        
-        print("[KafkaConsumer] - This is the configuration for the consumer:")
-        print("[KafkaConsumer] - -------------------------------------------")
-        print('[KafkaConsumer] - Bootstrap Server:  {}'.format(options['bootstrap.servers']))
-        if (self.kafka_env != 'LOCAL'):
+
+        # Printing out producer config for debugging purposes
+        print("[KafkaProducer] - This is the configuration for the producer:")
+        print("[KafkaProducer] - -------------------------------------------")
+        print('[KafkaProducer] - Bootstrap Server:  {}'.format(options['bootstrap.servers']))
+        print('[KafkaProducer] - Security Protocol: {}'.format(options['security.protocol']))
+        if (self.security_protocol == 'SASL_PLAINTEXT' or self.security_protocol == 'SASL_SSL'):
             # Obfuscate password
             if (len(self.kafka_password) > 3):
                 obfuscated_password = self.kafka_password[0] + "*****" + self.kafka_password[len(self.kafka_password)-1]
             else:
                 obfuscated_password = "*******"
-            print('[KafkaConsumer] - Security Protocol: {}'.format(options['security.protocol']))
-            print('[KafkaConsumer] - SASL Mechanism:    {}'.format(options['sasl.mechanisms']))
-            print('[KafkaConsumer] - SASL Username:     {}'.format(options['sasl.username']))
-            print('[KafkaConsumer] - SASL Password:     {}'.format(obfuscated_password))
-            if (self.kafka_env == 'OCP'): 
-                print('[KafkaConsumer] - SSL CA Location:   {}'.format(options['ssl.ca.location']))
-        print("[KafkaConsumer] - -------------------------------------------")
+            print('[KafkaProducer] - SASL Mechanism:    {}'.format(options['sasl.mechanisms']))
+            print('[KafkaProducer] - SASL Username:     {}'.format(options['sasl.username']))
+            print('[KafkaProducer] - SASL Password:     {}'.format(obfuscated_password))
+            if (options['ssl.ca.location']!=""):
+                print('[KafkaProducer] - SSL CA Location:   {}'.format(options['ssl.ca.location']))
+        print("[KafkaProducer] - -------------------------------------------")
 
         # Creating the producer
         self.producer = Producer(options)
