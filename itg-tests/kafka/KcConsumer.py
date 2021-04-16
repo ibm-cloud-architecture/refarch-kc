@@ -4,11 +4,11 @@ from confluent_kafka import Consumer, KafkaError
 
 class KafkaConsumer:
 
-    def __init__(self, kafka_env = 'LOCAL', kafka_brokers = "", kafka_user = "", kafka_password = "", topic_name = "",autocommit = True):
-        self.kafka_env = kafka_env
-        self.kafka_brokers = kafka_brokers
-        self.kafka_user = kafka_user
-        self.kafka_password = kafka_password
+    def __init__(self,topic_name = "",autocommit = True):
+        self.kafka_brokers = os.environ['KAFKA_BROKERS']
+        self.kafka_user = os.environ['KAFKA_USER']
+        self.kafka_password = os.environ['KAFKA_PASSWORD']
+        self.security_protocol = os.environ['SECURITY_PROTOCOL']
         self.topic_name = topic_name
         self.kafka_auto_commit = autocommit
 
@@ -20,21 +20,22 @@ class KafkaConsumer:
                 'group.id': groupID,
                 'auto.offset.reset': 'earliest',
                 'enable.auto.commit': self.kafka_auto_commit,
+                'security.protocol': self.security_protocol
         }
-        if (self.kafka_env != 'LOCAL'):
-            options['security.protocol'] = 'SASL_SSL'
-            options['sasl.mechanisms'] = 'PLAIN'
+        if (self.security_protocol == 'SASL_SSL' or self.security_protocol == 'SASL_PLAINTEXT'):
             options['sasl.username'] = self.kafka_user
             options['sasl.password'] = self.kafka_password
-        if (self.kafka_env == 'OCP'):
-            options['sasl.mechanisms'] = 'SCRAM-SHA-512'
+            options['sasl.mechanisms'] = os.environ['SASL_MECHANISM']
+        # Ideally, we would check here if SECURITY_PROTOCOL is SSL or SASL_SSL but IBM Event Streams on IBM Cloud
+        if (os.environ['PEM_CERT']!=""):
             options['ssl.ca.location'] = os.environ['PEM_CERT']
 
-        # Printing out producer config for debugging purposes        
+        # Printing out producer config for debugging purposes
         print("[KafkaConsumer] - This is the configuration for the consumer:")
         print("[KafkaConsumer] - -------------------------------------------")
         print('[KafkaConsumer] - Bootstrap Server:  {}'.format(options['bootstrap.servers']))
-        if (self.kafka_env != 'LOCAL'):
+        print('[KafkaConsumer] - Security Protocol: {}'.format(options['security.protocol']))
+        if (self.security_protocol == 'SASL_PLAINTEXT' or self.security_protocol == 'SASL_SSL'):
             # Obfuscate password
             if (len(self.kafka_password) > 3):
                 obfuscated_password = self.kafka_password[0] + "*****" + self.kafka_password[len(self.kafka_password)-1]
@@ -44,14 +45,14 @@ class KafkaConsumer:
             print('[KafkaConsumer] - SASL Mechanism:    {}'.format(options['sasl.mechanisms']))
             print('[KafkaConsumer] - SASL Username:     {}'.format(options['sasl.username']))
             print('[KafkaConsumer] - SASL Password:     {}'.format(obfuscated_password))
-            if (self.kafka_env == 'OCP'): 
+            if (options['ssl.ca.location']!=""):
                 print('[KafkaConsumer] - SSL CA Location:   {}'.format(options['ssl.ca.location']))
         print("[KafkaConsumer] - -------------------------------------------")
 
         # Create the consumer
         self.consumer = Consumer(options)
         self.consumer.subscribe([self.topic_name])
-    
+
     # Prints out and returns the decoded events received by the consumer
     def traceResponse(self, msg):
         msgStr = msg.value().decode('utf-8')
@@ -121,6 +122,6 @@ class KafkaConsumer:
                     gotIt= True
                 continue
             self.traceResponse(msg)
-    
+
     def close(self):
         self.consumer.close()
