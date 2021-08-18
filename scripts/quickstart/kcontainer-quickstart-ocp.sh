@@ -85,6 +85,8 @@ git clone https://github.com/ibm-cloud-architecture/refarch-kc-gitops.git
 
 cd refarch-kc-gitops/environments
 
+git checkout jesus-testing
+
 ### INSTALL Strimzi OPERATOR
 ### More info available via `oc describe packagemanifests strimzi-kafka-operator -n openshift-marketplace`
 
