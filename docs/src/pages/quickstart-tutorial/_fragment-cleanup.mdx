@@ -1,0 +1,55 @@
+If you wish to cleanup your environment to the initial state where no order or container was created and your kafka topics where empty, execute the following steps from the terminal:
+
+1. Scale all the Appsody/OpenLiberty apps to 0 replicas so that there is no consumer or consumer group hooked up to any kafka topic
+
+  ```
+  for APP in $(oc get AppsodyApplication,OpenLibertyApplication | grep "-" | awk '{print $1}'); do oc patch $APP --type 'json' -p '[{"op":"add", "path":"/spec/replicas", "value":0}]'; done
+  ```
+
+1. Delete the postgresql database that stores the state of the existing containers so all those existing containers are removed
+
+  ```
+  oc delete pod/postgres-db-postgresql-0
+  ```
+
+1. Delete all kafka topics so that we get rid of all existing events in them
+
+  ```
+  for i in `oc get kafkatopics | grep '-' | awk '{print $1}'`; do oc delete kafkatopic $i; done
+  ```
+
+1. Wait until the below command returns 1. This is to ensure that all the topics have been removed (it may take a couple of minutes to the Strimzi operator to accomplish the task)
+
+  ```
+  oc exec -it my-cluster-kafka-0 -- ./bin/kafka-topics.sh --list --bootstrap-server localhost:9092 | wc -l
+  ```
+
+1. Download the definition of the kafka topics in order to recreate these
+
+  ```
+  curl -o kafka-topics.yaml https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-kc-gitops/master/environments/dev/apps/refarch-kc/base/kafka/kafka-topics.yaml
+  ```
+
+1. Recreate the kafka topics
+
+  ```
+  oc apply -f kafka-topics.yaml
+  ```
+
+1. Wait until the below command returns 10 or greater. This is to ensure that all the topics have been created (it may take a couple of minutes to the Strimzi operator to accomplish the task)
+
+  ```
+  oc exec -it my-cluster-kafka-0 -- ./bin/kafka-topics.sh --list --bootstrap-server localhost:9092 | wc -l
+  ```
+
+1. Scale all the Appsody/OpenLiberty apps back to 1 replica
+
+  ```
+  for APP in $(oc get AppsodyApplication,OpenLibertyApplication | grep "-" | awk '{print $1}'); do oc patch $APP --type 'json' -p '[{"op":"add", "path":"/spec/replicas", "value":1}]'; done
+  ```
+
+1. You may need to wait a couple of minutes for these Appsody and OpenLiberty applications to get started. You can check the status of these running
+
+  ```
+  oc get pods -l app.kubernetes.io/part-of=refarch-kc
+  ```
