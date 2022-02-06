@@ -27,9 +27,7 @@ Each of these business processes will be executed step-by-step using the demonst
 
 In this section, we are going to see how to deploy the KContainer Shipping Container Reference Implementation on the [OpenShift Playgrounds](https://learn.openshift.com/playgrounds/openshift45/) hosted environment.
 
-1. Go to [`https://learn.openshift.com/playgrounds/openshift45/`](https://learn.openshift.com/playgrounds/openshift45/) in a browser and click **Start Scenario**.
-
-  ![OpenShift Playground](images/openshift_playground.png)
+1. Go to [`https://developers.redhat.com/developer-sandbox`](https://developers.redhat.com/developer-sandbox) in a browser and start a sandbox environment.
 
 1. From a terminal that has access to your OpenShift cluster, download the [kcontainer-quickstart-ocp.sh](https://github.com/ibm-cloud-architecture/refarch-kc/tree/master/scripts/quickstart/kcontainer-quickstart-ocp.sh) file:
   ```
@@ -302,11 +300,14 @@ Now, in order for the demo to work, we **must** make sure that the new order we 
 - `Shanghai` as the `Pickup Address City`
 - `Oakland` as the `Destination Address City`
 
-the reason for this is that we created in the [Setup](#setup) section a container in `Shanghai` with a capacity of `10` and we know there is only one voyage whose source port is Shanghai and that voyage ships containers to `Oakland`. The rest of the attributes, will not have effect on the order management. **DO NOT** click `Submit` yet.
+the reason for this is that we created in the [Setup](#setup) section a container in `Shanghai` with a capacity of `10` 
+and we know there is only one voyage whose source port is Shanghai and that voyage ships containers to `Oakland`. 
+The rest of the attributes, will not have effect on the order management. **DO NOT** click `Submit` yet.
 
 ![](images/kc-order-form.png)
 
-We are ready to submit our new order for the KContainer application to process it. But first, let's go over what is meant to happen behind the scenes as a result:
+We are ready to submit our new order for the KContainer application to process it. But first, let's go over 
+what is meant to happen behind the scenes as a result:
 
 ![](images/flow.png)
 
